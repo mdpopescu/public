@@ -21,6 +21,7 @@ namespace Tests
       C A
 00001 1 4
 00002 3 4
+
 ";
 
       var startInfo = new ProcessStartInfo

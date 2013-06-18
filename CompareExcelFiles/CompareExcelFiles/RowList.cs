@@ -49,14 +49,21 @@ namespace Brownstone.CompareExcelFiles
 
     private static bool IsFoundIn(IList<string> row, IEnumerable<string[]> otherRows, IEnumerable<int> columns)
     {
+      // do NOT call .ToList(), this MUST be lazily evaluated
+      var comparisons = otherRows.Select(otherRow => CompareRow(row, otherRow, columns));
+      
       // the list is sorted by the given columns; use that to stop when either equality is found,
       // or the given row is greater than the other
-      var firstSignificantComparison = otherRows
-        .Select(otherRow => CompareRow(row, otherRow, columns))
-        .Where(OtherIsLessThanOrEqualToGiven)
-        .FirstOrDefault();
+      foreach (var comparison in comparisons)
+      {
+        if (comparison == 0) // success
+          return true;
+        if (comparison < 0) // the rest can no longer be equal (the list is sorted)
+          return false;
+      }
 
-      return firstSignificantComparison == 0;
+      // reached the end of the list without finding equality
+      return false;
     }
 
     private static int CompareRow(IList<string> row, IList<string> otherRow, IEnumerable<int> indices)
@@ -65,11 +72,6 @@ namespace Brownstone.CompareExcelFiles
         .Select(index => String.Compare(row[index], otherRow[index], StringComparison.InvariantCultureIgnoreCase))
         .Where(comparison => comparison != 0)
         .FirstOrDefault();
-    }
-
-    private static bool OtherIsLessThanOrEqualToGiven(int comparison)
-    {
-      return comparison <= 0;
     }
   }
 }
