@@ -124,5 +124,51 @@ namespace Tests
         Assert.AreEqual("00008 4 8000 3 1700", lines[8]);
       }
     }
+
+    [TestClass]
+    public class ExcludeRecords : TableTests
+    {
+      [TestMethod]
+      public void File1Minus2()
+      {
+        var columns = new[] { "A", "B", "C", "D" };
+        var rows1 = new[]
+        {
+          new[] { "1", "10", "1", "100", },
+          new[] { "2", "20", "1", "200", },
+          new[] { "3", "30", "1", "300", },
+          new[] { "1", "40", "2", "400", },
+          new[] { "2", "50", "2", "500", },
+          new[] { "3", "60", "2", "600", },
+          new[] { "1", "70", "3", "700", },
+          new[] { "2", "80", "3", "800", },
+          new[] { "3", "90", "3", "900", },
+        };
+        var sut = new Table(columns, new RowList(rows1));
+        sut.SortBy(new[] { "C", "A" });
+        var rows2 = new[]
+        {
+          new[] { "1", "5000", "3", "1400", },
+          new[] { "2", "6000", "3", "1500", },
+          new[] { "3", "7000", "3", "1600", },
+          new[] { "4", "8000", "3", "1700", },
+          new[] { "1", "1000", "1", "1000", },
+          new[] { "2", "2000", "1", "1100", },
+          new[] { "3", "3000", "1", "1200", },
+          new[] { "4", "4000", "1", "1300", },
+        };
+        var other = new Table(columns, new RowList(rows2));
+        other.SortBy(new[] { "C", "A" });
+
+        var result = sut.ExcludeRecords(other, new[] { "C", "A" });
+
+        var lines = new List<string>();
+        result.Dump(columns, lines.Add);
+        Assert.AreEqual(4, lines.Count);
+        Assert.AreEqual("00001 1 40 2 400", lines[1]);
+        Assert.AreEqual("00002 2 50 2 500", lines[2]);
+        Assert.AreEqual("00003 3 60 2 600", lines[3]);
+      }
+    }
   }
 }
