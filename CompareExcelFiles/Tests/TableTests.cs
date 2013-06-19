@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Brownstone.CompareExcelFiles;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Renfield.CompareExcelFiles;
 
-namespace Tests
+namespace Renfield.Tests
 {
   [TestClass]
   public class TableTests

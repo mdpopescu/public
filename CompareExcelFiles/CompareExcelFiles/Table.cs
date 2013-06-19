@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using OfficeOpenXml;
 
-namespace Brownstone.CompareExcelFiles
+namespace Renfield.CompareExcelFiles
 {
   public class Table
   {

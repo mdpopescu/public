@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("CompareExcelFiles")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Clevertech")]
+[assembly: AssemblyCompany("Renfield Software")]
 [assembly: AssemblyProduct("CompareExcelFiles")]
-[assembly: AssemblyCopyright("Copyright © Clevertech 2013")]
+[assembly: AssemblyCopyright("Copyright © Renfield Software 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

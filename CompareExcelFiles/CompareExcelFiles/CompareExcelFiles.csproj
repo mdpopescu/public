@@ -8,7 +8,7 @@
     <ProjectGuid>{884A4BD2-16E5-419E-9B19-EE05970CB0A3}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Brownstone.CompareExcelFiles</RootNamespace>
+    <RootNamespace>Renfield.CompareExcelFiles</RootNamespace>
     <AssemblyName>CompareExcelFiles</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>

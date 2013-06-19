@@ -9,7 +9,7 @@
     <ProjectGuid>{D97D1FEE-86AE-4D46-BCC5-1C5B7556022F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tests</RootNamespace>
+    <RootNamespace>Renfield.Tests</RootNamespace>
     <AssemblyName>Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

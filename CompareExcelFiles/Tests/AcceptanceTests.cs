@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Renfield.Tests
 {
   [TestClass]
   public class AcceptanceTests

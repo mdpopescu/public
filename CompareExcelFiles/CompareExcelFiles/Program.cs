@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Brownstone.CompareExcelFiles
+namespace Renfield.CompareExcelFiles
 {
   internal class Program
   {
