@@ -19,8 +19,8 @@ namespace Renfield.Tests
 
 ** 2: ..\..\..\file2.xlsx ** --- 2 distinct rows out of 8
       C A
-00001 1 4
-00002 3 4
+00001 3 4
+00002 1 4
 
 ";
 
@@ -32,13 +32,12 @@ namespace Renfield.Tests
     [TestMethod]
     public void ReturnsHelp()
     {
-      const string ARGS = @"..\..\..\file1.xlsx ..\..\..\file2.xlsx C A";
       const string EXPECTED_OUTPUT = @"Syntax: CompareExcelFiles file1 file2 column [column...]
         file1     first file to compare
         file2     second file to compare
         column    name of column(s) to sort / compare by
 ";
-      var result = RunAndCaptureOutput(ARGS);
+      var result = RunAndCaptureOutput("");
 
       Assert.AreEqual(EXPECTED_OUTPUT, result);
     }

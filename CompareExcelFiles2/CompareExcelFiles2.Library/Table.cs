@@ -1,4 +1,6 @@
-﻿namespace Renfield.CompareExcelFiles2.Library
+﻿using System;
+
+namespace Renfield.CompareExcelFiles2.Library
 {
   public interface Table
   {
@@ -7,5 +9,7 @@
 
     string[] Columns { get; }
     string[][] Data { get; }
+
+    void Dump(string[] columns, Action<string> writeLine);
   }
 }
