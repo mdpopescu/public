@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace CompareExcelFiles
+namespace Renfield.CompareExcelFiles
 {
-  class Program
+  internal class Program
   {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
+      Console.WriteLine("Syntax: CompareExcelFiles file1 file2 column [column...]");
+      Console.WriteLine("        file1     first file to compare");
+      Console.WriteLine("        file2     second file to compare");
+      Console.WriteLine("        column    name of column(s) to sort / compare by");
     }
   }
 }
