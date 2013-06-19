@@ -26,5 +26,24 @@ namespace Renfield.CompareExcelFiles2.Library
 
       Data = cells.Skip(1).ToArray();
     }
+
+    public void Dump(string[] columns, Action<string> writeLine)
+    {
+      writeLine(string.Format("      {0}", string.Join(" ", columns)));
+
+      var indices = GetIndices(columns).ToList();
+      var lineNo = 1;
+
+      var lines = Data.Select(row => string.Join(" ", indices.Select(index => row[index])));
+      foreach (var line in lines)
+        writeLine(string.Format("{0:d5} {1}", lineNo++, line));
+    }
+
+    //
+
+    private IEnumerable<int> GetIndices(IEnumerable<string> requiredColumns)
+    {
+      return requiredColumns.Select(col => Array.IndexOf(Columns, col));
+    }
   }
 }

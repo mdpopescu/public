@@ -144,5 +144,43 @@ namespace Renfield.Tests
         Assert.AreEqual("6", sut.Data[1][2]);
       }
     }
+
+    [TestClass]
+    public class Dump
+    {
+      [TestMethod]
+      public void PrintsOutTheHeader()
+      {
+        var sut = new MemoryTable(new[]
+        {
+          new[] { "A", "B", "C" },
+          new[] { "1", "2", "3" },
+          new[] { "4", "5", "6" },
+        });
+        var output = new List<string>();
+
+        sut.Dump(new[] { "A", "C" }, output.Add);
+
+        Assert.AreEqual("      A C", output[0]);
+      }
+
+      [TestMethod]
+      public void PrintsOutTheData()
+      {
+        var sut = new MemoryTable(new[]
+        {
+          new[] { "A", "B", "C" },
+          new[] { "1", "2", "3" },
+          new[] { "4", "5", "6" },
+        });
+        var output = new List<string>();
+
+        sut.Dump(new[] { "A", "C" }, output.Add);
+
+        Assert.AreEqual(3, output.Count);
+        Assert.AreEqual("00001 1 3", output[1]);
+        Assert.AreEqual("00002 4 6", output[2]);
+      }
+    }
   }
 }
