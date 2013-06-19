@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Renfield.CompareExcelFiles2.Library;
 
 namespace Renfield.Tests
 {
@@ -40,6 +41,29 @@ namespace Renfield.Tests
       var result = RunAndCaptureOutput(ARGS);
 
       Assert.AreEqual(EXPECTED_OUTPUT, result);
+    }
+
+    [TestMethod]
+    public void LoadsExcelFile()
+    {
+      const string FILE_NAME = @"..\..\..\file1.xlsx";
+
+      var sut = new ExcelLoader();
+
+      var result = sut.Load(FILE_NAME);
+
+      Assert.AreEqual(9, result.RowCount); // number of *data* rows
+      Assert.AreEqual(4, result.ColCount);
+      CollectionAssert.AreEqual(new[] { "A", "B", "C", "D" }, result.Columns);
+      CollectionAssert.AreEqual(new[] { "1", "10", "1", "100" }, result.Data[0]);
+      CollectionAssert.AreEqual(new[] { "2", "20", "1", "200" }, result.Data[1]);
+      CollectionAssert.AreEqual(new[] { "3", "30", "1", "300" }, result.Data[2]);
+      CollectionAssert.AreEqual(new[] { "1", "40", "2", "400" }, result.Data[3]);
+      CollectionAssert.AreEqual(new[] { "2", "50", "2", "500" }, result.Data[4]);
+      CollectionAssert.AreEqual(new[] { "3", "60", "2", "600" }, result.Data[5]);
+      CollectionAssert.AreEqual(new[] { "1", "70", "3", "700" }, result.Data[6]);
+      CollectionAssert.AreEqual(new[] { "2", "80", "3", "800" }, result.Data[7]);
+      CollectionAssert.AreEqual(new[] { "3", "90", "3", "900" }, result.Data[8]);
     }
 
     //
