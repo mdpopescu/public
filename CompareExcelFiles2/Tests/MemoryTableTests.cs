@@ -45,10 +45,51 @@ namespace Renfield.Tests
       }
 
       [TestMethod]
-      [ExpectedException(typeof(Exception))]
+      [ExpectedException(typeof (Exception))]
       public void ThrowsWhenNull()
       {
         var sut = new MemoryTable(null);
+      }
+    }
+
+    [TestClass]
+    public class ColCount : MemoryTableTests
+    {
+      [TestMethod]
+      public void SingleColumn()
+      {
+        var sut = new MemoryTable(new[]
+        {
+          new[] { "A" },
+          new[] { "1" },
+          new[] { "2" },
+        });
+
+        Assert.AreEqual(1, sut.ColCount);
+      }
+
+      [TestMethod]
+      public void MultipleColumns()
+      {
+        var sut = new MemoryTable(new[]
+        {
+          new[] { "A", "B", "C" },
+          new[] { "1", "2", "3" },
+          new[] { "4", "5", "6" },
+        });
+
+        Assert.AreEqual(3, sut.ColCount);
+      }
+
+      [TestMethod]
+      [ExpectedException(typeof (Exception))]
+      public void ThrowsWhenNoColumns()
+      {
+        var sut = new MemoryTable(new[]
+        {
+          new string[0],
+          new string[0],
+        });
       }
     }
   }

@@ -14,10 +14,14 @@ namespace Renfield.CompareExcelFiles2.Library
     public MemoryTable(IEnumerable<string[]> cells)
     {
       cells = (cells ?? new List<string[]>()).ToList();
-      if (!cells.Any())
-        throw new Exception("At least one row is required.");
 
       RowCount = cells.Count() - 1;
+      if (RowCount < 1)
+        throw new Exception("At least one row is required.");
+
+      ColCount = cells.First().Length;
+      if (ColCount < 1)
+        throw new Exception("At least one column is required.");
     }
   }
 }
