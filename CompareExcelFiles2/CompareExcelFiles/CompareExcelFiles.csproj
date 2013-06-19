@@ -63,6 +63,12 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CompareExcelFiles2.Library\CompareExcelFiles2.Library.csproj">
+      <Project>{16863DC2-75D3-4288-97ED-ED7AFD9FBC80}</Project>
+      <Name>CompareExcelFiles2.Library</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

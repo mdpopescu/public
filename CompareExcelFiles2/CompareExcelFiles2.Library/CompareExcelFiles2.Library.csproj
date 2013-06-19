@@ -49,6 +49,7 @@
     <Compile Include="MemoryTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Table.cs" />
+    <Compile Include="TableComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

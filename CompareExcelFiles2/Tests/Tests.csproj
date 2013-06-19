@@ -53,6 +53,7 @@
     <Compile Include="MemoryTableTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AcceptanceTests.cs" />
+    <Compile Include="TableComparerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CompareExcelFiles2.Library\CompareExcelFiles2.Library.csproj">
