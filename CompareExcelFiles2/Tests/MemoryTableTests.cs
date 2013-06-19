@@ -92,5 +92,35 @@ namespace Renfield.Tests
         });
       }
     }
+
+    [TestClass]
+    public class Columns : MemoryTableTests
+    {
+      [TestMethod]
+      public void SingleColumn()
+      {
+        var sut = new MemoryTable(new[]
+        {
+          new[] { "A" },
+          new[] { "1" },
+          new[] { "2" },
+        });
+
+        CollectionAssert.AreEqual(new[] { "A" }, sut.Columns);
+      }
+
+      [TestMethod]
+      public void MultipleColumns()
+      {
+        var sut = new MemoryTable(new[]
+        {
+          new[] { "A", "B", "C" },
+          new[] { "1", "2", "3" },
+          new[] { "4", "5", "6" },
+        });
+
+        CollectionAssert.AreEqual(new[] { "A", "B", "C" }, sut.Columns);
+      }
+    }
   }
 }

@@ -19,7 +19,8 @@ namespace Renfield.CompareExcelFiles2.Library
       if (RowCount < 1)
         throw new Exception("At least one row is required.");
 
-      ColCount = cells.First().Length;
+      Columns = cells.First();
+      ColCount = Columns.Length;
       if (ColCount < 1)
         throw new Exception("At least one column is required.");
     }
