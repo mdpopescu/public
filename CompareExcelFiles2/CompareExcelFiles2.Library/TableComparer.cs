@@ -13,7 +13,7 @@ namespace Renfield.CompareExcelFiles2.Library
 
     public Table Compare(Table table1, Table table2)
     {
-      var indices = GetIndices(table1.Columns).ToList();
+      var indices = table1.Columns.GetIndices(columns).ToList();
 
       var rows = table1
         .Data
@@ -25,11 +25,6 @@ namespace Renfield.CompareExcelFiles2.Library
     //
 
     private readonly string[] columns;
-
-    private IEnumerable<int> GetIndices(string[] tableColumns)
-    {
-      return columns.Select(col => Array.IndexOf(tableColumns, col));
-    }
 
     private static bool RowFoundIn(IList<string> row, IEnumerable<string[]> data, IEnumerable<int> indices)
     {
