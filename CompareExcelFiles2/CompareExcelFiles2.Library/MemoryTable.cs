@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Renfield.CompareExcelFiles2.Library
@@ -12,6 +13,10 @@ namespace Renfield.CompareExcelFiles2.Library
 
     public MemoryTable(IEnumerable<string[]> cells)
     {
+      cells = (cells ?? new List<string[]>()).ToList();
+      if (!cells.Any())
+        throw new Exception("At least one row is required.");
+
       RowCount = cells.Count() - 1;
     }
   }

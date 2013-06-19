@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Renfield.CompareExcelFiles2.Library;
 
 namespace Renfield.Tests
@@ -33,6 +35,20 @@ namespace Renfield.Tests
         });
 
         Assert.AreEqual(3, sut.RowCount);
+      }
+
+      [TestMethod]
+      [ExpectedException(typeof (Exception))]
+      public void ThrowsWhenNoRows()
+      {
+        var sut = new MemoryTable(new List<string[]>());
+      }
+
+      [TestMethod]
+      [ExpectedException(typeof(Exception))]
+      public void ThrowsWhenNull()
+      {
+        var sut = new MemoryTable(null);
       }
     }
   }
