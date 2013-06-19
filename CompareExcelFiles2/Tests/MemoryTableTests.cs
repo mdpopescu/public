@@ -122,5 +122,27 @@ namespace Renfield.Tests
         CollectionAssert.AreEqual(new[] { "A", "B", "C" }, sut.Columns);
       }
     }
+
+    [TestClass]
+    public class Data : MemoryTableTests
+    {
+      [TestMethod]
+      public void MultipleRowsAndColumns()
+      {
+        var sut = new MemoryTable(new[]
+        {
+          new[] { "A", "B", "C" },
+          new[] { "1", "2", "3" },
+          new[] { "4", "5", "6" },
+        });
+
+        Assert.AreEqual("1", sut.Data[0][0]);
+        Assert.AreEqual("2", sut.Data[0][1]);
+        Assert.AreEqual("3", sut.Data[0][2]);
+        Assert.AreEqual("4", sut.Data[1][0]);
+        Assert.AreEqual("5", sut.Data[1][1]);
+        Assert.AreEqual("6", sut.Data[1][2]);
+      }
+    }
   }
 }

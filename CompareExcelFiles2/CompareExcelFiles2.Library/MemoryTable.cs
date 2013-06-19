@@ -16,13 +16,15 @@ namespace Renfield.CompareExcelFiles2.Library
       cells = (cells ?? new List<string[]>()).ToList();
 
       RowCount = cells.Count() - 1;
-      if (RowCount < 1)
+      if (RowCount < 0)
         throw new Exception("At least one row is required.");
 
       Columns = cells.First();
       ColCount = Columns.Length;
       if (ColCount < 1)
         throw new Exception("At least one column is required.");
+
+      Data = cells.Skip(1).ToArray();
     }
   }
 }
