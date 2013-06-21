@@ -12,22 +12,22 @@ namespace Renfield.HotFolderWindowsService
 
     public void Created(object sender, FileSystemEventArgs e)
     {
-      log.WriteEntry("Created: " + e.FullPath);
+      log.WriteEntry(string.Format("Created: {0}", e.FullPath), EventLogEntryType.Information);
     }
 
     public void Deleted(object sender, FileSystemEventArgs e)
     {
-      log.WriteEntry("Deleted: " + e.FullPath);
+      log.WriteEntry(string.Format("Deleted: {0}", e.FullPath), EventLogEntryType.Information);
     }
 
     public void Changed(object sender, FileSystemEventArgs e)
     {
-      log.WriteEntry("Changed: " + e.FullPath);
+      log.WriteEntry(string.Format("Changed: {0}", e.FullPath), EventLogEntryType.Information);
     }
 
-    public void Renamed(object sender, FileSystemEventArgs e)
+    public void Renamed(object sender, RenamedEventArgs e)
     {
-      log.WriteEntry("Renamed: " + e.FullPath);
+      log.WriteEntry(string.Format("Renamed: {0} to {1}", e.OldFullPath, e.FullPath), EventLogEntryType.Information);
     }
 
     //

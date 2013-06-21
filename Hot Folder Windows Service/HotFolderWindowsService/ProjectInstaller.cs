@@ -10,7 +10,7 @@ namespace Renfield.HotFolderWindowsService
     {
       InitializeComponent();
 
-      serviceInstaller1.Installers.Clear();
+      serviceInstaller.Installers.Clear();
     }
   }
 }

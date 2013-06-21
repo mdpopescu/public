@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.ServiceProcess;
 using System.Threading;
 
@@ -11,18 +12,32 @@ namespace Renfield.HotFolderWindowsService
       InitializeComponent();
 
       EventLog.Log = ServiceName;
+      EventLog.Source = ServiceName;
+
       reporter = new Reporter(EventLog);
     }
 
     protected override void OnStart(string[] args)
     {
-      fsw = new FileSystemWatcher(args[0]);
+      base.OnStart(args);
+
+      var path = args[0];
+      EventLog.WriteEntry("Monitoring " + path, EventLogEntryType.Information);
+
+      fsw = new FileSystemWatcher(args[0])
+      {
+        Filter = "*.*",
+        NotifyFilter = NotifyFilters.DirectoryName |
+                       NotifyFilters.FileName |
+                       NotifyFilters.LastWrite,
+        IncludeSubdirectories = false,
+      };
       fsw.Created += reporter.Created;
       fsw.Deleted += reporter.Deleted;
       fsw.Changed += reporter.Changed;
       fsw.Renamed += reporter.Renamed;
 
-      EventLog.WriteEntry("Service started successfully.");
+      fsw.EnableRaisingEvents = true;
     }
 
     protected override void OnStop()
@@ -38,21 +53,17 @@ namespace Renfield.HotFolderWindowsService
       fsw.Dispose();
       fsw = null;
 
-      EventLog.WriteEntry("Service stopped successfully.");
+      base.OnStop();
     }
 
     protected override void OnPause()
     {
       fsw.EnableRaisingEvents = false;
-
-      EventLog.WriteEntry("Service paused.");
     }
 
     protected override void OnContinue()
     {
       fsw.EnableRaisingEvents = true;
-
-      EventLog.WriteEntry("Service resumed.");
     }
 
     //
