@@ -21,6 +21,8 @@ namespace Renfield.HotFolderWindowsService
       fsw.Deleted += reporter.Deleted;
       fsw.Changed += reporter.Changed;
       fsw.Renamed += reporter.Renamed;
+
+      EventLog.WriteEntry("Service started successfully.");
     }
 
     protected override void OnStop()
@@ -35,16 +37,22 @@ namespace Renfield.HotFolderWindowsService
 
       fsw.Dispose();
       fsw = null;
+
+      EventLog.WriteEntry("Service stopped successfully.");
     }
 
     protected override void OnPause()
     {
       fsw.EnableRaisingEvents = false;
+
+      EventLog.WriteEntry("Service paused.");
     }
 
     protected override void OnContinue()
     {
       fsw.EnableRaisingEvents = true;
+
+      EventLog.WriteEntry("Service resumed.");
     }
 
     //

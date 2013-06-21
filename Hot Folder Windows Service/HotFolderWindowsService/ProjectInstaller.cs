@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Configuration.Install;
-using System.Linq;
-
 
 namespace Renfield.HotFolderWindowsService
 {
   [RunInstaller(true)]
-  public partial class ProjectInstaller : System.Configuration.Install.Installer
+  public partial class ProjectInstaller : Installer
   {
     public ProjectInstaller()
     {
       InitializeComponent();
+
+      serviceInstaller1.Installers.Clear();
     }
   }
 }
