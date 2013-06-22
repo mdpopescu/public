@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory", "Inventory\Inventory.csproj", "{C728F45D-C4C0-4E6A-824E-F39676C6CE1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Tests", "Inventory.Tests\Inventory.Tests.csproj", "{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C728F45D-C4C0-4E6A-824E-F39676C6CE1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C728F45D-C4C0-4E6A-824E-F39676C6CE1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C728F45D-C4C0-4E6A-824E-F39676C6CE1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C728F45D-C4C0-4E6A-824E-F39676C6CE1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

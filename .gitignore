@@ -27,3 +27,7 @@
 obj/
 bin/
 _ReSharper/
+packages/
+
+# NuGet.exe should be included #
+!NuGet.exe
