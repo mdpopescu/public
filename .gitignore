@@ -28,6 +28,7 @@ obj/
 bin/
 _ReSharper/
 packages/
+TestResults/
 
 # NuGet.exe should be included #
 !NuGet.exe

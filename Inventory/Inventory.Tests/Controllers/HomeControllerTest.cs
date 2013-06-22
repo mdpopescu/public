@@ -17,7 +17,7 @@ namespace Renfield.Inventory.Tests.Controllers
       var result = controller.Index() as ViewResult;
 
       // Assert
-      Assert.AreEqual("Welcome to ASP.NET MVC!", result.ViewBag.Message);
+      Assert.AreEqual("Welcome to Inventory!", result.ViewBag.Message);
     }
   }
 }

@@ -1,0 +1,4 @@
+Pages:
+ - product entry: allows the addition of new products and/or new stock for existing products
+ - product sale: allows the sale of existing stock; gets updated in real-time
+ - product inventory: shows the paginated list of existing stock, updated in real-time
