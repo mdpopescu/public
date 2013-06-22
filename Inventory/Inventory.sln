@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{01AC56
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Library", "Inventory.Library\Inventory.Library.csproj", "{AA26FFEA-7F77-4463-AF08-7EB905EB09C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA26FFEA-7F77-4463-AF08-7EB905EB09C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA26FFEA-7F77-4463-AF08-7EB905EB09C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA26FFEA-7F77-4463-AF08-7EB905EB09C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA26FFEA-7F77-4463-AF08-7EB905EB09C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
