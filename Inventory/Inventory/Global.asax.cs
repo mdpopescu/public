@@ -31,6 +31,9 @@ namespace Renfield.Inventory
 
       RegisterGlobalFilters(GlobalFilters.Filters);
       RegisterRoutes(RouteTable.Routes);
+
+      // Register the default hubs route: ~/signalr
+      RouteTable.Routes.MapHubs();
     }
   }
 }

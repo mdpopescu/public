@@ -19,18 +19,5 @@ namespace Renfield.Inventory.Tests.Controllers
       // Assert
       Assert.AreEqual("Welcome to ASP.NET MVC!", result.ViewBag.Message);
     }
-
-    [TestMethod]
-    public void About()
-    {
-      // Arrange
-      var controller = new HomeController();
-
-      // Act
-      var result = controller.About() as ViewResult;
-
-      // Assert
-      Assert.IsNotNull(result);
-    }
   }
 }
