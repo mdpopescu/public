@@ -1,4 +1,4 @@
-﻿namespace Renfield.Inventory.Models
+﻿namespace Renfield.Inventory.Library.Data
 {
   public class Company
   {

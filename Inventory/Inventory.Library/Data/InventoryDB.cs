@@ -1,7 +1,6 @@
 ﻿using System.Data.Entity;
-using Renfield.Inventory.Models;
 
-namespace Renfield.Inventory.Data
+namespace Renfield.Inventory.Library.Data
 {
   public class InventoryDB : DbContext
   {
