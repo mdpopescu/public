@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Renfield.Inventory.Models;
 
 namespace Renfield.Inventory.Controllers
 {
@@ -11,9 +12,11 @@ namespace Renfield.Inventory.Controllers
       return View();
     }
 
-    public ActionResult About()
+    public ActionResult NewPurchase()
     {
-      return View();
+      var order = new NewPurchaseOrder();
+
+      return View(order);
     }
   }
 }

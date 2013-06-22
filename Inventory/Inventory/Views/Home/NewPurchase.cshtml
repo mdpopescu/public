@@ -1,0 +1,15 @@
+﻿@model Renfield.Inventory.Models.NewPurchaseOrder
+
+@{
+  ViewBag.Title = "New Purchase Order";
+}
+
+<h2>New Purchase Order</h2>
+
+@Html.BeginForm(null){
+<fieldset>
+  <legend>New Purchase Order</legend>
+  @Html.EditorFor(m => m.CompanyName)
+
+</fieldset>
+}
