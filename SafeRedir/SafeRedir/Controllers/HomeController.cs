@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Renfield.SafeRedir.Models;
 
 namespace Renfield.SafeRedir.Controllers
 {
@@ -6,9 +7,9 @@ namespace Renfield.SafeRedir.Controllers
   {
     public ActionResult Index()
     {
-      ViewBag.Message = "Safe (time-limited) URL redirector";
+      var model = new RedirectInfo();
 
-      return View();
+      return View(model);
     }
   }
 }

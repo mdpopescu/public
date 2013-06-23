@@ -1,23 +1,29 @@
 ﻿using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Renfield.SafeRedir.Controllers;
+using Renfield.SafeRedir.Models;
 
 namespace Renfield.SafeRedir.Tests.Controllers
 {
   [TestClass]
   public class HomeControllerTest
   {
-    [TestMethod]
-    public void Index()
+    [TestClass]
+    public class Index : HomeControllerTest
     {
-      // Arrange
-      var controller = new HomeController();
+      [TestMethod]
+      public void DefaultValues()
+      {
+        var sut = new HomeController();
 
-      // Act
-      var result = controller.Index() as ViewResult;
+        var result = sut.Index() as ViewResult;
 
-      // Assert
-      Assert.AreEqual("Safe (time-limited) URL redirector", result.ViewBag.Message);
+        var model = result.Model as RedirectInfo;
+        Assert.IsNotNull(model);
+        Assert.AreEqual("", model.URL);
+        Assert.AreEqual("http://www.randomkittengenerator.com/", model.SafeURL);
+        Assert.AreEqual(5, model.ExpiresInMins);
+      }
     }
   }
 }
