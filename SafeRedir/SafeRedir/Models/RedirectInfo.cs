@@ -9,8 +9,8 @@
     public RedirectInfo()
     {
       URL = "";
-      SafeURL = "http://www.randomkittengenerator.com/";
-      TTL = 5 * 60;
+      SafeURL = Constants.DEFAULT_SAFE_URL;
+      TTL = Constants.DEFAULT_TTL;
     }
   }
 }

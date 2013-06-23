@@ -39,6 +39,27 @@ namespace Renfield.SafeRedir.Tests
           Assert.IsNotNull(submit);
         }
       }
+
+      [TestMethod]
+      public void PostingReturnsNewUrlRedirectingToOriginal()
+      {
+        const string REDIRECT_PREFIX = BASE_URL + "/r/";
+
+        using (var web = new WebClient())
+        {
+          var data = string.Format("URL=example.com&SafeURL={0}&TTL={1}", "http://www.randomkittengenerator.com/", 300);
+          var shortened = web.UploadString(URL, data);
+          Assert.IsTrue(shortened.StartsWith(REDIRECT_PREFIX));
+
+          //var req = (HttpWebRequest) WebRequest.Create(shortened);
+          //req.AllowAutoRedirect = false;
+          //var res = (HttpWebResponse) req.GetResponse();
+
+          web.DownloadString(shortened);
+          var original = web.ResponseHeaders["Location"];
+          Assert.AreEqual("example.com", original);
+        }
+      }
     }
   }
 }
