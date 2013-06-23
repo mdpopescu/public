@@ -32,9 +32,9 @@ namespace Renfield.SafeRedir.Tests
           var safeUrl = form.SelectSingleNode("//input[@id='SafeURL']");
           Assert.IsNotNull(safeUrl);
           Assert.AreEqual("http://www.randomkittengenerator.com/", safeUrl.Attributes["Value"].Value);
-          var expiresInMins = form.SelectSingleNode("//input[@id='ExpiresInMins']");
+          var expiresInMins = form.SelectSingleNode("//input[@id='TTL']");
           Assert.IsNotNull(expiresInMins);
-          Assert.AreEqual("5", expiresInMins.Attributes["Value"].Value);
+          Assert.AreEqual("300", expiresInMins.Attributes["Value"].Value);
           var submit = form.SelectSingleNode("//input[@type='submit']");
           Assert.IsNotNull(submit);
         }

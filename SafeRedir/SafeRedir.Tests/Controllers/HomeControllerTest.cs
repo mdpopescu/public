@@ -22,7 +22,7 @@ namespace Renfield.SafeRedir.Tests.Controllers
         Assert.IsNotNull(model);
         Assert.AreEqual("", model.URL);
         Assert.AreEqual("http://www.randomkittengenerator.com/", model.SafeURL);
-        Assert.AreEqual(5, model.ExpiresInMins);
+        Assert.AreEqual(5 * 60, model.TTL);
       }
     }
   }
