@@ -48,16 +48,15 @@ namespace Renfield.SafeRedir.Tests
         using (var web = new WebClient())
         {
           var data = string.Format("URL=example.com&SafeURL={0}&TTL={1}", "http://www.randomkittengenerator.com/", 300);
+          web.Headers["Content-Type"] = "application/x-www-form-urlencoded";
           var shortened = web.UploadString(URL, data);
           Assert.IsTrue(shortened.StartsWith(REDIRECT_PREFIX));
 
-          //var req = (HttpWebRequest) WebRequest.Create(shortened);
-          //req.AllowAutoRedirect = false;
-          //var res = (HttpWebResponse) req.GetResponse();
-
-          web.DownloadString(shortened);
-          var original = web.ResponseHeaders["Location"];
-          Assert.AreEqual("example.com", original);
+          var req = (HttpWebRequest) WebRequest.Create(shortened);
+          req.AllowAutoRedirect = false;
+          var res = (HttpWebResponse) req.GetResponse();
+          Assert.AreEqual("Redirect", res.StatusCode.ToString());
+          Assert.AreEqual("http://example.com/", res.Headers["Location"]);
         }
       }
     }
