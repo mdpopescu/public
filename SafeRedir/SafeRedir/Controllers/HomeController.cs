@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Renfield.SafeRedir.Models;
 using Renfield.SafeRedir.Services;
 
@@ -22,8 +23,8 @@ namespace Renfield.SafeRedir.Controllers
     [HttpPost]
     public ContentResult Index(FormCollection form)
     {
-      var url = form["URL"];
-      var safeUrl = form["SafeURL"] ?? Constants.DEFAULT_SAFE_URL;
+      var url = NormalizeUrl(form["URL"]);
+      var safeUrl = NormalizeUrl(form["SafeURL"] ?? Constants.DEFAULT_SAFE_URL);
       int ttl;
       if (!int.TryParse(form["TTL"], out ttl))
         ttl = Constants.DEFAULT_TTL;
@@ -36,13 +37,24 @@ namespace Renfield.SafeRedir.Controllers
     }
 
     [HttpGet]
-    public RedirectResult r(string shortUrl)
+    public ActionResult r(string id)
     {
-      return shorteningService.GetUrl(shortUrl);
+      var redirectResult = shorteningService.GetUrl(id);
+      if (redirectResult == null)
+        return new HttpNotFoundResult("Unknown id " + id);
+
+      return redirectResult;
     }
 
     //
 
     private readonly ShorteningService shorteningService;
+
+    private static string NormalizeUrl(string url)
+    {
+      var uri = new UriBuilder(url);
+
+      return uri.Uri.ToString();
+    }
   }
 }

@@ -33,7 +33,7 @@ namespace Renfield.SafeRedir.Tests.Controllers
       {
         var svc = new Mock<ShorteningService>();
         svc
-          .Setup(it => it.CreateRedirect("example.com", It.IsAny<string>(), It.IsAny<int>()))
+          .Setup(it => it.CreateRedirect("http://example.com/", It.IsAny<string>(), It.IsAny<int>()))
           .Returns("123");
         var form = new FormCollection { { "URL", "example.com" } };
         var sut = new HomeController(svc.Object);
@@ -44,6 +44,34 @@ namespace Renfield.SafeRedir.Tests.Controllers
         var result = sut.Index(form).Content;
 
         Assert.IsTrue(result.EndsWith("/r/123"), string.Format("Result is [{0}]", result));
+      }
+
+      [TestMethod]
+      public void NormalizesGivenUrl()
+      {
+        var svc = new Mock<ShorteningService>();
+        var form = new FormCollection { { "URL", "example.com" } };
+        var sut = new HomeController(svc.Object);
+        var helper = new MvcHelper();
+        helper.SetUpController(sut);
+
+        sut.Index(form);
+
+        svc.Verify(it => it.CreateRedirect("http://example.com/", It.IsAny<string>(), It.IsAny<int>()));
+      }
+
+      [TestMethod]
+      public void NormalizesSafeUrl()
+      {
+        var svc = new Mock<ShorteningService>();
+        var form = new FormCollection { { "URL", "example.com" }, { "SafeURL", "example.com" } };
+        var sut = new HomeController(svc.Object);
+        var helper = new MvcHelper();
+        helper.SetUpController(sut);
+
+        sut.Index(form);
+
+        svc.Verify(it => it.CreateRedirect(It.IsAny<string>(), "http://example.com/", It.IsAny<int>()));
       }
     }
 
@@ -60,9 +88,21 @@ namespace Renfield.SafeRedir.Tests.Controllers
           .Returns(redirect);
         var sut = new HomeController(svc.Object);
 
-        var result = sut.r("abc");
+        var result = sut.r("abc") as RedirectResult;
 
         Assert.AreEqual(redirect, result);
+      }
+
+      [TestMethod]
+      public void Returns404ForUnknownId()
+      {
+        var svc = new Mock<ShorteningService>();
+        var sut = new HomeController(svc.Object);
+
+        var result = sut.r("abc") as HttpNotFoundResult;
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Unknown id abc", result.StatusDescription);
       }
     }
   }

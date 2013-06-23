@@ -84,6 +84,33 @@ namespace Renfield.SafeRedir.Tests.Services
         Assert.AreEqual("a", result.Url);
         Assert.IsFalse(result.Permanent);
       }
+
+      [TestMethod]
+      public void ReturnsSafeUrlAsPermanentRedirect()
+      {
+        var repository = new Mock<Repository>();
+        repository
+          .Setup(it => it.GetUrlInfo("123"))
+          .Returns(new UrlInfo { OriginalUrl = "a", SafeUrl = "b", ExpiresAt = new DateTime(2000, 1, 1, 1, 1, 1) });
+        var sut = new DbShorteningService(repository.Object, null);
+        SystemInfo.SystemClock = () => new DateTime(2000, 1, 1, 1, 1, 2);
+
+        var result = sut.GetUrl("123");
+
+        Assert.AreEqual("b", result.Url);
+        Assert.IsTrue(result.Permanent);
+      }
+
+      [TestMethod]
+      public void ReturnsNullForUnknownId()
+      {
+        var repository = new Mock<Repository>();
+        var sut = new DbShorteningService(repository.Object, null);
+
+        var result = sut.GetUrl("123");
+
+        Assert.IsNull(result);
+      }
     }
   }
 }

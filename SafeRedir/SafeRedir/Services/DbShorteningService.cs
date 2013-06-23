@@ -43,10 +43,14 @@ namespace Renfield.SafeRedir.Services
     public RedirectResult GetUrl(string shortUrl)
     {
       var urlInfo = repository.GetUrlInfo(shortUrl);
+      if (urlInfo == null)
+        return null;
+
       var now = SystemInfo.SystemClock();
       var url = urlInfo.GetUrl(now);
+      var permanent = url == urlInfo.SafeUrl;
 
-      return new RedirectResult(url);
+      return new RedirectResult(url, permanent);
     }
 
     //
