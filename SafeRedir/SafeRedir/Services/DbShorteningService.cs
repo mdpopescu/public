@@ -1,4 +1,5 @@
-﻿using Renfield.SafeRedir.Data;
+﻿using System;
+using Renfield.SafeRedir.Data;
 
 namespace Renfield.SafeRedir.Services
 {
@@ -14,15 +15,28 @@ namespace Renfield.SafeRedir.Services
     {
       var urlInfo = new UrlInfo
       {
-        Id = uniqueIdGenerator.Generate(),
         OriginalUrl = url,
         SafeUrl = safeUrl,
         ExpiresAt = SystemInfo.SystemClock().AddSeconds(ttl),
       };
-      repository.UrlInformation.Add(urlInfo);
-      repository.SaveChanges();
 
-      return urlInfo.Id;
+      do
+      {
+        urlInfo.Id = uniqueIdGenerator.Generate();
+        if (repository.GetUrlInfo(urlInfo.Id) != null)
+          continue;
+
+        try
+        {
+          repository.AddUrlInfo(urlInfo);
+          repository.SaveChanges();
+          return urlInfo.Id;
+        }
+        catch (Exception)
+        {
+          // get another unique id and try again
+        }
+      } while (true);
     }
 
     //
