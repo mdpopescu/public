@@ -29,6 +29,8 @@ bin/
 _ReSharper*/
 packages/
 TestResults/
+*.Publish.xml
+_bin_deployableAssemblies/
 
 # NuGet.exe should be included #
 !NuGet.exe
