@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Data.Entity;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -36,6 +37,8 @@ namespace Renfield.SafeRedir
 
       RegisterGlobalFilters(GlobalFilters.Filters);
       RegisterRoutes(RouteTable.Routes);
+
+      Database.SetInitializer(new DropCreateDatabaseIfModelChanges<Data.Database>());
     }
   }
 }

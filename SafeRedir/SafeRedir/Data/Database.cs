@@ -7,6 +7,11 @@ namespace Renfield.SafeRedir.Data
   {
     public DbSet<UrlInfo> UrlInformation { get; set; }
 
+    public Database(string connectionStringName)
+      : base(connectionStringName)
+    {
+    }
+
     public void AddUrlInfo(UrlInfo urlInfo)
     {
       UrlInformation.Add(urlInfo);
