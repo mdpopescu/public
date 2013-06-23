@@ -9,7 +9,10 @@
 @Html.BeginForm(null){
 <fieldset>
   <legend>New Purchase Order</legend>
-  @Html.EditorFor(m => m.CompanyName)
-
+  
+  <p>
+    @Html.LabelFor(m => m.CompanyName)
+    @Html.EditorFor(m => m.CompanyName)
+  </p>
 </fieldset>
 }
