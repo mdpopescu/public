@@ -89,7 +89,9 @@
     <Compile Include="Models\RedirectInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DbShorteningService.cs" />
+    <Compile Include="Services\DbUniqueIdGenerator.cs" />
     <Compile Include="Services\ShorteningService.cs" />
+    <Compile Include="Services\UniqueIdGenerator.cs" />
     <Compile Include="SystemInfo.cs" />
   </ItemGroup>
   <ItemGroup>
