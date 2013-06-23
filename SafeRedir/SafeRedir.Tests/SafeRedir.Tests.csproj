@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AcceptanceTests.cs" />
+    <Compile Include="Data\UrlInfoTests.cs" />
     <Compile Include="MvcHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
