@@ -33,7 +33,7 @@ namespace Renfield.SafeRedir.Tests.Controllers
       {
         var svc = new Mock<ShorteningService>();
         svc
-          .Setup(it => it.Shorten("example.com", It.IsAny<string>(), It.IsAny<int>()))
+          .Setup(it => it.CreateRedirect("example.com", It.IsAny<string>(), It.IsAny<int>()))
           .Returns("123");
         var form = new FormCollection { { "URL", "example.com" } };
         var sut = new HomeController(svc.Object);

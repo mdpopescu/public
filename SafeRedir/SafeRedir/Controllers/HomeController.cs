@@ -28,7 +28,7 @@ namespace Renfield.SafeRedir.Controllers
       if (!int.TryParse(form["TTL"], out ttl))
         ttl = Constants.DEFAULT_TTL;
 
-      var id = shorteningService.Shorten(url, safeUrl, ttl);
+      var id = shorteningService.CreateRedirect(url, safeUrl, ttl);
 
       var redirectLink = Url.RouteUrl("Redirect", new { id });
 

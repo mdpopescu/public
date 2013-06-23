@@ -2,6 +2,6 @@
 {
   public interface ShorteningService
   {
-    string Shorten(string url, string safeUrl, int ttl);
+    string CreateRedirect(string url, string safeUrl, int ttl);
   }
 }

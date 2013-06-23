@@ -1,6 +1,7 @@
 using System.Web.Mvc;
 using Munq.MVC3;
 using Renfield.SafeRedir.App_Start;
+using Renfield.SafeRedir.Data;
 using Renfield.SafeRedir.Services;
 using WebActivator;
 
@@ -15,7 +16,8 @@ namespace Renfield.SafeRedir.App_Start
       DependencyResolver.SetResolver(new MunqDependencyResolver());
 
       var ioc = MunqDependencyResolver.Container;
-      ioc.Register<ShorteningService>(c => new DbShorteningService());
+      ioc.Register<Repository>(c => new Database());
+      ioc.Register<ShorteningService>(c => new DbShorteningService(c.Resolve<Repository>()));
     }
   }
 }
