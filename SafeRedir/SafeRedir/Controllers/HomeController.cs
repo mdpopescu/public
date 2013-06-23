@@ -30,9 +30,15 @@ namespace Renfield.SafeRedir.Controllers
 
       var id = shorteningService.CreateRedirect(url, safeUrl, ttl);
 
-      var redirectLink = Url.RouteUrl("Redirect", new { id });
+      var redirectLink = Url.RouteUrl("Redirect", new { id }, Request.Url.Scheme);
 
       return Content(redirectLink);
+    }
+
+    [HttpGet]
+    public RedirectResult r(string shortUrl)
+    {
+      return shorteningService.GetUrl(shortUrl);
     }
 
     //

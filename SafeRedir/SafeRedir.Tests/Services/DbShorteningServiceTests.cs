@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.SafeRedir.Data;
@@ -64,6 +63,26 @@ namespace Renfield.SafeRedir.Tests.Services
         var result = sut.CreateRedirect("example.com", "safe.com", 10);
 
         Assert.AreEqual("456", result);
+      }
+    }
+
+    [TestClass]
+    public class GetUrl : DbShorteningServiceTests
+    {
+      [TestMethod]
+      public void ReturnsOriginalUrlAsTemporaryRedirect()
+      {
+        var repository = new Mock<Repository>();
+        repository
+          .Setup(it => it.GetUrlInfo("123"))
+          .Returns(new UrlInfo { OriginalUrl = "a", SafeUrl = "b", ExpiresAt = new DateTime(2000, 1, 1, 1, 1, 1) });
+        var sut = new DbShorteningService(repository.Object, null);
+        SystemInfo.SystemClock = () => new DateTime(2000, 1, 1, 1, 1, 0);
+
+        var result = sut.GetUrl("123");
+
+        Assert.AreEqual("a", result.Url);
+        Assert.IsFalse(result.Permanent);
       }
     }
   }

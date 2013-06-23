@@ -8,10 +8,10 @@ using Renfield.SafeRedir.Services;
 namespace Renfield.SafeRedir.Tests.Controllers
 {
   [TestClass]
-  public class HomeControllerTest
+  public class HomeControllerTests
   {
     [TestClass]
-    public class Index : HomeControllerTest
+    public class Index : HomeControllerTests
     {
       [TestMethod]
       public void GetReturnsDefaultValues()
@@ -44,6 +44,25 @@ namespace Renfield.SafeRedir.Tests.Controllers
         var result = sut.Index(form).Content;
 
         Assert.IsTrue(result.EndsWith("/r/123"), string.Format("Result is [{0}]", result));
+      }
+    }
+
+    [TestClass]
+    public class r : HomeControllerTests
+    {
+      [TestMethod]
+      public void ReturnsRedirectFromService()
+      {
+        var svc = new Mock<ShorteningService>();
+        var redirect = new RedirectResult("http://example.com");
+        svc
+          .Setup(it => it.GetUrl("abc"))
+          .Returns(redirect);
+        var sut = new HomeController(svc.Object);
+
+        var result = sut.r("abc");
+
+        Assert.AreEqual(redirect, result);
       }
     }
   }

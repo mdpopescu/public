@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web.Mvc;
 using Renfield.SafeRedir.Data;
 
 namespace Renfield.SafeRedir.Services
@@ -37,6 +38,15 @@ namespace Renfield.SafeRedir.Services
           // get another unique id and try again
         }
       } while (true);
+    }
+
+    public RedirectResult GetUrl(string shortUrl)
+    {
+      var urlInfo = repository.GetUrlInfo(shortUrl);
+      var now = SystemInfo.SystemClock();
+      var url = urlInfo.GetUrl(now);
+
+      return new RedirectResult(url);
     }
 
     //
