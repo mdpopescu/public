@@ -1,6 +1,23 @@
-﻿@Model RedirectInfo
+﻿@model Renfield.SafeRedir.Models.RedirectInfo
 @{
   ViewBag.Title = "Home Page";
 }
 
 <h2>Safe (time-limited) URL redirector</h2>
+
+@using (Html.BeginForm())
+{
+  <p>
+    @Html.LabelFor(m => m.URL)
+    @Html.TextBoxFor(m => m.URL)
+  </p>
+  <p>
+    @Html.LabelFor(m => m.SafeURL)
+    @Html.TextBoxFor(m => m.SafeURL)
+  </p>
+  <p>
+    @Html.LabelFor(m => m.ExpiresInMins)
+    @Html.TextBoxFor(m => m.ExpiresInMins)
+  </p>
+  <input type="submit" value="Shorten"/>
+}
