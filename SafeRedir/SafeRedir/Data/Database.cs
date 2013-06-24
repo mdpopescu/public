@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity;
-using System.Data.SqlServerCe;
 using System.Linq;
 
 namespace Renfield.SafeRedir.Data
@@ -8,8 +7,8 @@ namespace Renfield.SafeRedir.Data
   {
     public DbSet<UrlInfo> UrlInformation { get; set; }
 
-    public Database()
-      : base(new SqlCeConnection("Data Source=Database.sdf; Persist Security Info=false;"), true)
+    public Database(string connectionName)
+      : base(connectionName)
     {
     }
 
