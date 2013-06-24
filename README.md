@@ -8,4 +8,4 @@ Public repository - CC-by-SA 3.0
 * Hot Folder Windows Service: Windows service to monitor a specific folder and (for now) log the create / delete / change / rename events
 * Inventory: (INCOMPLETE) inventory management system - mainly to use SignalR and Knockout.js
 * RecursiveCompare: recursive comparison of two objects' properties (if some of those properties are objects, compare those using the same algorithm); incomplete
-* SafeRedir: (INCOMPLETE) time-limited URL redirection; the shortened link will redirect to the real one for only a limited time (default 5 minutes) and then redirect to a "safe" link afterwards
+* SafeRedir: time-limited URL redirection; the shortened link will redirect to the real one for only a limited time (default 5 minutes) and then redirect to a "safe" link afterwards; deployed at http://red.renfieldsoftware.com/
