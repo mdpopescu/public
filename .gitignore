@@ -31,7 +31,7 @@ packages/
 TestResults/
 *.Publish.xml
 _bin_deployableAssemblies/
-connectionStrings.config
+connectionStrings*.config
 
 # NuGet.exe should be included #
 !NuGet.exe
