@@ -16,7 +16,7 @@ namespace Renfield.SafeRedir.App_Start
       DependencyResolver.SetResolver(new MunqDependencyResolver());
 
       var ioc = MunqDependencyResolver.Container;
-      ioc.Register<Repository>(c => new Database("SafeRedir"));
+      ioc.Register<Repository>(c => new Database());
       ioc.Register<UniqueIdGenerator>(c => new UniqueIdGeneratorFromGuid());
       ioc.Register<ShorteningService>(c => new DbShorteningService(c.Resolve<Repository>(), c.Resolve<UniqueIdGenerator>()));
     }

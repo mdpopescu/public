@@ -1,3 +1,0 @@
-﻿<connectionStrings>
-  <add name="SafeRedir" connectionString="Data Source=.; Initial Catalog=mdpopesc_SafeRedir; User ID=XXX; Password=XXX;" providerName="System.Data.SqlClient" />
-</connectionStrings>
