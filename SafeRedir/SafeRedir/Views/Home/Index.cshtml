@@ -13,17 +13,17 @@
   <ol>
     <li>
       @Html.LabelFor(m => m.URL)
-      @Html.TextBoxFor(m => m.URL)
+      @Html.EditorFor(m => m.URL)
       @Html.ValidationMessageFor(m => m.URL)
     </li>
     <li>
       @Html.LabelFor(m => m.SafeURL)
-      @Html.TextBoxFor(m => m.SafeURL)
+      @Html.EditorFor(m => m.SafeURL)
       @Html.ValidationMessageFor(m => m.SafeURL)
     </li>
     <li>
       @Html.LabelFor(m => m.TTL)
-      @Html.TextBoxFor(m => m.TTL, new { @class = "short" })
+      @Html.EditorFor(m => m.TTL, new { cssClass = "short" })
       @Html.ValidationMessageFor(m => m.TTL)
     </li>
     <li id="send">

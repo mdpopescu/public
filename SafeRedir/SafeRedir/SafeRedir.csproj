@@ -201,6 +201,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
+    <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Data.SqlServerCe.Entity\System.Data.SqlServerCe.Entity.dll" />
     <None Include="_bin_deployableAssemblies\EN\System.Data.SqlServerCe.xml" />
     <None Include="_bin_deployableAssemblies\System.Data.SqlServerCe.dll" />
