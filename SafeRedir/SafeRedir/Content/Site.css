@@ -209,9 +209,7 @@ form textarea {
 }
 
 form input[type="text"].short,
-form input[type="password"].short {
-    width: 6em;
-}
+form input[type="password"].short { width: 6em; }
 
 form input[type="text"]:focus,
 form input[type="password"]:focus,
@@ -360,3 +358,14 @@ div#title {
 .text-box.multi-line { height: 6.5em; }
 
 .tri-state { width: 6em; }
+
+/* */
+
+.chart div {
+    font: 10px sans-serif;
+    background-color: steelblue;
+    text-align: right;
+    padding: 3px;
+    margin: 1px;
+    color: white;
+}

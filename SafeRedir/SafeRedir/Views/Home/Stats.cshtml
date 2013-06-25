@@ -26,3 +26,25 @@
     </li>
   </ol>
 </div>
+
+<!-- chart -->
+
+<div id="chart" class="chart"></div>
+
+<script type="text/javascript">
+  var data = [@Model.Today, @Model.CurrentMonth, @Model.CurrentYear, @Model.Overall];
+
+  var scaling = d3.scale.linear()
+    .domain([0, d3.max(data)])
+    .range(["10px", "420px"]);
+
+  var chart = d3.select("#chart");
+
+  chart.selectAll("div")
+    .data(data)
+    .enter()
+    .append("div")
+    .style("width", scaling)
+    .text(String);
+
+</script>
