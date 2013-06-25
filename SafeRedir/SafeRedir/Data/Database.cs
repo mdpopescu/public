@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace Renfield.SafeRedir.Data
@@ -20,6 +21,11 @@ namespace Renfield.SafeRedir.Data
     public UrlInfo GetUrlInfo(string id)
     {
       return UrlInformation.FirstOrDefault(it => it.Id == id);
+    }
+
+    public IEnumerable<UrlInfo> GetAll()
+    {
+      return UrlInformation;
     }
   }
 }

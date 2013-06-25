@@ -8,22 +8,22 @@ using Renfield.SafeRedir.Services;
 namespace Renfield.SafeRedir.Tests.Services
 {
   [TestClass]
-  public class DbShorteningServiceTests
+  public class BusinessLogicTests
   {
     private Mock<Repository> repository;
     private Mock<UniqueIdGenerator> idGen;
-    private DbShorteningService sut;
+    private BusinessLogic sut;
 
     [TestInitialize]
     public void SetUp()
     {
       repository = new Mock<Repository>();
       idGen = new Mock<UniqueIdGenerator>();
-      sut = new DbShorteningService(repository.Object, idGen.Object);
+      sut = new BusinessLogic(repository.Object, idGen.Object);
     }
 
     [TestClass]
-    public class CreateRedirect : DbShorteningServiceTests
+    public class CreateRedirect : BusinessLogicTests
     {
       [TestMethod]
       public void SavesUrlInfo()
@@ -70,7 +70,7 @@ namespace Renfield.SafeRedir.Tests.Services
     }
 
     [TestClass]
-    public class GetUrl : DbShorteningServiceTests
+    public class GetUrl : BusinessLogicTests
     {
       [TestMethod]
       public void ReturnsOriginalUrlAsTemporaryRedirect()
@@ -106,6 +106,88 @@ namespace Renfield.SafeRedir.Tests.Services
         var result = sut.GetUrl("123");
 
         Assert.IsNull(result);
+      }
+    }
+
+    [TestClass]
+    public class GetSummary : BusinessLogicTests
+    {
+      [TestMethod]
+      public void ReturnsCountForCurrentDay()
+      {
+        repository
+          .Setup(it => it.GetAll())
+          .Returns(new[]
+          {
+            new UrlInfo { ExpiresAt = new DateTime(2000, 1, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 1, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 1, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 1, 2) },
+          });
+        SystemInfo.SystemClock = () => new DateTime(2000, 1, 1);
+
+        var result = sut.GetSummary();
+
+        Assert.AreEqual(3, result.Today);
+      }
+
+      [TestMethod]
+      public void ReturnsCountForCurrentMonth()
+      {
+        repository
+          .Setup(it => it.GetAll())
+          .Returns(new[]
+          {
+            new UrlInfo { ExpiresAt = new DateTime(2000, 1, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 2, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 2, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 3, 2) },
+          });
+        SystemInfo.SystemClock = () => new DateTime(2000, 2, 1);
+
+        var result = sut.GetSummary();
+
+        Assert.AreEqual(2, result.CurrentMonth);
+      }
+
+      [TestMethod]
+      public void ReturnsCountForCurrentYear()
+      {
+        repository
+          .Setup(it => it.GetAll())
+          .Returns(new[]
+          {
+            new UrlInfo { ExpiresAt = new DateTime(2000, 1, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 2, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2001, 2, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2001, 3, 2) },
+            new UrlInfo { ExpiresAt = new DateTime(2001, 3, 5) },
+          });
+        SystemInfo.SystemClock = () => new DateTime(2001, 2, 1);
+
+        var result = sut.GetSummary();
+
+        Assert.AreEqual(3, result.CurrentYear);
+      }
+
+      [TestMethod]
+      public void ReturnsOverallCount()
+      {
+        repository
+          .Setup(it => it.GetAll())
+          .Returns(new[]
+          {
+            new UrlInfo { ExpiresAt = new DateTime(2000, 1, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 2, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2001, 2, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2001, 3, 2) },
+            new UrlInfo { ExpiresAt = new DateTime(2001, 3, 5) },
+          });
+        SystemInfo.SystemClock = () => new DateTime(2001, 2, 1);
+
+        var result = sut.GetSummary();
+
+        Assert.AreEqual(5, result.Overall);
       }
     }
   }

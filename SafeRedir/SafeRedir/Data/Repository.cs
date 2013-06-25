@@ -1,4 +1,6 @@
-﻿namespace Renfield.SafeRedir.Data
+﻿using System.Collections.Generic;
+
+namespace Renfield.SafeRedir.Data
 {
   public interface Repository
   {
@@ -6,5 +8,6 @@
 
     void AddUrlInfo(UrlInfo urlInfo);
     UrlInfo GetUrlInfo(string id);
+    IEnumerable<UrlInfo> GetAll();
   }
 }

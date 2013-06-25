@@ -7,9 +7,9 @@ namespace Renfield.SafeRedir.Controllers
 {
   public class HomeController : Controller
   {
-    public HomeController(ShorteningService shorteningService)
+    public HomeController(Logic logic)
     {
-      this.shorteningService = shorteningService;
+      this.logic = logic;
     }
 
     [HttpGet]
@@ -30,7 +30,7 @@ namespace Renfield.SafeRedir.Controllers
       var safeUrl = NormalizeUrl(info.SafeURL ?? Constants.DEFAULT_SAFE_URL);
       var ttl = info.TTL ?? Constants.DEFAULT_TTL;
 
-      var id = shorteningService.CreateRedirect(url, safeUrl, ttl);
+      var id = logic.CreateRedirect(url, safeUrl, ttl);
 
       var redirectLink = Url.RouteUrl("Redirect", new { id }, Request.Url.Scheme);
 
@@ -40,16 +40,24 @@ namespace Renfield.SafeRedir.Controllers
     [HttpGet]
     public ActionResult r(string id)
     {
-      var redirectResult = shorteningService.GetUrl(id);
+      var redirectResult = logic.GetUrl(id);
       if (redirectResult == null)
         return new HttpNotFoundResult("Unknown id " + id);
 
       return redirectResult;
     }
 
+    [HttpGet]
+    public ActionResult Stats()
+    {
+      var model = logic.GetSummary();
+
+      return View(model);
+    }
+
     //
 
-    private readonly ShorteningService shorteningService;
+    private readonly Logic logic;
 
     private static string NormalizeUrl(string url)
     {

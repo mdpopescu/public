@@ -1,0 +1,28 @@
+﻿@model Renfield.SafeRedir.Models.SummaryInfo
+
+@{
+  ViewBag.Title = "Statistics";
+}
+
+<h2>Statistics</h2>
+
+<div id="stats">
+  <ol>
+    <li>
+      <span class="period">@Html.LabelFor(m => m.Today)</span>
+      <span class="count">@Html.DisplayFor(m => m.Today)</span>
+    </li>
+    <li>
+      <span class="period">@Html.LabelFor(m => m.CurrentMonth)</span>
+      <span class="count">@Html.DisplayFor(m => m.CurrentMonth)</span>
+    </li>
+    <li>
+      <span class="period">@Html.LabelFor(m => m.CurrentYear)</span>
+      <span class="count">@Html.DisplayFor(m => m.CurrentYear)</span>
+    </li>
+    <li>
+      <span class="period">@Html.LabelFor(m => m.Overall)</span>
+      <span class="count">@Html.DisplayFor(m => m.Overall)</span>
+    </li>
+  </ol>
+</div>

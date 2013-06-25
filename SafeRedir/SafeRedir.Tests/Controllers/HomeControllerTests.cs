@@ -10,13 +10,13 @@ namespace Renfield.SafeRedir.Tests.Controllers
   [TestClass]
   public class HomeControllerTests
   {
-    private Mock<ShorteningService> svc;
+    private Mock<Logic> svc;
     private HomeController sut;
 
     [TestInitialize]
     public void SetUp()
     {
-      svc = new Mock<ShorteningService>();
+      svc = new Mock<Logic>();
       sut = new HomeController(svc.Object);
     }
 
@@ -114,6 +114,22 @@ namespace Renfield.SafeRedir.Tests.Controllers
 
         Assert.IsNotNull(result);
         Assert.AreEqual("Unknown id abc", result.StatusDescription);
+      }
+    }
+
+    [TestClass]
+    public class Stats : HomeControllerTests
+    {
+      [TestMethod]
+      public void ReturnsModelFromService()
+      {
+        var summaryInfo = new SummaryInfo();
+        svc
+          .Setup(it => it.GetSummary())
+          .Returns(summaryInfo);
+
+        var result = sut.Stats() as ViewResult;
+        Assert.AreEqual(summaryInfo, result.Model);
       }
     }
   }

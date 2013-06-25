@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Renfield.SafeRedir.Data;
+using Renfield.SafeRedir.Models;
 
 namespace Renfield.SafeRedir.Services
 {
-  public class DbShorteningService : ShorteningService
+  public class BusinessLogic : Logic
   {
-    public DbShorteningService(Repository repository, UniqueIdGenerator uniqueIdGenerator)
+    public BusinessLogic(Repository repository, UniqueIdGenerator uniqueIdGenerator)
     {
       this.repository = repository;
       this.uniqueIdGenerator = uniqueIdGenerator;
@@ -51,6 +53,24 @@ namespace Renfield.SafeRedir.Services
       var permanent = url == urlInfo.SafeUrl;
 
       return new RedirectResult(url, permanent);
+    }
+
+    public SummaryInfo GetSummary()
+    {
+      var today = SystemInfo.SystemClock().Date;
+
+      // do NOT call .ToList() here - it MUST be evaluated multiple times
+      var records = repository
+        .GetAll()
+        .Select(it => it.ExpiresAt);
+
+      return new SummaryInfo
+      {
+        Today = records.Count(it => it.Date == today),
+        CurrentMonth = records.Count(it => it.Date.Month == today.Month && it.Date.Year == today.Year),
+        CurrentYear = records.Count(it => it.Date.Year == today.Year),
+        Overall = records.Count(),
+      };
     }
 
     //
