@@ -11,7 +11,7 @@ namespace Renfield.SafeRedir.Models
     [Display(Name = "Safe URL (after TTL expires)", Prompt = "This will be returned after the timeout")]
     public string SafeURL { get; set; }
 
-    [Display(Name = "Time-to-live (sec)", Prompt = "Expiration time in seconds")]
+    [Display(Name = "Time-to-live (sec)", Prompt = "Seconds")]
     public int? TTL { get; set; }
 
     public RedirectInfo()
