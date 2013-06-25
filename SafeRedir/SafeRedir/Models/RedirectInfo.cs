@@ -1,21 +1,21 @@
-﻿using System.ComponentModel;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Renfield.SafeRedir.Models
 {
   public class RedirectInfo
   {
-    [DisplayName("URL to shorten")]
+    [Display(Name = "URL to shorten", Prompt = "This will be returned initially")]
+    [Required(ErrorMessage = "Please enter the URL.")]
     public string URL { get; set; }
 
-    [DisplayName("Safe URL (used after TTL expires)")]
+    [Display(Name = "Safe URL (after TTL expires)", Prompt = "This will be returned after the timeout")]
     public string SafeURL { get; set; }
 
-    [DisplayName("Time-to-live (sec)")]
-    public int TTL { get; set; }
+    [Display(Name = "Time-to-live (sec)", Prompt = "Expiration time in seconds")]
+    public int? TTL { get; set; }
 
     public RedirectInfo()
     {
-      URL = "";
       SafeURL = Constants.DEFAULT_SAFE_URL;
       TTL = Constants.DEFAULT_TTL;
     }

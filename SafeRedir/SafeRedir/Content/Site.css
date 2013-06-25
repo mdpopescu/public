@@ -17,18 +17,14 @@ a:link {
     text-decoration: underline;
 }
 
-a:visited {
-    color: #505abc;
-}
+a:visited { color: #505abc; }
 
 a:hover {
     color: #1d60ff;
     text-decoration: none;
 }
 
-a:active {
-    color: #12eb87;
-}
+a:active { color: #12eb87; }
 
 p, ul {
     margin-bottom: 20px;
@@ -38,12 +34,11 @@ p, ul {
 header,
 footer,
 nav,
-section {
-    display: block;
-}
+section { display: block; }
 
 /* HEADINGS   
 ----------------------------------------------------------*/
+
 h1, h2, h3, h4, h5, h6 {
     font-size: 1.5em;
     color: #000;
@@ -55,27 +50,20 @@ h1 {
     margin-bottom: 0;
 }
 
-h2 {
-    padding: 0 0 10px 0;
-}
+h2 { padding: 0 0 10px 0; }
 
-h3 {
-    font-size: 1.2em;
-}
+h3 { font-size: 1.2em; }
 
-h4 {
-    font-size: 1.1em;
-}
+h4 { font-size: 1.1em; }
 
-h5, h6 {
-    font-size: 1em;
-}
+h5, h6 { font-size: 1em; }
 
 /* PRIMARY LAYOUT ELEMENTS   
 ----------------------------------------------------------*/
 
 /* you can specify a greater or lesser percentage for the 
 page width. Or, you can specify an exact pixel width. */
+
 .page {
     width: 90%;
     margin-left: auto;
@@ -108,7 +96,7 @@ header h1, #header h1 {
     -moz-border-radius: 4px 0 0 0;
 }
 
-footer, 
+footer,
 #footer {
     background-color: #fff;
     color: #999;
@@ -124,6 +112,7 @@ footer,
 
 /* TAB MENU   
 ----------------------------------------------------------*/
+
 ul#menu {
     border-bottom: 1px #5C87B2 solid;
     padding: 0 0 2px;
@@ -175,7 +164,77 @@ ul#menu li.selected a {
 /* FORM LAYOUT ELEMENTS   
 ----------------------------------------------------------*/
 
-fieldset {
+form {
+    font: 13px Georgia, "Times New Roman", Times, serif;
+    background: #eee;
+    margin: 20px;
+    padding: 10px 20px;
+    width: 800px;
+}
+
+form ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+form li {
+    padding: 6px;
+    background: #e1e1e1;
+    margin-bottom: 1px;
+}
+
+form li #send {
+    background: none;
+    margin-top: 6px;
+}
+
+form label {
+    float: left;
+    width: 15em;
+    text-align: right;
+    margin-right: 2em;
+    color: #0066CC;
+    line-height: 23px; /* This will make the labels vertically centered with the inputs */
+}
+
+form input[type="text"],
+form input[type="password"],
+form textarea {
+    padding: 4px;
+    font: 13px Georgia, "Times New Roman", Times, serif;
+    border: 1px solid #999999;
+    width: 40em;
+    height: 90%;
+}
+
+form input[type="text"].short,
+form input[type="password"].short {
+    width: 6em;
+}
+
+form input[type="text"]:focus,
+form input[type="password"]:focus,
+form textarea:focus {
+    border: 1px solid #666;
+    background: #e3f1f1;
+}
+
+form li#send button {
+    background: #003366 url(images/submit.png) no-repeat 0px -4px;
+    border: none;
+    padding: 4px 8px 4px 28px;
+    border-radius: 15%; /* Don't expect this to work on IE6 or 7 */
+    -moz-border-radius: 15%;
+    -webkit-border-radius: 15%;
+    color: #fff;
+    margin-left: 17em; /* Total width of the labels + their right margin */
+    cursor: pointer;
+}
+
+form li#send button:hover { background-color: #006633; }
+
+/*fieldset {
     border: 1px solid #ddd;
     padding: 0 1.4em 1.4em 1.4em;
     margin: 0 0 1.5em 0;
@@ -186,11 +245,9 @@ legend {
     font-weight: bold;
 }
 
-textarea {
-    min-height: 75px;
-}
+textarea { min-height: 75px; }
 
-input[type="text"], 
+input[type="text"],
 input[type="password"] {
     border: 1px solid #ccc;
     padding: 2px;
@@ -210,7 +267,7 @@ input[type="submit"] {
     font-size: 1.2em;
     padding: 5px;
 }
-
+*/
 /* TABLE
 ----------------------------------------------------------*/
 
@@ -233,18 +290,13 @@ table th {
 
 /* MISC  
 ----------------------------------------------------------*/
-.clear {
-    clear: both;
-}
 
-.error {
-    color: Red;
-}
+.clear { clear: both; }
 
-nav, 
-#menucontainer {
-    margin-top: 40px;
-}
+.error { color: Red; }
+
+nav,
+#menucontainer { margin-top: 40px; }
 
 div#title {
     display: block;
@@ -277,13 +329,10 @@ div#title {
 
 /* Styles for validation helpers
 -----------------------------------------------------------*/
-.field-validation-error {
-    color: #ff0000;
-}
 
-.field-validation-valid {
-    display: none;
-}
+.field-validation-error { color: #ff0000; }
+
+.field-validation-valid { display: none; }
 
 .input-validation-error {
     border: 1px solid #ff0000;
@@ -295,30 +344,19 @@ div#title {
     color: #ff0000;
 }
 
-.validation-summary-valid {
-    display: none;
-}
+.validation-summary-valid { display: none; }
 
 /* Styles for editor and display helpers
 ----------------------------------------------------------*/
-.display-label, 
-.editor-label {
-    margin: 1em 0 0 0;
-}
 
-.display-field, 
-.editor-field {
-    margin: 0.5em 0 0 0;
-}
+.display-label,
+.editor-label { margin: 1em 0 0 0; }
 
-.text-box {
-    width: 30em;
-}
+.display-field,
+.editor-field { margin: 0.5em 0 0 0; }
 
-.text-box.multi-line {
-    height: 6.5em;
-}
+.text-box { width: 30em; }
 
-.tri-state {
-    width: 6em;
-}
+.text-box.multi-line { height: 6.5em; }
+
+.tri-state { width: 6em; }

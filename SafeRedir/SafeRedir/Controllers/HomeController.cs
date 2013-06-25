@@ -21,13 +21,14 @@ namespace Renfield.SafeRedir.Controllers
     }
 
     [HttpPost]
-    public ContentResult Index(FormCollection form)
+    public ActionResult Index(RedirectInfo info)
     {
-      var url = NormalizeUrl(form["URL"]);
-      var safeUrl = NormalizeUrl(form["SafeURL"] ?? Constants.DEFAULT_SAFE_URL);
-      int ttl;
-      if (!int.TryParse(form["TTL"], out ttl))
-        ttl = Constants.DEFAULT_TTL;
+      if (!ModelState.IsValid)
+        return RedirectToAction("Index");
+
+      var url = NormalizeUrl(info.URL);
+      var safeUrl = NormalizeUrl(info.SafeURL ?? Constants.DEFAULT_SAFE_URL);
+      var ttl = info.TTL ?? Constants.DEFAULT_TTL;
 
       var id = shorteningService.CreateRedirect(url, safeUrl, ttl);
 

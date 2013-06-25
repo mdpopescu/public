@@ -35,43 +35,60 @@ namespace Renfield.SafeRedir.Tests.Controllers
         svc
           .Setup(it => it.CreateRedirect("http://example.com/", It.IsAny<string>(), It.IsAny<int>()))
           .Returns("123");
-        var form = new FormCollection { { "URL", "example.com" } };
+        var info = new RedirectInfo { URL = "example.com" };
         var sut = new HomeController(svc.Object);
         var helper = new MvcHelper();
         helper.SetUpController(sut);
         helper.Response.Setup(x => x.ApplyAppPathModifier("/r/123")).Returns("http://localhost/r/123");
 
-        var result = sut.Index(form).Content;
+        var result = (sut.Index(info) as ContentResult).Content;
 
         Assert.IsTrue(result.EndsWith("/r/123"), string.Format("Result is [{0}]", result));
       }
 
       [TestMethod]
-      public void NormalizesGivenUrl()
+      public void PostNormalizesGivenUrl()
       {
         var svc = new Mock<ShorteningService>();
-        var form = new FormCollection { { "URL", "example.com" } };
+        var info = new RedirectInfo { URL = "example.com" };
         var sut = new HomeController(svc.Object);
         var helper = new MvcHelper();
         helper.SetUpController(sut);
 
-        sut.Index(form);
+        sut.Index(info);
 
         svc.Verify(it => it.CreateRedirect("http://example.com/", It.IsAny<string>(), It.IsAny<int>()));
       }
 
       [TestMethod]
-      public void NormalizesSafeUrl()
+      public void PostNormalizesSafeUrl()
       {
         var svc = new Mock<ShorteningService>();
-        var form = new FormCollection { { "URL", "example.com" }, { "SafeURL", "example.com" } };
+        var info = new RedirectInfo { URL = "example.com", SafeURL = "example.com" };
         var sut = new HomeController(svc.Object);
         var helper = new MvcHelper();
         helper.SetUpController(sut);
 
-        sut.Index(form);
+        sut.Index(info);
 
         svc.Verify(it => it.CreateRedirect(It.IsAny<string>(), "http://example.com/", It.IsAny<int>()));
+      }
+
+      [TestMethod]
+      public void PostReturnsValidationErrorIfUrlIsMissing()
+      {
+        var svc = new Mock<ShorteningService>();
+        var info = new RedirectInfo();
+        var sut = new HomeController(svc.Object);
+        var helper = new MvcHelper();
+        helper.SetUpController(sut);
+        sut.ValidateModel(info);
+
+        sut.Index(info);
+
+        Assert.IsFalse(sut.ModelState.IsValid);
+        Assert.AreEqual(1, sut.ModelState["URL"].Errors.Count);
+        Assert.AreEqual("Please enter the URL.", sut.ModelState["URL"].Errors[0].ErrorMessage);
       }
     }
 
