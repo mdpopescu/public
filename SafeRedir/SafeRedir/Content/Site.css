@@ -66,6 +66,7 @@ page width. Or, you can specify an exact pixel width. */
 
 .page {
     width: 90%;
+    height: 100%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -98,7 +99,10 @@ header h1, #header h1 {
 
 footer,
 #footer {
-    background-color: #fff;
+    position: absolute;
+    bottom: 0;
+    width: 90%;
+    height: 20px;
     color: #999;
     padding: 10px 0;
     text-align: center;
@@ -201,7 +205,7 @@ form label {
 form input[type="text"],
 form input[type="password"],
 form textarea {
-    padding: 4px;
+    padding: 3px;
     font: 13px Georgia, "Times New Roman", Times, serif;
     border: 1px solid #999999;
     width: 40em;
@@ -226,46 +230,12 @@ form li#send button {
     -moz-border-radius: 15%;
     -webkit-border-radius: 15%;
     color: #fff;
-    margin-left: 17em; /* Total width of the labels + their right margin */
+    margin-left: 16.6em; /* Total width of the labels + their right margin - small amount to align better */
     cursor: pointer;
 }
 
 form li#send button:hover { background-color: #006633; }
 
-/*fieldset {
-    border: 1px solid #ddd;
-    padding: 0 1.4em 1.4em 1.4em;
-    margin: 0 0 1.5em 0;
-}
-
-legend {
-    font-size: 1.2em;
-    font-weight: bold;
-}
-
-textarea { min-height: 75px; }
-
-input[type="text"],
-input[type="password"] {
-    border: 1px solid #ccc;
-    padding: 2px;
-    font-size: 1.2em;
-    color: #444;
-    width: 200px;
-}
-
-select {
-    border: 1px solid #ccc;
-    padding: 2px;
-    font-size: 1.2em;
-    color: #444;
-}
-
-input[type="submit"] {
-    font-size: 1.2em;
-    padding: 5px;
-}
-*/
 /* TABLE
 ----------------------------------------------------------*/
 
@@ -358,8 +328,6 @@ div#title {
 .text-box.multi-line { height: 6.5em; }
 
 .tri-state { width: 6em; }
-
-/* */
 
 .chart div {
     font: 10px sans-serif;
