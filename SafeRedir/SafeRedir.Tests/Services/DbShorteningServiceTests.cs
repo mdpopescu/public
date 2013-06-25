@@ -10,15 +10,24 @@ namespace Renfield.SafeRedir.Tests.Services
   [TestClass]
   public class DbShorteningServiceTests
   {
+    private Mock<Repository> repository;
+    private Mock<UniqueIdGenerator> idGen;
+    private DbShorteningService sut;
+
+    [TestInitialize]
+    public void SetUp()
+    {
+      repository = new Mock<Repository>();
+      idGen = new Mock<UniqueIdGenerator>();
+      sut = new DbShorteningService(repository.Object, idGen.Object);
+    }
+
     [TestClass]
     public class CreateRedirect : DbShorteningServiceTests
     {
       [TestMethod]
       public void SavesUrlInfo()
       {
-        var repository = new Mock<Repository>();
-        var idGen = new Mock<UniqueIdGenerator>();
-        var sut = new DbShorteningService(repository.Object, idGen.Object);
         SystemInfo.SystemClock = () => new DateTime(2000, 1, 1, 1, 1, 1);
 
         sut.CreateRedirect("example.com", "safe.com", 10);
@@ -32,12 +41,9 @@ namespace Renfield.SafeRedir.Tests.Services
       [TestMethod]
       public void SavesAndReturnsIdFromUniqueIdService()
       {
-        var repository = new Mock<Repository>();
-        var idGen = new Mock<UniqueIdGenerator>();
         idGen
           .Setup(it => it.Generate())
           .Returns("123");
-        var sut = new DbShorteningService(repository.Object, idGen.Object);
 
         var result = sut.CreateRedirect("example.com", "safe.com", 10);
 
@@ -49,16 +55,13 @@ namespace Renfield.SafeRedir.Tests.Services
       public void RetriesIfUniqueIdAlreadyExists()
       {
         var ids = new List<string> { "123", "456" };
-        var repository = new Mock<Repository>();
         repository
           .Setup(it => it.GetUrlInfo("123"))
           .Returns(new UrlInfo());
-        var idGen = new Mock<UniqueIdGenerator>();
         var index = 0;
         idGen
           .Setup(it => it.Generate())
           .Returns(() => ids[index++]);
-        var sut = new DbShorteningService(repository.Object, idGen.Object);
 
         var result = sut.CreateRedirect("example.com", "safe.com", 10);
 
@@ -72,11 +75,9 @@ namespace Renfield.SafeRedir.Tests.Services
       [TestMethod]
       public void ReturnsOriginalUrlAsTemporaryRedirect()
       {
-        var repository = new Mock<Repository>();
         repository
           .Setup(it => it.GetUrlInfo("123"))
           .Returns(new UrlInfo { OriginalUrl = "a", SafeUrl = "b", ExpiresAt = new DateTime(2000, 1, 1, 1, 1, 1) });
-        var sut = new DbShorteningService(repository.Object, null);
         SystemInfo.SystemClock = () => new DateTime(2000, 1, 1, 1, 1, 0);
 
         var result = sut.GetUrl("123");
@@ -88,11 +89,9 @@ namespace Renfield.SafeRedir.Tests.Services
       [TestMethod]
       public void ReturnsSafeUrlAsPermanentRedirect()
       {
-        var repository = new Mock<Repository>();
         repository
           .Setup(it => it.GetUrlInfo("123"))
           .Returns(new UrlInfo { OriginalUrl = "a", SafeUrl = "b", ExpiresAt = new DateTime(2000, 1, 1, 1, 1, 1) });
-        var sut = new DbShorteningService(repository.Object, null);
         SystemInfo.SystemClock = () => new DateTime(2000, 1, 1, 1, 1, 2);
 
         var result = sut.GetUrl("123");
@@ -104,9 +103,6 @@ namespace Renfield.SafeRedir.Tests.Services
       [TestMethod]
       public void ReturnsNullForUnknownId()
       {
-        var repository = new Mock<Repository>();
-        var sut = new DbShorteningService(repository.Object, null);
-
         var result = sut.GetUrl("123");
 
         Assert.IsNull(result);

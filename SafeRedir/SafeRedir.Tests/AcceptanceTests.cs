@@ -36,7 +36,7 @@ namespace Renfield.SafeRedir.Tests
           var expiresInMins = form.SelectSingleNode("//input[@id='TTL']");
           Assert.IsNotNull(expiresInMins);
           Assert.AreEqual("300", expiresInMins.Attributes["Value"].Value);
-          var submit = form.SelectSingleNode("//input[@type='submit']");
+          var submit = form.SelectSingleNode("//button[@type='submit']");
           Assert.IsNotNull(submit);
         }
       }

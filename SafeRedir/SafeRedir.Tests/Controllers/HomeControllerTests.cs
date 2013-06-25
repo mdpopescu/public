@@ -10,20 +10,27 @@ namespace Renfield.SafeRedir.Tests.Controllers
   [TestClass]
   public class HomeControllerTests
   {
+    private Mock<ShorteningService> svc;
+    private HomeController sut;
+
+    [TestInitialize]
+    public void SetUp()
+    {
+      svc = new Mock<ShorteningService>();
+      sut = new HomeController(svc.Object);
+    }
+
     [TestClass]
     public class Index : HomeControllerTests
     {
       [TestMethod]
       public void GetReturnsDefaultValues()
       {
-        var svc = new Mock<ShorteningService>();
-        var sut = new HomeController(svc.Object);
-
         var result = sut.Index() as ViewResult;
 
         var model = result.Model as RedirectInfo;
         Assert.IsNotNull(model);
-        Assert.AreEqual("", model.URL);
+        Assert.IsNull(model.URL);
         Assert.AreEqual("http://www.randomkittengenerator.com/", model.SafeURL);
         Assert.AreEqual(5 * 60, model.TTL);
       }
@@ -31,12 +38,10 @@ namespace Renfield.SafeRedir.Tests.Controllers
       [TestMethod]
       public void PostReturnsShortenedUrl()
       {
-        var svc = new Mock<ShorteningService>();
         svc
           .Setup(it => it.CreateRedirect("http://example.com/", It.IsAny<string>(), It.IsAny<int>()))
           .Returns("123");
         var info = new RedirectInfo { URL = "example.com" };
-        var sut = new HomeController(svc.Object);
         var helper = new MvcHelper();
         helper.SetUpController(sut);
         helper.Response.Setup(x => x.ApplyAppPathModifier("/r/123")).Returns("http://localhost/r/123");
@@ -49,9 +54,7 @@ namespace Renfield.SafeRedir.Tests.Controllers
       [TestMethod]
       public void PostNormalizesGivenUrl()
       {
-        var svc = new Mock<ShorteningService>();
         var info = new RedirectInfo { URL = "example.com" };
-        var sut = new HomeController(svc.Object);
         var helper = new MvcHelper();
         helper.SetUpController(sut);
 
@@ -63,9 +66,7 @@ namespace Renfield.SafeRedir.Tests.Controllers
       [TestMethod]
       public void PostNormalizesSafeUrl()
       {
-        var svc = new Mock<ShorteningService>();
         var info = new RedirectInfo { URL = "example.com", SafeURL = "example.com" };
-        var sut = new HomeController(svc.Object);
         var helper = new MvcHelper();
         helper.SetUpController(sut);
 
@@ -77,9 +78,7 @@ namespace Renfield.SafeRedir.Tests.Controllers
       [TestMethod]
       public void PostReturnsValidationErrorIfUrlIsMissing()
       {
-        var svc = new Mock<ShorteningService>();
         var info = new RedirectInfo();
-        var sut = new HomeController(svc.Object);
         var helper = new MvcHelper();
         helper.SetUpController(sut);
         sut.ValidateModel(info);
@@ -98,12 +97,10 @@ namespace Renfield.SafeRedir.Tests.Controllers
       [TestMethod]
       public void ReturnsRedirectFromService()
       {
-        var svc = new Mock<ShorteningService>();
         var redirect = new RedirectResult("http://example.com");
         svc
           .Setup(it => it.GetUrl("abc"))
           .Returns(redirect);
-        var sut = new HomeController(svc.Object);
 
         var result = sut.r("abc") as RedirectResult;
 
@@ -113,9 +110,6 @@ namespace Renfield.SafeRedir.Tests.Controllers
       [TestMethod]
       public void Returns404ForUnknownId()
       {
-        var svc = new Mock<ShorteningService>();
-        var sut = new HomeController(svc.Object);
-
         var result = sut.r("abc") as HttpNotFoundResult;
 
         Assert.IsNotNull(result);
