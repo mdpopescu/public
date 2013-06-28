@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Renfield.SafeRedir.Models;
 using Renfield.SafeRedir.Services;
 
@@ -51,6 +52,17 @@ namespace Renfield.SafeRedir.Controllers
     public ActionResult Stats()
     {
       var model = logic.GetSummary();
+
+      return View(model);
+    }
+
+    [HttpGet]
+    public ActionResult Display(string id)
+    {
+      if (id != "{EA41809E-CADD-4057-BA5A-B01B34C95070}")
+        return new HttpNotFoundResult("The resource cannot be found.");
+
+      var model = new DisplayModel();
 
       return View(model);
     }

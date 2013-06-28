@@ -132,5 +132,26 @@ namespace Renfield.SafeRedir.Tests.Controllers
         Assert.AreEqual(summaryInfo, result.Model);
       }
     }
+
+    [TestClass]
+    public class Display : HomeControllerTests
+    {
+      [TestMethod]
+      public void Returns404IfCalledWithWrongOrNoKey()
+      {
+        var result = sut.Display("abc") as HttpNotFoundResult;
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("The resource cannot be found.", result.StatusDescription);
+      }
+
+      [TestMethod]
+      public void ReturnsDisplayModelIfCalledWithCorrectKey()
+      {
+        var result = sut.Display("{EA41809E-CADD-4057-BA5A-B01B34C95070}") as ViewResult;
+
+        Assert.IsNotNull(result.Model);
+      }
+    }
   }
 }

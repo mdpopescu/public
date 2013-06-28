@@ -14,30 +14,27 @@ namespace Renfield.SafeRedir.Tests
     private const string REDIRECT_PREFIX = BASE_URL + "/r/";
 
     [TestMethod]
-    public void IndexReturnsFormWithDefaultValues()
+    public void GetIndexReturnsFormWithDefaultValues()
     {
-      using (var web = new WebClient())
-      {
-        var root = LoadHtml("/");
+      var root = LoadHtml("/");
 
-        var form = root.SelectSingleNode("//form");
-        Assert.IsNotNull(form);
-        var url = form.SelectSingleNode("//input[@id='URL']");
-        Assert.IsNotNull(url);
-        Assert.AreEqual("", url.Attributes["Value"].Value);
-        var safeUrl = form.SelectSingleNode("//input[@id='SafeURL']");
-        Assert.IsNotNull(safeUrl);
-        Assert.AreEqual("http://www.randomkittengenerator.com/", safeUrl.Attributes["Value"].Value);
-        var expiresInMins = form.SelectSingleNode("//input[@id='TTL']");
-        Assert.IsNotNull(expiresInMins);
-        Assert.AreEqual("300", expiresInMins.Attributes["Value"].Value);
-        var submit = form.SelectSingleNode("//button[@type='submit']");
-        Assert.IsNotNull(submit);
-      }
+      var form = root.SelectSingleNode("//form");
+      Assert.IsNotNull(form);
+      var url = form.SelectSingleNode("//input[@id='URL']");
+      Assert.IsNotNull(url);
+      Assert.AreEqual("", url.Attributes["Value"].Value);
+      var safeUrl = form.SelectSingleNode("//input[@id='SafeURL']");
+      Assert.IsNotNull(safeUrl);
+      Assert.AreEqual("http://www.randomkittengenerator.com/", safeUrl.Attributes["Value"].Value);
+      var expiresInMins = form.SelectSingleNode("//input[@id='TTL']");
+      Assert.IsNotNull(expiresInMins);
+      Assert.AreEqual("300", expiresInMins.Attributes["Value"].Value);
+      var submit = form.SelectSingleNode("//button[@type='submit']");
+      Assert.IsNotNull(submit);
     }
 
     [TestMethod]
-    public void PostingToIndexReturnsNewUrlRedirectingToOriginal()
+    public void PostIndexReturnsNewUrlRedirectingToOriginal()
     {
       using (var web = new WebClient())
       {
@@ -53,7 +50,7 @@ namespace Renfield.SafeRedir.Tests
     }
 
     [TestMethod]
-    public void PostingToIndexReturnsNewUrlRedirectingToSafeAfterTTL()
+    public void PostIndexReturnsNewUrlRedirectingToSafeAfterTTL()
     {
       using (var web = new WebClient())
       {
@@ -71,7 +68,7 @@ namespace Renfield.SafeRedir.Tests
     }
 
     [TestMethod]
-    public void StatsReturnsNumberOfRecordsForSeveralPeriods()
+    public void GetStatsReturnsNumberOfRecordsForSeveralPeriods()
     {
       var root = LoadHtml("/Home/Stats");
 
@@ -87,6 +84,35 @@ namespace Renfield.SafeRedir.Tests
       Assert.IsNotNull(items[2].SelectSingleNode(".//span[@class='count']").InnerText);
       Assert.AreEqual("Overall", items[3].SelectSingleNode(".//span[@class='period']").InnerText);
       Assert.IsNotNull(items[3].SelectSingleNode(".//span[@class='count']").InnerText);
+    }
+
+    [TestMethod]
+    public void GetDisplayWithoutKeyReturnsNotFound()
+    {
+      try
+      {
+        SafeGet(BASE_URL + "/Home/Display");
+        Assert.Fail("Should have thrown.");
+      }
+      catch (WebException ex)
+      {
+        Assert.AreEqual("NotFound", ((HttpWebResponse) ex.Response).StatusCode.ToString());
+      }
+    }
+
+    [TestMethod]
+    public void GetDisplayWithKeyReturnsFormWithTwoFieldsAndAButton()
+    {
+      var root = LoadHtml("/Home/Display/{EA41809E-CADD-4057-BA5A-B01B34C95070}");
+
+      var form = root.SelectSingleNode("//form");
+      Assert.IsNotNull(form);
+      var fromDate = form.SelectSingleNode("//input[@id='FromDate']");
+      Assert.IsNotNull(fromDate);
+      var toDate = form.SelectSingleNode("//input[@id='ToDate']");
+      Assert.IsNotNull(toDate);
+      var submit = form.SelectSingleNode("//button[@type='submit']");
+      Assert.IsNotNull(submit);
     }
 
     //

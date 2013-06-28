@@ -1,0 +1,29 @@
+﻿@model Renfield.SafeRedir.Models.DisplayModel
+
+@{
+  ViewBag.Title = "Display";
+}
+
+<h2>Display</h2>
+
+@Html.ValidationSummary()
+
+@using (Html.BeginForm())
+{
+  <p>Please enter the following:</p>
+  <ol>
+    <li>
+      @Html.LabelFor(m => m.FromDate)
+      @Html.EditorFor(m => m.FromDate)
+      @Html.ValidationMessageFor(m => m.FromDate)
+    </li>
+    <li>
+      @Html.LabelFor(m => m.ToDate)
+      @Html.EditorFor(m => m.ToDate)
+      @Html.ValidationMessageFor(m => m.ToDate)
+    </li>
+    <li id="send">
+      <button type="submit">Submit</button>
+    </li>
+  </ol>
+}
