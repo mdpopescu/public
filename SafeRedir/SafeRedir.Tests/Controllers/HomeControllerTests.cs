@@ -1,7 +1,10 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Linq;
+using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.SafeRedir.Controllers;
+using Renfield.SafeRedir.Data;
 using Renfield.SafeRedir.Models;
 using Renfield.SafeRedir.Services;
 
@@ -17,7 +20,8 @@ namespace Renfield.SafeRedir.Tests.Controllers
     public void SetUp()
     {
       svc = new Mock<Logic>();
-      sut = new HomeController(svc.Object);
+      var dateService = new DateService();
+      sut = new HomeController(svc.Object, dateService);
     }
 
     [TestClass]
@@ -137,7 +141,7 @@ namespace Renfield.SafeRedir.Tests.Controllers
     public class Display : HomeControllerTests
     {
       [TestMethod]
-      public void Returns404IfCalledWithWrongOrNoKey()
+      public void GetReturns404IfCalledWithWrongOrNoKey()
       {
         var result = sut.Display("abc") as HttpNotFoundResult;
 
@@ -146,11 +150,40 @@ namespace Renfield.SafeRedir.Tests.Controllers
       }
 
       [TestMethod]
-      public void ReturnsDisplayModelIfCalledWithCorrectKey()
+      public void GetReturnsDisplayModelIfCalledWithCorrectKey()
       {
         var result = sut.Display("{EA41809E-CADD-4057-BA5A-B01B34C95070}") as ViewResult;
 
         Assert.IsNotNull(result.Model);
+      }
+
+      [TestMethod]
+      public void PostWithoutCorrectKeyReturns404()
+      {
+        var result = sut.Display("abc", DateTime.MinValue, DateTime.MaxValue) as HttpNotFoundResult;
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("The resource cannot be found.", result.StatusDescription);
+      }
+
+      [TestMethod]
+      public void PostWithCorrectKeyReturnsListOfUrlInfo()
+      {
+        var list = new[]
+        {
+          new UrlInfo { OriginalUrl = "a", SafeUrl = "b", ExpiresAt = new DateTime(2000, 1, 1) },
+          new UrlInfo { OriginalUrl = "c", SafeUrl = "d", ExpiresAt = new DateTime(2000, 1, 2) },
+          new UrlInfo { OriginalUrl = "e", SafeUrl = "f", ExpiresAt = new DateTime(2000, 1, 3) },
+        };
+        svc
+          .Setup(it => it.GetAll())
+          .Returns(list);
+
+        var result = sut.Display("{EA41809E-CADD-4057-BA5A-B01B34C95070}", DateTime.MinValue, DateTime.MaxValue) as ViewResult;
+
+        var model = result.Model as DisplayListModel;
+        Assert.AreEqual("all records", model.DateRange);
+        CollectionAssert.AreEqual(list, model.UrlInformation.ToArray());
       }
     }
   }

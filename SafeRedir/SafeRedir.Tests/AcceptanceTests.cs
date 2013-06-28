@@ -115,6 +115,28 @@ namespace Renfield.SafeRedir.Tests
       Assert.IsNotNull(submit);
     }
 
+    [TestMethod]
+    public void PostDisplayWithKeyReturnsTableWithLinks()
+    {
+      using (var web = new WebClient())
+      {
+        const string data = "FromDate=&ToDate=";
+        web.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+        var html = web.UploadString(BASE_URL + "/Home/Display/{EA41809E-CADD-4057-BA5A-B01B34C95070}", data);
+
+        var doc = new HtmlDocument();
+        doc.LoadHtml(html);
+        var root = doc.DocumentNode;
+
+        var table = root.SelectSingleNode("//table");
+        var rows = table.SelectNodes(".//tr");
+        var cells = table.SelectNodes(".//th|.//td");
+
+        Assert.IsTrue(rows.Count > 0);
+        Assert.IsTrue(cells.Count > 0);
+      }
+    }
+
     //
 
     private static HtmlNode LoadHtml(string page)

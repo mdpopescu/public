@@ -100,11 +100,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\DisplayListModel.cs" />
     <Compile Include="Models\DisplayModel.cs" />
     <Compile Include="Models\RedirectInfo.cs" />
     <Compile Include="Models\SummaryInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\BusinessLogic.cs" />
+    <Compile Include="Services\DateService.cs" />
     <Compile Include="Services\UniqueIdGeneratorFromGuid.cs" />
     <Compile Include="Services\Logic.cs" />
     <Compile Include="Services\UniqueIdGenerator.cs" />
@@ -209,6 +211,7 @@
     <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
     <Content Include="Views\Home\Stats.cshtml" />
     <Content Include="Views\Home\Display.cshtml" />
+    <Content Include="Views\Home\DisplayList.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Data.SqlServerCe.Entity\System.Data.SqlServerCe.Entity.dll" />
     <None Include="_bin_deployableAssemblies\EN\System.Data.SqlServerCe.xml" />
     <None Include="_bin_deployableAssemblies\System.Data.SqlServerCe.dll" />
