@@ -152,7 +152,7 @@ namespace Renfield.SafeRedir.Tests.Controllers
       [TestMethod]
       public void GetReturnsDisplayModelIfCalledWithCorrectKey()
       {
-        var result = sut.Display("{EA41809E-CADD-4057-BA5A-B01B34C95070}") as ViewResult;
+        var result = sut.Display(Constants.SECRET) as ViewResult;
 
         Assert.IsNotNull(result.Model);
       }
@@ -172,18 +172,65 @@ namespace Renfield.SafeRedir.Tests.Controllers
         var list = new[]
         {
           new UrlInfo { OriginalUrl = "a", SafeUrl = "b", ExpiresAt = new DateTime(2000, 1, 1) },
-          new UrlInfo { OriginalUrl = "c", SafeUrl = "d", ExpiresAt = new DateTime(2000, 1, 2) },
-          new UrlInfo { OriginalUrl = "e", SafeUrl = "f", ExpiresAt = new DateTime(2000, 1, 3) },
+          new UrlInfo { OriginalUrl = "c", SafeUrl = "d", ExpiresAt = new DateTime(2000, 1, 1) },
+          new UrlInfo { OriginalUrl = "e", SafeUrl = "f", ExpiresAt = new DateTime(2000, 1, 1) },
         };
         svc
           .Setup(it => it.GetAll())
           .Returns(list);
 
-        var result = sut.Display("{EA41809E-CADD-4057-BA5A-B01B34C95070}", DateTime.MinValue, DateTime.MaxValue) as ViewResult;
+        var result = sut.Display(Constants.SECRET, null, null) as ViewResult;
 
         var model = result.Model as DisplayListModel;
         Assert.AreEqual("all records", model.DateRange);
         CollectionAssert.AreEqual(list, model.UrlInformation.ToArray());
+      }
+
+      [TestMethod]
+      public void PostWithCorrectKeyReturnsListMatchingDateRange()
+      {
+        var list = new[]
+        {
+          new UrlInfo { OriginalUrl = "0", SafeUrl = "0", ExpiresAt = new DateTime(1999, 1, 1) },
+          new UrlInfo { OriginalUrl = "a", SafeUrl = "b", ExpiresAt = new DateTime(2000, 1, 1) },
+          new UrlInfo { OriginalUrl = "c", SafeUrl = "d", ExpiresAt = new DateTime(2000, 1, 1) },
+          new UrlInfo { OriginalUrl = "e", SafeUrl = "f", ExpiresAt = new DateTime(2000, 1, 1) },
+          new UrlInfo { OriginalUrl = "9", SafeUrl = "9", ExpiresAt = new DateTime(2001, 1, 1) },
+        };
+        svc
+          .Setup(it => it.GetAll())
+          .Returns(list);
+
+        var result = sut.Display(Constants.SECRET, new DateTime(2000, 1, 1), new DateTime(2000, 12, 31)) as ViewResult;
+
+        var model = result.Model as DisplayListModel;
+        var records = model.UrlInformation.ToList();
+        Assert.AreEqual(3, records.Count);
+        Assert.AreEqual("a", records[0].OriginalUrl);
+        Assert.AreEqual("c", records[1].OriginalUrl);
+        Assert.AreEqual("e", records[2].OriginalUrl);
+      }
+
+      [TestMethod]
+      public void RecordsAreReturnedInDescendingOrderByDate()
+      {
+        var list = new[]
+        {
+          new UrlInfo { OriginalUrl = "a", SafeUrl = "b", ExpiresAt = new DateTime(2000, 1, 1) },
+          new UrlInfo { OriginalUrl = "c", SafeUrl = "d", ExpiresAt = new DateTime(2000, 2, 2) },
+          new UrlInfo { OriginalUrl = "e", SafeUrl = "f", ExpiresAt = new DateTime(2000, 3, 3) },
+        };
+        svc
+          .Setup(it => it.GetAll())
+          .Returns(list);
+
+        var result = sut.Display(Constants.SECRET, null, null) as ViewResult;
+
+        var model = result.Model as DisplayListModel;
+        var records = model.UrlInformation.ToList();
+        Assert.AreEqual("e", records[0].OriginalUrl);
+        Assert.AreEqual("c", records[1].OriginalUrl);
+        Assert.AreEqual("a", records[2].OriginalUrl);
       }
     }
   }

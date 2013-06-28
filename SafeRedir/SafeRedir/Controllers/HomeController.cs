@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Renfield.SafeRedir.Models;
 using Renfield.SafeRedir.Services;
@@ -68,13 +69,24 @@ namespace Renfield.SafeRedir.Controllers
     }
 
     [HttpPost]
-    public ActionResult Display(string id, DateTime fromDate, DateTime toDate)
+    public ActionResult Display(string id, DateTime? fromDate, DateTime? toDate)
     {
       if (id != "{EA41809E-CADD-4057-BA5A-B01B34C95070}")
         return new HttpNotFoundResult("The resource cannot be found.");
 
-      var list = logic.GetAll();
-      var model = new DisplayListModel { DateRange = dateService.GetRange(fromDate, toDate), UrlInformation = list };
+      fromDate = fromDate ?? DateTime.MinValue;
+      toDate = toDate ?? DateTime.MaxValue;
+
+      var list = logic
+        .GetAll()
+        .Where(it => it.ExpiresAt >= fromDate && it.ExpiresAt <= toDate)
+        .OrderByDescending(it => it.ExpiresAt)
+        .ToList();
+      var model = new DisplayListModel
+      {
+        DateRange = dateService.GetRange(fromDate.GetValueOrDefault(), toDate.GetValueOrDefault()),
+        UrlInformation = list,
+      };
 
       return View("DisplayList", model);
     }

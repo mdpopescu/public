@@ -7,8 +7,22 @@
 <h2>Display</h2>
 
 <div id="records">
-  <p>Displaying records between <span class="date"></span></p>
+  <p>Displaying <span class="date-range">@Model.DateRange</span></p>
   <table>
-  
+    <thead>
+      <tr>
+        <th>Original URL</th>
+        <th>Safe URL</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var urlInfo in Model.UrlInformation)
+      {
+        <tr>
+          <td><a href="@urlInfo.OriginalUrl">@urlInfo.OriginalUrl</a></td>
+          <td><a href="@urlInfo.SafeUrl">@urlInfo.SafeUrl</a></td>
+        </tr>
+      }
+    </tbody>
   </table>
 </div>

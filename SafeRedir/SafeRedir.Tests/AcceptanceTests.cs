@@ -103,7 +103,7 @@ namespace Renfield.SafeRedir.Tests
     [TestMethod]
     public void GetDisplayWithKeyReturnsFormWithTwoFieldsAndAButton()
     {
-      var root = LoadHtml("/Home/Display/{EA41809E-CADD-4057-BA5A-B01B34C95070}");
+      var root = LoadHtml("/Home/Display/" + Constants.SECRET);
 
       var form = root.SelectSingleNode("//form");
       Assert.IsNotNull(form);
@@ -122,7 +122,7 @@ namespace Renfield.SafeRedir.Tests
       {
         const string data = "FromDate=&ToDate=";
         web.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-        var html = web.UploadString(BASE_URL + "/Home/Display/{EA41809E-CADD-4057-BA5A-B01B34C95070}", data);
+        var html = web.UploadString(BASE_URL + "/Home/Display/" + Constants.SECRET, data);
 
         var doc = new HtmlDocument();
         doc.LoadHtml(html);
