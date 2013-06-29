@@ -29,7 +29,7 @@ namespace Renfield.SafeRedir.Tests.Services
       [TestMethod]
       public void FromDate()
       {
-        var result = sut.GetRange(new DateTime(2000, 1, 1), DateTime.MaxValue);
+        var result = sut.GetRange(new DateTime(2000, 1, 1), null);
 
         Assert.AreEqual("records after 2000-01-01", result);
       }
@@ -37,7 +37,7 @@ namespace Renfield.SafeRedir.Tests.Services
       [TestMethod]
       public void ToDate()
       {
-        var result = sut.GetRange(DateTime.MinValue, new DateTime(2001, 3, 5));
+        var result = sut.GetRange(null, new DateTime(2001, 3, 5));
 
         Assert.AreEqual("records before 2001-03-05", result);
       }
@@ -45,7 +45,7 @@ namespace Renfield.SafeRedir.Tests.Services
       [TestMethod]
       public void AllRecords()
       {
-        var result = sut.GetRange(DateTime.MinValue, DateTime.MaxValue);
+        var result = sut.GetRange(null, null);
 
         Assert.AreEqual("all records", result);
       }

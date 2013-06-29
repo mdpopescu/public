@@ -9,10 +9,11 @@ namespace Renfield.SafeRedir.Services
 {
   public class BusinessLogic : Logic
   {
-    public BusinessLogic(Repository repository, UniqueIdGenerator uniqueIdGenerator)
+    public BusinessLogic(Repository repository, UniqueIdGenerator uniqueIdGenerator, DateService dateService)
     {
       this.repository = repository;
       this.uniqueIdGenerator = uniqueIdGenerator;
+      this.dateService = dateService;
     }
 
     public string CreateRedirect(string url, string safeUrl, int ttl)
@@ -74,14 +75,52 @@ namespace Renfield.SafeRedir.Services
       };
     }
 
-    public IEnumerable<UrlInfo> GetAll()
+    public PaginatedRecords GetRecords(int? page, DateTime? fromDate, DateTime? toDate)
     {
-      return repository.GetAll();
+      var relevantRecords = GetRecordsInRange(fromDate, toDate);
+
+      var pageCount = (relevantRecords.Count() - 1) / Constants.PAGE_SIZE + 1;
+      var fixedPage = FixPage(page, pageCount);
+
+      var records = relevantRecords
+        .OrderByDescending(it => it.ExpiresAt)
+        .Skip((fixedPage - 1) * Constants.PAGE_SIZE)
+        .Take(Constants.PAGE_SIZE)
+        .ToList();
+
+      return new PaginatedRecords
+      {
+        PageCount = pageCount,
+        CurrentPage = fixedPage,
+        DateRange = dateService.GetRange(fromDate, toDate),
+        UrlInformation = records,
+      };
     }
 
     //
 
     private readonly Repository repository;
     private readonly UniqueIdGenerator uniqueIdGenerator;
+    private readonly DateService dateService;
+
+    private IEnumerable<UrlInfo> GetRecordsInRange(DateTime? fromDate, DateTime? toDate)
+    {
+      // do NOT call .ToList() - this MUST be re-evaluated
+      return repository
+        .GetAll()
+        .Where(it => it.ExpiresAt >= (fromDate ?? new DateTime(1900, 1, 1)) &&
+                     it.ExpiresAt <= (toDate ?? new DateTime(2100, 1, 1)));
+    }
+
+    private static int FixPage(int? page, int pageCount)
+    {
+      page = page ?? 1; // page is 1-based
+      if (page < 1)
+        page = 1;
+      if (page > pageCount)
+        page = pageCount;
+
+      return page.GetValueOrDefault();
+    }
   }
 }

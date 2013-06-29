@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.SafeRedir.Data;
@@ -19,7 +20,7 @@ namespace Renfield.SafeRedir.Tests.Services
     {
       repository = new Mock<Repository>();
       idGen = new Mock<UniqueIdGenerator>();
-      sut = new BusinessLogic(repository.Object, idGen.Object);
+      sut = new BusinessLogic(repository.Object, idGen.Object, new DateService());
     }
 
     [TestClass]
@@ -188,6 +189,96 @@ namespace Renfield.SafeRedir.Tests.Services
         var result = sut.GetSummary();
 
         Assert.AreEqual(5, result.Overall);
+      }
+    }
+
+    [TestClass]
+    public class GetRecords : BusinessLogicTests
+    {
+      [TestMethod]
+      public void ReturnsRecordsMatchingDateRange()
+      {
+        repository
+          .Setup(it => it.GetAll())
+          .Returns(new[]
+          {
+            new UrlInfo { ExpiresAt = new DateTime(1999, 1, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 1, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 2, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 3, 1) },
+            new UrlInfo { ExpiresAt = new DateTime(2001, 1, 1) },
+          });
+
+        var result = sut.GetRecords(null, new DateTime(2000, 1, 1), new DateTime(2000, 12, 31));
+
+        Assert.AreEqual("records between 2000-01-01 and 2000-12-31", result.DateRange);
+        var records = result.UrlInformation.ToList();
+        Assert.AreEqual(3, records.Count);
+        Assert.AreEqual(2000, records[0].ExpiresAt.Year);
+        Assert.AreEqual(2000, records[1].ExpiresAt.Year);
+        Assert.AreEqual(2000, records[2].ExpiresAt.Year);
+      }
+
+      [TestMethod]
+      public void ReturnsRecordsInDescendingOrderByDate()
+      {
+        repository
+          .Setup(it => it.GetAll())
+          .Returns(new[]
+          {
+            new UrlInfo { OriginalUrl = "a", ExpiresAt = new DateTime(2000, 1, 1) },
+            new UrlInfo { OriginalUrl = "b", ExpiresAt = new DateTime(2000, 2, 1) },
+            new UrlInfo { OriginalUrl = "c", ExpiresAt = new DateTime(2000, 3, 1) },
+          });
+
+        var result = sut.GetRecords(null, null, null);
+
+        var records = result.UrlInformation.ToList();
+        Assert.AreEqual("c", records[0].OriginalUrl);
+        Assert.AreEqual("b", records[1].OriginalUrl);
+        Assert.AreEqual("a", records[2].OriginalUrl);
+      }
+
+      [TestMethod]
+      public void ReturnsFirstPageWith10Records()
+      {
+        var index = 0;
+        var list = Enumerable
+          .Range(0, 20)
+          .Select(_ => new UrlInfo { OriginalUrl = index.ToString(), ExpiresAt = new DateTime(2000, 1, 1).AddDays(index++) })
+          .ToList();
+        repository
+          .Setup(it => it.GetAll())
+          .Returns(list);
+
+        var result = sut.GetRecords(null, null, null);
+
+        Assert.AreEqual(2, result.PageCount);
+        Assert.AreEqual(1, result.CurrentPage);
+        var records = result.UrlInformation.ToList();
+        Assert.AreEqual(10, records.Count);
+        Assert.AreEqual(20, records[0].ExpiresAt.Day);
+        Assert.AreEqual(11, records[9].ExpiresAt.Day);
+      }
+
+      [TestMethod]
+      public void ReturnsGivenPage()
+      {
+        var index = 0;
+        var list = Enumerable
+          .Range(0, 30)
+          .Select(_ => new UrlInfo { OriginalUrl = index.ToString(), ExpiresAt = new DateTime(2000, 1, 1).AddDays(index++) })
+          .ToList();
+        repository
+          .Setup(it => it.GetAll())
+          .Returns(list);
+
+        var result = sut.GetRecords(2, null, null);
+
+        Assert.AreEqual(2, result.CurrentPage);
+        var records = result.UrlInformation.ToList();
+        Assert.AreEqual(20, records[0].ExpiresAt.Day);
+        Assert.AreEqual(11, records[9].ExpiresAt.Day);
       }
     }
   }

@@ -137,6 +137,29 @@ namespace Renfield.SafeRedir.Tests
       }
     }
 
+    [TestMethod]
+    public void Pagination()
+    {
+      using (var web = new WebClient())
+      {
+        const string data = "FromDate=&ToDate=";
+        web.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+        var html = web.UploadString(BASE_URL + "/Home/Display/" + Constants.SECRET, data);
+
+        var doc = new HtmlDocument();
+        doc.LoadHtml(html);
+        var root = doc.DocumentNode;
+
+        var pages = root.SelectSingleNode("//div[@id='pages']");
+        Assert.IsNotNull(pages);
+        var pageNumbers = pages.SelectSingleNode(".//ol");
+        Assert.IsNotNull(pageNumbers);
+        var currentPage = pageNumbers.SelectSingleNode("li[@class='currentPage']");
+        Assert.IsNotNull(currentPage);
+        Assert.AreEqual("1", currentPage.InnerText);
+      }
+    }
+
     //
 
     private static HtmlNode LoadHtml(string page)

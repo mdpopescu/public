@@ -100,7 +100,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\DisplayListModel.cs" />
+    <Compile Include="Models\PaginatedRecords.cs" />
     <Compile Include="Models\DisplayModel.cs" />
     <Compile Include="Models\RedirectInfo.cs" />
     <Compile Include="Models\SummaryInfo.cs" />

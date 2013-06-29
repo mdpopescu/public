@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.SafeRedir.Controllers;
-using Renfield.SafeRedir.Data;
 using Renfield.SafeRedir.Models;
 using Renfield.SafeRedir.Services;
 
@@ -20,8 +17,7 @@ namespace Renfield.SafeRedir.Tests.Controllers
     public void SetUp()
     {
       svc = new Mock<Logic>();
-      var dateService = new DateService();
-      sut = new HomeController(svc.Object, dateService);
+      sut = new HomeController(svc.Object);
     }
 
     [TestClass]
@@ -160,77 +156,23 @@ namespace Renfield.SafeRedir.Tests.Controllers
       [TestMethod]
       public void PostWithoutCorrectKeyReturns404()
       {
-        var result = sut.Display("abc", DateTime.MinValue, DateTime.MaxValue) as HttpNotFoundResult;
+        var result = sut.Display("abc", null, null, null) as HttpNotFoundResult;
 
         Assert.IsNotNull(result);
         Assert.AreEqual("The resource cannot be found.", result.StatusDescription);
       }
 
       [TestMethod]
-      public void PostWithCorrectKeyReturnsListOfUrlInfo()
+      public void PostWithCorrectKeyReturnsModelFromService()
       {
-        var list = new[]
-        {
-          new UrlInfo { OriginalUrl = "a", SafeUrl = "b", ExpiresAt = new DateTime(2000, 1, 1) },
-          new UrlInfo { OriginalUrl = "c", SafeUrl = "d", ExpiresAt = new DateTime(2000, 1, 1) },
-          new UrlInfo { OriginalUrl = "e", SafeUrl = "f", ExpiresAt = new DateTime(2000, 1, 1) },
-        };
+        var model = new PaginatedRecords();
         svc
-          .Setup(it => it.GetAll())
-          .Returns(list);
+          .Setup(it => it.GetRecords(null, null, null))
+          .Returns(model);
 
-        var result = sut.Display(Constants.SECRET, null, null) as ViewResult;
+        var result = sut.Display(Constants.SECRET, null, null, null) as ViewResult;
 
-        var model = result.Model as DisplayListModel;
-        Assert.AreEqual("all records", model.DateRange);
-        CollectionAssert.AreEqual(list, model.UrlInformation.ToArray());
-      }
-
-      [TestMethod]
-      public void PostWithCorrectKeyReturnsListMatchingDateRange()
-      {
-        var list = new[]
-        {
-          new UrlInfo { OriginalUrl = "0", SafeUrl = "0", ExpiresAt = new DateTime(1999, 1, 1) },
-          new UrlInfo { OriginalUrl = "a", SafeUrl = "b", ExpiresAt = new DateTime(2000, 1, 1) },
-          new UrlInfo { OriginalUrl = "c", SafeUrl = "d", ExpiresAt = new DateTime(2000, 1, 1) },
-          new UrlInfo { OriginalUrl = "e", SafeUrl = "f", ExpiresAt = new DateTime(2000, 1, 1) },
-          new UrlInfo { OriginalUrl = "9", SafeUrl = "9", ExpiresAt = new DateTime(2001, 1, 1) },
-        };
-        svc
-          .Setup(it => it.GetAll())
-          .Returns(list);
-
-        var result = sut.Display(Constants.SECRET, new DateTime(2000, 1, 1), new DateTime(2000, 12, 31)) as ViewResult;
-
-        var model = result.Model as DisplayListModel;
-        var records = model.UrlInformation.ToList();
-        Assert.AreEqual(3, records.Count);
-        Assert.AreEqual("a", records[0].OriginalUrl);
-        Assert.AreEqual("c", records[1].OriginalUrl);
-        Assert.AreEqual("e", records[2].OriginalUrl);
-      }
-
-      [TestMethod]
-      public void RecordsAreReturnedInDescendingOrderByDate()
-      {
-        var list = new[]
-        {
-          new UrlInfo { OriginalUrl = "a", SafeUrl = "b", ExpiresAt = new DateTime(2000, 1, 1) },
-          new UrlInfo { OriginalUrl = "c", SafeUrl = "d", ExpiresAt = new DateTime(2000, 2, 2) },
-          new UrlInfo { OriginalUrl = "e", SafeUrl = "f", ExpiresAt = new DateTime(2000, 3, 3) },
-        };
-        svc
-          .Setup(it => it.GetAll())
-          .Returns(list);
-
-        var result = sut.Display(Constants.SECRET, null, null) as ViewResult;
-
-        var model = result.Model as DisplayListModel;
-        var records = model.UrlInformation.ToList();
-        Assert.AreEqual("e", records[0].OriginalUrl);
-        Assert.AreEqual("c", records[1].OriginalUrl);
-        Assert.AreEqual("a", records[2].OriginalUrl);
+        Assert.AreEqual(model, result.Model);
       }
     }
   }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Mvc;
 using Renfield.SafeRedir.Models;
 using Renfield.SafeRedir.Services;
@@ -8,10 +7,9 @@ namespace Renfield.SafeRedir.Controllers
 {
   public class HomeController : Controller
   {
-    public HomeController(Logic logic, DateService dateService)
+    public HomeController(Logic logic)
     {
       this.logic = logic;
-      this.dateService = dateService;
     }
 
     [HttpGet]
@@ -69,24 +67,12 @@ namespace Renfield.SafeRedir.Controllers
     }
 
     [HttpPost]
-    public ActionResult Display(string id, DateTime? fromDate, DateTime? toDate)
+    public ActionResult Display(string id, int? page, DateTime? fromDate, DateTime? toDate)
     {
       if (id != "{EA41809E-CADD-4057-BA5A-B01B34C95070}")
         return new HttpNotFoundResult("The resource cannot be found.");
 
-      fromDate = fromDate ?? DateTime.MinValue;
-      toDate = toDate ?? DateTime.MaxValue;
-
-      var list = logic
-        .GetAll()
-        .Where(it => it.ExpiresAt >= fromDate && it.ExpiresAt <= toDate)
-        .OrderByDescending(it => it.ExpiresAt)
-        .ToList();
-      var model = new DisplayListModel
-      {
-        DateRange = dateService.GetRange(fromDate.GetValueOrDefault(), toDate.GetValueOrDefault()),
-        UrlInformation = list,
-      };
+      var model = logic.GetRecords(page, fromDate, toDate);
 
       return View("DisplayList", model);
     }
@@ -94,7 +80,6 @@ namespace Renfield.SafeRedir.Controllers
     //
 
     private readonly Logic logic;
-    private readonly DateService dateService;
 
     private static string NormalizeUrl(string url)
     {

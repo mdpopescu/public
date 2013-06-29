@@ -337,3 +337,8 @@ div#title {
     margin: 1px;
     color: white;
 }
+
+/* */
+.date-range {
+    font-style: italic;
+}
