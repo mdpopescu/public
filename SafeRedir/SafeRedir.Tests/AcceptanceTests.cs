@@ -101,7 +101,7 @@ namespace Renfield.SafeRedir.Tests
     }
 
     [TestMethod]
-    public void GetDisplayWithKeyReturnsFormWithTwoFieldsAndAButton()
+    public void GetDisplayWithKeyReturnsFilteringFormWithTwoFieldsAndAButton()
     {
       var root = LoadHtml("/Home/Display/" + Constants.SECRET);
 
@@ -116,50 +116,43 @@ namespace Renfield.SafeRedir.Tests
     }
 
     [TestMethod]
-    public void PostDisplayWithKeyReturnsTableWithLinks()
+    public void GetDisplayWithKeyReturnsTableWithLinks()
     {
-      using (var web = new WebClient())
-      {
-        const string data = "FromDate=&ToDate=";
-        web.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-        var html = web.UploadString(BASE_URL + "/Home/Display/" + Constants.SECRET, data);
+      var root = LoadHtml("/Home/Display/" + Constants.SECRET);
 
-        var doc = new HtmlDocument();
-        doc.LoadHtml(html);
-        var root = doc.DocumentNode;
+      var table = root.SelectSingleNode("//table");
+      var rows = table.SelectNodes(".//tr");
+      var cells = table.SelectNodes(".//th|.//td");
 
-        var table = root.SelectSingleNode("//table");
-        var rows = table.SelectNodes(".//tr");
-        var cells = table.SelectNodes(".//th|.//td");
-
-        Assert.IsTrue(rows.Count > 0);
-        Assert.IsTrue(cells.Count > 0);
-      }
+      Assert.IsTrue(rows.Count > 0);
+      Assert.IsTrue(cells.Count > 0);
     }
 
     [TestMethod]
     public void Pagination()
     {
-      using (var web = new WebClient())
-      {
-        const string data = "FromDate=&ToDate=";
-        web.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-        var html = web.UploadString(BASE_URL + "/Home/Display/" + Constants.SECRET, data);
+      var root = LoadHtml("/Home/Display/" + Constants.SECRET);
 
-        var doc = new HtmlDocument();
-        doc.LoadHtml(html);
-        var root = doc.DocumentNode;
+      // has pages div
+      var pages = root.SelectSingleNode("//div[@id='pages']");
+      Assert.IsNotNull(pages);
 
-        var pages = root.SelectSingleNode("//div[@id='pages']");
-        Assert.IsNotNull(pages);
-        var pagination = pages.SelectSingleNode(".//ol");
-        Assert.IsNotNull(pagination);
-        var currentPage = pagination.SelectSingleNode("li[@class='currentPage']");
-        Assert.IsNotNull(currentPage);
-        Assert.AreEqual("1", currentPage.InnerText.Trim());
-        var links = pagination.SelectNodes("li/a").ToList();
-        Assert.IsTrue(links.Count > 0);
-      }
+      // has list of pages
+      var pagination = pages.SelectSingleNode(".//ol");
+      Assert.IsNotNull(pagination);
+
+      // pages have links
+      var links = pagination.SelectNodes("li/a").ToList();
+      Assert.IsTrue(links.Count > 0);
+
+      // has current page
+      var currentPage = pagination.SelectSingleNode("li[@class='currentPage']");
+      Assert.IsNotNull(currentPage);
+      Assert.AreEqual("1", currentPage.InnerText.Trim());
+
+      // current page is NOT linked
+      var currentPageLink = currentPage.SelectSingleNode(".//a");
+      Assert.IsNull(currentPageLink);
     }
 
     //

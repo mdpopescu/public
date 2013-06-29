@@ -1,4 +1,4 @@
-﻿@model Renfield.SafeRedir.Models.DisplayModel
+﻿@model Renfield.SafeRedir.Models.PaginatedRecords
 
 @{
   ViewBag.Title = "Display";
@@ -6,24 +6,67 @@
 
 <h2>Display</h2>
 
-@Html.ValidationSummary()
+<div id="filter">
+  @Html.ValidationSummary()
 
-@using (Html.BeginForm())
-{
-  <p>Please enter the following:</p>
-  <ol>
-    <li>
-      @Html.LabelFor(m => m.FromDate)
-      @Html.EditorFor(m => m.FromDate)
-      @Html.ValidationMessageFor(m => m.FromDate)
-    </li>
-    <li>
-      @Html.LabelFor(m => m.ToDate)
-      @Html.EditorFor(m => m.ToDate)
-      @Html.ValidationMessageFor(m => m.ToDate)
-    </li>
-    <li id="send">
-      <button type="submit">Submit</button>
-    </li>
-  </ol>
-}
+  @using (Html.BeginForm())
+  {
+    @Html.HiddenFor(m => m.FromDate)
+    @Html.HiddenFor(m => m.ToDate)
+
+    <p>Filter by date:</p>
+    <ol>
+      <li>
+        @Html.LabelFor(m => m.FromDate)
+        @Html.EditorFor(m => m.FromDate, new { cssClass = "short" })
+        @Html.ValidationMessageFor(m => m.FromDate)
+      </li>
+      <li>
+        @Html.LabelFor(m => m.ToDate)
+        @Html.EditorFor(m => m.ToDate, new { cssClass = "short" })
+        @Html.ValidationMessageFor(m => m.ToDate)
+      </li>
+      <li id="send">
+        <button type="submit">Submit</button>
+      </li>
+    </ol>
+  }
+</div>
+
+<div id="records">
+  <p>Displaying <span class="date-range">@Model.DateRange</span></p>
+  <div id="pages">
+    <ol>
+      @for (var i = 1; i <= Model.PageCount; i++)
+      {
+        if (i == Model.CurrentPage)
+        {
+          <li class='currentPage'>@i</li>
+        }
+        else
+        {
+          <li>@Html.ActionLink(i.ToString(), "Display", new { page = i })</li>
+        }
+      }
+    </ol>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Original URL</th>
+        <th>Safe URL</th>
+        <th>Expiration</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var urlInfo in Model.UrlInformation)
+      {
+        <tr>
+          <td><a href="@urlInfo.OriginalUrl">@urlInfo.OriginalUrl</a></td>
+          <td><a href="@urlInfo.SafeUrl">@urlInfo.SafeUrl</a></td>
+          <td>@urlInfo.ExpiresAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

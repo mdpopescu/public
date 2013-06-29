@@ -137,24 +137,7 @@ namespace Renfield.SafeRedir.Tests.Controllers
     public class Display : HomeControllerTests
     {
       [TestMethod]
-      public void GetReturns404IfCalledWithWrongOrNoKey()
-      {
-        var result = sut.Display("abc") as HttpNotFoundResult;
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual("The resource cannot be found.", result.StatusDescription);
-      }
-
-      [TestMethod]
-      public void GetReturnsDisplayModelIfCalledWithCorrectKey()
-      {
-        var result = sut.Display(Constants.SECRET) as ViewResult;
-
-        Assert.IsNotNull(result.Model);
-      }
-
-      [TestMethod]
-      public void PostWithoutCorrectKeyReturns404()
+      public void Returns404IfCalledWithWrongOrNoKey()
       {
         var result = sut.Display("abc", null, null, null) as HttpNotFoundResult;
 
@@ -163,7 +146,7 @@ namespace Renfield.SafeRedir.Tests.Controllers
       }
 
       [TestMethod]
-      public void PostWithCorrectKeyReturnsModelFromService()
+      public void ReturnsModelFromService()
       {
         var model = new PaginatedRecords();
         svc

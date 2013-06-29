@@ -211,6 +211,8 @@ namespace Renfield.SafeRedir.Tests.Services
 
         var result = sut.GetRecords(null, new DateTime(2000, 1, 1), new DateTime(2000, 12, 31));
 
+        Assert.AreEqual(new DateTime(2000, 1, 1), result.FromDate);
+        Assert.AreEqual(new DateTime(2000, 12, 31), result.ToDate);
         Assert.AreEqual("records between 2000-01-01 and 2000-12-31", result.DateRange);
         var records = result.UrlInformation.ToList();
         Assert.AreEqual(3, records.Count);

@@ -90,6 +90,8 @@ namespace Renfield.SafeRedir.Services
 
       return new PaginatedRecords
       {
+        FromDate = fromDate,
+        ToDate = toDate,
         PageCount = pageCount,
         CurrentPage = fixedPage,
         DateRange = dateService.GetRange(fromDate, toDate),
