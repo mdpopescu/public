@@ -8,6 +8,16 @@
 
 <div id="records">
   <p>Displaying <span class="date-range">@Model.DateRange</span></p>
+  <div id="pages">
+    <ol>
+      @for (var i = 1; i <= Model.PageCount; i++)
+      {
+        <li class='@(i == Model.CurrentPage ? "currentPage" : "")'>
+          @Html.ActionLink(i.ToString(), "Display", new { page = i })
+        </li>
+      }
+    </ol>
+  </div>
   <table>
     <thead>
       <tr>

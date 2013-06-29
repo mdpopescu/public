@@ -152,11 +152,13 @@ namespace Renfield.SafeRedir.Tests
 
         var pages = root.SelectSingleNode("//div[@id='pages']");
         Assert.IsNotNull(pages);
-        var pageNumbers = pages.SelectSingleNode(".//ol");
-        Assert.IsNotNull(pageNumbers);
-        var currentPage = pageNumbers.SelectSingleNode("li[@class='currentPage']");
+        var pagination = pages.SelectSingleNode(".//ol");
+        Assert.IsNotNull(pagination);
+        var currentPage = pagination.SelectSingleNode("li[@class='currentPage']");
         Assert.IsNotNull(currentPage);
-        Assert.AreEqual("1", currentPage.InnerText);
+        Assert.AreEqual("1", currentPage.InnerText.Trim());
+        var links = pagination.SelectNodes("li/a").ToList();
+        Assert.IsTrue(links.Count > 0);
       }
     }
 

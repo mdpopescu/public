@@ -339,6 +339,9 @@ div#title {
 }
 
 /* */
-.date-range {
-    font-style: italic;
-}
+
+.date-range { font-style: italic; }
+
+#pages ol li { display: inline; }
+
+#pages ol li.currentPage { font-size: 125%; }
