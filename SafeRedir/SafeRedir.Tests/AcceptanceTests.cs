@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading;
 using HtmlAgilityPack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -163,8 +164,21 @@ namespace Renfield.SafeRedir.Tests
       using (var web = new WebClient())
       {
         const string data = "FromDate=2000-01-01&ToDate=2099-12-31";
-        web.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-        var html = web.UploadString(string.Format("{0}/Home/Display/{1}", BASE_URL, Constants.SECRET), data);
+        var byteArray = Encoding.UTF8.GetBytes(data);
+
+        var req = (HttpWebRequest) WebRequest.Create(string.Format("{0}/Home/Display/{1}", BASE_URL, Constants.SECRET));
+        req.AllowAutoRedirect = false;
+        req.Method = "POST";
+        req.ContentType = "application/x-www-form-urlencoded";
+        req.ContentLength = byteArray.Length;
+
+        var stream = req.GetRequestStream();
+        stream.Write(byteArray, 0, byteArray.Length);
+
+        var res = (HttpWebResponse) req.GetResponse();
+        Assert.AreEqual("Redirect", res.StatusCode.ToString());
+        var newPage = res.Headers["Location"];
+        var html = web.DownloadString(BASE_URL + newPage);
 
         var doc = new HtmlDocument();
         doc.LoadHtml(html);
@@ -173,9 +187,9 @@ namespace Renfield.SafeRedir.Tests
 
       var form = root.SelectSingleNode("//form");
       var fromDate = form.SelectSingleNode("//input[@id='FromDate']");
-      Assert.AreEqual("2000-01-01", fromDate.Attributes["Value"].Value);
+      Assert.AreEqual("01/01/2000", fromDate.Attributes["Value"].Value);
       var toDate = form.SelectSingleNode("//input[@id='ToDate']");
-      Assert.AreEqual("2099-12-31", toDate.Attributes["Value"].Value);
+      Assert.AreEqual("12/31/2099", toDate.Attributes["Value"].Value);
     }
 
     //

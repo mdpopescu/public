@@ -211,7 +211,6 @@
     <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
     <Content Include="Views\Home\Stats.cshtml" />
     <Content Include="Views\Home\Display.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
     <None Include="_bin_deployableAssemblies\System.Data.SqlServerCe.Entity\System.Data.SqlServerCe.Entity.dll" />
     <None Include="_bin_deployableAssemblies\EN\System.Data.SqlServerCe.xml" />
     <None Include="_bin_deployableAssemblies\System.Data.SqlServerCe.dll" />

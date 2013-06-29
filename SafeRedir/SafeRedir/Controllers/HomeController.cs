@@ -60,6 +60,9 @@ namespace Renfield.SafeRedir.Controllers
       if (id != "{EA41809E-CADD-4057-BA5A-B01B34C95070}")
         return new HttpNotFoundResult("The resource cannot be found.");
 
+      if (Request.HttpMethod == "POST")
+        return RedirectToAction("Display", new { id, page, fromDate, toDate });
+
       var model = logic.GetRecords(page, fromDate, toDate);
 
       return View(model);

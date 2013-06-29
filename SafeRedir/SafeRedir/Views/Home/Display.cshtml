@@ -1,4 +1,5 @@
-﻿@model Renfield.SafeRedir.Models.PaginatedRecords
+﻿@using Renfield.SafeRedir
+@model Renfield.SafeRedir.Models.PaginatedRecords
 
 @{
   ViewBag.Title = "Display";
@@ -62,7 +63,7 @@
         <tr>
           <td><a href="@urlInfo.OriginalUrl">@urlInfo.OriginalUrl</a></td>
           <td><a href="@urlInfo.SafeUrl">@urlInfo.SafeUrl</a></td>
-          <td class="date">@urlInfo.ExpiresAt.ToString("Constants.DATE_FORMAT HH:mm:ss")</td>
+          <td class="date">@urlInfo.ExpiresAt.ToString(Constants.DATE_FORMAT + " HH:mm:ss")</td>
         </tr>
       }
     </tbody>
