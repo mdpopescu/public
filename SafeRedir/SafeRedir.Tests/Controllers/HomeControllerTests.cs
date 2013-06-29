@@ -152,10 +152,27 @@ namespace Renfield.SafeRedir.Tests.Controllers
         svc
           .Setup(it => it.GetRecords(null, null, null))
           .Returns(model);
+        var helper = new MvcHelper();
+        helper.SetUpController(sut);
+        helper.Request.Setup(it => it.HttpMethod).Returns("GET");
 
         var result = sut.Display(Constants.SECRET, null, null, null) as ViewResult;
 
         Assert.AreEqual(model, result.Model);
+      }
+
+      [TestMethod]
+      public void PostRedirectsToGet()
+      {
+        var helper = new MvcHelper();
+        helper.SetUpController(sut);
+        helper.Request.Setup(it => it.HttpMethod).Returns("POST");
+
+        var result = sut.Display(Constants.SECRET, null, null, null) as RedirectToRouteResult;
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual("Display", result.RouteValues["action"]);
+        Assert.AreEqual(Constants.SECRET, result.RouteValues["id"]);
       }
     }
   }
