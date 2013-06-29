@@ -50,7 +50,8 @@
       }
     </ol>
   </div>
-  <table>
+
+  <table class="jtable">
     <thead>
       <tr>
         <th>Original URL</th>
@@ -64,9 +65,15 @@
         <tr>
           <td><a href="@urlInfo.OriginalUrl">@urlInfo.OriginalUrl</a></td>
           <td><a href="@urlInfo.SafeUrl">@urlInfo.SafeUrl</a></td>
-          <td>@urlInfo.ExpiresAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+          <td class="date">@urlInfo.ExpiresAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
         </tr>
       }
     </tbody>
   </table>
 </div>
+
+<script type="text/javascript">
+  $(function() {
+    JTable.Setup();
+  });
+</script>

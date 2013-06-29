@@ -342,6 +342,21 @@ div#title {
 
 .date-range { font-style: italic; }
 
-#pages ol li { display: inline; }
+#pages ol li {
+    display: inline;
+    margin: 4px;
+    background-color: #eee;
+    padding-right: 1em;
+    padding-left: 1em;
+}
 
 #pages ol li.currentPage { font-size: 125%; }
+
+#records table { width: 80%; }
+
+#records th { text-align: center; }
+
+#records td.date {
+    width: 12em;
+    text-align: center;
+}
