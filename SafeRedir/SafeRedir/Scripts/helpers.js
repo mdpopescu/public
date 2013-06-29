@@ -6,7 +6,7 @@ JTable.Setup = function() {
   $('caption', table).addClass('ui-state-default');
   $('th', table).addClass('ui-state-default');
   $('td', table).addClass('ui-widget-content');
-  $(table).delegate('tr', 'hover', function() {
+  $(table).delegate('tr', 'hover', function () {
     $('td', $(this)).toggleClass('ui-state-hover');
   });
   $(table).delegate('tr', 'click', function() {

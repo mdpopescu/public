@@ -348,7 +348,7 @@ div#title {
 #pages ol li {
     display: inline;
     margin: 4px;
-    background-color: #eee;
+    background-color: orange;
 }
 
 #pages ol li a 
