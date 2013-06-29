@@ -108,10 +108,16 @@ namespace Renfield.SafeRedir.Services
     private IEnumerable<UrlInfo> GetRecordsInRange(DateTime? fromDate, DateTime? toDate)
     {
       // do NOT call .ToList() - this MUST be re-evaluated
+      var start = fromDate ?? new DateTime(1900, 1, 1);
+      var end = toDate ?? new DateTime(2100, 1, 1);
+
+      // if the end time is not specified, use the last second of the day
+      if (end.TimeOfDay == new TimeSpan(0, 0, 0))
+        end = end.AddDays(1).AddSeconds(-1);
+
       return repository
         .GetAll()
-        .Where(it => it.ExpiresAt >= (fromDate ?? new DateTime(1900, 1, 1)) &&
-                     it.ExpiresAt <= (toDate ?? new DateTime(2100, 1, 1)));
+        .Where(it => it.ExpiresAt >= start && it.ExpiresAt <= end);
     }
 
     private static int FixPage(int? page, int pageCount)

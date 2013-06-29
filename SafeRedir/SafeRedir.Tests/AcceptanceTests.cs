@@ -155,6 +155,29 @@ namespace Renfield.SafeRedir.Tests
       Assert.IsNull(currentPageLink);
     }
 
+    [TestMethod]
+    public void Filtering()
+    {
+      HtmlNode root;
+
+      using (var web = new WebClient())
+      {
+        const string data = "FromDate=2000-01-01&ToDate=2099-12-31";
+        web.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+        var html = web.UploadString(string.Format("{0}/Home/Display/{1}", BASE_URL, Constants.SECRET), data);
+
+        var doc = new HtmlDocument();
+        doc.LoadHtml(html);
+        root = doc.DocumentNode;
+      }
+
+      var form = root.SelectSingleNode("//form");
+      var fromDate = form.SelectSingleNode("//input[@id='FromDate']");
+      Assert.AreEqual("2000-01-01", fromDate.Attributes["Value"].Value);
+      var toDate = form.SelectSingleNode("//input[@id='ToDate']");
+      Assert.AreEqual("2099-12-31", toDate.Attributes["Value"].Value);
+    }
+
     //
 
     private static HtmlNode LoadHtml(string page)

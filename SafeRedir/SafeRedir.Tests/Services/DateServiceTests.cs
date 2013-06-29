@@ -49,6 +49,14 @@ namespace Renfield.SafeRedir.Tests.Services
 
         Assert.AreEqual("all records", result);
       }
+
+      [TestMethod]
+      public void UseOnlyDates()
+      {
+        var result = sut.GetRange(new DateTime(2000, 1, 1, 2, 3, 4), new DateTime(2001, 3, 5, 6, 7, 8));
+
+        Assert.AreEqual("records between 2000-01-01 and 2001-03-05", result);
+      }
     }
   }
 }

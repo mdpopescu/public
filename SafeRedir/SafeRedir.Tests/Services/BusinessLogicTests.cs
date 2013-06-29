@@ -222,6 +222,24 @@ namespace Renfield.SafeRedir.Tests.Services
       }
 
       [TestMethod]
+      public void ToDateEndsInTheLastSecondIfNoTimeGiven()
+      {
+        repository
+          .Setup(it => it.GetAll())
+          .Returns(new[]
+          {
+            new UrlInfo { ExpiresAt = new DateTime(2000, 1, 1, 0, 0, 0) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 1, 1, 12, 0, 0) },
+            new UrlInfo { ExpiresAt = new DateTime(2000, 1, 1, 23, 59, 59) },
+          });
+
+        var result = sut.GetRecords(null, new DateTime(2000, 1, 1), new DateTime(2000, 1, 1));
+
+        var records = result.UrlInformation.ToList();
+        Assert.AreEqual(3, records.Count);
+      }
+
+      [TestMethod]
       public void ReturnsRecordsInDescendingOrderByDate()
       {
         repository
