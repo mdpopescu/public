@@ -15,12 +15,12 @@
     <ol>
       <li>
         @Html.LabelFor(m => m.FromDate)
-        @Html.EditorFor(m => m.FromDate, new { cssClass = "short" })
+        @Html.EditorFor(m => m.FromDate, new { cssClass = "short2" })
         @Html.ValidationMessageFor(m => m.FromDate)
       </li>
       <li>
         @Html.LabelFor(m => m.ToDate)
-        @Html.EditorFor(m => m.ToDate, new { cssClass = "short" })
+        @Html.EditorFor(m => m.ToDate, new { cssClass = "short2" })
         @Html.ValidationMessageFor(m => m.ToDate)
       </li>
       <li id="send">
@@ -42,7 +42,7 @@
         }
         else
         {
-          <li>@Html.ActionLink(i.ToString(), "Display", new { page = i })</li>
+          <li>@Html.ActionLink(i.ToString(), "Display", new { page = i, Model.FromDate, Model.ToDate })</li>
         }
       }
     </ol>
@@ -62,7 +62,7 @@
         <tr>
           <td><a href="@urlInfo.OriginalUrl">@urlInfo.OriginalUrl</a></td>
           <td><a href="@urlInfo.SafeUrl">@urlInfo.SafeUrl</a></td>
-          <td class="date">@urlInfo.ExpiresAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+          <td class="date">@urlInfo.ExpiresAt.ToString("Constants.DATE_FORMAT HH:mm:ss")</td>
         </tr>
       }
     </tbody>

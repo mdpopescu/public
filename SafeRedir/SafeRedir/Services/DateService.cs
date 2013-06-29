@@ -8,11 +8,15 @@ namespace Renfield.SafeRedir.Services
     {
       if (fromDate == null && toDate == null)
         return "all records";
+
+      var d1 = fromDate.GetValueOrDefault().ToString(Constants.DATE_FORMAT);
+      var d2 = toDate.GetValueOrDefault().ToString(Constants.DATE_FORMAT);
+
       if (fromDate == null)
-        return string.Format("records before {0:yyyy-MM-dd}", toDate);
+        return string.Format("records before {0}", d2);
       if (toDate == null)
-        return string.Format("records after {0:yyyy-MM-dd}", fromDate);
-      return string.Format("records between {0:yyyy-MM-dd} and {1:yyyy-MM-dd}", fromDate, toDate);
+        return string.Format("records after {0}", d1);
+      return string.Format("records between {0} and {1}", d1, d2);
     }
   }
 }

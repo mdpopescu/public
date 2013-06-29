@@ -8,9 +8,13 @@ namespace Renfield.SafeRedir.Models
   public class PaginatedRecords
   {
     [Display(Name = "Start date (optional)")]
+    [DataType(DataType.Date)]
+    [DisplayFormat(DataFormatString = Constants.DATE_FORMAT, ApplyFormatInEditMode = true)]
     public DateTime? FromDate { get; set; }
 
     [Display(Name = "End date (optional)")]
+    [DataType(DataType.Date)]
+    [DisplayFormat(DataFormatString = Constants.DATE_FORMAT, ApplyFormatInEditMode = true)]
     public DateTime? ToDate { get; set; }
 
     public string DateRange { get; set; }

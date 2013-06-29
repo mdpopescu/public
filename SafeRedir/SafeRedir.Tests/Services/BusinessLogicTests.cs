@@ -213,7 +213,7 @@ namespace Renfield.SafeRedir.Tests.Services
 
         Assert.AreEqual(new DateTime(2000, 1, 1), result.FromDate);
         Assert.AreEqual(new DateTime(2000, 12, 31), result.ToDate);
-        Assert.AreEqual("records between 2000-01-01 and 2000-12-31", result.DateRange);
+        Assert.AreEqual("records between 01/01/2000 and 12/31/2000", result.DateRange);
         var records = result.UrlInformation.ToList();
         Assert.AreEqual(3, records.Count);
         Assert.AreEqual(2000, records[0].ExpiresAt.Year);

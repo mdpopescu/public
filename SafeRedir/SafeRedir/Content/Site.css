@@ -215,6 +215,9 @@ form textarea {
 form input[type="text"].short,
 form input[type="password"].short { width: 6em; }
 
+form input[type="text"].short2,
+form input[type="password"].short2 { width: 8em; }
+
 form input[type="text"]:focus,
 form input[type="password"]:focus,
 form textarea:focus {
@@ -346,11 +349,18 @@ div#title {
     display: inline;
     margin: 4px;
     background-color: #eee;
+}
+
+#pages ol li a {
     padding-right: 1em;
     padding-left: 1em;
 }
 
-#pages ol li.currentPage { font-size: 125%; }
+#pages ol li.currentPage {
+    font-size: 125%;
+    padding-right: 1em;
+    padding-left: 1em;
+}
 
 #records table { width: 80%; }
 

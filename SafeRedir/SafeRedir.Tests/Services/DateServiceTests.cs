@@ -23,7 +23,7 @@ namespace Renfield.SafeRedir.Tests.Services
       {
         var result = sut.GetRange(new DateTime(2000, 1, 1), new DateTime(2001, 3, 5));
 
-        Assert.AreEqual("records between 2000-01-01 and 2001-03-05", result);
+        Assert.AreEqual("records between 01/01/2000 and 03/05/2001", result);
       }
 
       [TestMethod]
@@ -31,7 +31,7 @@ namespace Renfield.SafeRedir.Tests.Services
       {
         var result = sut.GetRange(new DateTime(2000, 1, 1), null);
 
-        Assert.AreEqual("records after 2000-01-01", result);
+        Assert.AreEqual("records after 01/01/2000", result);
       }
 
       [TestMethod]
@@ -39,7 +39,7 @@ namespace Renfield.SafeRedir.Tests.Services
       {
         var result = sut.GetRange(null, new DateTime(2001, 3, 5));
 
-        Assert.AreEqual("records before 2001-03-05", result);
+        Assert.AreEqual("records before 03/05/2001", result);
       }
 
       [TestMethod]
@@ -55,7 +55,7 @@ namespace Renfield.SafeRedir.Tests.Services
       {
         var result = sut.GetRange(new DateTime(2000, 1, 1, 2, 3, 4), new DateTime(2001, 3, 5, 6, 7, 8));
 
-        Assert.AreEqual("records between 2000-01-01 and 2001-03-05", result);
+        Assert.AreEqual("records between 01/01/2000 and 03/05/2001", result);
       }
     }
   }

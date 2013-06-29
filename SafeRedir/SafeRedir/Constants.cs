@@ -7,5 +7,7 @@
     public const int PAGE_SIZE = 10;
 
     public const string SECRET = "{EA41809E-CADD-4057-BA5A-B01B34C95070}";
+
+    public const string DATE_FORMAT = "MM/dd/yyyy";
   }
 }
