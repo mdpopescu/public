@@ -3,12 +3,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Inventory.Tests
 {
-    [TestClass]
-    public class AcceptanceTests
+  [TestClass]
+  public class AcceptanceTests
+  {
+    [TestMethod]
+    public void TestMethod1()
     {
-        [TestMethod]
-        public void TestMethod1()
-        {
-        }
     }
+  }
 }
