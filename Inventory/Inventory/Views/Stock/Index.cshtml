@@ -10,13 +10,17 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Sale Price</th>
+      <th>Quantity</th>
+      <th>Purchase Value</th>
+      <th>Sale Value</th>
     </tr>
   </thead>
   <tbody data-bind="foreach: products">
     <tr>
       <td data-bind="text: Name"></td>
-      <td data-bind="text: SalePrice" class="number"></td>
+      <td data-bind="text: Quantity" class="number"></td>
+      <td data-bind="text: PurchaseValue" class="number"></td>
+      <td data-bind="text: SaleValue" class="number"></td>
     </tr>
   </tbody>
 </table>
@@ -25,8 +29,8 @@
   $(function() {
     var data = {
       'products': [
-        { 'Name': 'Hammer', 'SalePrice': '11.99' },
-        { 'Name': 'Nail Pack x100', 'SalePrice': '0.05' }
+        { 'Name': 'Hammer', 'Quantity': '5.00', 'PurchaseValue': '55.00', 'Sale Value': '77.99' },
+        { 'Name': 'Nail Pack x100', 'Quantity': '5.00', 'PurchaseValue': '55.00', 'Sale Value': '77.99' }
       ]
     };
     var view = ko.mapping.fromJS(data);

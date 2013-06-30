@@ -39,7 +39,7 @@ namespace Renfield.Inventory.Tests
         .SelectNodes(".//th")
         .Select(node => node.InnerText)
         .ToArray();
-      CollectionAssert.AreEqual(new[] { "Name", "Sale Price" }, columns);
+      CollectionAssert.AreEqual(new[] { "Name", "Quantity", "Purchase Value", "Sale Value" }, columns);
     }
 
     //
