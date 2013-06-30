@@ -11,6 +11,11 @@ namespace Renfield.Inventory.Data
     public DbSet<Acquisition> Acquisitions { get; set; }
     public DbSet<Sale> Sales { get; set; }
 
+    public InventoryDB(string nameOrConnectionString)
+      : base(nameOrConnectionString)
+    {
+    }
+
     public IEnumerable<Stock> GetStock()
     {
       return from p in Products

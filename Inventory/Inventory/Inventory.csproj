@@ -47,6 +47,16 @@
       <HintPath>..\packages\EntityFramework.SqlServerCompact.6.0.0-beta1\lib\net40\EntityFramework.SqlServerCompact.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Munq.IocContainer">
+      <HintPath>..\packages\Munq.IocContainer.3.1.6\Lib\Munq.IocContainer.dll</HintPath>
+    </Reference>
+    <Reference Include="Munq.MVC3">
+      <HintPath>..\packages\Munq.MVC3.3.1.5\Lib\Munq.MVC3.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
@@ -75,14 +85,19 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebActivator">
+      <HintPath>..\packages\WebActivator.1.4.4\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\MunqMvc3Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Data\Acquisition.cs" />
     <Compile Include="Data\AcquisitionItem.cs" />
     <Compile Include="Data\Company.cs" />
     <Compile Include="Data\InventoryDB.cs" />
+    <Compile Include="Data\InventoryDBFactory.cs" />
     <Compile Include="Data\Product.cs" />
     <Compile Include="Data\Repository.cs" />
     <Compile Include="Data\Sale.cs" />
@@ -244,6 +259,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
