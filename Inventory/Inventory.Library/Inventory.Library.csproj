@@ -50,6 +50,7 @@
     <Compile Include="Data\Company.cs" />
     <Compile Include="Data\InventoryDB.cs" />
     <Compile Include="Data\Product.cs" />
+    <Compile Include="Data\Repository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
