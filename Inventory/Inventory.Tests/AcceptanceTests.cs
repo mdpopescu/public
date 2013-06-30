@@ -28,6 +28,17 @@ namespace Renfield.Inventory.Tests
       Assert.AreEqual("Todos", links[6].InnerText);
     }
 
+    [TestMethod]
+    public void Stock()
+    {
+      var root = LoadHtml("Stock/");
+
+      var productsTable = root.SelectSingleNode(".//table[@id='products']");
+      Assert.IsNotNull(productsTable);
+      var columns = productsTable.SelectNodes(".//th").ToArray();
+      CollectionAssert.AreEqual(new[] { "Name", "Sale Price" }, columns);
+    }
+
     //
 
     private static HtmlNode LoadHtml(string page)
