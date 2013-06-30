@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Inventory.Models 
+namespace Renfield.Inventory.Models 
 {
     public class ExternalLoginConfirmationViewModel
     {

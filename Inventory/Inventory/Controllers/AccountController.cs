@@ -8,9 +8,9 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
-using Inventory.Models;
+using Renfield.Inventory.Models;
 
-namespace Inventory.Controllers
+namespace Renfield.Inventory.Controllers
 {
     [Authorize]
     public class AccountController : Controller

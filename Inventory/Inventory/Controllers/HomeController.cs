@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Inventory.Controllers
+namespace Renfield.Inventory.Controllers
 {
     public class HomeController : Controller
     {

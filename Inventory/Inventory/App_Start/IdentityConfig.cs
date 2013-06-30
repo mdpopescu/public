@@ -8,10 +8,10 @@ using System.Web;
 using System.Web.Helpers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Inventory;
-using Inventory.Models;
+using Renfield.Inventory.Models;
+using Renfield.Inventory;
 
-namespace Inventory
+namespace Renfield.Inventory
 {
     // For more information on ASP.NET Identity, visit http://go.microsoft.com/fwlink/?LinkId=301863
     public static class IdentityConfig 
@@ -92,7 +92,7 @@ namespace Microsoft.AspNet.Identity
             ClaimsIdentity ci = identity as ClaimsIdentity;
             if (ci != null) 
             {
-                return ci.FindFirstValue(Inventory.IdentityConfig.UserIdClaimType);
+                return ci.FindFirstValue(IdentityConfig.UserIdClaimType);
             }
             return String.Empty;
         }

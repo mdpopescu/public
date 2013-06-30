@@ -1,6 +1,6 @@
 ﻿using Owin;
 
-namespace Inventory
+namespace Renfield.Inventory
 {
     public partial class Startup
     {

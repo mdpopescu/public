@@ -9,7 +9,7 @@ using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace Inventory.Models 
+namespace Renfield.Inventory.Models 
 {
     // Modify the User class to add extra user information
     public class User : IUser

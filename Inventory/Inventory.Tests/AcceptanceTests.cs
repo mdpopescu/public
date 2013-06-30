@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Inventory.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class AcceptanceTests
     {
         [TestMethod]
         public void TestMethod1()

@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace Inventory
+namespace Renfield.Inventory
 {
     public class BundleConfig
     {
