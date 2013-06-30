@@ -9,5 +9,10 @@ namespace Renfield.Inventory
     {
       return multiSequence.SelectMany(s => s);
     }
+
+    public static string Formatted(this decimal value)
+    {
+      return value.ToString("#,##0.00");
+    }
   }
 }
