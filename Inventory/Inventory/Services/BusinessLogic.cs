@@ -12,7 +12,7 @@ namespace Renfield.Inventory.Services
 
     public IEnumerable<Stock> GetStock()
     {
-      return repository.GetStock();
+      return repository.Stocks;
     }
 
     //

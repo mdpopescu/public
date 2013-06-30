@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Data.Entity;
 
 namespace Renfield.Inventory.Data
 {
@@ -6,6 +6,12 @@ namespace Renfield.Inventory.Data
   {
     int SaveChanges();
 
-    IEnumerable<Stock> GetStock();
+    DbSet<Product> Products { get; set; }
+    DbSet<Company> Companies { get; set; }
+    DbSet<Acquisition> Acquisitions { get; set; }
+    DbSet<AcquisitionItem> AcquisitionItems { get; set; }
+    DbSet<Sale> Sales { get; set; }
+    DbSet<SaleItem> SaleItems { get; set; }
+    DbSet<Stock> Stocks { get; set; }
   }
 }

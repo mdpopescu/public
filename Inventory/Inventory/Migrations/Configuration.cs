@@ -72,7 +72,7 @@ namespace Renfield.Inventory.Migrations
           Items = new[]
           {
             new SaleItem { ProductId = products["Saw"], Quantity = 3, Price = 19.99m },
-            new SaleItem { ProductId = products["Nail Pack x 100"], Quantity = 1, Price = 0.05m },
+            new SaleItem { ProductId = products["Nail Pack x100"], Quantity = 30, Price = 0.05m },
             new SaleItem { ProductId = products["Hammer"], Quantity = 1, Price = 10.99m },
           }
         },
@@ -82,11 +82,21 @@ namespace Renfield.Inventory.Migrations
           Date = new DateTime(2013, 6, 4),
           Items = new[]
           {
-            new SaleItem { ProductId = products["Nail Pack x 100"], Quantity = 3, Price = 0.04m },
+            new SaleItem { ProductId = products["Nail Pack x100"], Quantity = 150, Price = 0.04m },
             new SaleItem { ProductId = products["Toolkit"], Quantity = 2, Price = 19.99m },
             new SaleItem { ProductId = products["Hammer"], Quantity = 2, Price = 11.99m },
           }
         }
+        );
+
+      context.SaveChanges();
+
+      context.Stocks.AddOrUpdate(
+        s => s.ProductId,
+        new Stock { ProductId = products["Hammer"], Name = "Hammer", Quantity = 17, PurchaseValue = 101.83m, SaleValue = 203.83m, },
+        new Stock { ProductId = products["Nail Pack x100"], Name = "Nail Pack x100", Quantity = 1820, PurchaseValue = 18.20m, SaleValue = 91.00m, },
+        new Stock { ProductId = products["Saw"], Name = "Saw", Quantity = 7, PurchaseValue = 90.93m, SaleValue = 339.83m, },
+        new Stock { ProductId = products["Toolkit"], Name = "Toolkit", Quantity = 8, PurchaseValue = 239.92m, SaleValue = 319.92m, }
         );
 
       context.SaveChanges();
