@@ -322,3 +322,13 @@ div#title {
 .tri-state {
     width: 6em;
 }
+
+/**/
+
+table th {
+    text-align: center;
+}
+
+table td.number {
+    text-align: right;
+}
