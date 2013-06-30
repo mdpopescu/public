@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Inventory")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Renfield Software")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Inventory")]
-[assembly: AssemblyCopyright("Copyright © Renfield Software 2013")]
+[assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("bbb79e71-6c52-46e9-bac3-5edaa7c5fe3b")]
+[assembly: Guid("7078b305-1032-45f9-b29d-367da5bc24c0")]
 
 // Version information for an assembly consists of the following four values:
 //

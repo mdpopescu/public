@@ -1,23 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory", "Inventory\Inventory.csproj", "{C728F45D-C4C0-4E6A-824E-F39676C6CE1D}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2013 for Web
+VisualStudioVersion = 12.0.20617.1 PREVIEW
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory", "Inventory\Inventory.csproj", "{DEDE9F54-9056-4FD2-8796-D8710FAFD431}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Tests", "Inventory.Tests\Inventory.Tests.csproj", "{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{01AC568C-031D-4079-9195-94E85A9D071E}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Library", "Inventory.Library\Inventory.Library.csproj", "{AA26FFEA-7F77-4463-AF08-7EB905EB09C4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Info", "Info", "{38B1F24B-6931-413A-8375-F03655737F8D}"
-	ProjectSection(SolutionItems) = preProject
-		todo.txt = todo.txt
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Tests", "C:\Users\Marcel Popescu\Documents\Visual Studio 2013\Projects\Inventory\Inventory.Tests\Inventory.Tests.csproj", "{5FDBBA13-4895-443F-8CDC-1066DF68C222}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,18 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C728F45D-C4C0-4E6A-824E-F39676C6CE1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C728F45D-C4C0-4E6A-824E-F39676C6CE1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C728F45D-C4C0-4E6A-824E-F39676C6CE1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C728F45D-C4C0-4E6A-824E-F39676C6CE1D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D32BDA5-C059-4758-BE6D-D15C15EBC0D7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA26FFEA-7F77-4463-AF08-7EB905EB09C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA26FFEA-7F77-4463-AF08-7EB905EB09C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA26FFEA-7F77-4463-AF08-7EB905EB09C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA26FFEA-7F77-4463-AF08-7EB905EB09C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEDE9F54-9056-4FD2-8796-D8710FAFD431}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEDE9F54-9056-4FD2-8796-D8710FAFD431}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEDE9F54-9056-4FD2-8796-D8710FAFD431}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEDE9F54-9056-4FD2-8796-D8710FAFD431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FDBBA13-4895-443F-8CDC-1066DF68C222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FDBBA13-4895-443F-8CDC-1066DF68C222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FDBBA13-4895-443F-8CDC-1066DF68C222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FDBBA13-4895-443F-8CDC-1066DF68C222}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
