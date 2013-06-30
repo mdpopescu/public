@@ -27,15 +27,11 @@
 
 <script type="text/javascript">
   $(function() {
-    var data = {
-      'products': [
-        { 'Name': 'Hammer', 'Quantity': '5.00', 'PurchaseValue': '55.00', 'Sale Value': '77.99' },
-        { 'Name': 'Nail Pack x100', 'Quantity': '5.00', 'PurchaseValue': '55.00', 'Sale Value': '77.99' }
-      ]
-    };
-    var view = ko.mapping.fromJS(data);
+    $.getJSON($.BASE_URL + "Stock/GetStock", function(data) {
+      var view = ko.mapping.fromJS(data);
 
-    ko.applyBindings(view);
+      ko.applyBindings(view);
+    });
 
     JTable.Setup();
   })
