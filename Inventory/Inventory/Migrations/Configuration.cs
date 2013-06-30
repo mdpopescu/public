@@ -1,3 +1,4 @@
+using System;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using Renfield.Inventory.Data;
@@ -44,6 +45,7 @@ namespace Renfield.Inventory.Migrations
         new Acquisition
         {
           CompanyId = companies["Acme"],
+          Date = new DateTime(2013, 5, 1),
           Items = new[]
           {
             new AcquisitionItem { ProductId = products["Hammer"], Quantity = 20, Price = 5.99m },
@@ -53,10 +55,36 @@ namespace Renfield.Inventory.Migrations
         new Acquisition
         {
           CompanyId = companies["Hotpoint"],
+          Date = new DateTime(2013, 5, 3),
           Items = new[]
           {
             new AcquisitionItem { ProductId = products["Saw"], Quantity = 10, Price = 12.99m },
             new AcquisitionItem { ProductId = products["Toolkit"], Quantity = 10, Price = 29.99m },
+          }
+        }
+        );
+
+      context.Sales.AddOrUpdate(
+        new Sale
+        {
+          CompanyId = companies["Microsoft"],
+          Date = new DateTime(2013, 6, 1),
+          Items = new[]
+          {
+            new SaleItem { ProductId = products["Saw"], Quantity = 3, Price = 19.99m },
+            new SaleItem { ProductId = products["Nail Pack x 100"], Quantity = 1, Price = 0.05m },
+            new SaleItem { ProductId = products["Hammer"], Quantity = 1, Price = 10.99m },
+          }
+        },
+        new Sale
+        {
+          CompanyId = companies["Borland"],
+          Date = new DateTime(2013, 6, 4),
+          Items = new[]
+          {
+            new SaleItem { ProductId = products["Nail Pack x 100"], Quantity = 3, Price = 0.04m },
+            new SaleItem { ProductId = products["Toolkit"], Quantity = 2, Price = 19.99m },
+            new SaleItem { ProductId = products["Hammer"], Quantity = 2, Price = 11.99m },
           }
         }
         );

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Renfield.Inventory.Data
 {
@@ -6,6 +7,7 @@ namespace Renfield.Inventory.Data
   {
     public int Id { get; set; }
     public int CompanyId { get; set; }
+    public DateTime Date { get; set; }
 
     public virtual ICollection<AcquisitionItem> Items { get; set; }
     public virtual Company Company { get; set; }
