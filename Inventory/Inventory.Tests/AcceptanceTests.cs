@@ -35,7 +35,10 @@ namespace Renfield.Inventory.Tests
 
       var productsTable = root.SelectSingleNode(".//table[@id='products']");
       Assert.IsNotNull(productsTable);
-      var columns = productsTable.SelectNodes(".//th").ToArray();
+      var columns = productsTable
+        .SelectNodes(".//th")
+        .Select(node => node.InnerText)
+        .ToArray();
       CollectionAssert.AreEqual(new[] { "Name", "Sale Price" }, columns);
     }
 
