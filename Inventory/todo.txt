@@ -1,8 +1,8 @@
 Pages:
  - presentation page
  - product inventory: shows the paginated list of existing stock, updated in real-time
- - product entry: allows the addition of new products and/or new stock for existing products
- - product sale: allows the sale of existing stock; gets updated in real-time
+ - product acquisitions: allows the addition of new products and/or new stock for existing products
+ - product sales: allows the sale of existing stock; gets updated in real-time
  - edit company details
  - edit product details
  - show "todos" - when entering a new purchase / sale order, if the company is new just create it and add the company name to the "todo" list; same with products

@@ -79,9 +79,24 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Data\Acquisition.cs" />
+    <Compile Include="Data\AcquisitionItem.cs" />
+    <Compile Include="Data\Company.cs" />
+    <Compile Include="Data\InventoryDB.cs" />
+    <Compile Include="Data\Product.cs" />
+    <Compile Include="Data\Repository.cs" />
+    <Compile Include="Data\Sale.cs" />
+    <Compile Include="Data\SaleItem.cs" />
+    <Compile Include="Data\Stock.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201306301126012_m00.cs" />
+    <Compile Include="Migrations\201306301126012_m00.Designer.cs">
+      <DependentUpon>201306301126012_m00.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -236,6 +251,11 @@
   <ItemGroup>
     <None Include="Scripts\jquery-2.0.2.min.map" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201306301126012_m00.resx">
+      <DependentUpon>201306301126012_m00.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
