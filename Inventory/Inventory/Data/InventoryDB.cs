@@ -27,14 +27,14 @@ namespace Renfield.Inventory.Data
     public IEnumerable<Acquisition> GetAcquisitions()
     {
       return Acquisitions
-        .Include("Company")
-        .Include("Items");
+        .Include(it => it.Company)
+        .Include(it => it.Items.Select(itt => itt.Product));
     }
 
     public IEnumerable<AcquisitionItem> GetAcquisitionItems(int id)
     {
       return AcquisitionItems
-        .Include("Product")
+        .Include(it => it.Product)
         .Where(ai => ai.AcquisitionId == id);
     }
 
