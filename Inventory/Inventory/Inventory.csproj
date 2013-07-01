@@ -269,6 +269,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Stocks\Index.cshtml" />
     <Content Include="Views\Acquisitions\Index.cshtml" />
+    <Content Include="Views\Acquisitions\Create.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

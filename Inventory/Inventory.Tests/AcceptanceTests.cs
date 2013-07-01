@@ -15,7 +15,7 @@ namespace Renfield.Inventory.Tests
     {
       var root = LoadHtml("");
 
-      var nav = root.SelectSingleNode(".//ul[@id='menu']");
+      var nav = root.GetTagById("ul", "menu");
       Assert.IsNotNull(nav);
       var links = nav.SelectNodes(".//li/a").ToList();
       Assert.AreEqual(7, links.Count);
@@ -33,10 +33,9 @@ namespace Renfield.Inventory.Tests
     {
       var root = LoadHtml("Stocks/");
 
-      var productsTable = root.SelectSingleNode(".//table[@id='products']");
+      var productsTable = root.GetTagById("table", "products");
       Assert.IsNotNull(productsTable);
-      CollectionAssert.AreEqual(new[] { "Name", "Quantity", "Recommended Retail Price", "Purchase Value", "Sale Value" },
-        GetColumns(productsTable).ToArray());
+      CollectionAssert.AreEqual(new[] { "Name", "Quantity", "Recommended Retail Price", "Purchase Value", "Sale Value" }, productsTable.GetColumns());
     }
 
     [TestMethod]
@@ -44,21 +43,25 @@ namespace Renfield.Inventory.Tests
     {
       var root = LoadHtml("Acquisitions/");
 
-      var linkToAdd = root.SelectSingleNode(".//a[@id='acquisitions_create']");
+      var linkToAdd = root.GetTagById("a", "acquisitions_create");
       Assert.IsNotNull(linkToAdd);
       Assert.AreEqual("/Acquisitions/Create", linkToAdd.Attributes["href"].Value);
-      var mainTable = root.SelectSingleNode(".//table[@id='acquisitions']");
+      var mainTable = root.GetTagById("table", "acquisitions");
       Assert.IsNotNull(mainTable);
-      CollectionAssert.AreEqual(new[] { "Company Name", "Date", "Total Value" }, GetColumns(mainTable));
-      var itemsTable = root.SelectSingleNode(".//table[@id='acquisition_items']");
+      CollectionAssert.AreEqual(new[] { "Company Name", "Date", "Total Value" }, mainTable.GetColumns());
+      var itemsTable = root.GetTagById("table", "acquisition_items");
       Assert.IsNotNull(itemsTable);
-      CollectionAssert.AreEqual(new[] { "Product Name", "Quantity", "Price", "Value" }, GetColumns(itemsTable));
+      CollectionAssert.AreEqual(new[] { "Product Name", "Quantity", "Price", "Value" }, itemsTable.GetColumns());
     }
 
     [TestMethod]
     public void GetCreateAcquisitions()
     {
       var root = LoadHtml("Acquisitions/Create");
+
+      var form = root.SelectSingleNode(".//form");
+      var companyName = form.GetTagById("input", "companyName");
+      Assert.IsNotNull(companyName);
     }
 
     //
@@ -76,14 +79,6 @@ namespace Renfield.Inventory.Tests
     {
       using (var web = new WebClient())
         return web.DownloadString(url);
-    }
-
-    private static string[] GetColumns(HtmlNode productsTable)
-    {
-      return productsTable
-        .SelectNodes(".//th")
-        .Select(node => node.InnerText)
-        .ToArray();
     }
   }
 }
