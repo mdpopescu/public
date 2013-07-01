@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Renfield.Inventory.Models;
 using Renfield.Inventory.Services;
 
 namespace Renfield.Inventory.Controllers
@@ -25,6 +26,13 @@ namespace Renfield.Inventory.Controllers
     {
       var data = logic.GetAcquisitionItems(id);
       return Json(data, JsonRequestBehavior.AllowGet);
+    }
+
+    public ActionResult Create()
+    {
+      var model = new AcquisitionModel();
+
+      return View(model);
     }
 
     //

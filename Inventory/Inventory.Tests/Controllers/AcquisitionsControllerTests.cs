@@ -54,5 +54,14 @@ namespace Renfield.Inventory.Tests.Controllers
 
       Assert.AreEqual(list, result.Data);
     }
+
+    [TestMethod]
+    public void GetCreateReturnsViewWithAcquisitionModel()
+    {
+      var result = sut.Create() as ViewResult;
+
+      var model = result.Model as AcquisitionModel;
+      Assert.IsNotNull(model);
+    }
   }
 }

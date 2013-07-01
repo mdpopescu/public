@@ -44,12 +44,21 @@ namespace Renfield.Inventory.Tests
     {
       var root = LoadHtml("Acquisitions/");
 
+      var linkToAdd = root.SelectSingleNode(".//a[@id='acquisitions_create']");
+      Assert.IsNotNull(linkToAdd);
+      Assert.AreEqual("/Acquisitions/Create", linkToAdd.Attributes["href"].Value);
       var mainTable = root.SelectSingleNode(".//table[@id='acquisitions']");
       Assert.IsNotNull(mainTable);
       CollectionAssert.AreEqual(new[] { "Company Name", "Date", "Total Value" }, GetColumns(mainTable));
       var itemsTable = root.SelectSingleNode(".//table[@id='acquisition_items']");
       Assert.IsNotNull(itemsTable);
       CollectionAssert.AreEqual(new[] { "Product Name", "Quantity", "Price", "Value" }, GetColumns(itemsTable));
+    }
+
+    [TestMethod]
+    public void GetCreateAcquisitions()
+    {
+      var root = LoadHtml("Acquisitions/Create");
     }
 
     //
