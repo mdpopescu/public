@@ -37,5 +37,28 @@ namespace Renfield.Inventory.Data
         .Include("Product")
         .Where(ai => ai.AcquisitionId == id);
     }
+
+    public Company FindOrAddCompanyByName(string name)
+    {
+      var company = Companies
+                      .Where(it => it.Name == name)
+                      .FirstOrDefault()
+                    ?? new Company { Name = name };
+
+      return company;
+    }
+
+    public Product FindOrAddProductByName(string name)
+    {
+      return Products
+               .Where(it => it.Name == name)
+               .FirstOrDefault()
+             ?? new Product { Name = name };
+    }
+
+    public void AddAcquisition(Acquisition acquisition)
+    {
+      Acquisitions.Add(acquisition);
+    }
   }
 }

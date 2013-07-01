@@ -40,8 +40,38 @@ namespace Renfield.Inventory.Services
           .ToList();
     }
 
+    public void AddAcquisition(AcquisitionModel model)
+    {
+      using (var repository = dbFactory.Invoke())
+      {
+        repository.AddAcquisition(ToEntity(repository, model));
+
+        repository.SaveChanges();
+      }
+    }
+
     //
 
     private readonly Func<Repository> dbFactory;
+
+    private static Acquisition ToEntity(Repository repository, AcquisitionModel model)
+    {
+      return new Acquisition
+      {
+        CompanyId = repository.FindOrAddCompanyByName(model.CompanyName).Id,
+        Date = model.Date.ParseDateNullable() ?? DateTime.Today,
+        Items = model.Items.Select(it => ToEntity(repository, it)).ToList(),
+      };
+    }
+
+    private static AcquisitionItem ToEntity(Repository repository, AcquisitionItemModel model)
+    {
+      return new AcquisitionItem
+      {
+        ProductId = repository.FindOrAddProductByName(model.ProductName).Id,
+        Quantity = decimal.Parse(model.Quantity),
+        Price = decimal.Parse(model.Price),
+      };
+    }
   }
 }

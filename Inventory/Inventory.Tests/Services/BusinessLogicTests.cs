@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.Inventory.Data;
+using Renfield.Inventory.Models;
 using Renfield.Inventory.Services;
 
 namespace Renfield.Inventory.Tests.Services
@@ -108,6 +109,46 @@ namespace Renfield.Inventory.Tests.Services
       Assert.AreEqual("20.00", result[1].Quantity);
       Assert.AreEqual("15.99", result[1].Price);
       Assert.AreEqual("319.80", result[1].Value);
+    }
+
+    [TestMethod]
+    public void AddAcquisitionAddsTheCorrectValuesToTheRepository()
+    {
+      repository
+        .Setup(it => it.FindOrAddCompanyByName("Microsoft"))
+        .Returns(new Company { Id = 1 });
+      repository
+        .Setup(it => it.FindOrAddProductByName("abc"))
+        .Returns(new Product { Id = 1 });
+      repository
+        .Setup(it => it.FindOrAddProductByName("def"))
+        .Returns(new Product { Id = 2 });
+      repository
+        .Setup(it => it.AddAcquisition(It.Is<Acquisition>(a => a.CompanyId == 1 &&
+                                                               a.Date == new DateTime(2000, 2, 3) &&
+                                                               a.Items.Count == 2 &&
+                                                               a.Items.First().ProductId == 1 &&
+                                                               a.Items.First().Quantity == 1.23m &&
+                                                               a.Items.First().Price == 4.00m)))
+        .Verifiable();
+      repository
+        .Setup(it => it.SaveChanges())
+        .Verifiable();
+
+      var model = new AcquisitionModel
+      {
+        CompanyName = "Microsoft",
+        Date = "2/3/2000",
+        Items = new[]
+        {
+          new AcquisitionItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
+          new AcquisitionItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+        },
+      };
+
+      sut.AddAcquisition(model);
+
+      repository.Verify();
     }
   }
 }

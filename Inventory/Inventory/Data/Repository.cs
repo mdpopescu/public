@@ -10,5 +10,8 @@ namespace Renfield.Inventory.Data
     IEnumerable<Stock> GetStocks();
     IEnumerable<Acquisition> GetAcquisitions();
     IEnumerable<AcquisitionItem> GetAcquisitionItems(int id);
+    Company FindOrAddCompanyByName(string name);
+    Product FindOrAddProductByName(string name);
+    void AddAcquisition(Acquisition acquisition);
   }
 }

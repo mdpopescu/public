@@ -45,6 +45,8 @@ namespace Renfield.Inventory.Controllers
     [HttpPost]
     public ActionResult Create(AcquisitionModel model)
     {
+      logic.AddAcquisition(model);
+
       return RedirectToAction("Create");
     }
 

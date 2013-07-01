@@ -74,5 +74,15 @@ namespace Renfield.Inventory.Tests.Controllers
       Assert.AreEqual("Create", result.RouteValues["action"]);
       Assert.IsNull(result.RouteValues["controller"]);
     }
+
+    [TestMethod]
+    public void PostCallsTheLogicToAddTheNewAcquisition()
+    {
+      var model = new AcquisitionModel();
+
+      sut.Create(model);
+
+      logic.Verify(it => it.AddAcquisition(model));
+    }
   }
 }

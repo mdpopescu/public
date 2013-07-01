@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Renfield.Inventory
@@ -24,6 +25,12 @@ namespace Renfield.Inventory
     {
       return string.Format("value: {1}, attr: {{ id : '{0}_' + $index() + '__{1}', name: '{0}[' + $index() + '].{1}' }}",
         listName, field);
+    }
+
+    public static DateTime? ParseDateNullable(this string s)
+    {
+      DateTime result;
+      return DateTime.TryParse(s, out result) ? result : (DateTime?) null;
     }
   }
 }
