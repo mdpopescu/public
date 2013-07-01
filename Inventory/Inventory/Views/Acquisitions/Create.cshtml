@@ -30,7 +30,7 @@
           <th>Quantity</th>
           <th>Price</th>
           <th>Value</th>
-          <th></th>
+          <th><button data-bind="click: addItem">[+]</button></th>
         </tr>
       </thead>
       <tbody data-bind="foreach: items">
@@ -38,11 +38,8 @@
           <td><input type="text" data-bind="value: ProductName"/></td>
           <td><input type="text" data-bind="value: Quantity" class="number"/></td>
           <td><input type="text" data-bind="value: Price" class="number"/></td>
-          <td data-bind="text: Value" class="number"></td>
-          <td>
-            <button data-bind="click: addItem">[+]</button>
-            <button data-bind="click: delItem">[-]</button>
-          </td>
+          <td><input type="text" data-bind="value: Value" class="number" readonly="readonly"/></td>
+          <td><button data-bind="click: $parent.delItem">[--]</button></td>
         </tr>
       </tbody>
     </table>
@@ -53,44 +50,46 @@
 
 <script type="text/javascript">
   $(function() {
-    var viewModel = createViewModel();
+    var viewModel = new ViewModel();
     ko.applyBindings(viewModel);
 
     JTable.Setup();
 
-    function createViewModel() {
-      var createItem = function() {
-        return {
-          ProductName: ko.observable(),
-          Quantity: ko.observable(),
-          Price: ko.observable(),
-          Value: ko.computed(function() {
-            try {
-              return this.Quantity() * this.Price();
-            } catch(ex) {
-              return 0;
-            }
-          })
-        };
+    function ViewModel() {
+      var self = this;
+
+      self.CompanyName = ko.observable();
+      self.Date = ko.observable();
+      self.items = ko.observableArray([new Item()]);
+
+      self.addItem = function() {
+        self.items.push(new Item());
       };
 
-      var addItem = function() {
-        items.push(createItem());
+      self.delItem = function(item) {
+        self.items.remove(item);
+        if (self.items().length == 0)
+          self.addItem();
       };
+    }
 
-      var delItem = function() {
-        items.pop();
-      };
+    function Item() {
+      var self = this;
 
-      var items = ko.observableArray([createItem()]);
+      self.ProductName = ko.observable();
+      self.Quantity = ko.observable();
+      self.Price = ko.observable();
+      self.Value = ko.computed(function() {
+        try {
+          var result = parseFloat(self.Quantity()) * parseFloat(self.Price());
+          if (isNaN(result))
+            result = 0;
 
-      return {
-        CompanyName: ko.observable(),
-        Date: ko.observable(),
-        items: items,
-        addItem: addItem,
-        delItem: delItem
-      };
+          return result;
+        } catch(ex) {
+          return 0;
+        }
+      });
     }
   })
 </script>
