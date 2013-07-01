@@ -60,7 +60,7 @@
       selected: function(e, ui) {
         var id = $(ui.selected).data('id');
 
-        $('#acquisitionId').val(id);
+        $('#acquisitionId').text(id);
         $.getJSON($.BASE_URL + "Acquisitions/GetAcquisitionItems", { id: id }, function(data) {
           if (childView != null)
             ko.mapping.fromJS({ acquisitionItems: data }, childView);
