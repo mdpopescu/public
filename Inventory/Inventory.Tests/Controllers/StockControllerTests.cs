@@ -1,8 +1,11 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.Inventory.Controllers;
 using Renfield.Inventory.Data;
+using Renfield.Inventory.Models;
 using Renfield.Inventory.Services;
 
 namespace Renfield.Inventory.Tests.Controllers
@@ -48,7 +51,7 @@ namespace Renfield.Inventory.Tests.Controllers
 
         var result = sut.GetStock() as JsonResult;
 
-        dynamic data = result.Data;
+        var data = ((IEnumerable<StockModel>) result.Data).ToList();
         Assert.AreEqual(2, data.Count);
         Assert.AreEqual("Hammer", data[0].Name);
         Assert.AreEqual("1.00", data[0].Quantity);
