@@ -52,13 +52,13 @@
 
 <script type="text/javascript">
   $(function() {
-    var masterView = null;
-    var childView = null;
+    var masterViewModel = null;
+    var childViewModel = null;
 
     $.getJSON($.BASE_URL + "Acquisitions/GetAcquisitions", function(data) {
-      masterView = ko.mapping.fromJS({ acquisitions: data });
+      masterViewModel = ko.mapping.fromJS({ acquisitions: data });
 
-      ko.applyBindings(masterView, $('#acquisitions')[0]);
+      ko.applyBindings(masterViewModel, $('#acquisitions')[0]);
     });
 
     JTable.Setup();
@@ -70,11 +70,11 @@
 
         $('#acquisitionId').text(id);
         $.getJSON($.BASE_URL + "Acquisitions/GetAcquisitionItems", { id: id }, function(data) {
-          if (childView != null)
-            ko.mapping.fromJS({ acquisitionItems: data }, childView);
+          if (childViewModel != null)
+            ko.mapping.fromJS({ acquisitionItems: data }, childViewModel);
           else {
-            childView = ko.mapping.fromJS({ acquisitionItems: data });
-            ko.applyBindings(childView, $('#acquisition_items')[0]);
+            childViewModel = ko.mapping.fromJS({ acquisitionItems: data });
+            ko.applyBindings(childViewModel, $('#acquisition_items')[0]);
           }
         });
       }

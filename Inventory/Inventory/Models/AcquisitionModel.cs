@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Renfield.Inventory.Data;
 
 namespace Renfield.Inventory.Models
@@ -6,7 +7,10 @@ namespace Renfield.Inventory.Models
   public class AcquisitionModel
   {
     public int Id { get; set; }
+
+    [Display(Name = "Company Name")]
     public string CompanyName { get; set; }
+
     public string Date { get; set; }
     public string Value { get; set; }
 

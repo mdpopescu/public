@@ -28,9 +28,9 @@
 <script type="text/javascript">
   $(function() {
     $.getJSON($.BASE_URL + "Stocks/GetStocks", function(data) {
-      var view = ko.mapping.fromJS({ stock: data });
+      var viewModel = ko.mapping.fromJS({ stock: data });
 
-      ko.applyBindings(view);
+      ko.applyBindings(viewModel);
     });
 
     JTable.Setup();

@@ -1,8 +1,96 @@
 ﻿@model Renfield.Inventory.Models.AcquisitionModel
-
 @{
   ViewBag.Title = "Create new acquisition";
 }
 
 <h2>Create new acquisition</h2>
 
+@Html.ValidationSummary()
+
+@using (Html.BeginForm())
+{
+  <div id="formHeader">
+    <span>
+      @Html.LabelFor(m => m.CompanyName)
+      @Html.EditorFor(m => m.CompanyName)
+      @Html.ValidationMessageFor(m => m.CompanyName)
+    </span>
+    <span>
+      @Html.LabelFor(m => m.Date)
+      @Html.EditorFor(m => m.Date)
+      @Html.ValidationMessageFor(m => m.Date)
+    </span>
+  </div>
+
+  <div id="formItems">
+    <table id="acquisition_items" class="jtable">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Value</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody data-bind="foreach: items">
+        <tr>
+          <td><input type="text" data-bind="value: ProductName"/></td>
+          <td><input type="text" data-bind="value: Quantity" class="number"/></td>
+          <td><input type="text" data-bind="value: Price" class="number"/></td>
+          <td data-bind="text: Value" class="number"></td>
+          <td>
+            <button data-bind="click: addItem">[+]</button>
+            <button data-bind="click: delItem">[-]</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <input type="submit" value="Submit" />
+}
+
+<script type="text/javascript">
+  $(function() {
+    var viewModel = createViewModel();
+    ko.applyBindings(viewModel);
+
+    JTable.Setup();
+
+    function createViewModel() {
+      var createItem = function() {
+        return {
+          ProductName: ko.observable(),
+          Quantity: ko.observable(),
+          Price: ko.observable(),
+          Value: ko.computed(function() {
+            try {
+              return this.Quantity() * this.Price();
+            } catch(ex) {
+              return 0;
+            }
+          })
+        };
+      };
+
+      var addItem = function() {
+        items.push(createItem());
+      };
+
+      var delItem = function() {
+        items.pop();
+      };
+
+      var items = ko.observableArray([createItem()]);
+
+      return {
+        CompanyName: ko.observable(),
+        Date: ko.observable(),
+        items: items,
+        addItem: addItem,
+        delItem: delItem
+      };
+    }
+  })
+</script>

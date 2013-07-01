@@ -1,11 +1,15 @@
-﻿using Renfield.Inventory.Data;
+﻿using System.ComponentModel.DataAnnotations;
+using Renfield.Inventory.Data;
 
 namespace Renfield.Inventory.Models
 {
   public class AcquisitionItemModel
   {
     public int Id { get; set; }
+
+    [Display(Name = "Product Name")]
     public string ProductName { get; set; }
+
     public string Quantity { get; set; }
     public string Price { get; set; }
     public string Value { get; set; }

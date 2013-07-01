@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using HtmlAgilityPack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -62,6 +63,9 @@ namespace Renfield.Inventory.Tests
       var form = root.SelectSingleNode(".//form");
       var companyName = form.GetTagById("input", "companyName");
       Assert.IsNotNull(companyName);
+      var date = form.GetTagById("input", "date");
+      Assert.IsNotNull(date);
+      Assert.AreEqual(DateTime.Today.ToString("MM/dd/yyyy"), date.Attributes["Value"].Value);
     }
 
     //
