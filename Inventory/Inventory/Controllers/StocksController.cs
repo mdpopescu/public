@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using Renfield.Inventory.Models;
+﻿using System.Web.Mvc;
 using Renfield.Inventory.Services;
 
 namespace Renfield.Inventory.Controllers
@@ -19,9 +17,7 @@ namespace Renfield.Inventory.Controllers
 
     public ActionResult GetStocks()
     {
-      var data = logic
-        .GetStocks()
-        .Select(StockModel.From);
+      var data = logic.GetStocks();
       return Json(data, JsonRequestBehavior.AllowGet);
     }
 

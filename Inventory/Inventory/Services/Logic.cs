@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using Renfield.Inventory.Data;
+using Renfield.Inventory.Models;
 
 namespace Renfield.Inventory.Services
 {
   public interface Logic
   {
-    IEnumerable<Stock> GetStocks();
-    IEnumerable<Acquisition> GetAcquisitions();
-    IEnumerable<AcquisitionItem> GetAcquisitionItems(int id);
+    IEnumerable<StockModel> GetStocks();
+    IEnumerable<AcquisitionModel> GetAcquisitions();
+    IEnumerable<AcquisitionItemModel> GetAcquisitionItems(int id);
   }
 }

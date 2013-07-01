@@ -11,12 +11,14 @@
       <tr>
         <th>Company Name</th>
         <th>Date</th>
+        <th>Total Value</th>
       </tr>
     </thead>
     <tbody data-bind="foreach: acquisitions">
       <tr data-bind="attr: { 'data-id' : Id }">
         <td data-bind="text: CompanyName"></td>
         <td data-bind="text: Date" class="date"></td>
+        <td data-bind="text: Value" class="number"></td>
       </tr>
     </tbody>
   </table>
@@ -30,6 +32,7 @@
         <th>Product Name</th>
         <th>Quantity</th>
         <th>Price</th>
+        <th>Value</th>
       </tr>
     </thead>
     <tbody data-bind="foreach: acquisitionItems">
@@ -37,6 +40,7 @@
         <td data-bind="text: ProductName"></td>
         <td data-bind="text: Quantity" class="number"></td>
         <td data-bind="text: Price" class="number"></td>
+        <td data-bind="text: Value" class="number"></td>
       </tr>
     </tbody>
   </table>

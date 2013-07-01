@@ -8,6 +8,7 @@ namespace Renfield.Inventory.Models
     public string ProductName { get; set; }
     public string Quantity { get; set; }
     public string Price { get; set; }
+    public string Value { get; set; }
 
     public static AcquisitionItemModel From(AcquisitionItem value)
     {
@@ -17,6 +18,7 @@ namespace Renfield.Inventory.Models
         ProductName = value.Product.Name,
         Quantity = value.Quantity.Formatted(),
         Price = value.Price.Formatted(),
+        Value = (value.Quantity * value.Price).Formatted(),
       };
     }
   }

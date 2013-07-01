@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using Renfield.Inventory.Models;
+﻿using System.Web.Mvc;
 using Renfield.Inventory.Services;
 
 namespace Renfield.Inventory.Controllers
@@ -19,19 +17,13 @@ namespace Renfield.Inventory.Controllers
 
     public ActionResult GetAcquisitions()
     {
-      var data = logic
-        .GetAcquisitions()
-        .Select(AcquisitionModel.From)
-        .ToList();
+      var data = logic.GetAcquisitions();
       return Json(data, JsonRequestBehavior.AllowGet);
     }
 
     public ActionResult GetAcquisitionItems(int id)
     {
-      var data = logic
-        .GetAcquisitionItems(id)
-        .Select(AcquisitionItemModel.From)
-        .ToList();
+      var data = logic.GetAcquisitionItems(id);
       return Json(data, JsonRequestBehavior.AllowGet);
     }
 

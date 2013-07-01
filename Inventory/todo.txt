@@ -8,3 +8,7 @@ Pages:
  - show "todos" - when entering a new purchase / sale order, if the company is new just create it and add the company name to the "todo" list; same with products
 
 All those pages (except for the first one) require user authentication.
+
+
+- include the mini profiler
+- include signalR

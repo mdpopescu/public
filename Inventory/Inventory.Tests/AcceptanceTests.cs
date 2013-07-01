@@ -35,7 +35,8 @@ namespace Renfield.Inventory.Tests
 
       var productsTable = root.SelectSingleNode(".//table[@id='products']");
       Assert.IsNotNull(productsTable);
-      CollectionAssert.AreEqual(new[] { "Name", "Quantity", "Purchase Value", "Sale Value" }, GetColumns(productsTable).ToArray());
+      CollectionAssert.AreEqual(new[] { "Name", "Quantity", "Recommended Retail Price", "Purchase Value", "Sale Value" },
+        GetColumns(productsTable).ToArray());
     }
 
     [TestMethod]
@@ -45,10 +46,10 @@ namespace Renfield.Inventory.Tests
 
       var mainTable = root.SelectSingleNode(".//table[@id='acquisitions']");
       Assert.IsNotNull(mainTable);
-      CollectionAssert.AreEqual(new[] { "Company Name", "Date" }, GetColumns(mainTable));
+      CollectionAssert.AreEqual(new[] { "Company Name", "Date", "Total Value" }, GetColumns(mainTable));
       var itemsTable = root.SelectSingleNode(".//table[@id='acquisition_items']");
       Assert.IsNotNull(itemsTable);
-      CollectionAssert.AreEqual(new[] { "Product Name", "Quantity", "Price" }, GetColumns(itemsTable));
+      CollectionAssert.AreEqual(new[] { "Product Name", "Quantity", "Price", "Value" }, GetColumns(itemsTable));
     }
 
     //

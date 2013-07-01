@@ -7,6 +7,7 @@ namespace Renfield.Inventory.Models
     public int Id { get; set; }
     public string Name { get; set; }
     public string Quantity { get; set; }
+    public string RRP { get; set; }
     public string PurchaseValue { get; set; }
     public string SaleValue { get; set; }
 
@@ -17,6 +18,7 @@ namespace Renfield.Inventory.Models
         Id = value.Id,
         Name = value.Name,
         Quantity = value.Quantity.Formatted(),
+        RRP = value.SalePrice.Formatted(),
         PurchaseValue = value.PurchaseValue.Formatted(),
         SaleValue = value.SaleValue.Formatted(),
       };

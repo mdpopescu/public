@@ -78,6 +78,7 @@
     <Compile Include="Controllers\StocksControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
+    <Compile Include="Services\BusinessLogicTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

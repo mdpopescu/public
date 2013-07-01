@@ -12,7 +12,12 @@ namespace Renfield.Inventory
 
     public static string Formatted(this decimal value)
     {
-      return value.ToString("#,##0.00");
+      return value.ToString(Constants.DECIMAL_FORMAT);
+    }
+
+    public static string Formatted(this decimal? value)
+    {
+      return value.HasValue ? value.Value.Formatted() : "";
     }
   }
 }

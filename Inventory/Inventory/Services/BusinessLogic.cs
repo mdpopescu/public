@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Renfield.Inventory.Data;
+using Renfield.Inventory.Models;
 
 namespace Renfield.Inventory.Services
 {
@@ -12,25 +13,30 @@ namespace Renfield.Inventory.Services
       this.dbFactory = dbFactory;
     }
 
-    public IEnumerable<Stock> GetStocks()
-    {
-      using (var repository = dbFactory.Invoke())
-        return repository.Stocks.ToList();
-    }
-
-    public IEnumerable<Acquisition> GetAcquisitions()
-    {
-      using (var repository = dbFactory.Invoke())
-        return repository.Acquisitions.Include("Company").ToList();
-    }
-
-    public IEnumerable<AcquisitionItem> GetAcquisitionItems(int id)
+    public IEnumerable<StockModel> GetStocks()
     {
       using (var repository = dbFactory.Invoke())
         return repository
-          .AcquisitionItems
-          .Include("Product")
-          .Where(ai => ai.AcquisitionId == id)
+          .GetStocks()
+          .Select(StockModel.From)
+          .ToList();
+    }
+
+    public IEnumerable<AcquisitionModel> GetAcquisitions()
+    {
+      using (var repository = dbFactory.Invoke())
+        return repository
+          .GetAcquisitions()
+          .Select(AcquisitionModel.From)
+          .ToList();
+    }
+
+    public IEnumerable<AcquisitionItemModel> GetAcquisitionItems(int id)
+    {
+      using (var repository = dbFactory.Invoke())
+        return repository
+          .GetAcquisitionItems(id)
+          .Select(AcquisitionItemModel.From)
           .ToList();
     }
 
