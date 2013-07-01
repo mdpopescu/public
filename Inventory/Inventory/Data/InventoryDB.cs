@@ -34,8 +34,8 @@ namespace Renfield.Inventory.Data
     public IEnumerable<AcquisitionItem> GetAcquisitionItems(int id)
     {
       return AcquisitionItems
-        .Include(it => it.Product)
-        .Where(ai => ai.AcquisitionId == id);
+        .Where(ai => ai.AcquisitionId == id)
+        .Include(it => it.Product);
     }
 
     public Company FindOrAddCompanyByName(string name)
