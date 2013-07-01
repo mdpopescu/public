@@ -26,6 +26,15 @@ namespace Renfield.Inventory.Controllers
       return Json(data, JsonRequestBehavior.AllowGet);
     }
 
+    public ActionResult GetAcquisitionItems(int id)
+    {
+      var data = logic
+        .GetAcquisitionItems(id)
+        .Select(AcquisitionItemModel.From)
+        .ToList();
+      return Json(data, JsonRequestBehavior.AllowGet);
+    }
+
     //
 
     private readonly Logic logic;

@@ -24,6 +24,16 @@ namespace Renfield.Inventory.Services
         return repository.Acquisitions.Include("Company").ToList();
     }
 
+    public IEnumerable<AcquisitionItem> GetAcquisitionItems(int id)
+    {
+      using (var repository = dbFactory.Invoke())
+        return repository
+          .AcquisitionItems
+          .Include("Product")
+          .Where(ai => ai.AcquisitionId == id)
+          .ToList();
+    }
+
     //
 
     private readonly Func<Repository> dbFactory;

@@ -48,7 +48,7 @@ namespace Renfield.Inventory.Tests
       CollectionAssert.AreEqual(new[] { "Company Name", "Date" }, GetColumns(mainTable));
       var itemsTable = root.SelectSingleNode(".//table[@id='acquisition_items']");
       Assert.IsNotNull(itemsTable);
-      CollectionAssert.AreEqual(new[] { "Name", "Quantity", "Price" }, GetColumns(itemsTable));
+      CollectionAssert.AreEqual(new[] { "Product Name", "Quantity", "Price" }, GetColumns(itemsTable));
     }
 
     //

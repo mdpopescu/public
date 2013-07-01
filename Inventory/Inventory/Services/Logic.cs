@@ -7,5 +7,6 @@ namespace Renfield.Inventory.Services
   {
     IEnumerable<Stock> GetStocks();
     IEnumerable<Acquisition> GetAcquisitions();
+    IEnumerable<AcquisitionItem> GetAcquisitionItems(int id);
   }
 }

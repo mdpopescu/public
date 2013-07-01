@@ -4,47 +4,59 @@
 
 <h2>Acquisitions</h2>
 
-<table id="acquisitions" class="jtable">
-  <thead>
-    <tr>
-      <th>Company Name</th>
-      <th>Date</th>
-    </tr>
-  </thead>
-  <tbody data-bind="foreach: acquisitions">
-    <tr>
-      <td data-bind="text: CompanyName"></td>
-      <td data-bind="text: date" class="date"></td>
-    </tr>
-  </tbody>
-</table>
+<div>
+  <legend>Acquisitions</legend>
+  <table id="acquisitions" class="jtable">
+    <thead>
+      <tr>
+        <th>Company Name</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody data-bind="foreach: acquisitions">
+      <tr data-bind="attr: { 'data-id' : Id }">
+        <td data-bind="text: CompanyName"></td>
+        <td data-bind="text: Date" class="date"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div>
+  <legend>Items for <span></span></legend>
+  <table id="acquisition_items" class="jtable">
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody data-bind="foreach: acquisitionItems">
+      <tr>
+        <td data-bind="text: ProductName"></td>
+        <td data-bind="text: Quantity" class="number"></td>
+        <td data-bind="text: Price" class="number"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <script type="text/javascript">
-  $(function() {
-    $.getJSON($.BASE_URL + "Acquisitions/GetAcquisitions", function(data) {
-      var view = ko.mapping.fromJS({ acquisitions: data }, mapping);
+  $(function () {
+    $.getJSON($.BASE_URL + "Acquisitions/GetAcquisitions", function (data) {
+      var view = ko.mapping.fromJS({ acquisitions: data });
 
       ko.applyBindings(view);
     });
 
-    JTable.Setup();
+    //JTable.Setup();
 
-    //
-
-    var mapping = {
-      'acquisitions': {
-        create: function(options) {
-          return new acquisitionModel(options.data);
-        }
+    $("#acquisitions").selectable({
+      filter: 'tbody tr',
+      selected: function (e, ui) {
+        console.log('x');
       }
-    };
-
-    function acquisitionModel(data) {
-      ko.mapping.fromJS(data, { }, this);
-
-      this.date = ko.computed(function() {
-        return formatDate(parseJsonDate(this.Date()));
-      }, this);
-    }
+    });
   })
 </script>
