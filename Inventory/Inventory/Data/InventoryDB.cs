@@ -26,7 +26,9 @@ namespace Renfield.Inventory.Data
 
     public IEnumerable<Acquisition> GetAcquisitions()
     {
-      return Acquisitions.Include("Company");
+      return Acquisitions
+        .Include("Company")
+        .Include("Items");
     }
 
     public IEnumerable<AcquisitionItem> GetAcquisitionItems(int id)
