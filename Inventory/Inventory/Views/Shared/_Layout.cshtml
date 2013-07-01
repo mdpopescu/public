@@ -1,6 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using StackExchange.Profiling
+
+<!DOCTYPE html>
 <html>
   <head>
+    @this.InitClientTimings()
+    
     <meta charset="utf-8" />
     <title>@ViewBag.Title</title>
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
@@ -47,5 +51,6 @@
         Copyright (c) 2013 <a href="http://renfieldsoftware.com">Renfield Software</a> &mdash; <a href="mailto:mdpopescu@renfieldsoftware.com">questions or comments?</a>
       </footer>
     </div>
+    @MiniProfiler.RenderIncludes()
   </body>
 </html>
