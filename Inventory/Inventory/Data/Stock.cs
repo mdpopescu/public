@@ -13,13 +13,9 @@ namespace Renfield.Inventory.Data
     [StringLength(256)]
     public string Name { get; set; }
 
-    [DisplayFormat(DataFormatString = "#,##0.00")]
+    public decimal? SalePrice { get; set; }
     public decimal Quantity { get; set; }
-
-    [DisplayFormat(DataFormatString = "#,##0.00")]
     public decimal PurchaseValue { get; set; }
-
-    [DisplayFormat(DataFormatString = "#,##0.00")]
     public decimal SaleValue { get; set; }
   }
 }

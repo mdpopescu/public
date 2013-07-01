@@ -95,10 +95,42 @@ namespace Renfield.Inventory.Migrations
 
       context.Stocks.AddOrUpdate(
         s => s.ProductId,
-        new Stock { ProductId = products["Hammer"], Name = "Hammer", Quantity = 17, PurchaseValue = 101.83m, SaleValue = 203.83m, },
-        new Stock { ProductId = products["Nail Pack x100"], Name = "Nail Pack x100", Quantity = 1820, PurchaseValue = 18.20m, SaleValue = 91.00m, },
-        new Stock { ProductId = products["Saw"], Name = "Saw", Quantity = 7, PurchaseValue = 90.93m, SaleValue = 339.83m, },
-        new Stock { ProductId = products["Toolkit"], Name = "Toolkit", Quantity = 8, PurchaseValue = 239.92m, SaleValue = 319.92m, }
+        new Stock
+        {
+          ProductId = products["Hammer"],
+          SalePrice = 11.99m,
+          Name = "Hammer",
+          Quantity = 17,
+          PurchaseValue = 101.83m,
+          SaleValue = 203.83m,
+        },
+        new Stock
+        {
+          ProductId = products["Nail Pack x100"],
+          SalePrice = 0.05m,
+          Name = "Nail Pack x100",
+          Quantity = 1820,
+          PurchaseValue = 18.20m,
+          SaleValue = 91.00m,
+        },
+        new Stock
+        {
+          ProductId = products["Saw"],
+          SalePrice = 19.99m,
+          Name = "Saw",
+          Quantity = 7,
+          PurchaseValue = 90.93m,
+          SaleValue = 339.83m,
+        },
+        new Stock
+        {
+          ProductId = products["Toolkit"],
+          SalePrice = 39.99m,
+          Name = "Toolkit",
+          Quantity = 8,
+          PurchaseValue = 239.92m,
+          SaleValue = 319.92m,
+        }
         );
 
       context.SaveChanges();
