@@ -22,7 +22,7 @@ namespace Renfield.Inventory.App_Start
       ioc.Register("InventoryDB", c => ConfigurationManager.ConnectionStrings["InventoryDB"].ConnectionString);
       ioc.Register<Repository>(c => new InventoryDB(c.Resolve<string>("InventoryDB")));
 
-      ioc.Register<Logic>(c => new BusinessLogic(c.Resolve<Repository>()));
+      ioc.Register<Logic>(c => new BusinessLogic(c.Resolve<Repository>));
     }
   }
 }

@@ -5,6 +5,7 @@ namespace Renfield.Inventory.Services
 {
   public interface Logic
   {
-    IEnumerable<Stock> GetStock();
+    IEnumerable<Stock> GetStocks();
+    IEnumerable<Acquisition> GetAcquisitions();
   }
 }

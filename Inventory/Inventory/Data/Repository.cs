@@ -1,8 +1,9 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 
 namespace Renfield.Inventory.Data
 {
-  public interface Repository
+  public interface Repository: IDisposable
   {
     int SaveChanges();
 

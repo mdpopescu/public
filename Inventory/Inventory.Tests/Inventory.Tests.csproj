@@ -74,7 +74,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AcceptanceTests.cs" />
-    <Compile Include="Controllers\StockControllerTests.cs" />
+    <Compile Include="Controllers\AcquisitionsControllerTests.cs" />
+    <Compile Include="Controllers\StocksControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
   </ItemGroup>

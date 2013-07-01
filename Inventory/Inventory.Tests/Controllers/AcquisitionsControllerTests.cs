@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,20 +12,20 @@ using Renfield.Inventory.Services;
 namespace Renfield.Inventory.Tests.Controllers
 {
   [TestClass]
-  public class StockControllerTests
+  public class AcquisitionsControllerTests
   {
     private Mock<Logic> logic;
-    private StockController sut;
+    private AcquisitionsController sut;
 
     [TestInitialize]
     public void SetUp()
     {
       logic = new Mock<Logic>();
-      sut = new StockController(logic.Object);
+      sut = new AcquisitionsController(logic.Object);
     }
 
     [TestClass]
-    public class Index : StockControllerTests
+    public class Index : AcquisitionsControllerTests
     {
       [TestMethod]
       public void ReturnsViewWithNoModel()
@@ -36,27 +37,25 @@ namespace Renfield.Inventory.Tests.Controllers
     }
 
     [TestClass]
-    public class GetStock : StockControllerTests
+    public class GetStock : AcquisitionsControllerTests
     {
       [TestMethod]
       public void ReturnsDataFromServiceAsJson()
       {
         logic
-          .Setup(it => it.GetStock())
+          .Setup(it => it.GetAcquisitions())
           .Returns(new[]
           {
-            new Stock { Name = "Hammer", Quantity = 1.00m, PurchaseValue = 5.99m, SaleValue = 7.99m },
-            new Stock { Name = "Nails Pack x100", Quantity = 2.00m, PurchaseValue = 0.02m, SaleValue = 0.05m }
+            new Acquisition { Company = new Company { Name = "Microsoft" }, Date = new DateTime(2000, 3, 4) },
+            new Acquisition { Company = new Company { Name = "Borland" }, Date = new DateTime(2000, 5, 6) },
           });
 
-        var result = sut.GetStock() as JsonResult;
+        var result = sut.GetAcquisitions() as JsonResult;
 
-        var data = ((IEnumerable<StockModel>) result.Data).ToList();
+        var data = ((IEnumerable<AcquisitionModel>) result.Data).ToList();
         Assert.AreEqual(2, data.Count);
-        Assert.AreEqual("Hammer", data[0].Name);
-        Assert.AreEqual("1.00", data[0].Quantity);
-        Assert.AreEqual("5.99", data[0].PurchaseValue);
-        Assert.AreEqual("7.99", data[0].SaleValue);
+        Assert.AreEqual("Microsoft", data[0].CompanyName);
+        Assert.AreEqual(new DateTime(2000, 3, 4), data[0].Date);
       }
     }
   }

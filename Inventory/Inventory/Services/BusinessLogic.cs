@@ -1,22 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Renfield.Inventory.Data;
 
 namespace Renfield.Inventory.Services
 {
   public class BusinessLogic : Logic
   {
-    public BusinessLogic(Repository repository)
+    public BusinessLogic(Func<Repository> dbFactory)
     {
-      this.repository = repository;
+      this.dbFactory = dbFactory;
     }
 
-    public IEnumerable<Stock> GetStock()
+    public IEnumerable<Stock> GetStocks()
     {
-      return repository.Stocks;
+      using (var repository = dbFactory.Invoke())
+        return repository.Stocks.ToList();
+    }
+
+    public IEnumerable<Acquisition> GetAcquisitions()
+    {
+      using (var repository = dbFactory.Invoke())
+        return repository.Acquisitions.Include("Company").ToList();
     }
 
     //
 
-    private readonly Repository repository;
+    private readonly Func<Repository> dbFactory;
   }
 }

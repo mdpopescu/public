@@ -5,9 +5,9 @@ using Renfield.Inventory.Services;
 
 namespace Renfield.Inventory.Controllers
 {
-  public class StockController : Controller
+  public class AcquisitionsController : Controller
   {
-    public StockController(Logic logic)
+    public AcquisitionsController(Logic logic)
     {
       this.logic = logic;
     }
@@ -17,11 +17,11 @@ namespace Renfield.Inventory.Controllers
       return View();
     }
 
-    public ActionResult GetStock()
+    public ActionResult GetAcquisitions()
     {
       var data = logic
-        .GetStock()
-        .Select(StockModel.From)
+        .GetAcquisitions()
+        .Select(AcquisitionModel.From)
         .ToList();
       return Json(data, JsonRequestBehavior.AllowGet);
     }

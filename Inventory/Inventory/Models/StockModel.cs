@@ -4,6 +4,7 @@ namespace Renfield.Inventory.Models
 {
   public class StockModel
   {
+    public int Id { get; set; }
     public string Name { get; set; }
     public string Quantity { get; set; }
     public string PurchaseValue { get; set; }
@@ -13,6 +14,7 @@ namespace Renfield.Inventory.Models
     {
       return new StockModel
       {
+        Id = value.Id,
         Name = value.Name,
         Quantity = value.Quantity.Formatted(),
         PurchaseValue = value.PurchaseValue.Formatted(),

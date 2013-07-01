@@ -42,6 +42,7 @@ namespace Renfield.Inventory.Migrations
         .ToDictionary(c => c.Name, c => c.Id);
 
       context.Acquisitions.AddOrUpdate(
+        a => a.CompanyId,
         new Acquisition
         {
           CompanyId = companies["Acme"],
@@ -65,6 +66,7 @@ namespace Renfield.Inventory.Migrations
         );
 
       context.Sales.AddOrUpdate(
+        s => s.CompanyId,
         new Sale
         {
           CompanyId = companies["Microsoft"],

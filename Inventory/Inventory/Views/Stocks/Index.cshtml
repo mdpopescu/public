@@ -1,6 +1,4 @@
-﻿
-
-@{
+﻿@{
   ViewBag.Title = "Product Inventory";
 }
 
@@ -27,7 +25,7 @@
 
 <script type="text/javascript">
   $(function() {
-    $.getJSON($.BASE_URL + "Stock/GetStock", function(data) {
+    $.getJSON($.BASE_URL + "Stocks/GetStocks", function(data) {
       var view = ko.mapping.fromJS({ stock: data });
 
       ko.applyBindings(view);

@@ -31,15 +31,24 @@ namespace Renfield.Inventory.Tests
     [TestMethod]
     public void Stock()
     {
-      var root = LoadHtml("Stock/");
+      var root = LoadHtml("Stocks/");
 
       var productsTable = root.SelectSingleNode(".//table[@id='products']");
       Assert.IsNotNull(productsTable);
-      var columns = productsTable
-        .SelectNodes(".//th")
-        .Select(node => node.InnerText)
-        .ToArray();
-      CollectionAssert.AreEqual(new[] { "Name", "Quantity", "Purchase Value", "Sale Value" }, columns);
+      CollectionAssert.AreEqual(new[] { "Name", "Quantity", "Purchase Value", "Sale Value" }, GetColumns(productsTable).ToArray());
+    }
+
+    [TestMethod]
+    public void Acquisitions()
+    {
+      var root = LoadHtml("Acquisitions/");
+
+      var mainTable = root.SelectSingleNode(".//table[@id='acquisitions']");
+      Assert.IsNotNull(mainTable);
+      CollectionAssert.AreEqual(new[] { "Company Name", "Date" }, GetColumns(mainTable));
+      var itemsTable = root.SelectSingleNode(".//table[@id='acquisition_items']");
+      Assert.IsNotNull(itemsTable);
+      CollectionAssert.AreEqual(new[] { "Name", "Quantity", "Price" }, GetColumns(itemsTable));
     }
 
     //
@@ -57,6 +66,14 @@ namespace Renfield.Inventory.Tests
     {
       using (var web = new WebClient())
         return web.DownloadString(url);
+    }
+
+    private static string[] GetColumns(HtmlNode productsTable)
+    {
+      return productsTable
+        .SelectNodes(".//th")
+        .Select(node => node.InnerText)
+        .ToArray();
     }
   }
 }
