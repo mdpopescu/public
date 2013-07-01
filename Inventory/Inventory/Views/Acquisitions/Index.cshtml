@@ -5,7 +5,7 @@
 <h2>Acquisitions</h2>
 
 <div>
-  <legend>Acquisitions</legend>
+  <p>Acquisitions</p>
   <table id="acquisitions" class="jtable">
     <thead>
       <tr>
@@ -23,7 +23,7 @@
 </div>
 
 <div>
-  <legend>Items for <span></span></legend>
+  <p>Items for <span id="acquisitionId"></span></p>
   <table id="acquisition_items" class="jtable">
     <thead>
       <tr>
@@ -43,19 +43,26 @@
 </div>
 
 <script type="text/javascript">
-  $(function () {
-    $.getJSON($.BASE_URL + "Acquisitions/GetAcquisitions", function (data) {
+  $(function() {
+    $.getJSON($.BASE_URL + "Acquisitions/GetAcquisitions", function(data) {
       var view = ko.mapping.fromJS({ acquisitions: data });
 
       ko.applyBindings(view);
     });
 
-    //JTable.Setup();
+    JTable.Setup();
 
-    $("#acquisitions").selectable({
+    $('#acquisitions').selectable({
       filter: 'tbody tr',
-      selected: function (e, ui) {
-        console.log('x');
+      selected: function(e, ui) {
+        var id = $(ui.selected).data('id');
+
+        $('#acquisitionId').val(id);
+        $.getJSON($.BASE_URL + "Acquisitions/GetAcquisitionItems", { id: id }, function(data) {
+          var view = ko.mapping.fromJS({ acquisitionItems: data });
+
+          ko.applyBindings(view);
+        });
       }
     });
   })

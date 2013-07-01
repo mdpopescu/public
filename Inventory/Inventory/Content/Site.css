@@ -297,4 +297,8 @@ table th { text-align: center; }
 
 table td.number { text-align: right; }
 
-.ui-selecting, .ui-selected { background: rgb(208, 229, 245) }
+table td.date { }
+
+.ui-selecting, .ui-selected { background: rgb(208, 229, 245); }
+
+.jtable tr:hover { background: rgb(5, 248, 255); }
