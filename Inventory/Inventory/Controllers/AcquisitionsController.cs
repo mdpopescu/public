@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Renfield.Inventory.Models;
 using Renfield.Inventory.Services;
 
@@ -30,7 +31,7 @@ namespace Renfield.Inventory.Controllers
 
     public ActionResult Create()
     {
-      var model = new AcquisitionModel();
+      var model = new AcquisitionModel { Date = DateTime.Today.ToString(Constants.DATE_FORMAT) };
 
       return View(model);
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -62,6 +63,7 @@ namespace Renfield.Inventory.Tests.Controllers
 
       var model = result.Model as AcquisitionModel;
       Assert.IsNotNull(model);
+      Assert.AreEqual(DateTime.Today.ToString(Constants.DATE_FORMAT), model.Date);
     }
   }
 }

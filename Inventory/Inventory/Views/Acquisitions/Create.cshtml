@@ -82,10 +82,7 @@
       self.Value = ko.computed(function() {
         try {
           var result = parseFloat(self.Quantity()) * parseFloat(self.Price());
-          if (isNaN(result))
-            result = 0;
-
-          return result;
+          return isNaN(result) ? 0 : result;
         } catch(ex) {
           return 0;
         }

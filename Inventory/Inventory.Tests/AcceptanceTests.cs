@@ -19,14 +19,14 @@ namespace Renfield.Inventory.Tests
       var nav = root.GetTagById("ul", "menu");
       Assert.IsNotNull(nav);
       var links = nav.SelectNodes(".//li/a").ToList();
-      Assert.AreEqual(7, links.Count);
+      Assert.AreEqual(3, links.Count);
       Assert.AreEqual("Home", links[0].InnerText);
       Assert.AreEqual("Product Inventory", links[1].InnerText);
       Assert.AreEqual("Acquisitions", links[2].InnerText);
-      Assert.AreEqual("Sales", links[3].InnerText);
-      Assert.AreEqual("Products", links[4].InnerText);
-      Assert.AreEqual("Companies", links[5].InnerText);
-      Assert.AreEqual("Todos", links[6].InnerText);
+      //Assert.AreEqual("Sales", links[3].InnerText);
+      //Assert.AreEqual("Products", links[4].InnerText);
+      //Assert.AreEqual("Companies", links[5].InnerText);
+      //Assert.AreEqual("Todos", links[6].InnerText);
     }
 
     [TestMethod]
@@ -60,10 +60,9 @@ namespace Renfield.Inventory.Tests
     {
       var root = LoadHtml("Acquisitions/Create");
 
-      var form = root.SelectSingleNode(".//form");
-      var companyName = form.GetTagById("input", "companyName");
+      var companyName = root.GetTagById("input", "CompanyName");
       Assert.IsNotNull(companyName);
-      var date = form.GetTagById("input", "date");
+      var date = root.GetTagById("input", "Date");
       Assert.IsNotNull(date);
       Assert.AreEqual(DateTime.Today.ToString("MM/dd/yyyy"), date.Attributes["Value"].Value);
     }
