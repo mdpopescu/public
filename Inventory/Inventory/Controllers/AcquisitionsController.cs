@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Renfield.Inventory.Models;
 using Renfield.Inventory.Services;
@@ -32,7 +33,11 @@ namespace Renfield.Inventory.Controllers
     [HttpGet]
     public ActionResult Create()
     {
-      var model = new AcquisitionModel { Date = DateTime.Today.ToString(Constants.DATE_FORMAT) };
+      var model = new AcquisitionModel
+      {
+        Date = DateTime.Today.ToString(Constants.DATE_FORMAT),
+        Items = new List<AcquisitionItemModel> { new AcquisitionItemModel() }
+      };
 
       return View(model);
     }

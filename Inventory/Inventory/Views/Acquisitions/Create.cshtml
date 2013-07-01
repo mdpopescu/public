@@ -1,4 +1,5 @@
-﻿@model Renfield.Inventory.Models.AcquisitionModel
+﻿@using Renfield.Inventory
+@model Renfield.Inventory.Models.AcquisitionModel
 @{
   ViewBag.Title = "Create new acquisition";
 }
@@ -35,11 +36,21 @@
       </thead>
       <tbody data-bind="foreach: items">
         <tr>
-          <td><input type="text" data-bind="value: ProductName"/></td>
-          <td><input type="text" data-bind="value: Quantity" class="number"/></td>
-          <td><input type="text" data-bind="value: Price" class="number"/></td>
-          <td><input type="text" data-bind="value: Value" class="number" readonly="readonly"/></td>
-          <td><button data-bind="click: $parent.delItem">[--]</button></td>
+          <td>
+            <input data-bind="@Extensions.DataBinding("Items", "ProductName")" type="text" value="" />
+          </td>
+          <td>
+            <input data-bind="@Extensions.DataBinding("Items", "Quantity")" type="text" value="" />
+          </td>
+          <td>
+            <input data-bind="@Extensions.DataBinding("Items", "Price")" type="text" value="" />
+          </td>
+          <td>
+            <input data-bind="value: Value" readonly="readonly" type="text" value="" />
+          </td>
+          <td>
+            <button data-bind="click: $parent.delItem">[--]</button>
+          </td>
         </tr>
       </tbody>
     </table>
