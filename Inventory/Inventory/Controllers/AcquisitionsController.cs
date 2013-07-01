@@ -29,11 +29,18 @@ namespace Renfield.Inventory.Controllers
       return Json(data, JsonRequestBehavior.AllowGet);
     }
 
+    [HttpGet]
     public ActionResult Create()
     {
       var model = new AcquisitionModel { Date = DateTime.Today.ToString(Constants.DATE_FORMAT) };
 
       return View(model);
+    }
+
+    [HttpPost]
+    public ActionResult Create(AcquisitionModel model)
+    {
+      return RedirectToAction("Create");
     }
 
     //

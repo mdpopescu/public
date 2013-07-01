@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Text;
 using HtmlAgilityPack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -67,6 +68,14 @@ namespace Renfield.Inventory.Tests
       Assert.AreEqual(DateTime.Today.ToString("MM/dd/yyyy"), date.Attributes["Value"].Value);
     }
 
+    [TestMethod]
+    public void PostCreateAcquisitionsRedirectsBackToGet()
+    {
+      var res = SafePost("Acquisitions/Create", null);
+      Assert.AreEqual("Redirect", res.StatusCode.ToString());
+      Assert.AreEqual("/Acquisitions/Create", res.Headers["Location"]);
+    }
+
     //
 
     private static HtmlNode LoadHtml(string page)
@@ -82,6 +91,22 @@ namespace Renfield.Inventory.Tests
     {
       using (var web = new WebClient())
         return web.DownloadString(url);
+    }
+
+    private static HttpWebResponse SafePost(string page, string data)
+    {
+      var byteArray = Encoding.UTF8.GetBytes(data + "");
+
+      var req = (HttpWebRequest) WebRequest.Create(string.Format("{0}/{1}", BASE_URL, page));
+      req.AllowAutoRedirect = false;
+      req.Method = "POST";
+      req.ContentType = "application/x-www-form-urlencoded";
+      req.ContentLength = byteArray.Length;
+
+      var stream = req.GetRequestStream();
+      stream.Write(byteArray, 0, byteArray.Length);
+
+      return (HttpWebResponse) req.GetResponse();
     }
   }
 }

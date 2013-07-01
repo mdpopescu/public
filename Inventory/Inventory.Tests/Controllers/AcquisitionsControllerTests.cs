@@ -65,5 +65,14 @@ namespace Renfield.Inventory.Tests.Controllers
       Assert.IsNotNull(model);
       Assert.AreEqual(DateTime.Today.ToString(Constants.DATE_FORMAT), model.Date);
     }
+
+    [TestMethod]
+    public void PostCreateRedirectsBackToGet()
+    {
+      var result = sut.Create(new AcquisitionModel()) as RedirectToRouteResult;
+
+      Assert.AreEqual("Create", result.RouteValues["action"]);
+      Assert.IsNull(result.RouteValues["controller"]);
+    }
   }
 }
