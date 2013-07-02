@@ -21,12 +21,6 @@ namespace Renfield.Inventory
       return value.HasValue ? value.Value.Formatted() : "";
     }
 
-    public static string DataBinding(string listName, string field)
-    {
-      return string.Format("value: {1}, attr: {{ id : '{0}_' + $index() + '__{1}', name: '{0}[' + $index() + '].{1}' }}",
-        listName, field);
-    }
-
     public static DateTime? ParseDateNullable(this string s)
     {
       DateTime result;

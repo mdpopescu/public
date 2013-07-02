@@ -118,6 +118,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MetadataExtensions.cs" />
     <Compile Include="Migrations\201306301126012_m00.cs" />
     <Compile Include="Migrations\201306301126012_m00.Designer.cs">
       <DependentUpon>201306301126012_m00.cs</DependentUpon>

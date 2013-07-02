@@ -37,13 +37,13 @@
       <tbody data-bind="foreach: items">
         <tr>
           <td>
-            <input data-bind="@Extensions.DataBinding("Items", "ProductName")" type="text" value="" />
+            <input data-bind="@Html.DataBinding(m => m.Items, it => it.ProductName)" type="text" value="" />
           </td>
           <td>
-            <input data-bind="@Extensions.DataBinding("Items", "Quantity")" type="text" value="" />
+            <input data-bind="@Html.DataBinding(m => m.Items, it => it.Quantity)" type="text" value="" />
           </td>
           <td>
-            <input data-bind="@Extensions.DataBinding("Items", "Price")" type="text" value="" />
+            <input data-bind="@Html.DataBinding(m => m.Items, it => it.Price)" type="text" value="" />
           </td>
           <td>
             <input data-bind="value: Value" readonly="readonly" type="text" value="" />
