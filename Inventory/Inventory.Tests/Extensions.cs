@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using HtmlAgilityPack;
 
 namespace Renfield.Inventory.Tests
@@ -16,6 +18,11 @@ namespace Renfield.Inventory.Tests
         .SelectNodes(".//th")
         .Select(node => node.InnerText)
         .ToArray();
+    }
+
+    public static IEnumerable<T> FindByKey<T, TKey>(this IEnumerable<T> list, Func<T, TKey> keySelector, object key)
+    {
+      return list.Where(it => keySelector(it).Equals(key));
     }
   }
 }

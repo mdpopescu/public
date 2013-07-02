@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.Entity;
 
 namespace Renfield.Inventory.Data
 {
@@ -9,17 +10,14 @@ namespace Renfield.Inventory.Data
     int SaveChanges();
     DbTransaction BeginTransaction();
 
-    IEnumerable<Stock> GetStocks();
-    Stock GetStock(int productId);
-    void AddStock(Stock stock);
-    void UpdateStock(int id, decimal newQuantity, decimal oldQuantity);
-    
+    IDbSet<Stock> Stocks { get; set; }
+
     IEnumerable<Acquisition> GetAcquisitions();
     IEnumerable<AcquisitionItem> GetAcquisitionItems(int id);
     void AddAcquisition(Acquisition acquisition);
-    
+
     Company FindOrAddCompanyByName(string name);
-    
-    Product FindOrAddProductByName(string name);
+
+    IEnumerable<Product> GetProducts();
   }
 }

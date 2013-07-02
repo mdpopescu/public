@@ -26,5 +26,10 @@ namespace Renfield.Inventory
       DateTime result;
       return DateTime.TryParse(s, out result) ? result : (DateTime?) null;
     }
+
+    public static bool IsNullOrEmpty(this string s)
+    {
+      return string.IsNullOrEmpty(s);
+    }
   }
 }

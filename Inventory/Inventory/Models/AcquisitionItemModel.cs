@@ -8,10 +8,15 @@ namespace Renfield.Inventory.Models
     public int Id { get; set; }
 
     [Display(Name = "Product Name")]
+    [Required]
     public string ProductName { get; set; }
 
+    [Required]
     public string Quantity { get; set; }
+
+    [Required]
     public string Price { get; set; }
+
     public string Value { get; set; }
 
     public static AcquisitionItemModel From(AcquisitionItem value)
@@ -24,6 +29,13 @@ namespace Renfield.Inventory.Models
         Price = value.Price.Formatted(),
         Value = (value.Quantity * value.Price).Formatted(),
       };
+    }
+
+    public bool IsValid()
+    {
+      return !ProductName.IsNullOrEmpty() &&
+             !Quantity.IsNullOrEmpty() &&
+             !Price.IsNullOrEmpty();
     }
   }
 }
