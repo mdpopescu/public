@@ -6,12 +6,12 @@ namespace Renfield.Inventory.Data
 {
   public class InventoryDB : DbContext, Repository
   {
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Company> Companies { get; set; }
-    public DbSet<Acquisition> Acquisitions { get; set; }
-    public DbSet<AcquisitionItem> AcquisitionItems { get; set; }
-    public DbSet<Sale> Sales { get; set; }
-    public DbSet<SaleItem> SaleItems { get; set; }
+    public IDbSet<Product> Products { get; set; }
+    public IDbSet<Company> Companies { get; set; }
+    public IDbSet<Acquisition> Acquisitions { get; set; }
+    public IDbSet<AcquisitionItem> AcquisitionItems { get; set; }
+    public IDbSet<Sale> Sales { get; set; }
+    public IDbSet<SaleItem> SaleItems { get; set; }
     public IDbSet<Stock> Stocks { get; set; }
 
     public InventoryDB(string nameOrConnectionString)
@@ -19,10 +19,10 @@ namespace Renfield.Inventory.Data
     {
     }
 
-    public void AddStock(Stock stock)
-    {
-      Stocks.Add(stock);
-    }
+    //public void AddStock(Stock stock)
+    //{
+    //  Stocks.Add(stock);
+    //}
 
     public IEnumerable<Acquisition> GetAcquisitions()
     {
@@ -51,11 +51,6 @@ namespace Renfield.Inventory.Data
                     ?? new Company { Name = name };
 
       return company;
-    }
-
-    public IEnumerable<Product> GetProducts()
-    {
-      return Products;
     }
   }
 }

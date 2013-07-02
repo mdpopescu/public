@@ -8,15 +8,15 @@ namespace Renfield.Inventory.Data
   {
     int SaveChanges();
 
+    IDbSet<Product> Products { get; set; }
     IDbSet<Stock> Stocks { get; set; }
-    void AddStock(Stock stock);
+
+    //void AddStock(Stock stock);
 
     IEnumerable<Acquisition> GetAcquisitions();
     IEnumerable<AcquisitionItem> GetAcquisitionItems(int id);
     void AddAcquisition(Acquisition acquisition);
 
     Company FindOrAddCompanyByName(string name);
-
-    IEnumerable<Product> GetProducts();
   }
 }

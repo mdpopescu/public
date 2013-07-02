@@ -28,14 +28,12 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void ReturnsStockModels()
       {
-        var list = new List<Stock>
+        var stocks = new List<Stock>
         {
           new Stock { Name = "Hammer", Quantity = 1.00m, SalePrice = 3.45m, PurchaseValue = 5.99m, SaleValue = 7.99m },
           new Stock { Name = "Nails Pack x100", Quantity = 2.00m, SalePrice = null, PurchaseValue = 0.02m, SaleValue = 0.05m },
         };
-        repository
-          .Setup(it => it.Stocks)
-          .Returns(new FakeDbSet<Stock>(list));
+        repository.SetUpTable(it => it.Stocks, stocks);
 
         var result = sut.GetStocks().ToList();
 
@@ -128,16 +126,17 @@ namespace Renfield.Inventory.Tests.Services
     [TestClass]
     public class AddAcquisition : BusinessLogicTests
     {
+      private List<Product> products;
       private List<Stock> stocks;
 
       [TestInitialize]
       public void InnerSetUp()
       {
+        products = new List<Product>();
         stocks = new List<Stock>();
 
-        repository
-          .Setup(it => it.Stocks)
-          .Returns(new FakeDbSet<Stock>(stocks));
+        repository.SetUpTable(it => it.Products, products);
+        repository.SetUpTable(it => it.Stocks, stocks);
       }
 
       [TestMethod]
@@ -146,13 +145,8 @@ namespace Renfield.Inventory.Tests.Services
         repository
           .Setup(it => it.FindOrAddCompanyByName("Microsoft"))
           .Returns(new Company { Id = 1 });
-        repository
-          .Setup(it => it.GetProducts())
-          .Returns(new[]
-          {
-            new Product { Id = 1, Name = "abc" },
-            new Product { Id = 2, Name = "def" },
-          });
+        products.Add(new Product { Id = 1, Name = "abc" });
+        products.Add(new Product { Id = 2, Name = "def" });
         repository
           .Setup(it => it.AddAcquisition(It.Is<Acquisition>(a => a.Company.Id == 1 &&
                                                                  a.Date == new DateTime(2000, 2, 3) &&
@@ -187,12 +181,7 @@ namespace Renfield.Inventory.Tests.Services
         repository
           .Setup(it => it.FindOrAddCompanyByName("Microsoft"))
           .Returns(new Company { Id = 1 });
-        repository
-          .Setup(it => it.GetProducts())
-          .Returns(new[]
-          {
-            new Product { Id = 4, Name = "d" },
-          });
+        products.Add(new Product { Id = 4, Name = "d" });
 
         var model = new AcquisitionModel
         {
@@ -248,14 +237,9 @@ namespace Renfield.Inventory.Tests.Services
         repository
           .Setup(it => it.FindOrAddCompanyByName("Microsoft"))
           .Returns(new Company { Id = 1 });
-        repository
-          .Setup(it => it.GetProducts())
-          .Returns(new[]
-          {
-            new Product { Id = 1, Name = "abc" },
-            new Product { Id = 2, Name = "def", SalePrice = 12.34m },
-          });
-        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 12.35m });
+        products.Add(new Product { Id = 1, Name = "abc" });
+        products.Add(new Product { Id = 2, Name = "def", SalePrice = 12.34m });
+        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
         Acquisition acquisition = null;
         repository
           .Setup(it => it.AddAcquisition(It.IsAny<Acquisition>()))
@@ -275,7 +259,7 @@ namespace Renfield.Inventory.Tests.Services
         sut.AddAcquisition(model);
 
         Assert.AreEqual(2, stocks.Count);
-        Assert.AreEqual(13.58m, stocks[0].Quantity);
+        Assert.AreEqual(23.58m, stocks[0].Quantity);
         var addedStock = stocks[1];
         Assert.AreEqual(2, addedStock.ProductId);
         Assert.AreEqual("def", addedStock.Name);

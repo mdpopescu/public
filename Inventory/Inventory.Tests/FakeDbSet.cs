@@ -46,10 +46,7 @@ namespace Renfield.Inventory.Tests
     {
       list.Add(entity);
 
-      // all my entities have "int Id" as the identity key, so set that
-      dynamic it = entity;
-      it.Id = list.Select(item => ((dynamic) item).Id).Max() + 1;
-
+      FixEntityId(entity);
       return entity;
     }
 
@@ -62,6 +59,8 @@ namespace Renfield.Inventory.Tests
     public T Attach(T entity)
     {
       list.Add(entity);
+
+      FixEntityId(entity);
       return entity;
     }
 
@@ -80,5 +79,12 @@ namespace Renfield.Inventory.Tests
 
     private readonly List<T> list;
     private readonly IQueryable queryable;
+
+    private void FixEntityId(T entity)
+    {
+      // all my entities have "int Id" as the identity key, so set that
+      dynamic it = entity;
+      it.Id = list.Select(item => ((dynamic) item).Id).Max() + 1;
+    }
   }
 }

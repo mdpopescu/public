@@ -79,7 +79,7 @@ namespace Renfield.Inventory.Services
         .Where(it => !it.IsNullOrEmpty())
         .ToList();
       var products = repository
-        .GetProducts()
+        .Products
         .Where(it => productNames.Contains(it.Name))
         .ToList();
 

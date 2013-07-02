@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using HtmlAgilityPack;
+using Moq;
 
 namespace Renfield.Inventory.Tests
 {
@@ -20,9 +23,13 @@ namespace Renfield.Inventory.Tests
         .ToArray();
     }
 
-    public static IEnumerable<T> FindByKey<T, TKey>(this IEnumerable<T> list, Func<T, TKey> keySelector, object key)
+    public static void SetUpTable<TMock, TTable>(this Mock<TMock> mock, Expression<Func<TMock, IDbSet<TTable>>> expression, List<TTable> list)
+      where TMock : class
+      where TTable : class, new()
     {
-      return list.Where(it => keySelector(it).Equals(key));
+      mock
+        .Setup(expression)
+        .Returns(new FakeDbSet<TTable>(list));
     }
   }
 }
