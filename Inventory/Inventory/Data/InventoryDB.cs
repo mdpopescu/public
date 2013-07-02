@@ -19,11 +19,6 @@ namespace Renfield.Inventory.Data
     {
     }
 
-    //public void AddStock(Stock stock)
-    //{
-    //  Stocks.Add(stock);
-    //}
-
     public IEnumerable<Acquisition> GetAcquisitions()
     {
       return Acquisitions
@@ -41,16 +36,6 @@ namespace Renfield.Inventory.Data
     public void AddAcquisition(Acquisition acquisition)
     {
       Acquisitions.Add(acquisition);
-    }
-
-    public Company FindOrAddCompanyByName(string name)
-    {
-      var company = Companies
-                      .Where(it => it.Name == name)
-                      .FirstOrDefault()
-                    ?? new Company { Name = name };
-
-      return company;
     }
   }
 }

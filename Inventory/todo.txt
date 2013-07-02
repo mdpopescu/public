@@ -10,5 +10,10 @@ Pages:
 All those pages (except for the first one) require user authentication.
 
 
-- include the mini profiler
 - include signalR
+
+
+
+AddAcquisition:
+- adds missing products
+- adds missing companies

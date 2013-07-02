@@ -12,13 +12,24 @@ namespace Renfield.Inventory.Tests.Services
   [TestClass]
   public class BusinessLogicTests
   {
+    private List<Product> products;
+    private List<Company> companies;
+    private List<Stock> stocks;
     private Mock<Repository> repository;
     private BusinessLogic sut;
 
     [TestInitialize]
     public void SetUp()
     {
+      products = new List<Product>();
+      companies = new List<Company>();
+      stocks = new List<Stock>();
+
       repository = new Mock<Repository>();
+      repository.SetUpTable(it => it.Products, products);
+      repository.SetUpTable(it => it.Companies, companies);
+      repository.SetUpTable(it => it.Stocks, stocks);
+
       sut = new BusinessLogic(() => repository.Object);
     }
 
@@ -28,12 +39,8 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void ReturnsStockModels()
       {
-        var stocks = new List<Stock>
-        {
-          new Stock { Name = "Hammer", Quantity = 1.00m, SalePrice = 3.45m, PurchaseValue = 5.99m, SaleValue = 7.99m },
-          new Stock { Name = "Nails Pack x100", Quantity = 2.00m, SalePrice = null, PurchaseValue = 0.02m, SaleValue = 0.05m },
-        };
-        repository.SetUpTable(it => it.Stocks, stocks);
+        stocks.Add(new Stock { Name = "Hammer", Quantity = 1.00m, SalePrice = 3.45m, PurchaseValue = 5.99m, SaleValue = 7.99m });
+        stocks.Add(new Stock { Name = "Nails Pack x100", Quantity = 2.00m, SalePrice = null, PurchaseValue = 0.02m, SaleValue = 0.05m });
 
         var result = sut.GetStocks().ToList();
 
@@ -126,39 +133,12 @@ namespace Renfield.Inventory.Tests.Services
     [TestClass]
     public class AddAcquisition : BusinessLogicTests
     {
-      private List<Product> products;
-      private List<Stock> stocks;
-
-      [TestInitialize]
-      public void InnerSetUp()
-      {
-        products = new List<Product>();
-        stocks = new List<Stock>();
-
-        repository.SetUpTable(it => it.Products, products);
-        repository.SetUpTable(it => it.Stocks, stocks);
-      }
-
       [TestMethod]
       public void AddsTheCorrectValuesToTheRepository()
       {
-        repository
-          .Setup(it => it.FindOrAddCompanyByName("Microsoft"))
-          .Returns(new Company { Id = 1 });
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
         products.Add(new Product { Id = 1, Name = "abc" });
         products.Add(new Product { Id = 2, Name = "def" });
-        repository
-          .Setup(it => it.AddAcquisition(It.Is<Acquisition>(a => a.Company.Id == 1 &&
-                                                                 a.Date == new DateTime(2000, 2, 3) &&
-                                                                 a.Items.Count == 2 &&
-                                                                 a.Items.First().Product.Id == 1 &&
-                                                                 a.Items.First().Quantity == 1.23m &&
-                                                                 a.Items.First().Price == 4.00m)))
-          .Verifiable();
-        repository
-          .Setup(it => it.SaveChanges())
-          .Verifiable();
-
         var model = new AcquisitionModel
         {
           CompanyName = "Microsoft",
@@ -172,17 +152,20 @@ namespace Renfield.Inventory.Tests.Services
 
         sut.AddAcquisition(model);
 
-        repository.Verify();
+        repository.Verify(it => it.AddAcquisition(It.Is<Acquisition>(a => a.Company.Id == 1 &&
+                                                                          a.Date == new DateTime(2000, 2, 3) &&
+                                                                          a.Items.Count == 2 &&
+                                                                          a.Items.First().Product.Id == 1 &&
+                                                                          a.Items.First().Quantity == 1.23m &&
+                                                                          a.Items.First().Price == 4.00m)));
+        repository.Verify(it => it.SaveChanges());
       }
 
       [TestMethod]
       public void IgnoresItemsWithInvalidFields()
       {
-        repository
-          .Setup(it => it.FindOrAddCompanyByName("Microsoft"))
-          .Returns(new Company { Id = 1 });
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
         products.Add(new Product { Id = 4, Name = "d" });
-
         var model = new AcquisitionModel
         {
           CompanyName = "Microsoft",
@@ -210,10 +193,7 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void DoesNotAddTheRootObjectIfAllItemsAreInvalid()
       {
-        repository
-          .Setup(it => it.FindOrAddCompanyByName("Microsoft"))
-          .Returns(new Company { Id = 1 });
-
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
         var model = new AcquisitionModel
         {
           CompanyName = "Microsoft",
@@ -234,9 +214,7 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void UpdatesTheStock()
       {
-        repository
-          .Setup(it => it.FindOrAddCompanyByName("Microsoft"))
-          .Returns(new Company { Id = 1 });
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
         products.Add(new Product { Id = 1, Name = "abc" });
         products.Add(new Product { Id = 2, Name = "def", SalePrice = 12.34m });
         stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
@@ -267,6 +245,56 @@ namespace Renfield.Inventory.Tests.Services
         Assert.AreEqual(5.67m, addedStock.Quantity);
         Assert.AreEqual(45.36m, addedStock.PurchaseValue);
         Assert.AreEqual(69.97m, addedStock.SaleValue);
+      }
+
+      [TestMethod]
+      public void AddsTheMissingProducts()
+      {
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        products.Add(new Product { Id = 1, Name = "abc", SalePrice = 12.34m });
+        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
+        Acquisition acquisition = null;
+        repository
+          .Setup(it => it.AddAcquisition(It.IsAny<Acquisition>()))
+          .Callback<Acquisition>(it => acquisition = FixItems(it));
+
+        var model = new AcquisitionModel
+        {
+          CompanyName = "Microsoft",
+          Date = "2/3/2000",
+          Items = new[]
+          {
+            new AcquisitionItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
+            new AcquisitionItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+          },
+        };
+
+        sut.AddAcquisition(model);
+
+        Assert.AreEqual(2, products.Count);
+        Assert.AreEqual("abc", products[0].Name);
+        Assert.AreEqual("def", products[1].Name);
+      }
+
+      [TestMethod]
+      public void AddsTheCompanyIfNeeded()
+      {
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        var model = new AcquisitionModel
+        {
+          CompanyName = "Google",
+          Date = "2/3/2000",
+          Items = new[]
+          {
+            new AcquisitionItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
+            new AcquisitionItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+          },
+        };
+
+        sut.AddAcquisition(model);
+
+        Assert.AreEqual(2,companies.Count);
+        Assert.AreEqual("Google",companies[1].Name);
       }
 
       //

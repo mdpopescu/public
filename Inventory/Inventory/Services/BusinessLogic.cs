@@ -85,7 +85,7 @@ namespace Renfield.Inventory.Services
 
       var items = model
         .Items
-        .Select(it => ToEntity(products, it))
+        .Select(it => ToEntity(repository, products, it))
         .Where(it => it != null)
         .ToList();
       if (!items.Any())
@@ -93,13 +93,14 @@ namespace Renfield.Inventory.Services
 
       return new Acquisition
       {
-        Company = repository.FindOrAddCompanyByName(model.CompanyName),
+        Company = repository.Companies.Where(it => it.Name == model.CompanyName).FirstOrDefault()
+                  ?? repository.Companies.Add(new Company { Name = model.CompanyName }),
         Date = model.Date.ParseDateNullable() ?? DateTime.Today,
         Items = items,
       };
     }
 
-    private static AcquisitionItem ToEntity(IEnumerable<Product> products, AcquisitionItemModel model)
+    private static AcquisitionItem ToEntity(Repository repository, IEnumerable<Product> products, AcquisitionItemModel model)
     {
       if (!model.IsValid())
         return null;
@@ -107,13 +108,13 @@ namespace Renfield.Inventory.Services
       return new AcquisitionItem
       {
         Product = products.Where(it => it.Name == model.ProductName).FirstOrDefault()
-                  ?? new Product { Name = model.ProductName },
+                  ?? repository.Products.Add(new Product { Name = model.ProductName }),
         Quantity = decimal.Parse(model.Quantity),
         Price = decimal.Parse(model.Price),
       };
     }
 
-    private static void UpdateStock(Repository repository, List<Stock> stocks, AcquisitionItem acquisitionItem)
+    private static void UpdateStock(Repository repository, IEnumerable<Stock> stocks, AcquisitionItem acquisitionItem)
     {
       var newQuantity = acquisitionItem.Quantity;
       var product = acquisitionItem.Product;
