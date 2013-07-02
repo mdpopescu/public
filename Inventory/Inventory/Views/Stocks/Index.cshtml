@@ -27,12 +27,32 @@
 
 <script type="text/javascript">
   $(function() {
-    $.getJSON($.BASE_URL + "Stocks/GetStocks", function(data) {
-      var viewModel = ko.mapping.fromJS({ stock: data });
+    var viewModel;
+    updateModel();
 
-      ko.applyBindings(viewModel);
+    var hub = $.connection.liveUpdateHub;
+
+    hub.client.updateStocks = function() {
+      updateModel();
+    };
+
+    $.connection.hub.start().done(function () {
+      // nothing for now
     });
 
     JTable.Setup();
-  })
+
+    //
+    
+    function updateModel() {
+      $.getJSON($.BASE_URL + "Stocks/GetStocks", function(data) {
+        if (viewModel)
+          ko.mapping.fromJS({ stock: data }, viewModel);
+        else {
+          viewModel = ko.mapping.fromJS({ stock: data });
+          ko.applyBindings(viewModel);
+        }
+      });
+    }
+  });
 </script>

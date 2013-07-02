@@ -64,6 +64,9 @@ namespace Renfield.Inventory.Services
         foreach (var acquisitionItem in acquisition.Items)
           UpdateStock(repository, stocks, acquisitionItem);
         repository.SaveChanges();
+
+        // update the clients
+        LiveUpdateHub.Instance.Value.All.updateStocks();
       }
     }
 
@@ -125,7 +128,7 @@ namespace Renfield.Inventory.Services
         stock.Quantity += newQuantity;
       else
       {
-        repository.Stocks.Add(new Stock
+        stock = new Stock
         {
           ProductId = productId,
           Name = product.Name,
@@ -133,7 +136,8 @@ namespace Renfield.Inventory.Services
           Quantity = newQuantity,
           PurchaseValue = Math.Round(newQuantity * acquisitionItem.Price, 2),
           SaleValue = Math.Round(newQuantity * product.SalePrice.GetValueOrDefault(), 2),
-        });
+        };
+        repository.Stocks.Add(stock);
       }
     }
   }
