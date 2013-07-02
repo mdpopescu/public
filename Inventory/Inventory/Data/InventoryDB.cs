@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 
 namespace Renfield.Inventory.Data
@@ -22,12 +19,9 @@ namespace Renfield.Inventory.Data
     {
     }
 
-    public DbTransaction BeginTransaction()
+    public void AddStock(Stock stock)
     {
-      if (Database.Connection.State == ConnectionState.Closed)
-        ((IObjectContextAdapter) this).ObjectContext.Connection.Open();
-
-      return Database.Connection.BeginTransaction();
+      Stocks.Add(stock);
     }
 
     public IEnumerable<Acquisition> GetAcquisitions()

@@ -43,14 +43,13 @@ namespace Renfield.Inventory.Services
     public void AddAcquisition(AcquisitionModel model)
     {
       using (var repository = dbFactory.Invoke())
-      using (var t = repository.BeginTransaction())
       {
         var acquisition = ToEntity(repository, model);
         if (acquisition == null)
           return;
 
         repository.AddAcquisition(acquisition);
-        repository.SaveChanges();
+        repository.SaveChanges(); // this updates the ProductId field on the items
 
         // get the stock records for these products
         var productIds = acquisition
@@ -63,22 +62,8 @@ namespace Renfield.Inventory.Services
           .ToList();
 
         foreach (var acquisitionItem in acquisition.Items)
-          UpdateStock(stocks, acquisitionItem);
+          UpdateStock(repository, stocks, acquisitionItem);
         repository.SaveChanges();
-
-        // verification phase: if any of the stock records have a different quantity than it should, throw an exception
-        // t will be null for testing
-        //if (t != null)
-        //{
-        //  var concurrencyViolations = from acquisitionItem in acquisition.Items
-        //                              let stock = repository.GetStock(acquisitionItem.ProductId)
-        //                              where stock.Quantity != acquisitionItem.Quantity
-        //                              select acquisitionItem;
-        //  if (concurrencyViolations.Any())
-        //    throw new Exception("Someone else has changed one of the products; please try again.");
-
-        //  t.Commit();
-        //}
       }
     }
 
@@ -128,7 +113,7 @@ namespace Renfield.Inventory.Services
       };
     }
 
-    private static void UpdateStock(List<Stock> stocks, AcquisitionItem acquisitionItem)
+    private static void UpdateStock(Repository repository, List<Stock> stocks, AcquisitionItem acquisitionItem)
     {
       var newQuantity = acquisitionItem.Quantity;
       var product = acquisitionItem.Product;
@@ -139,7 +124,7 @@ namespace Renfield.Inventory.Services
         stock.Quantity += newQuantity;
       else
       {
-        stocks.Add(new Stock
+        repository.Stocks.Add(new Stock
         {
           ProductId = productId,
           Name = product.Name,

@@ -8,20 +8,18 @@ using System.Linq.Expressions;
 
 namespace Renfield.Inventory.Tests
 {
-  public class FakeDbSet<T, TKey> : IDbSet<T>
-    where T : class
+  public class FakeDbSet<T> : IDbSet<T>
+    where T : class, new()
   {
     public Expression Expression { get; private set; }
     public Type ElementType { get; private set; }
     public IQueryProvider Provider { get; private set; }
     public ObservableCollection<T> Local { get; private set; }
 
-    public FakeDbSet(IEnumerable<T> list, Func<T> creator, Func<T, TKey> keySelector)
+    public FakeDbSet(List<T> list)
     {
-      this.list = list.ToList();
+      this.list = list;
       queryable = this.list.AsQueryable();
-      this.creator = creator;
-      this.keySelector = keySelector;
 
       Expression = queryable.Expression;
       ElementType = queryable.ElementType;
@@ -41,14 +39,17 @@ namespace Renfield.Inventory.Tests
 
     public T Find(params object[] keyValues)
     {
-      return list
-        .FindByKey(keySelector, keyValues[0])
-        .FirstOrDefault();
+      throw new NotImplementedException();
     }
 
     public T Add(T entity)
     {
       list.Add(entity);
+
+      // all my entities have "int Id" as the identity key, so set that
+      dynamic it = entity;
+      it.Id = list.Select(item => ((dynamic) item).Id).Max() + 1;
+
       return entity;
     }
 
@@ -66,7 +67,7 @@ namespace Renfield.Inventory.Tests
 
     public T Create()
     {
-      return creator.Invoke();
+      return new T();
     }
 
     public TDerivedEntity Create<TDerivedEntity>()
@@ -79,7 +80,5 @@ namespace Renfield.Inventory.Tests
 
     private readonly List<T> list;
     private readonly IQueryable queryable;
-    private readonly Func<T> creator;
-    private readonly Func<T, TKey> keySelector;
   }
 }

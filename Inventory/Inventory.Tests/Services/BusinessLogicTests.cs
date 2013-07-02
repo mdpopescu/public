@@ -35,7 +35,7 @@ namespace Renfield.Inventory.Tests.Services
         };
         repository
           .Setup(it => it.Stocks)
-          .Returns(new FakeDbSet<Stock, int>(list, () => new Stock(), it => it.Id));
+          .Returns(new FakeDbSet<Stock>(list));
 
         var result = sut.GetStocks().ToList();
 
@@ -128,6 +128,18 @@ namespace Renfield.Inventory.Tests.Services
     [TestClass]
     public class AddAcquisition : BusinessLogicTests
     {
+      private List<Stock> stocks;
+
+      [TestInitialize]
+      public void InnerSetUp()
+      {
+        stocks = new List<Stock>();
+
+        repository
+          .Setup(it => it.Stocks)
+          .Returns(new FakeDbSet<Stock>(stocks));
+      }
+
       [TestMethod]
       public void AddsTheCorrectValuesToTheRepository()
       {
@@ -243,13 +255,11 @@ namespace Renfield.Inventory.Tests.Services
             new Product { Id = 1, Name = "abc" },
             new Product { Id = 2, Name = "def", SalePrice = 12.34m },
           });
-        var stocks = new List<Stock>
-        {
-          new Stock { Id = 1, ProductId = 1, Quantity = 12.35m },
-        };
+        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 12.35m });
+        Acquisition acquisition = null;
         repository
-          .Setup(it => it.Stocks)
-          .Returns(new FakeDbSet<Stock, int>(stocks, () => new Stock(), it => it.Id));
+          .Setup(it => it.AddAcquisition(It.IsAny<Acquisition>()))
+          .Callback<Acquisition>(it => acquisition = FixItems(it));
 
         var model = new AcquisitionModel
         {
@@ -273,6 +283,19 @@ namespace Renfield.Inventory.Tests.Services
         Assert.AreEqual(5.67m, addedStock.Quantity);
         Assert.AreEqual(45.36m, addedStock.PurchaseValue);
         Assert.AreEqual(69.97m, addedStock.SaleValue);
+      }
+
+      //
+
+      /// <summary>
+      ///   Fixes the ProductId on the items (this is done by SaveChanges in normal execution)
+      /// </summary>
+      private static Acquisition FixItems(Acquisition acquisition)
+      {
+        foreach (var item in acquisition.Items)
+          item.ProductId = item.Product.Id;
+
+        return acquisition;
       }
     }
   }
