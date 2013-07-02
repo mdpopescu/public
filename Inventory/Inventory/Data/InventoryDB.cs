@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Linq;
 
@@ -19,9 +20,35 @@ namespace Renfield.Inventory.Data
     {
     }
 
+    public DbTransaction BeginTransaction()
+    {
+      return Database.Connection.BeginTransaction();
+    }
+
     public IEnumerable<Stock> GetStocks()
     {
       return Stocks;
+    }
+
+    public Stock GetStock(int productId)
+    {
+      return Stocks
+        .Where(it => it.ProductId == productId)
+        .FirstOrDefault();
+    }
+
+    public void AddStock(Stock stock)
+    {
+      Stocks.Add(stock);
+    }
+
+    public void UpdateStock(int id, decimal newQuantity, decimal oldQuantity)
+    {
+      // using optimistic concurrency, therefore I want to throw if the record has been changed
+      var stock = Stocks.First(it => it.ProductId == id && it.Quantity == oldQuantity);
+
+      stock.Quantity = newQuantity;
+      SaveChanges();
     }
 
     public IEnumerable<Acquisition> GetAcquisitions()
@@ -36,6 +63,11 @@ namespace Renfield.Inventory.Data
       return AcquisitionItems
         .Where(ai => ai.AcquisitionId == id)
         .Include(it => it.Product);
+    }
+
+    public void AddAcquisition(Acquisition acquisition)
+    {
+      Acquisitions.Add(acquisition);
     }
 
     public Company FindOrAddCompanyByName(string name)
@@ -54,11 +86,6 @@ namespace Renfield.Inventory.Data
                .Where(it => it.Name == name)
                .FirstOrDefault()
              ?? new Product { Name = name };
-    }
-
-    public void AddAcquisition(Acquisition acquisition)
-    {
-      Acquisitions.Add(acquisition);
     }
   }
 }

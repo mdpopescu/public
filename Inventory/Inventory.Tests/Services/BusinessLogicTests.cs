@@ -124,10 +124,10 @@ namespace Renfield.Inventory.Tests.Services
         .Setup(it => it.FindOrAddProductByName("def"))
         .Returns(new Product { Id = 2 });
       repository
-        .Setup(it => it.AddAcquisition(It.Is<Acquisition>(a => a.CompanyId == 1 &&
+        .Setup(it => it.AddAcquisition(It.Is<Acquisition>(a => a.Company.Id == 1 &&
                                                                a.Date == new DateTime(2000, 2, 3) &&
                                                                a.Items.Count == 2 &&
-                                                               a.Items.First().ProductId == 1 &&
+                                                               a.Items.First().Product.Id == 1 &&
                                                                a.Items.First().Quantity == 1.23m &&
                                                                a.Items.First().Price == 4.00m)))
         .Verifiable();
@@ -149,6 +149,47 @@ namespace Renfield.Inventory.Tests.Services
       sut.AddAcquisition(model);
 
       repository.Verify();
+    }
+
+    [TestMethod]
+    public void AddAcquisitionUpdatesTheStock()
+    {
+      repository
+        .Setup(it => it.FindOrAddCompanyByName("Microsoft"))
+        .Returns(new Company { Id = 1 });
+      repository
+        .Setup(it => it.FindOrAddProductByName("abc"))
+        .Returns(new Product { Id = 1, Name = "abc" });
+      repository
+        .Setup(it => it.FindOrAddProductByName("def"))
+        .Returns(new Product { Id = 2, Name = "def", SalePrice = 12.34m });
+      repository
+        .Setup(it => it.GetStock(1))
+        .Returns(new Stock { Quantity = 12.35m });
+      repository
+        .Setup(it => it.GetStock(2))
+        .Returns((Stock) null);
+
+      var model = new AcquisitionModel
+      {
+        CompanyName = "Microsoft",
+        Date = "2/3/2000",
+        Items = new[]
+        {
+          new AcquisitionItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
+          new AcquisitionItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+        },
+      };
+
+      sut.AddAcquisition(model);
+
+      repository.Verify(it => it.UpdateStock(1, 13.58m, 12.35m));
+      repository.Verify(it => it.AddStock(It.Is<Stock>(s => s.ProductId == 2 &&
+                                                            s.Name == "def" &&
+                                                            s.SalePrice == 12.34m &&
+                                                            s.Quantity == 5.67m &&
+                                                            s.PurchaseValue == 45.36m &&
+                                                            s.SaleValue == 69.97m)));
     }
   }
 }

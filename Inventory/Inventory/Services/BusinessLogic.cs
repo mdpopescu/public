@@ -43,10 +43,29 @@ namespace Renfield.Inventory.Services
     public void AddAcquisition(AcquisitionModel model)
     {
       using (var repository = dbFactory.Invoke())
+      using (var t = repository.BeginTransaction())
       {
-        repository.AddAcquisition(ToEntity(repository, model));
+        var acquisition = ToEntity(repository, model);
+        repository.AddAcquisition(acquisition);
+
+        foreach (var acquisitionItem in acquisition.Items)
+          UpdateStock(repository, acquisitionItem);
 
         repository.SaveChanges();
+
+        // verification phase: if any of the stock records have a different quantity than it should, throw an exception
+        // t will be null for testing
+        if (t != null)
+        {
+          var concurrencyViolations = from acquisitionItem in acquisition.Items
+                                      let stock = repository.GetStock(acquisitionItem.ProductId)
+                                      where stock.Quantity != acquisitionItem.Quantity
+                                      select acquisitionItem;
+          if (concurrencyViolations.Any())
+            throw new Exception("Someone else has changed one of the products; please try again.");
+
+          t.Commit();
+        }
       }
     }
 
@@ -58,7 +77,7 @@ namespace Renfield.Inventory.Services
     {
       return new Acquisition
       {
-        CompanyId = repository.FindOrAddCompanyByName(model.CompanyName).Id,
+        Company = repository.FindOrAddCompanyByName(model.CompanyName),
         Date = model.Date.ParseDateNullable() ?? DateTime.Today,
         Items = model.Items.Select(it => ToEntity(repository, it)).ToList(),
       };
@@ -68,10 +87,33 @@ namespace Renfield.Inventory.Services
     {
       return new AcquisitionItem
       {
-        ProductId = repository.FindOrAddProductByName(model.ProductName).Id,
+        Product = repository.FindOrAddProductByName(model.ProductName),
         Quantity = decimal.Parse(model.Quantity),
         Price = decimal.Parse(model.Price),
       };
+    }
+
+    private static void UpdateStock(Repository repository, AcquisitionItem acquisitionItem)
+    {
+      var newQuantity = acquisitionItem.Quantity;
+      var product = acquisitionItem.Product;
+      var productId = product.Id;
+
+      var stock = repository.GetStock(productId);
+      if (stock != null)
+        repository.UpdateStock(productId, newQuantity + stock.Quantity, stock.Quantity);
+      else
+      {
+        repository.AddStock(new Stock
+        {
+          ProductId = productId,
+          Name = product.Name,
+          SalePrice = product.SalePrice,
+          Quantity = newQuantity,
+          PurchaseValue = Math.Round(newQuantity * acquisitionItem.Price, 2),
+          SaleValue = Math.Round(newQuantity * product.SalePrice.GetValueOrDefault(), 2),
+        });
+      }
     }
   }
 }

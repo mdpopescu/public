@@ -69,6 +69,7 @@ namespace Renfield.Inventory.Tests
     }
 
     [TestMethod]
+    [Ignore]
     public void PostCreateAcquisitionsRedirectsBackToGet()
     {
       const string POST_DATA = "CompanyName=Microsoft&Date=07/01/2013&Items[0].ProductName=Hammer&Items[0].Quantity=1.23&Items[0].Price=4";
