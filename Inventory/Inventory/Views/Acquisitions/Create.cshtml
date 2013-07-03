@@ -91,13 +91,18 @@
       self.Quantity = ko.observable();
       self.Price = ko.observable();
       self.Value = ko.computed(function() {
-        try {
-          var result = parseFloat(self.Quantity()) * parseFloat(self.Price());
-          return isNaN(result) ? 0 : result;
-        } catch(ex) {
-          return 0;
-        }
+        // first, round the quantity and price
+        self.Quantity(fixDecimals(self.Quantity()));
+        self.Price(fixDecimals(self.Price()));
+
+        // then, multiply the two
+        return fixDecimals(self.Quantity() * self.Price());
       });
+    }
+
+    function fixDecimals(value) {
+      var result = parseFloat(value).toFixed(2);
+      return isNaN(result) ? "" : result;
     }
   })
 </script>
