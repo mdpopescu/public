@@ -10,10 +10,6 @@ Pages:
 All those pages (except for the first one) require user authentication.
 
 
-- include signalR
-
-
-
-AddAcquisition:
-- adds missing products
-- adds missing companies
+todo:
+- optimistic concurrency
+  http://www.maherali.net/2012/09/optimistic-concurrency-with-ef-code.html

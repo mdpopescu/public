@@ -72,7 +72,7 @@ namespace Renfield.Inventory.Tests
     [Ignore]
     public void PostCreateAcquisitionsRedirectsBackToGet()
     {
-      const string POST_DATA = "CompanyName=Microsoft&Date=07/01/2013&Items[0].ProductName=Hammer&Items[0].Quantity=1.23&Items[0].Price=4";
+      const string POST_DATA = "CompanyName=Microsoft&Date=07/01/2013&Items[0].ProductName=Hammer&Items[0].Quantity=1&Items[0].Price=4";
 
       var res = SafePost("Acquisitions/Create", POST_DATA);
       Assert.AreEqual("Redirect", res.StatusCode.ToString());

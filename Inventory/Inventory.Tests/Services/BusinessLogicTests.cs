@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.Inventory.Data;
@@ -293,8 +294,8 @@ namespace Renfield.Inventory.Tests.Services
 
         sut.AddAcquisition(model);
 
-        Assert.AreEqual(2,companies.Count);
-        Assert.AreEqual("Google",companies[1].Name);
+        companies.Count.Should().Be(2);
+        companies[1].Name.Should().Be("Google");
       }
 
       //
