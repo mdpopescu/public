@@ -63,7 +63,7 @@
       decorateElement: true,
       registerExtenders: true,
       messagesOnModified: true,
-      insertMessages: true,
+      insertMessages: false,
       parseInputAttributes: true,
       messageTemplate: null
     });
@@ -76,7 +76,7 @@
     function ViewModel() {
       var self = this;
 
-      self.CompanyName = ko.observable("").extend({ required: { message: '*' } });
+      self.CompanyName = ko.observable("").extend({ required: { message: ' '} });
       self.Date = ko.observable("@Model.Date");
       self.items = ko.observableArray([new Item()]);
 
@@ -104,9 +104,9 @@
     function Item() {
       var self = this;
 
-      self.ProductName = ko.observable("").extend({ required: { message: '*' } });
-      self.Quantity = ko.observable("").extend({ required: { message: '*' } });
-      self.Price = ko.observable("").extend({ required: { message: '*' } });
+      self.ProductName = ko.observable("").extend({ required: { message: ' ' } });
+      self.Quantity = ko.observable("").extend({ required: { message: ' ' }, number: true });
+      self.Price = ko.observable("").extend({ required: { message: ' ' }, number: true });
       self.Value = ko.computed(function() {
         // first, round the quantity and price
         self.Quantity(fixDecimals(self.Quantity()));

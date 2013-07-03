@@ -305,4 +305,4 @@ table td.date { }
 
 .validationMessage { color: red; }
 
-.validationElement { background: red; }
+.validationElement { background: #ffeeee; }
