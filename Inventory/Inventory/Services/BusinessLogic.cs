@@ -44,7 +44,17 @@ namespace Renfield.Inventory.Services
     {
       using (var repository = dbFactory.Invoke())
       {
-        var acquisition = ToEntity(repository, model);
+        var productNames = model
+          .Items
+          .Select(it => it.ProductName)
+          .Where(it => !it.IsNullOrEmpty())
+          .ToList();
+        var products = repository
+          .Products
+          .Where(it => productNames.Contains(it.Name))
+          .ToList();
+
+        var acquisition = ToEntity(repository, products, model);
         if (acquisition == null)
           return;
 
@@ -65,8 +75,7 @@ namespace Renfield.Inventory.Services
           UpdateStock(repository, stocks, acquisitionItem);
         repository.SaveChanges();
 
-        // update the clients
-        LiveUpdateHub.Instance.Value.All.updateStocks();
+        UpdateAllClients();
       }
     }
 
@@ -74,18 +83,8 @@ namespace Renfield.Inventory.Services
 
     private readonly Func<Repository> dbFactory;
 
-    private static Acquisition ToEntity(Repository repository, AcquisitionModel model)
+    private static Acquisition ToEntity(Repository repository, IEnumerable<Product> products, AcquisitionModel model)
     {
-      var productNames = model
-        .Items
-        .Select(it => it.ProductName)
-        .Where(it => !it.IsNullOrEmpty())
-        .ToList();
-      var products = repository
-        .Products
-        .Where(it => productNames.Contains(it.Name))
-        .ToList();
-
       var items = model
         .Items
         .Select(it => ToEntity(repository, products, it))
@@ -139,6 +138,11 @@ namespace Renfield.Inventory.Services
         };
         repository.Stocks.Add(stock);
       }
+    }
+
+    private static void UpdateAllClients()
+    {
+      LiveUpdateHub.Instance.Value.All.updateStocks();
     }
   }
 }

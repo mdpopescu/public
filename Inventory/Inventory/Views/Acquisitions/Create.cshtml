@@ -13,13 +13,11 @@
   <div id="formHeader">
     <span>
       @Html.LabelFor(m => m.CompanyName)
-      @Html.EditorFor(m => m.CompanyName)
-      @Html.ValidationMessageFor(m => m.CompanyName)
+      @Html.TextBoxFor(m => m.CompanyName, new { data_bind = "value: CompanyName" })
     </span>
     <span>
       @Html.LabelFor(m => m.Date)
-      @Html.EditorFor(m => m.Date)
-      @Html.ValidationMessageFor(m => m.Date)
+      @Html.TextBoxFor(m => m.Date, new { data_bind = "value: Date" })
     </span>
   </div>
 
@@ -56,11 +54,20 @@
     </table>
   </div>
 
-  <input type="submit" value="Submit" />
+  <input type="submit" value="Submit" data-bind="click: submit" />
 }
 
 <script type="text/javascript">
   $(function() {
+    ko.validation.configure({
+      decorateElement: true,
+      registerExtenders: true,
+      messagesOnModified: true,
+      insertMessages: true,
+      parseInputAttributes: true,
+      messageTemplate: null
+    });
+
     var viewModel = new ViewModel();
     ko.applyBindings(viewModel);
 
@@ -69,8 +76,8 @@
     function ViewModel() {
       var self = this;
 
-      self.CompanyName = ko.observable();
-      self.Date = ko.observable();
+      self.CompanyName = ko.observable("").extend({ required: { message: '*' } });
+      self.Date = ko.observable("@Model.Date");
       self.items = ko.observableArray([new Item()]);
 
       self.addItem = function() {
@@ -82,14 +89,24 @@
         if (self.items().length == 0)
           self.addItem();
       };
+
+      self.errors = ko.validation.group(this, { deep: true, observable: true });
+
+      self.submit = function() {
+        if (self.errors().length == 0)
+          return true;
+
+        self.errors.showAllMessages();
+        return false;
+      };
     }
 
     function Item() {
       var self = this;
 
-      self.ProductName = ko.observable();
-      self.Quantity = ko.observable();
-      self.Price = ko.observable();
+      self.ProductName = ko.observable("").extend({ required: { message: '*' } });
+      self.Quantity = ko.observable("").extend({ required: { message: '*' } });
+      self.Price = ko.observable("").extend({ required: { message: '*' } });
       self.Value = ko.computed(function() {
         // first, round the quantity and price
         self.Quantity(fixDecimals(self.Quantity()));
