@@ -90,7 +90,7 @@
           self.addItem();
       };
 
-      self.errors = ko.validation.group(this, { deep: true, observable: true });
+      self.errors = ko.validation.group(this, { deep: true, observable: false });
 
       self.submit = function() {
         if (self.errors().length == 0)
