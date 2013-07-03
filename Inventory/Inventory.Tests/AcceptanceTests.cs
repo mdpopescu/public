@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Web;
+using FluentAssertions;
 using HtmlAgilityPack;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -18,12 +22,13 @@ namespace Renfield.Inventory.Tests
       var root = LoadHtml("");
 
       var nav = root.GetTagById("ul", "menu");
-      Assert.IsNotNull(nav);
+      nav.Should().NotBeNull();
+
       var links = nav.SelectNodes(".//li/a").ToList();
-      Assert.AreEqual(3, links.Count);
-      Assert.AreEqual("Home", links[0].InnerText);
-      Assert.AreEqual("Product Inventory", links[1].InnerText);
-      Assert.AreEqual("Acquisitions", links[2].InnerText);
+      links.Count.Should().Be(3);
+
+      var linksText = links.Select(it => it.InnerText).ToList();
+      linksText.ShouldAllBeEquivalentTo(new[] { "Home", "Product Inventory", "Acquisitions" });
       //Assert.AreEqual("Sales", links[3].InnerText);
       //Assert.AreEqual("Products", links[4].InnerText);
       //Assert.AreEqual("Companies", links[5].InnerText);
@@ -36,8 +41,10 @@ namespace Renfield.Inventory.Tests
       var root = LoadHtml("Stocks/");
 
       var productsTable = root.GetTagById("table", "products");
-      Assert.IsNotNull(productsTable);
-      CollectionAssert.AreEqual(new[] { "Name", "Quantity", "Recommended Retail Price", "Purchase Value", "Sale Value" }, productsTable.GetColumns());
+      productsTable.Should().NotBeNull();
+
+      var columns = productsTable.GetColumns();
+      columns.ShouldAllBeEquivalentTo(new[] { "Name", "Quantity", "Recommended Retail Price", "Purchase Value", "Sale Value" });
     }
 
     [TestMethod]
@@ -46,14 +53,16 @@ namespace Renfield.Inventory.Tests
       var root = LoadHtml("Acquisitions/");
 
       var linkToAdd = root.GetTagById("a", "acquisitions_create");
-      Assert.IsNotNull(linkToAdd);
-      Assert.AreEqual("/Acquisitions/Create", linkToAdd.Attributes["href"].Value);
+      linkToAdd.Should().NotBeNull();
+      linkToAdd.Attributes["href"].Value.Should().Be("/Acquisitions/Create");
+
       var mainTable = root.GetTagById("table", "acquisitions");
-      Assert.IsNotNull(mainTable);
-      CollectionAssert.AreEqual(new[] { "Company Name", "Date", "Total Value" }, mainTable.GetColumns());
+      mainTable.Should().NotBeNull();
+      mainTable.GetColumns().ShouldAllBeEquivalentTo(new[] { "Company Name", "Date", "Total Value" });
+
       var itemsTable = root.GetTagById("table", "acquisition_items");
-      Assert.IsNotNull(itemsTable);
-      CollectionAssert.AreEqual(new[] { "Product Name", "Quantity", "Price", "Value" }, itemsTable.GetColumns());
+      itemsTable.Should().NotBeNull();
+      itemsTable.GetColumns().ShouldAllBeEquivalentTo(new[] { "Product Name", "Quantity", "Price", "Value" });
     }
 
     [TestMethod]
@@ -62,21 +71,29 @@ namespace Renfield.Inventory.Tests
       var root = LoadHtml("Acquisitions/Create");
 
       var companyName = root.GetTagById("input", "CompanyName");
-      Assert.IsNotNull(companyName);
+      companyName.Should().NotBeNull();
+
       var date = root.GetTagById("input", "Date");
-      Assert.IsNotNull(date);
-      Assert.AreEqual(DateTime.Today.ToString("MM/dd/yyyy"), date.Attributes["Value"].Value);
+      date.Should().NotBeNull();
+      date.Attributes["Value"].Value.Should().Be(DateTime.Today.ToString("MM/dd/yyyy"));
     }
 
     [TestMethod]
     [Ignore]
     public void PostCreateAcquisitionsRedirectsBackToGet()
     {
-      const string POST_DATA = "CompanyName=Microsoft&Date=07/01/2013&Items[0].ProductName=Hammer&Items[0].Quantity=1&Items[0].Price=4";
+      var postData = new NameValueCollection
+      {
+        { "CompanyName", "Microsoft" },
+        { "Date", "07/01/2013" },
+        { "Items[0].ProductName", "Hammer" },
+        { "Items[0].Quantity", "1" },
+        { "Items[0].Price", "4" },
+      };
 
-      var res = SafePost("Acquisitions/Create", POST_DATA);
-      Assert.AreEqual("Redirect", res.StatusCode.ToString());
-      Assert.AreEqual("/Acquisitions/Create", res.Headers["Location"]);
+      var res = SafePost("Acquisitions/Create", postData);
+      res.StatusCode.Should().Be("Redirect");
+      res.Headers["Location"].Should().Be("/Acquisitions/Create");
     }
 
     //
@@ -96,9 +113,9 @@ namespace Renfield.Inventory.Tests
         return web.DownloadString(url);
     }
 
-    private static HttpWebResponse SafePost(string page, string data)
+    private static HttpWebResponse SafePost(string page, NameValueCollection values)
     {
-      var byteArray = Encoding.UTF8.GetBytes(data + "");
+      var byteArray = BuildPOSTData(values);
 
       var req = (HttpWebRequest) WebRequest.Create(string.Format("{0}/{1}", BASE_URL, page));
       req.AllowAutoRedirect = false;
@@ -110,6 +127,17 @@ namespace Renfield.Inventory.Tests
       stream.Write(byteArray, 0, byteArray.Length);
 
       return (HttpWebResponse) req.GetResponse();
+    }
+
+    private static byte[] BuildPOSTData(NameValueCollection values)
+    {
+      var data = values
+        .Cast<string>()
+        .Select(key => new KeyValuePair<string, string>(key, values[key]))
+        .Select(v => string.Format("{0}={1}", v.Key, HttpUtility.UrlEncode(v.Value)))
+        .Join("&");
+
+      return Encoding.UTF8.GetBytes(data + "");
     }
   }
 }

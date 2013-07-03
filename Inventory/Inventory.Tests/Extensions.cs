@@ -31,5 +31,10 @@ namespace Renfield.Inventory.Tests
         .Setup(expression)
         .Returns(new FakeDbSet<TTable>(list));
     }
+
+    public static string Join(this IEnumerable<string> values, string separator)
+    {
+      return string.Join(separator, values);
+    }
   }
 }
