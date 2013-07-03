@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 
 namespace Renfield.Inventory.Data
@@ -16,8 +15,6 @@ namespace Renfield.Inventory.Data
     IDbSet<SaleItem> SaleItems { get; set; }
     IDbSet<Stock> Stocks { get; set; }
 
-    IEnumerable<Acquisition> GetAcquisitions();
-    IEnumerable<AcquisitionItem> GetAcquisitionItems(int id);
     void AddAcquisition(Acquisition acquisition);
   }
 }

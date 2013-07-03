@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
+﻿using System.Data.Entity;
 
 namespace Renfield.Inventory.Data
 {
@@ -17,20 +15,6 @@ namespace Renfield.Inventory.Data
     public InventoryDB(string nameOrConnectionString)
       : base(nameOrConnectionString)
     {
-    }
-
-    public IEnumerable<Acquisition> GetAcquisitions()
-    {
-      return Acquisitions
-        .Include(it => it.Company)
-        .Include(it => it.Items.Select(itt => itt.Product));
-    }
-
-    public IEnumerable<AcquisitionItem> GetAcquisitionItems(int id)
-    {
-      return AcquisitionItems
-        .Where(ai => ai.AcquisitionId == id)
-        .Include(it => it.Product);
     }
 
     public void AddAcquisition(Acquisition acquisition)
