@@ -7,17 +7,19 @@
     
     <meta charset="utf-8" />
     <title>@ViewBag.Title</title>
+    
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/redmond/jquery-ui-1.10.3.custom.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/ui.notify.css")" rel="stylesheet" type="text/css" />
     
     <script src="@Url.Content("~/Scripts/jquery-2.0.2.min.js")" type="text/javascript"> </script>
     <script src="@Url.Content("~/Scripts/jquery-ui-1.10.3.min.js")" type="text/javascript"> </script>
-    <link href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/Content/themes/redmond/jquery-ui-1.10.3.custom.min.css")" rel="stylesheet" type="text/css" />
-    
     <script src="@Url.Content("~/Scripts/modernizr-2.6.2.js")" type="text/javascript"> </script>
     <script src="@Url.Content("~/Scripts/knockout-2.2.1.js")" type="text/javascript"> </script>
     <script src="@Url.Content("~/Scripts/knockout.mapping-latest.js")" type="text/javascript"> </script>
     <script src="@Url.Content("~/Scripts/knockout.validation.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Scripts/jquery.notify.js")" type="text/javascript"> </script>
     
     <script src="@Url.Content("~/Scripts/jquery.signalR-1.1.2.min.js")" type="text/javascript"> </script>
     <script src="@Url.Content("signalr/hubs")"> </script>
@@ -29,6 +31,13 @@
     </script>
   </head>
   <body>
+    <div id="notifications" style="display: none">
+      <div id="basic-template">
+        <a class="ui-notify-cross ui-notify-close" href="#">x</a>
+        <h1>#{title}</h1>
+        <p>#{text}</p>
+      </div>
+    </div>
     <div class="page">
       <header>
         <div id="title">
@@ -53,5 +62,11 @@
       </footer>
     </div>
     @MiniProfiler.RenderIncludes()
+    
+    <script type="text/javascript">
+      $(function() {
+        $('#notifications').notify();
+      });
+    </script>
   </body>
 </html>

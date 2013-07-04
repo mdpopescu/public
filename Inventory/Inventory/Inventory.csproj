@@ -253,6 +253,7 @@
     <Content Include="Content\themes\redmond\images\ui-icons_f9bd01_256x240.png" />
     <Content Include="Content\themes\redmond\jquery-ui-1.10.3.custom.css" />
     <Content Include="Content\themes\redmond\jquery-ui-1.10.3.custom.min.css" />
+    <Content Include="Content\ui.notify.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\helpers.js" />
     <Content Include="Scripts\jquery-2.0.2-vsdoc.js" />
@@ -260,6 +261,7 @@
     <Content Include="Scripts\jquery-2.0.2.min.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.min.js" />
+    <Content Include="Scripts\jquery.notify.js" />
     <Content Include="Scripts\jquery.signalR-1.1.2.js" />
     <Content Include="Scripts\jquery.signalR-1.1.2.min.js" />
     <Content Include="Scripts\knockout-2.2.1.debug.js" />

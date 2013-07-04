@@ -36,23 +36,30 @@
       updateModel();
     };
 
-    $.connection.hub.start().done(function () {
+    $.connection.hub.start().done(function() {
       // nothing for now
     });
 
     JTable.Setup();
 
     //
-    
+
     function updateModel() {
-      $.getJSON($.BASE_URL + "Stocks/GetStocks", function(data) {
-        if (viewModel)
-          ko.mapping.fromJS({ stock: data }, viewModel);
-        else {
-          viewModel = ko.mapping.fromJS({ stock: data });
-          ko.applyBindings(viewModel);
-        }
-      });
+      $.getJSON($.BASE_URL + "Stocks/GetStocks")
+        .done(function(data) {
+          if (viewModel)
+            ko.mapping.fromJS({ stock: data }, viewModel);
+          else {
+            viewModel = ko.mapping.fromJS({ stock: data });
+            ko.applyBindings(viewModel);
+          }
+        })
+        .error(function(xhr, status, error) {
+          $('#notifications').notify('create', {
+            title: 'Server Error',
+            text: error
+          });
+        });
     }
   });
 </script>
