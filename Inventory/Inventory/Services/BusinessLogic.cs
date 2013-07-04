@@ -77,7 +77,10 @@ namespace Renfield.Inventory.Services
           .ToList();
 
         foreach (var acquisitionItem in acquisition.Items)
-          UpdateStock(repository, stocks, acquisitionItem);
+        {
+          var item = acquisitionItem;
+          Retry.Times(3, TimeSpan.FromMilliseconds(100), () => UpdateStock(repository, stocks, item));
+        }
         repository.SaveChanges();
 
         UpdateAllClients();
@@ -143,6 +146,8 @@ namespace Renfield.Inventory.Services
         };
         repository.Stocks.Add(stock);
       }
+
+      repository.SaveChanges();
     }
 
     private static void UpdateAllClients()

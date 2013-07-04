@@ -14,5 +14,8 @@ namespace Renfield.Inventory.Data
     public decimal Quantity { get; set; }
     public decimal PurchaseValue { get; set; }
     public decimal SaleValue { get; set; }
+
+    [Timestamp]
+    public byte[] Version { get; set; }
   }
 }

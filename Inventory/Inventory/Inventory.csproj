@@ -154,12 +154,17 @@
     <Compile Include="Migrations\201307011223466_m03.Designer.cs">
       <DependentUpon>201307011223466_m03.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201307040636501_m04.cs" />
+    <Compile Include="Migrations\201307040636501_m04.Designer.cs">
+      <DependentUpon>201307040636501_m04.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AcquisitionItemModel.cs" />
     <Compile Include="Models\AcquisitionModel.cs" />
     <Compile Include="Models\StockModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Retry.cs" />
     <Compile Include="Services\BusinessLogic.cs" />
     <Compile Include="Services\Logic.cs" />
   </ItemGroup>
@@ -354,6 +359,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201307011223466_m03.resx">
       <DependentUpon>201307011223466_m03.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201307040636501_m04.resx">
+      <DependentUpon>201307040636501_m04.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
