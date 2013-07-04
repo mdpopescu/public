@@ -66,6 +66,13 @@
     <script type="text/javascript">
       $(function() {
         $('#notifications').notify();
+
+        $(document).ajaxError(function(event, xhr, settings, ex) {
+          $('#notifications').notify('create', {
+            title: 'Server Error',
+            text: ex
+          });
+        });
       });
     </script>
   </body>

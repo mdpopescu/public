@@ -55,11 +55,12 @@
     var masterViewModel = null;
     var childViewModel = null;
 
-    $.getJSON($.BASE_URL + "Acquisitions/GetAcquisitions", function(data) {
-      masterViewModel = ko.mapping.fromJS({ acquisitions: data });
+    $.getJSON($.BASE_URL + "Acquisitions/GetAcquisitions")
+      .done(function(data) {
+        masterViewModel = ko.mapping.fromJS({ acquisitions: data });
 
-      ko.applyBindings(masterViewModel, $('#acquisitions')[0]);
-    });
+        ko.applyBindings(masterViewModel, $('#acquisitions')[0]);
+      });
 
     JTable.Setup();
 
@@ -69,14 +70,15 @@
         var id = $(ui.selected).data('id');
 
         $('#acquisitionId').text(id);
-        $.getJSON($.BASE_URL + "Acquisitions/GetAcquisitionItems", { id: id }, function(data) {
-          if (childViewModel != null)
-            ko.mapping.fromJS({ acquisitionItems: data }, childViewModel);
-          else {
-            childViewModel = ko.mapping.fromJS({ acquisitionItems: data });
-            ko.applyBindings(childViewModel, $('#acquisition_items')[0]);
-          }
-        });
+        $.getJSON($.BASE_URL + "Acquisitions/GetAcquisitionItems", { id: id })
+          .done(function(data) {
+            if (childViewModel != null)
+              ko.mapping.fromJS({ acquisitionItems: data }, childViewModel);
+            else {
+              childViewModel = ko.mapping.fromJS({ acquisitionItems: data });
+              ko.applyBindings(childViewModel, $('#acquisition_items')[0]);
+            }
+          });
       }
     });
   })

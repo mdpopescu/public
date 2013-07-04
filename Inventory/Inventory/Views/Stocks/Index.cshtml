@@ -53,12 +53,6 @@
             viewModel = ko.mapping.fromJS({ stock: data });
             ko.applyBindings(viewModel);
           }
-        })
-        .error(function(xhr, status, error) {
-          $('#notifications').notify('create', {
-            title: 'Server Error',
-            text: error
-          });
         });
     }
   });
