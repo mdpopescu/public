@@ -158,6 +158,10 @@
     <Compile Include="Migrations\201307040636501_m04.Designer.cs">
       <DependentUpon>201307040636501_m04.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201307040857284_m05.cs" />
+    <Compile Include="Migrations\201307040857284_m05.Designer.cs">
+      <DependentUpon>201307040857284_m05.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AcquisitionItemModel.cs" />
@@ -362,6 +366,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201307040636501_m04.resx">
       <DependentUpon>201307040636501_m04.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201307040857284_m05.resx">
+      <DependentUpon>201307040857284_m05.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

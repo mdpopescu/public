@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Renfield.Inventory.Data
 {
@@ -10,5 +11,8 @@ namespace Renfield.Inventory.Data
     public string Name { get; set; }
 
     public decimal? SalePrice { get; set; }
+
+    public virtual ICollection<AcquisitionItem> AcquisitionItems { get; set; }
+    public virtual ICollection<SaleItem> SaleItems { get; set; }
   }
 }

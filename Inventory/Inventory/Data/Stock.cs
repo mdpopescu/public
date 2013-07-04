@@ -17,5 +17,7 @@ namespace Renfield.Inventory.Data
 
     [Timestamp]
     public byte[] Version { get; set; }
+
+    public virtual Product Product { get; set; }
   }
 }
