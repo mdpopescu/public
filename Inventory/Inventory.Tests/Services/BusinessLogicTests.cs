@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,6 +16,8 @@ namespace Renfield.Inventory.Tests.Services
   {
     private List<Product> products;
     private List<Company> companies;
+    private List<Acquisition> acquisitions;
+    private List<AcquisitionItem> acquisitionItems;
     private List<Stock> stocks;
     private Mock<Repository> repository;
     private BusinessLogic sut;
@@ -24,12 +27,20 @@ namespace Renfield.Inventory.Tests.Services
     {
       products = new List<Product>();
       companies = new List<Company>();
+      acquisitions = new List<Acquisition>();
+      acquisitionItems = new List<AcquisitionItem>();
       stocks = new List<Stock>();
 
       repository = new Mock<Repository>();
       repository.SetUpTable(it => it.Products, products);
       repository.SetUpTable(it => it.Companies, companies);
+      repository.SetUpTable(it => it.Acquisitions, acquisitions);
+      repository.SetUpTable(it => it.AcquisitionItems, acquisitionItems);
       repository.SetUpTable(it => it.Stocks, stocks);
+
+      repository
+        .Setup(it => it.SaveChanges())
+        .Callback(() => acquisitions.ForEach(FixItems));
 
       sut = new BusinessLogic(() => repository.Object);
     }
@@ -45,17 +56,9 @@ namespace Renfield.Inventory.Tests.Services
 
         var result = sut.GetStocks().ToList();
 
-        Assert.AreEqual(2, result.Count);
-        Assert.AreEqual("Hammer", result[0].Name);
-        Assert.AreEqual("1.00", result[0].Quantity);
-        Assert.AreEqual("3.45", result[0].RRP);
-        Assert.AreEqual("5.99", result[0].PurchaseValue);
-        Assert.AreEqual("7.99", result[0].SaleValue);
-        Assert.AreEqual("Nails Pack x100", result[1].Name);
-        Assert.AreEqual("2.00", result[1].Quantity);
-        Assert.AreEqual("", result[1].RRP);
-        Assert.AreEqual("0.02", result[1].PurchaseValue);
-        Assert.AreEqual("0.05", result[1].SaleValue);
+        result.Should().HaveCount(2);
+        result[0].ShouldBeEquivalentTo(new StockModel { Name = "Hammer", Quantity = "1.00", RRP = "3.45", PurchaseValue = "5.99", SaleValue = "7.99" });
+        result[1].ShouldBeEquivalentTo(new StockModel { Name = "Nails Pack x100", Quantity = "2.00", RRP = "", PurchaseValue = "0.02", SaleValue = "0.05" });
       }
     }
 
@@ -65,41 +68,37 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void ReturnsAcquisitionModels()
       {
-        repository
-          .Setup(it => it.GetAcquisitions())
-          .Returns(new[]
+        acquisitions.AddRange(new[]
+        {
+          new Acquisition
           {
-            new Acquisition
+            Company = new Company { Name = "Microsoft" },
+            Date = new DateTime(2000, 3, 4),
+            Items = new[]
             {
-              Company = new Company { Name = "Microsoft" },
-              Date = new DateTime(2000, 3, 4),
-              Items = new[]
-              {
-                new AcquisitionItem { Product = new Product { Name = "Hammer" }, Quantity = 1.23m, Price = 4.56m },
-                new AcquisitionItem { Product = new Product { Name = "Saw" }, Quantity = 20.00m, Price = 15.99m },
-              }
-            },
-            new Acquisition
+              new AcquisitionItem { Product = new Product { Name = "Hammer" }, Quantity = 1.23m, Price = 4.56m },
+              new AcquisitionItem { Product = new Product { Name = "Saw" }, Quantity = 20.00m, Price = 15.99m },
+            }
+          },
+          new Acquisition
+          {
+            Company = new Company { Name = "Borland" },
+            Date = new DateTime(2000, 5, 6),
+            Items = new[]
             {
-              Company = new Company { Name = "Borland" },
-              Date = new DateTime(2000, 5, 6),
-              Items = new[]
-              {
-                new AcquisitionItem { Product = new Product { Name = "Saw" }, Quantity = 10, Price = 12.99m },
-                new AcquisitionItem { Product = new Product { Name = "Toolkit" }, Quantity = 10, Price = 29.99m },
-              }
-            },
-          });
+              new AcquisitionItem { Product = new Product { Name = "Saw" }, Quantity = 10, Price = 12.99m },
+              new AcquisitionItem { Product = new Product { Name = "Toolkit" }, Quantity = 10, Price = 29.99m },
+            }
+          },
+        });
 
         var result = sut.GetAcquisitions().ToList();
 
-        Assert.AreEqual(2, result.Count);
-        Assert.AreEqual("Microsoft", result[0].CompanyName);
-        Assert.AreEqual("03/04/2000", result[0].Date);
-        Assert.AreEqual("325.41", result[0].Value);
-        Assert.AreEqual("Borland", result[1].CompanyName);
-        Assert.AreEqual("05/06/2000", result[1].Date);
-        Assert.AreEqual("429.80", result[1].Value);
+        result.Should().HaveCount(2);
+        result[0].ShouldBeEquivalentTo(new AcquisitionModel { CompanyName = "Microsoft", Date = "03/04/2000", Value = "325.41" },
+          options => options.Excluding(m => m.Items));
+        result[1].ShouldBeEquivalentTo(new AcquisitionModel { CompanyName = "Borland", Date = "05/06/2000", Value = "429.80" },
+          options => options.Excluding(m => m.Items));
       }
     }
 
@@ -109,25 +108,17 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void ReturnsAcquisitionItemModels()
       {
-        repository
-          .Setup(it => it.GetAcquisitionItems(1))
-          .Returns(new[]
-          {
-            new AcquisitionItem { Product = new Product { Name = "Hammer" }, Quantity = 1.23m, Price = 4.56m },
-            new AcquisitionItem { Product = new Product { Name = "Saw" }, Quantity = 20.00m, Price = 15.99m },
-          });
+        acquisitionItems.AddRange(new[]
+        {
+          new AcquisitionItem { AcquisitionId = 1, Product = new Product { Name = "Hammer" }, Quantity = 1.23m, Price = 4.56m },
+          new AcquisitionItem { AcquisitionId = 1, Product = new Product { Name = "Saw" }, Quantity = 20.00m, Price = 15.99m },
+        });
 
         var result = sut.GetAcquisitionItems(1).ToList();
 
-        Assert.AreEqual(2, result.Count);
-        Assert.AreEqual("Hammer", result[0].ProductName);
-        Assert.AreEqual("1.23", result[0].Quantity);
-        Assert.AreEqual("4.56", result[0].Price);
-        Assert.AreEqual("5.61", result[0].Value);
-        Assert.AreEqual("Saw", result[1].ProductName);
-        Assert.AreEqual("20.00", result[1].Quantity);
-        Assert.AreEqual("15.99", result[1].Price);
-        Assert.AreEqual("319.80", result[1].Value);
+        result.Should().HaveCount(2);
+        result[0].ShouldBeEquivalentTo(new AcquisitionItemModel { ProductName = "Hammer", Quantity = "1.23", Price = "4.56", Value = "5.61" });
+        result[1].ShouldBeEquivalentTo(new AcquisitionItemModel { ProductName = "Saw", Quantity = "20.00", Price = "15.99", Value = "319.80" });
       }
     }
 
@@ -153,12 +144,19 @@ namespace Renfield.Inventory.Tests.Services
 
         sut.AddAcquisition(model);
 
-        repository.Verify(it => it.AddAcquisition(It.Is<Acquisition>(a => a.Company.Id == 1 &&
-                                                                          a.Date == new DateTime(2000, 2, 3) &&
-                                                                          a.Items.Count == 2 &&
-                                                                          a.Items.First().Product.Id == 1 &&
-                                                                          a.Items.First().Quantity == 1.23m &&
-                                                                          a.Items.First().Price == 4.00m)));
+        acquisitions.Should().HaveCount(1);
+        var acquisition = acquisitions[0];
+        acquisition.ShouldBeEquivalentTo(new Acquisition
+        {
+          Id = 1,
+          Company = new Company { Id = 1, Name = "Microsoft" },
+          Date = new DateTime(2000, 2, 3),
+          Items = new Collection<AcquisitionItem>
+          {
+            new AcquisitionItem { Product = new Product { Id = 1, Name = "abc" }, ProductId = 1, Quantity = 1.23m, Price = 4.00m, },
+            new AcquisitionItem { Product = new Product { Id = 2, Name = "def" }, ProductId = 2, Quantity = 5.67m, Price = 8.00m, }
+          }
+        });
         repository.Verify(it => it.SaveChanges());
       }
 
@@ -182,13 +180,18 @@ namespace Renfield.Inventory.Tests.Services
 
         sut.AddAcquisition(model);
 
-        repository
-          .Verify(it => it.AddAcquisition(It.Is<Acquisition>(a => a.Company.Id == 1 &&
-                                                                  a.Date == new DateTime(2000, 1, 1) &&
-                                                                  a.Items.Count == 1 &&
-                                                                  a.Items.First().Product.Id == 4 &&
-                                                                  a.Items.First().Quantity == 4.00m &&
-                                                                  a.Items.First().Price == 4.00m)));
+        acquisitions.Should().HaveCount(1);
+        var acquisition = acquisitions[0];
+        acquisition.ShouldBeEquivalentTo(new Acquisition
+        {
+          Id = 1,
+          Company = new Company { Id = 1, Name = "Microsoft" },
+          Date = new DateTime(2000, 1, 1),
+          Items = new Collection<AcquisitionItem>
+          {
+            new AcquisitionItem { Product = new Product { Id = 4, Name = "d" }, ProductId = 4, Quantity = 4.00m, Price = 4.00m, },
+          }
+        });
       }
 
       [TestMethod]
@@ -209,7 +212,7 @@ namespace Renfield.Inventory.Tests.Services
 
         sut.AddAcquisition(model);
 
-        repository.Verify(it => it.AddAcquisition(It.IsAny<Acquisition>()), Times.Never());
+        acquisitions.Should().BeEmpty();
       }
 
       [TestMethod]
@@ -218,11 +221,7 @@ namespace Renfield.Inventory.Tests.Services
         companies.Add(new Company { Id = 1, Name = "Microsoft" });
         products.Add(new Product { Id = 1, Name = "abc" });
         products.Add(new Product { Id = 2, Name = "def", SalePrice = 12.34m });
-        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
-        Acquisition acquisition = null;
-        repository
-          .Setup(it => it.AddAcquisition(It.IsAny<Acquisition>()))
-          .Callback<Acquisition>(it => acquisition = FixItems(it));
+        stocks.Add(new Stock { Id = 1, ProductId = 1, Name = "abc", Quantity = 22.35m });
 
         var model = new AcquisitionModel
         {
@@ -237,15 +236,19 @@ namespace Renfield.Inventory.Tests.Services
 
         sut.AddAcquisition(model);
 
-        Assert.AreEqual(2, stocks.Count);
-        Assert.AreEqual(23.58m, stocks[0].Quantity);
+        stocks.Should().HaveCount(2);
+        stocks[0].Quantity.Should().Be(23.58m);
         var addedStock = stocks[1];
-        Assert.AreEqual(2, addedStock.ProductId);
-        Assert.AreEqual("def", addedStock.Name);
-        Assert.AreEqual(12.34m, addedStock.SalePrice);
-        Assert.AreEqual(5.67m, addedStock.Quantity);
-        Assert.AreEqual(45.36m, addedStock.PurchaseValue);
-        Assert.AreEqual(69.97m, addedStock.SaleValue);
+        addedStock.ShouldBeEquivalentTo(new Stock
+        {
+          Id = 2,
+          ProductId = 2,
+          Name = "def",
+          SalePrice = 12.34m,
+          Quantity = 5.67m,
+          PurchaseValue = 45.36m,
+          SaleValue = 69.97m,
+        });
       }
 
       [TestMethod]
@@ -254,10 +257,6 @@ namespace Renfield.Inventory.Tests.Services
         companies.Add(new Company { Id = 1, Name = "Microsoft" });
         products.Add(new Product { Id = 1, Name = "abc", SalePrice = 12.34m });
         stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
-        Acquisition acquisition = null;
-        repository
-          .Setup(it => it.AddAcquisition(It.IsAny<Acquisition>()))
-          .Callback<Acquisition>(it => acquisition = FixItems(it));
 
         var model = new AcquisitionModel
         {
@@ -272,9 +271,9 @@ namespace Renfield.Inventory.Tests.Services
 
         sut.AddAcquisition(model);
 
-        Assert.AreEqual(2, products.Count);
-        Assert.AreEqual("abc", products[0].Name);
-        Assert.AreEqual("def", products[1].Name);
+        products.Should().HaveCount(2);
+        products[0].Name.Should().Be("abc");
+        products[1].Name.Should().Be("def");
       }
 
       [TestMethod]
@@ -294,22 +293,20 @@ namespace Renfield.Inventory.Tests.Services
 
         sut.AddAcquisition(model);
 
-        companies.Count.Should().Be(2);
+        companies.Should().HaveCount(2);
         companies[1].Name.Should().Be("Google");
       }
+    }
 
-      //
+    //
 
-      /// <summary>
-      ///   Fixes the ProductId on the items (this is done by SaveChanges in normal execution)
-      /// </summary>
-      private static Acquisition FixItems(Acquisition acquisition)
-      {
-        foreach (var item in acquisition.Items)
-          item.ProductId = item.Product.Id;
-
-        return acquisition;
-      }
+    /// <summary>
+    ///   Fixes the ProductId on the items (this is done by SaveChanges in normal execution)
+    /// </summary>
+    private static void FixItems(Acquisition acquisition)
+    {
+      foreach (var item in acquisition.Items)
+        item.ProductId = item.Product.Id;
     }
   }
 }

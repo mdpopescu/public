@@ -14,7 +14,5 @@ namespace Renfield.Inventory.Data
     IDbSet<Sale> Sales { get; set; }
     IDbSet<SaleItem> SaleItems { get; set; }
     IDbSet<Stock> Stocks { get; set; }
-
-    void AddAcquisition(Acquisition acquisition);
   }
 }

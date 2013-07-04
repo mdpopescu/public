@@ -25,7 +25,7 @@ namespace Renfield.Inventory.Tests
       nav.Should().NotBeNull();
 
       var links = nav.SelectNodes(".//li/a").ToList();
-      links.Count.Should().Be(3);
+      links.Should().HaveCount(3);
 
       var linksText = links.Select(it => it.InnerText).ToList();
       linksText.ShouldAllBeEquivalentTo(new[] { "Home", "Product Inventory", "Acquisitions" });

@@ -11,5 +11,13 @@ All those pages (except for the first one) require user authentication.
 
 
 todo:
-- optimistic concurrency
-  http://www.maherali.net/2012/09/optimistic-concurrency-with-ef-code.html
+xxx- optimistic concurrency
+xxx  http://www.maherali.net/2012/09/optimistic-concurrency-with-ef-code.html
+
+NO!
+
+- acquisitions can ALWAYS change the stocks, they just have to keep retrying if the value has changed
+  (optimistic concurrency here - do a where with the old quantity and keep retrying, for each record)
+- sales should first lock the stocks and check that the quantity is enough
+  if it is, go ahead and make the changes and release
+  if not, a message should be returned to the customer indicating which stocks are not enough

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.Inventory.Controllers;
@@ -27,7 +28,7 @@ namespace Renfield.Inventory.Tests.Controllers
     {
       var result = sut.Index() as ViewResult;
 
-      Assert.IsNull(result.Model);
+      result.Model.Should().BeNull();
     }
 
     [TestMethod]
@@ -40,7 +41,7 @@ namespace Renfield.Inventory.Tests.Controllers
 
       var result = sut.GetAcquisitions() as JsonResult;
 
-      Assert.AreEqual(list, result.Data);
+      result.Data.As<IEnumerable<AcquisitionModel>>().ShouldAllBeEquivalentTo(list);
     }
 
     [TestMethod]
@@ -53,7 +54,7 @@ namespace Renfield.Inventory.Tests.Controllers
 
       var result = sut.GetAcquisitionItems(1) as JsonResult;
 
-      Assert.AreEqual(list, result.Data);
+      result.Data.As<IEnumerable<AcquisitionItemModel>>().ShouldAllBeEquivalentTo(list);
     }
 
     [TestMethod]
@@ -62,8 +63,8 @@ namespace Renfield.Inventory.Tests.Controllers
       var result = sut.Create() as ViewResult;
 
       var model = result.Model as AcquisitionModel;
-      Assert.IsNotNull(model);
-      Assert.AreEqual(DateTime.Today.ToString(Constants.DATE_FORMAT), model.Date);
+      model.Should().NotBeNull();
+      model.Date.Should().Be(DateTime.Today.ToString(Constants.DATE_FORMAT));
     }
 
     [TestMethod]
@@ -71,8 +72,8 @@ namespace Renfield.Inventory.Tests.Controllers
     {
       var result = sut.Create(new AcquisitionModel()) as RedirectToRouteResult;
 
-      Assert.AreEqual("Create", result.RouteValues["action"]);
-      Assert.IsNull(result.RouteValues["controller"]);
+      result.RouteValues["action"].Should().Be("Create");
+      result.RouteValues["controller"].Should().BeNull();
     }
 
     [TestMethod]

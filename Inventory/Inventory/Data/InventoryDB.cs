@@ -16,10 +16,5 @@ namespace Renfield.Inventory.Data
       : base(nameOrConnectionString)
     {
     }
-
-    public void AddAcquisition(Acquisition acquisition)
-    {
-      Acquisitions.Add(acquisition);
-    }
   }
 }

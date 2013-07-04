@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using Renfield.Inventory.Data;
 using Renfield.Inventory.Models;
@@ -26,7 +27,9 @@ namespace Renfield.Inventory.Services
     {
       using (var repository = dbFactory.Invoke())
         return repository
-          .GetAcquisitions()
+          .Acquisitions
+          .Include(it => it.Company)
+          .Include(it => it.Items.Select(itt => itt.Product))
           .Select(AcquisitionModel.From)
           .ToList();
     }
@@ -35,7 +38,9 @@ namespace Renfield.Inventory.Services
     {
       using (var repository = dbFactory.Invoke())
         return repository
-          .GetAcquisitionItems(id)
+          .AcquisitionItems
+          .Where(ai => ai.AcquisitionId == id)
+          .Include(it => it.Product)
           .Select(AcquisitionItemModel.From)
           .ToList();
     }
@@ -58,7 +63,7 @@ namespace Renfield.Inventory.Services
         if (acquisition == null)
           return;
 
-        repository.AddAcquisition(acquisition);
+        repository.Acquisitions.Add(acquisition);
         repository.SaveChanges(); // this updates the ProductId field on the items
 
         // get the stock records for these products

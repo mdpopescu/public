@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.Inventory.Controllers;
@@ -26,7 +27,7 @@ namespace Renfield.Inventory.Tests.Controllers
     {
       var result = sut.Index() as ViewResult;
 
-      Assert.IsNull(result.Model);
+      result.Should().NotBeNull();
     }
 
     [TestMethod]
@@ -39,7 +40,7 @@ namespace Renfield.Inventory.Tests.Controllers
 
       var result = sut.GetStocks() as JsonResult;
 
-      Assert.AreEqual(list, result.Data);
+      result.Data.As<List<StockModel>>().ShouldBeEquivalentTo(list);
     }
   }
 }
