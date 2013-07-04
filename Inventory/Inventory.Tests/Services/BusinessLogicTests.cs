@@ -18,6 +18,8 @@ namespace Renfield.Inventory.Tests.Services
     private List<Company> companies;
     private List<Acquisition> acquisitions;
     private List<AcquisitionItem> acquisitionItems;
+    private List<Sale> sales;
+    private List<SaleItem> saleItems;
     private List<Stock> stocks;
     private Mock<Repository> repository;
     private BusinessLogic sut;
@@ -29,6 +31,8 @@ namespace Renfield.Inventory.Tests.Services
       companies = new List<Company>();
       acquisitions = new List<Acquisition>();
       acquisitionItems = new List<AcquisitionItem>();
+      sales = new List<Sale>();
+      saleItems = new List<SaleItem>();
       stocks = new List<Stock>();
 
       repository = new Mock<Repository>();
@@ -36,11 +40,17 @@ namespace Renfield.Inventory.Tests.Services
       repository.SetUpTable(it => it.Companies, companies);
       repository.SetUpTable(it => it.Acquisitions, acquisitions);
       repository.SetUpTable(it => it.AcquisitionItems, acquisitionItems);
+      repository.SetUpTable(it => it.Sales, sales);
+      repository.SetUpTable(it => it.SaleItems, saleItems);
       repository.SetUpTable(it => it.Stocks, stocks);
 
       repository
         .Setup(it => it.SaveChanges())
-        .Callback(() => acquisitions.ForEach(FixItems));
+        .Callback(() =>
+        {
+          acquisitions.ForEach(FixItems);
+          sales.ForEach(FixItems);
+        });
 
       sut = new BusinessLogic(() => repository.Object);
     }
@@ -298,6 +308,242 @@ namespace Renfield.Inventory.Tests.Services
       }
     }
 
+    [TestClass]
+    public class GetSales : BusinessLogicTests
+    {
+      [TestMethod]
+      public void ReturnsSaleModels()
+      {
+        sales.AddRange(new[]
+        {
+          new Sale
+          {
+            Company = new Company { Name = "Microsoft" },
+            Date = new DateTime(2000, 3, 4),
+            Items = new[]
+            {
+              new SaleItem { Product = new Product { Name = "Hammer" }, Quantity = 1.23m, Price = 4.56m },
+              new SaleItem { Product = new Product { Name = "Saw" }, Quantity = 20.00m, Price = 15.99m },
+            }
+          },
+          new Sale
+          {
+            Company = new Company { Name = "Borland" },
+            Date = new DateTime(2000, 5, 6),
+            Items = new[]
+            {
+              new SaleItem { Product = new Product { Name = "Saw" }, Quantity = 10, Price = 12.99m },
+              new SaleItem { Product = new Product { Name = "Toolkit" }, Quantity = 10, Price = 29.99m },
+            }
+          },
+        });
+
+        var result = sut.GetSales().ToList();
+
+        result.Should().HaveCount(2);
+        result[0].ShouldBeEquivalentTo(new SaleModel { CompanyName = "Microsoft", Date = "03/04/2000", Value = "325.41" },
+          options => options.Excluding(m => m.Items));
+        result[1].ShouldBeEquivalentTo(new SaleModel { CompanyName = "Borland", Date = "05/06/2000", Value = "429.80" },
+          options => options.Excluding(m => m.Items));
+      }
+    }
+
+    [TestClass]
+    public class GetSaleItems : BusinessLogicTests
+    {
+      [TestMethod]
+      public void ReturnsSaleItemModels()
+      {
+        saleItems.AddRange(new[]
+        {
+          new SaleItem { SaleId = 1, Product = new Product { Name = "Hammer" }, Quantity = 1.23m, Price = 4.56m },
+          new SaleItem { SaleId = 1, Product = new Product { Name = "Saw" }, Quantity = 20.00m, Price = 15.99m },
+        });
+
+        var result = sut.GetSaleItems(1).ToList();
+
+        result.Should().HaveCount(2);
+        result[0].ShouldBeEquivalentTo(new SaleItemModel { ProductName = "Hammer", Quantity = "1.23", Price = "4.56", Value = "5.61" });
+        result[1].ShouldBeEquivalentTo(new SaleItemModel { ProductName = "Saw", Quantity = "20.00", Price = "15.99", Value = "319.80" });
+      }
+    }
+
+    [TestClass]
+    public class AddSale : BusinessLogicTests
+    {
+      [TestMethod]
+      public void AddsTheCorrectValuesToTheRepository()
+      {
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        products.Add(new Product { Id = 1, Name = "abc" });
+        products.Add(new Product { Id = 2, Name = "def" });
+        var model = new SaleModel
+        {
+          CompanyName = "Microsoft",
+          Date = "2/3/2000",
+          Items = new[]
+          {
+            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
+            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+          },
+        };
+
+        sut.AddSale(model);
+
+        sales.Should().HaveCount(1);
+        var sale = sales[0];
+        sale.ShouldBeEquivalentTo(new Sale
+        {
+          Id = 1,
+          Company = new Company { Id = 1, Name = "Microsoft" },
+          Date = new DateTime(2000, 2, 3),
+          Items = new Collection<SaleItem>
+          {
+            new SaleItem { Product = new Product { Id = 1, Name = "abc" }, ProductId = 1, Quantity = 1.23m, Price = 4.00m, },
+            new SaleItem { Product = new Product { Id = 2, Name = "def" }, ProductId = 2, Quantity = 5.67m, Price = 8.00m, }
+          }
+        });
+        repository.Verify(it => it.SaveChanges());
+      }
+
+      [TestMethod]
+      public void IgnoresItemsWithInvalidFields()
+      {
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        products.Add(new Product { Id = 4, Name = "d" });
+        var model = new SaleModel
+        {
+          CompanyName = "Microsoft",
+          Date = "1/1/2000",
+          Items = new[]
+          {
+            new SaleItemModel { ProductName = null, Quantity = "1", Price = "1" },
+            new SaleItemModel { ProductName = "b", Quantity = "", Price = "2" },
+            new SaleItemModel { ProductName = "c", Quantity = "3", Price = "" },
+            new SaleItemModel { ProductName = "d", Quantity = "4", Price = "4" },
+          },
+        };
+
+        sut.AddSale(model);
+
+        sales.Should().HaveCount(1);
+        var sale = sales[0];
+        sale.ShouldBeEquivalentTo(new Sale
+        {
+          Id = 1,
+          Company = new Company { Id = 1, Name = "Microsoft" },
+          Date = new DateTime(2000, 1, 1),
+          Items = new Collection<SaleItem>
+          {
+            new SaleItem { Product = new Product { Id = 4, Name = "d" }, ProductId = 4, Quantity = 4.00m, Price = 4.00m, },
+          }
+        });
+      }
+
+      [TestMethod]
+      public void DoesNotAddTheRootObjectIfAllItemsAreInvalid()
+      {
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        var model = new SaleModel
+        {
+          CompanyName = "Microsoft",
+          Date = "1/1/2000",
+          Items = new[]
+          {
+            new SaleItemModel { ProductName = null, Quantity = "1", Price = "1" },
+            new SaleItemModel { ProductName = "b", Quantity = "", Price = "2" },
+            new SaleItemModel { ProductName = "c", Quantity = "3", Price = "" },
+          },
+        };
+
+        sut.AddSale(model);
+
+        sales.Should().BeEmpty();
+      }
+
+      [TestMethod]
+      public void UpdatesTheStock()
+      {
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        products.Add(new Product { Id = 1, Name = "abc" });
+        products.Add(new Product { Id = 2, Name = "def", SalePrice = 12.34m });
+        stocks.Add(new Stock { Id = 1, ProductId = 1, Name = "abc", Quantity = 22.35m });
+
+        var model = new SaleModel
+        {
+          CompanyName = "Microsoft",
+          Date = "2/3/2000",
+          Items = new[]
+          {
+            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
+            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+          },
+        };
+
+        sut.AddSale(model);
+
+        stocks.Should().HaveCount(2);
+        stocks[0].Quantity.Should().Be(23.58m);
+        var addedStock = stocks[1];
+        addedStock.ShouldBeEquivalentTo(new Stock
+        {
+          Id = 2,
+          ProductId = 2,
+          Name = "def",
+          SalePrice = 12.34m,
+          Quantity = 5.67m,
+          PurchaseValue = 45.36m,
+          SaleValue = 69.97m,
+        });
+      }
+
+      [TestMethod]
+      public void AddsTheMissingProducts()
+      {
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        products.Add(new Product { Id = 1, Name = "abc", SalePrice = 12.34m });
+        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
+
+        var model = new SaleModel
+        {
+          CompanyName = "Microsoft",
+          Date = "2/3/2000",
+          Items = new[]
+          {
+            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
+            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+          },
+        };
+
+        sut.AddSale(model);
+
+        products.Should().HaveCount(2);
+        products[0].Name.Should().Be("abc");
+        products[1].Name.Should().Be("def");
+      }
+
+      [TestMethod]
+      public void AddsTheCompanyIfNeeded()
+      {
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        var model = new SaleModel
+        {
+          CompanyName = "Google",
+          Date = "2/3/2000",
+          Items = new[]
+          {
+            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
+            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+          },
+        };
+
+        sut.AddSale(model);
+
+        companies.Should().HaveCount(2);
+        companies[1].Name.Should().Be("Google");
+      }
+    }
+
     //
 
     /// <summary>
@@ -306,6 +552,15 @@ namespace Renfield.Inventory.Tests.Services
     private static void FixItems(Acquisition acquisition)
     {
       foreach (var item in acquisition.Items)
+        item.ProductId = item.Product.Id;
+    }
+
+    /// <summary>
+    ///   Fixes the ProductId on the items (this is done by SaveChanges in normal execution)
+    /// </summary>
+    private static void FixItems(Sale sale)
+    {
+      foreach (var item in sale.Items)
         item.ProductId = item.Product.Id;
     }
   }

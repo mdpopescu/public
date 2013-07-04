@@ -25,11 +25,10 @@ namespace Renfield.Inventory.Tests
       nav.Should().NotBeNull();
 
       var links = nav.SelectNodes(".//li/a").ToList();
-      links.Should().HaveCount(3);
+      links.Should().HaveCount(4);
 
       var linksText = links.Select(it => it.InnerText).ToList();
-      linksText.ShouldAllBeEquivalentTo(new[] { "Home", "Product Inventory", "Acquisitions" });
-      //Assert.AreEqual("Sales", links[3].InnerText);
+      linksText.ShouldAllBeEquivalentTo(new[] { "Home", "Product Inventory", "Acquisitions", "Sales" });
       //Assert.AreEqual("Products", links[4].InnerText);
       //Assert.AreEqual("Companies", links[5].InnerText);
       //Assert.AreEqual("Todos", links[6].InnerText);
@@ -94,6 +93,55 @@ namespace Renfield.Inventory.Tests
       var res = SafePost("Acquisitions/Create", postData);
       res.StatusCode.Should().Be("Redirect");
       res.Headers["Location"].Should().Be("/Acquisitions/Create");
+    }
+
+    [TestMethod]
+    public void Sales()
+    {
+      var root = LoadHtml("Sales/");
+
+      var linkToAdd = root.GetTagById("a", "sales_create");
+      linkToAdd.Should().NotBeNull();
+      linkToAdd.Attributes["href"].Value.Should().Be("/Sales/Create");
+
+      var mainTable = root.GetTagById("table", "Sales");
+      mainTable.Should().NotBeNull();
+      mainTable.GetColumns().ShouldAllBeEquivalentTo(new[] { "Company Name", "Date", "Total Value" });
+
+      var itemsTable = root.GetTagById("table", "Sale_items");
+      itemsTable.Should().NotBeNull();
+      itemsTable.GetColumns().ShouldAllBeEquivalentTo(new[] { "Product Name", "Quantity", "Price", "Value" });
+    }
+
+    [TestMethod]
+    public void GetCreateSales()
+    {
+      var root = LoadHtml("Sales/Create");
+
+      var companyName = root.GetTagById("input", "CompanyName");
+      companyName.Should().NotBeNull();
+
+      var date = root.GetTagById("input", "Date");
+      date.Should().NotBeNull();
+      date.Attributes["Value"].Value.Should().Be(DateTime.Today.ToString("MM/dd/yyyy"));
+    }
+
+    [TestMethod]
+    [Ignore]
+    public void PostCreateSalesRedirectsBackToGet()
+    {
+      var postData = new NameValueCollection
+      {
+        { "CompanyName", "Microsoft" },
+        { "Date", "07/01/2013" },
+        { "Items[0].ProductName", "Hammer" },
+        { "Items[0].Quantity", "1" },
+        { "Items[0].Price", "4" },
+      };
+
+      var res = SafePost("Sales/Create", postData);
+      res.StatusCode.Should().Be("Redirect");
+      res.Headers["Location"].Should().Be("/Sales/Create");
     }
 
     //

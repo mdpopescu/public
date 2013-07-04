@@ -118,6 +118,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AcquisitionsController.cs" />
+    <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="LiveUpdateHub.cs" />
     <Compile Include="Controllers\StocksController.cs" />
@@ -166,6 +167,8 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\AcquisitionItemModel.cs" />
     <Compile Include="Models\AcquisitionModel.cs" />
+    <Compile Include="Models\SaleItemModel.cs" />
+    <Compile Include="Models\SaleModel.cs" />
     <Compile Include="Models\StockModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Retry.cs" />
@@ -302,6 +305,8 @@
     <Content Include="Views\Stocks\Index.cshtml" />
     <Content Include="Views\Acquisitions\Index.cshtml" />
     <Content Include="Views\Acquisitions\Create.cshtml" />
+    <Content Include="Views\Sales\Create.cshtml" />
+    <Content Include="Views\Sales\Index.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

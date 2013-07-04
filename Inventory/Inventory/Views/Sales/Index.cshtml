@@ -1,0 +1,85 @@
+﻿@{
+  ViewBag.Title = "Sales";
+}
+
+<h2>Sales</h2>
+
+<p>
+  @Html.ActionLink("Create", "Create", null, new { id = "sales_create" })
+</p>
+
+<div>
+  <p>Sales</p>
+  <table id="Sales" class="jtable">
+    <thead>
+      <tr>
+        <th>Company Name</th>
+        <th>Date</th>
+        <th>Total Value</th>
+      </tr>
+    </thead>
+    <tbody data-bind="foreach: Sales">
+      <tr data-bind="attr: { 'data-id' : Id }">
+        <td data-bind="text: CompanyName"></td>
+        <td data-bind="text: Date" class="date"></td>
+        <td data-bind="text: Value" class="number"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div>
+  <p>Items for <span id="SaleId"></span></p>
+  <table id="Sale_items" class="jtable">
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody data-bind="foreach: SaleItems">
+      <tr>
+        <td data-bind="text: ProductName"></td>
+        <td data-bind="text: Quantity" class="number"></td>
+        <td data-bind="text: Price" class="number"></td>
+        <td data-bind="text: Value" class="number"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script type="text/javascript">
+  $(function() {
+    var masterViewModel = null;
+    var childViewModel = null;
+
+    $.getJSON($.BASE_URL + "Sales/GetSales")
+      .done(function(data) {
+        masterViewModel = ko.mapping.fromJS({ Sales: data });
+
+        ko.applyBindings(masterViewModel, $('#Sales')[0]);
+      });
+
+    JTable.Setup();
+
+    $('#Sales').selectable({
+      filter: 'tbody tr',
+      selected: function(e, ui) {
+        var id = $(ui.selected).data('id');
+
+        $('#SaleId').text(id);
+        $.getJSON($.BASE_URL + "Sales/GetSaleItems", { id: id })
+          .done(function(data) {
+            if (childViewModel != null)
+              ko.mapping.fromJS({ SaleItems: data }, childViewModel);
+            else {
+              childViewModel = ko.mapping.fromJS({ SaleItems: data });
+              ko.applyBindings(childViewModel, $('#Sale_items')[0]);
+            }
+          });
+      }
+    });
+  })
+</script>

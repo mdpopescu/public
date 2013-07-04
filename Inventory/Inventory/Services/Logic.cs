@@ -9,5 +9,8 @@ namespace Renfield.Inventory.Services
     IEnumerable<AcquisitionModel> GetAcquisitions();
     IEnumerable<AcquisitionItemModel> GetAcquisitionItems(int id);
     void AddAcquisition(AcquisitionModel model);
+    IEnumerable<SaleModel> GetSales();
+    IEnumerable<SaleItemModel> GetSaleItems(int id);
+    void AddSale(SaleModel model);
   }
 }

@@ -79,7 +79,71 @@ namespace Renfield.Inventory.Services
         foreach (var acquisitionItem in acquisition.Items)
         {
           var item = acquisitionItem;
-          Retry.Times(3, TimeSpan.FromMilliseconds(100), () => UpdateStock(repository, stocks, item));
+          Retry.Times(3, TimeSpan.FromMilliseconds(500), () => UpdateStock(repository, stocks, item));
+        }
+        repository.SaveChanges();
+
+        UpdateAllClients();
+      }
+    }
+
+    public IEnumerable<SaleModel> GetSales()
+    {
+      using (var repository = dbFactory.Invoke())
+        return repository
+          .Sales
+          .Include(it => it.Company)
+          .Include(it => it.Items.Select(itt => itt.Product))
+          .Select(SaleModel.From)
+          .ToList();
+    }
+
+    public IEnumerable<SaleItemModel> GetSaleItems(int id)
+    {
+      using (var repository = dbFactory.Invoke())
+        return repository
+          .SaleItems
+          .Where(ai => ai.SaleId == id)
+          .Include(it => it.Product)
+          .Select(SaleItemModel.From)
+          .ToList();
+    }
+
+    public void AddSale(SaleModel model)
+    {
+      using (var repository = dbFactory.Invoke())
+      {
+        var productNames = model
+          .Items
+          .Select(it => it.ProductName)
+          .Where(it => !it.IsNullOrEmpty())
+          .ToList();
+        var products = repository
+          .Products
+          .Where(it => productNames.Contains(it.Name))
+          .ToList();
+
+        var sale = ToEntity(repository, products, model);
+        if (sale == null)
+          return;
+
+        repository.Sales.Add(sale);
+        repository.SaveChanges(); // this updates the ProductId field on the items
+
+        // get the stock records for these products
+        var productIds = sale
+          .Items
+          .Select(it => it.ProductId)
+          .ToList();
+        var stocks = repository
+          .Stocks
+          .Where(it => productIds.Contains(it.ProductId))
+          .ToList();
+
+        foreach (var SaleItem in sale.Items)
+        {
+          var item = SaleItem;
+          Retry.Times(3, TimeSpan.FromMilliseconds(500), () => UpdateStock(repository, stocks, item));
         }
         repository.SaveChanges();
 
@@ -142,6 +206,65 @@ namespace Renfield.Inventory.Services
           SalePrice = product.SalePrice,
           Quantity = newQuantity,
           PurchaseValue = Math.Round(newQuantity * acquisitionItem.Price, 2),
+          SaleValue = Math.Round(newQuantity * product.SalePrice.GetValueOrDefault(), 2),
+        };
+        repository.Stocks.Add(stock);
+      }
+
+      repository.SaveChanges();
+    }
+
+    private static Sale ToEntity(Repository repository, IEnumerable<Product> products, SaleModel model)
+    {
+      var items = model
+        .Items
+        .Select(it => ToEntity(repository, products, it))
+        .Where(it => it != null)
+        .ToList();
+      if (!items.Any())
+        return null;
+
+      return new Sale
+      {
+        Company = repository.Companies.Where(it => it.Name == model.CompanyName).FirstOrDefault()
+                  ?? repository.Companies.Add(new Company { Name = model.CompanyName }),
+        Date = model.Date.ParseDateNullable() ?? DateTime.Today,
+        Items = items,
+      };
+    }
+
+    private static SaleItem ToEntity(Repository repository, IEnumerable<Product> products, SaleItemModel model)
+    {
+      if (!model.IsValid())
+        return null;
+
+      return new SaleItem
+      {
+        Product = products.Where(it => it.Name == model.ProductName).FirstOrDefault()
+                  ?? repository.Products.Add(new Product { Name = model.ProductName }),
+        Quantity = decimal.Parse(model.Quantity),
+        Price = decimal.Parse(model.Price),
+      };
+    }
+
+    private static void UpdateStock(Repository repository, IEnumerable<Stock> stocks, SaleItem SaleItem)
+    {
+      var newQuantity = SaleItem.Quantity;
+      var product = SaleItem.Product;
+      var productId = product.Id;
+
+      var stock = stocks.FirstOrDefault(it => it.ProductId == productId);
+      if (stock != null)
+        stock.Quantity += newQuantity;
+      else
+      {
+        stock = new Stock
+        {
+          ProductId = productId,
+          Name = product.Name,
+          SalePrice = product.SalePrice,
+          Quantity = newQuantity,
+          PurchaseValue = Math.Round(newQuantity * SaleItem.Price, 2),
           SaleValue = Math.Round(newQuantity * product.SalePrice.GetValueOrDefault(), 2),
         };
         repository.Stocks.Add(stock);

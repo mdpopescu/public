@@ -1,0 +1,125 @@
+﻿@using Renfield.Inventory
+@model Renfield.Inventory.Models.SaleModel
+@{
+  ViewBag.Title = "Create new Sale";
+}
+
+<h2>Create new Sale</h2>
+
+@Html.ValidationSummary()
+
+@using (Html.BeginForm())
+{
+  <div id="formHeader">
+    <span>
+      @Html.LabelFor(m => m.CompanyName)
+      @Html.TextBoxFor(m => m.CompanyName, new { data_bind = "value: CompanyName" })
+    </span>
+    <span>
+      @Html.LabelFor(m => m.Date)
+      @Html.TextBoxFor(m => m.Date, new { data_bind = "value: Date" })
+    </span>
+  </div>
+
+  <div id="formItems">
+    <table id="Sale_items" class="jtable">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Value</th>
+          <th><button data-bind="click: addItem">[+]</button></th>
+        </tr>
+      </thead>
+      <tbody data-bind="foreach: items">
+        <tr>
+          <td>
+            <input data-bind="@Html.DataBinding(m => m.Items, it => it.ProductName)" type="text" value="" />
+          </td>
+          <td>
+            <input data-bind="@Html.DataBinding(m => m.Items, it => it.Quantity)" type="text" value="" />
+          </td>
+          <td>
+            <input data-bind="@Html.DataBinding(m => m.Items, it => it.Price)" type="text" value="" />
+          </td>
+          <td>
+            <input data-bind="value: Value" readonly="readonly" type="text" value="" />
+          </td>
+          <td>
+            <button data-bind="click: $parent.delItem">[--]</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <input type="submit" value="Submit" data-bind="click: submit" />
+}
+
+<script type="text/javascript">
+  $(function() {
+    ko.validation.configure({
+      decorateElement: true,
+      registerExtenders: true,
+      messagesOnModified: true,
+      insertMessages: false,
+      parseInputAttributes: true,
+      messageTemplate: null
+    });
+
+    var viewModel = new ViewModel();
+    ko.applyBindings(viewModel);
+
+    JTable.Setup();
+
+    function ViewModel() {
+      var self = this;
+
+      self.CompanyName = ko.observable("").extend({ required: { message: ' '} });
+      self.Date = ko.observable("@Model.Date");
+      self.items = ko.observableArray([new Item()]);
+
+      self.addItem = function() {
+        self.items.push(new Item());
+      };
+
+      self.delItem = function(item) {
+        self.items.remove(item);
+        if (self.items().length == 0)
+          self.addItem();
+      };
+
+      self.errors = ko.validation.group(this, { deep: true, observable: false });
+
+      self.submit = function() {
+        if (self.errors().length == 0)
+          return true;
+
+        self.errors.showAllMessages();
+        return false;
+      };
+    }
+
+    function Item() {
+      var self = this;
+
+      self.ProductName = ko.observable("").extend({ required: { message: ' ' } });
+      self.Quantity = ko.observable("").extend({ required: { message: ' ' }, number: true });
+      self.Price = ko.observable("").extend({ required: { message: ' ' }, number: true });
+      self.Value = ko.computed(function() {
+        // first, round the quantity and price
+        self.Quantity(fixDecimals(self.Quantity()));
+        self.Price(fixDecimals(self.Price()));
+
+        // then, multiply the two
+        return fixDecimals(self.Quantity() * self.Price());
+      });
+    }
+
+    function fixDecimals(value) {
+      var result = parseFloat(value).toFixed(2);
+      return isNaN(result) ? "" : result;
+    }
+  })
+</script>

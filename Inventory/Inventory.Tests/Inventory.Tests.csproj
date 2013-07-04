@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="AcceptanceTests.cs" />
     <Compile Include="Controllers\AcquisitionsControllerTests.cs" />
+    <Compile Include="Controllers\SalesControllerTests.cs" />
     <Compile Include="Controllers\StocksControllerTests.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FakeDbSet.cs" />
