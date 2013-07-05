@@ -1,9 +1,16 @@
-﻿namespace Renfield.YelpSearch
+﻿using System;
+
+namespace Renfield.YelpSearch
 {
-  class Program
+  internal class Program
   {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
+      var settings = new YelpSettings();
+
+      var yelp = new YelpTool(settings);
+      var result = yelp.Search("hotels", "30314", 25);
+      Console.WriteLine(result);
     }
   }
 }
