@@ -9,3 +9,4 @@ Public repository - CC-by-SA 3.0
 * Inventory: (INCOMPLETE) inventory management system - mainly to use SignalR and Knockout.js
 * RecursiveCompare: recursive comparison of two objects' properties (if some of those properties are objects, compare those using the same algorithm); incomplete
 * SafeRedir: time-limited URL redirection; the shortened link will redirect to the real one for only a limited time (default 5 minutes) and then redirect to a "safe" link afterwards; deployed at http://red.renfieldsoftware.com/
+* YelpSearch: search Yelp for businesses (eg hotels) near a given zip; solution for https://www.odesk.com/jobs/~~d5624935369d26d1 (I didn't get the job so the code is mine)

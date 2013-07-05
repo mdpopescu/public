@@ -21,3 +21,10 @@ NO!
 - sales should first lock the stocks and check that the quantity is enough
   if it is, go ahead and make the changes and release
   if not, a message should be returned to the customer indicating which stocks are not enough
+
+
+sales:
+  - lock the records at the beginning and only unlock them at the end
+  - change the stock
+  - fail if there's not enough stock
+
