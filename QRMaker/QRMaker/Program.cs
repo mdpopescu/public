@@ -22,7 +22,7 @@ namespace Renfield.QRMaker
 
       GenerateImages(jobs, 8);
       CreateArchive(jobs, "test.zip");
-      DeleteImages(jobs);
+      DeleteImages(jobs, 8);
 
       watch.Stop();
       Console.WriteLine(watch.ElapsedMilliseconds + " msec elapsed.");
@@ -52,11 +52,13 @@ namespace Renfield.QRMaker
     {
       var dict = new ConcurrentDictionary<int, Generator>();
 
-      Parallel.ForEach(jobs, job =>
-      {
-        var generator = GetCurrentGenerator(dict, Thread.CurrentThread.ManagedThreadId);
-        generator.Render(job.Data, job.ImageFile);
-      });
+      Parallel.ForEach(jobs,
+        new ParallelOptions { MaxDegreeOfParallelism = maxCpuThreads },
+        job =>
+        {
+          var generator = GetCurrentGenerator(dict, Thread.CurrentThread.ManagedThreadId);
+          generator.Render(job.Data, job.ImageFile);
+        });
     }
 
     private static Generator GetCurrentGenerator(ConcurrentDictionary<int, Generator> dict, int managedThreadId)
@@ -76,15 +78,15 @@ namespace Renfield.QRMaker
       File.Delete(archiveFile);
 
       var zipper = new ZipFile(archiveFile);
-      foreach (var job in jobs)
-        zipper.AddFile(job.ImageFile);
+      zipper.AddFiles(jobs.Select(it => it.ImageFile));
       zipper.Save();
     }
 
-    private static void DeleteImages(IEnumerable<JobInfo> jobs)
+    private static void DeleteImages(IEnumerable<JobInfo> jobs, int maxCpuThreads)
     {
-      foreach (var job in jobs)
-        File.Delete(job.ImageFile);
+      Parallel.ForEach(jobs,
+        new ParallelOptions { MaxDegreeOfParallelism = maxCpuThreads },
+        job => File.Delete(job.ImageFile));
     }
   }
 }
