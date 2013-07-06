@@ -53,7 +53,7 @@
 <script type="text/javascript">
   $(function() {
     var masterVm = new ViewModel($.BASE_URL + "Sales/GetSales", $('#sales')[0]);
-    var childVm = new ViewModel($.BASE_URL + "Sales/GetSaleItems", $('#sale_items')[0]);
+    var detailVm = new DetailViewModel($.BASE_URL + "Sales/GetSaleItems", $('#sale_items')[0]);
 
     JTable.Setup();
 
@@ -63,7 +63,7 @@
         var id = $(ui.selected).data('id');
 
         $('#saleId').text(id);
-        childVm.updateForId(id);
+        detailVm.update(id);
       }
     });
   })
