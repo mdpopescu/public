@@ -1,12 +1,14 @@
 var ViewModel = (function () {
     function ViewModel(url, rootNode) {
         var _this = this;
-        this.initialize = function () {
-            _this.__load(function (data) {
-                this.model = ko.mapping.fromJS({ data: data });
-                ko.applyBindings(this.model, this.rootNode);
-            });
-        };
+        if (!this.initialize) {
+            this.initialize = function () {
+                _this.__load(function (data) {
+                    _this.model = ko.mapping.fromJS({ data: data });
+                    ko.applyBindings(_this.model, _this.rootNode);
+                });
+            };
+        }
 
         this.submit = function () {
             if (_this.errors().length == 0)
@@ -16,13 +18,17 @@ var ViewModel = (function () {
             return false;
         };
 
-        this.update = function () {
-            _this.__load(_this.__update);
-        };
+        if (!this.update) {
+            this.update = function () {
+                _this.__load(_this.__update);
+            };
+        }
 
-        this.__load = function (callback) {
-            $.getJSON(_this.url, callback);
-        };
+        if (!this.__load) {
+            this.__load = function (callback) {
+                $.getJSON(_this.url, callback);
+            };
+        }
 
         this.__update = function (data) {
             ko.mapping.fromJS({ data: data }, _this.model);

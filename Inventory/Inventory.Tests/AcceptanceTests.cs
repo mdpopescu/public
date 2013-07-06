@@ -104,11 +104,11 @@ namespace Renfield.Inventory.Tests
       linkToAdd.Should().NotBeNull();
       linkToAdd.Attributes["href"].Value.Should().Be("/Sales/Create");
 
-      var mainTable = root.GetTagById("table", "Sales");
+      var mainTable = root.GetTagById("table", "sales");
       mainTable.Should().NotBeNull();
       mainTable.GetColumns().ShouldAllBeEquivalentTo(new[] { "Company Name", "Date", "Total Value" });
 
-      var itemsTable = root.GetTagById("table", "Sale_items");
+      var itemsTable = root.GetTagById("table", "sale_items");
       itemsTable.Should().NotBeNull();
       itemsTable.GetColumns().ShouldAllBeEquivalentTo(new[] { "Product Name", "Quantity", "Price", "Value" });
     }

@@ -9,8 +9,6 @@ class DetailViewModel extends ViewModel {
   __updateItems: (data: any) => void;
 
   constructor(url: string, rootNode: Element) {
-    super(url, rootNode);
-
     // set up the methods
 
     this.initialize = () => { }
@@ -32,5 +30,9 @@ class DetailViewModel extends ViewModel {
         ko.applyBindings(this.model, this.rootNode);
       }
     }
+
+    // start the real constructor code
+
+    super(url, rootNode);
   }
 }

@@ -15,12 +15,14 @@ class ViewModel {
 
   constructor(url: string, rootNode: Element) {
     // set up the methods
-
-    this.initialize = () => {
-      this.__load(function (data: any) {
-        this.model = ko.mapping.fromJS({ data: data });
-        ko.applyBindings(this.model, this.rootNode);
-      });
+    
+    if (!this.initialize) {
+      this.initialize = () => {
+        this.__load((data: any) => {
+          this.model = ko.mapping.fromJS({ data: data });
+          ko.applyBindings(this.model, this.rootNode);
+        });
+      }
     }
 
     this.submit = () => {
@@ -31,12 +33,16 @@ class ViewModel {
       return false;
     }
 
-    this.update = () => {
-      this.__load(this.__update);
+    if (!this.update) {
+      this.update = () => {
+        this.__load(this.__update);
+      }
     }
 
-    this.__load = callback => {
-      $.getJSON(this.url, callback);
+    if (!this.__load) {
+      this.__load = callback => {
+        $.getJSON(this.url, callback);
+      }
     }
 
     this.__update = data => {

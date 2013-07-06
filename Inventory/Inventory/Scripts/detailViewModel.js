@@ -8,8 +8,6 @@ var DetailViewModel = (function (_super) {
     __extends(DetailViewModel, _super);
     function DetailViewModel(url, rootNode) {
         var _this = this;
-        _super.call(this, url, rootNode);
-
         this.initialize = function () {
         };
 
@@ -29,6 +27,8 @@ var DetailViewModel = (function (_super) {
                 ko.applyBindings(_this.model, _this.rootNode);
             }
         };
+
+        _super.call(this, url, rootNode);
     }
     return DetailViewModel;
 })(ViewModel);
