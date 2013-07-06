@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Gma.QrCodeNet.Encoding;
 using Ionic.Zip;
 
@@ -17,7 +19,7 @@ namespace Renfield.QRMaker
       var watch = new Stopwatch();
       watch.Start();
 
-      GenerateImages(jobs);
+      GenerateImages(jobs, 8);
       CreateArchive(jobs, "test.zip");
       DeleteImages(jobs);
 
@@ -45,11 +47,28 @@ namespace Renfield.QRMaker
       return bytes;
     }
 
-    private static void GenerateImages(IEnumerable<JobInfo> jobs)
+    private static void GenerateImages(IEnumerable<JobInfo> jobs, int maxCpuThreads)
     {
-      var generator = new Generator(new QrEncoder());
-      foreach (var job in jobs)
+      var dict = new ConcurrentDictionary<int, Generator>();
+
+      var parallelJobs = jobs.AsParallel();
+      parallelJobs.ForAll(job =>
+      {
+        var generator = GetCurrentGenerator(dict, Thread.CurrentThread.ManagedThreadId);
         generator.Render(job.Data, job.ImageFile);
+      });
+    }
+
+    private static Generator GetCurrentGenerator(ConcurrentDictionary<int, Generator> dict, int managedThreadId)
+    {
+      Generator result;
+      if (!dict.TryGetValue(managedThreadId, out result))
+      {
+        result = new Generator(new QrEncoder());
+        dict.AddOrUpdate(managedThreadId, result, (_, __) => result);
+      }
+
+      return result;
     }
 
     private static void CreateArchive(IEnumerable<JobInfo> jobs, string archiveFile)
