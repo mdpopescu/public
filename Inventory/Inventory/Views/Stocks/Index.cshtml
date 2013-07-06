@@ -2,6 +2,8 @@
   ViewBag.Title = "Product Inventory";
 }
 
+<script type="text/javascript" src="@Url.Content("~/Scripts/dataTools.js")"> </script>
+
 <h2>Product Inventory</h2>
 
 <table id="products" class="jtable">
@@ -14,7 +16,7 @@
       <th>Sale Value</th>
     </tr>
   </thead>
-  <tbody data-bind="foreach: stock">
+  <tbody data-bind="foreach: data">
     <tr>
       <td data-bind="text: Name"></td>
       <td data-bind="text: Quantity" class="number"></td>
@@ -27,13 +29,12 @@
 
 <script type="text/javascript">
   $(function() {
-    var viewModel;
-    updateModel();
+    var vm = new ViewModel($.BASE_URL + "Stocks/GetStocks");
 
     var hub = $.connection.liveUpdateHub;
 
     hub.client.updateStocks = function() {
-      updateModel();
+      vm.update();
     };
 
     $.connection.hub.start().done(function() {
@@ -41,19 +42,5 @@
     });
 
     JTable.Setup();
-
-    //
-
-    function updateModel() {
-      $.getJSON($.BASE_URL + "Stocks/GetStocks")
-        .done(function(data) {
-          if (viewModel)
-            ko.mapping.fromJS({ stock: data }, viewModel);
-          else {
-            viewModel = ko.mapping.fromJS({ stock: data });
-            ko.applyBindings(viewModel);
-          }
-        });
-    }
   });
 </script>

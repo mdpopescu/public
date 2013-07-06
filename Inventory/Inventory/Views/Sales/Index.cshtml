@@ -10,7 +10,7 @@
 
 <div>
   <p>Sales</p>
-  <table id="Sales" class="jtable">
+  <table id="sales" class="jtable">
     <thead>
       <tr>
         <th>Company Name</th>
@@ -18,7 +18,7 @@
         <th>Total Value</th>
       </tr>
     </thead>
-    <tbody data-bind="foreach: Sales">
+    <tbody data-bind="foreach: sales">
       <tr data-bind="attr: { 'data-id' : Id }">
         <td data-bind="text: CompanyName"></td>
         <td data-bind="text: Date" class="date"></td>
@@ -29,8 +29,8 @@
 </div>
 
 <div>
-  <p>Items for <span id="SaleId"></span></p>
-  <table id="Sale_items" class="jtable">
+  <p>Items for <span id="saleId"></span></p>
+  <table id="sale_items" class="jtable">
     <thead>
       <tr>
         <th>Product Name</th>
@@ -39,7 +39,7 @@
         <th>Value</th>
       </tr>
     </thead>
-    <tbody data-bind="foreach: SaleItems">
+    <tbody data-bind="foreach: saleItems">
       <tr>
         <td data-bind="text: ProductName"></td>
         <td data-bind="text: Quantity" class="number"></td>
@@ -57,26 +57,26 @@
 
     $.getJSON($.BASE_URL + "Sales/GetSales")
       .done(function(data) {
-        masterViewModel = ko.mapping.fromJS({ Sales: data });
+        masterViewModel = ko.mapping.fromJS({ sales: data });
 
-        ko.applyBindings(masterViewModel, $('#Sales')[0]);
+        ko.applyBindings(masterViewModel, $('#sales')[0]);
       });
 
     JTable.Setup();
 
-    $('#Sales').selectable({
+    $('#sales').selectable({
       filter: 'tbody tr',
       selected: function(e, ui) {
         var id = $(ui.selected).data('id');
 
-        $('#SaleId').text(id);
+        $('#saleId').text(id);
         $.getJSON($.BASE_URL + "Sales/GetSaleItems", { id: id })
           .done(function(data) {
             if (childViewModel != null)
-              ko.mapping.fromJS({ SaleItems: data }, childViewModel);
+              ko.mapping.fromJS({ saleItems: data }, childViewModel);
             else {
-              childViewModel = ko.mapping.fromJS({ SaleItems: data });
-              ko.applyBindings(childViewModel, $('#Sale_items')[0]);
+              childViewModel = ko.mapping.fromJS({ saleItems: data });
+              ko.applyBindings(childViewModel, $('#sale_items')[0]);
             }
           });
       }
