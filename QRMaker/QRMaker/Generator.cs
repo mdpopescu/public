@@ -15,7 +15,7 @@ namespace Renfield.QRMaker
       this.encoder = encoder;
     }
 
-    public void Render(string data, string fileName)
+    public void Render(byte[] data, string fileName)
     {
       encoder.ErrorCorrectionLevel = Settings.ErrorCorrectionLevel;
 
