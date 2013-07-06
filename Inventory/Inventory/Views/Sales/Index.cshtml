@@ -18,7 +18,7 @@
         <th>Total Value</th>
       </tr>
     </thead>
-    <tbody data-bind="foreach: sales">
+    <tbody data-bind="foreach: data">
       <tr data-bind="attr: { 'data-id' : Id }">
         <td data-bind="text: CompanyName"></td>
         <td data-bind="text: Date" class="date"></td>
@@ -39,7 +39,7 @@
         <th>Value</th>
       </tr>
     </thead>
-    <tbody data-bind="foreach: saleItems">
+    <tbody data-bind="foreach: items">
       <tr>
         <td data-bind="text: ProductName"></td>
         <td data-bind="text: Quantity" class="number"></td>
@@ -52,15 +52,8 @@
 
 <script type="text/javascript">
   $(function() {
-    var masterViewModel = null;
-    var childViewModel = null;
-
-    $.getJSON($.BASE_URL + "Sales/GetSales")
-      .done(function(data) {
-        masterViewModel = ko.mapping.fromJS({ sales: data });
-
-        ko.applyBindings(masterViewModel, $('#sales')[0]);
-      });
+    var masterVm = new ViewModel($.BASE_URL + "Sales/GetSales", $('#sales')[0]);
+    var childVm = new ViewModel($.BASE_URL + "Sales/GetSaleItems", $('#sale_items')[0]);
 
     JTable.Setup();
 
@@ -70,15 +63,7 @@
         var id = $(ui.selected).data('id');
 
         $('#saleId').text(id);
-        $.getJSON($.BASE_URL + "Sales/GetSaleItems", { id: id })
-          .done(function(data) {
-            if (childViewModel != null)
-              ko.mapping.fromJS({ saleItems: data }, childViewModel);
-            else {
-              childViewModel = ko.mapping.fromJS({ saleItems: data });
-              ko.applyBindings(childViewModel, $('#sale_items')[0]);
-            }
-          });
+        childVm.updateForId(id);
       }
     });
   })
