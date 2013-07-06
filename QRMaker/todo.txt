@@ -1,0 +1,22 @@
+Original job description:
+
+I need to get a console app made that we can pass a huge array of things to and it will output QR codes.
+I need the console to be smart, if we just look to make 1 qr then it will be the image, if we pass it several then it will make a zip file of them.
+
+I know for QR codes there are several things to control, like error correction, size etc.. so when you come up with the controls just let us know
+how to set them for each job, ideally its in the data we pass to this app.
+
+I would like to use this library on a server and will need to be able to have several instances of it running concurrently on different tasks.
+
+Here is what i think we need at a high level
+
+QR data to encode, size in px, name of file.png, error correction value, background color, foreground color.
+
+I think there are some padding settings in QR but i dont know if we need anything non standard here. ill leave it to you.
+
+I will need this thing to process thousands of rows in a single job so i need it to be threaded and fast. Ideally we can set some setting for max cpu threads to use (2-8 etc..)
+
+for the zip file I want it created using http://dotnetzip.codeplex.com/ 
+
+
+
