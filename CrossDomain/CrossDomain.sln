@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossDomain.Client", "CrossDomain.Client\CrossDomain.Client.csproj", "{F568C307-3AAB-4FDE-8F41-4CA9AA6418E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossDomain.Server", "CrossDomain.Server\CrossDomain.Server.csproj", "{650E2DB8-9CC6-4C49-9004-A1505B36C99B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F568C307-3AAB-4FDE-8F41-4CA9AA6418E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F568C307-3AAB-4FDE-8F41-4CA9AA6418E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F568C307-3AAB-4FDE-8F41-4CA9AA6418E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F568C307-3AAB-4FDE-8F41-4CA9AA6418E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{650E2DB8-9CC6-4C49-9004-A1505B36C99B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{650E2DB8-9CC6-4C49-9004-A1505B36C99B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{650E2DB8-9CC6-4C49-9004-A1505B36C99B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{650E2DB8-9CC6-4C49-9004-A1505B36C99B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,33 @@
+﻿@{
+  ViewBag.Title = "Home Page";
+}
+
+<h2>@ViewBag.Message</h2>
+<p>
+  To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
+</p>
+
+<button id="loadFromServer">Load from server</button>
+
+<div id="jqresult"></div>
+
+<script type="text/javascript">
+  $(function() {
+    $('#loadFromServer').click(function() {
+      var model = { 'UserName': 'user', 'Password': 'pass' };
+
+      //$.support.cors = true;
+      $.ajax('http://localhost:15091/api/Values', {
+        type: 'POST',
+        dataType: 'json',
+        data: model
+      })
+        .done(function(response) {
+          $('#jqresult').html("All OK");
+        })
+        .fail(function(xhr, status, error) {
+          alert('Error: ' + error);
+        });
+    });
+  })
+</script>
