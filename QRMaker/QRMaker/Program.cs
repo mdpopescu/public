@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Gma.QrCodeNet.Encoding;
 using Ionic.Zip;
 
@@ -51,8 +52,7 @@ namespace Renfield.QRMaker
     {
       var dict = new ConcurrentDictionary<int, Generator>();
 
-      var parallelJobs = jobs.AsParallel();
-      parallelJobs.ForAll(job =>
+      Parallel.ForEach(jobs, job =>
       {
         var generator = GetCurrentGenerator(dict, Thread.CurrentThread.ManagedThreadId);
         generator.Render(job.Data, job.ImageFile);
