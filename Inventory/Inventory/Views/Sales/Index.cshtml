@@ -55,8 +55,6 @@
     var masterVm = new ViewModel($.BASE_URL + "Sales/GetSales", $('#sales')[0]);
     var detailVm = new DetailViewModel($.BASE_URL + "Sales/GetSaleItems", $('#sale_items')[0]);
 
-    JTable.Setup();
-
     $('#sales').selectable({
       filter: 'tbody tr',
       selected: function(e, ui) {
