@@ -7,13 +7,14 @@
   To learn more about ASP.NET MVC visit <a href="http://asp.net/mvc" title="ASP.NET MVC Website">http://asp.net/mvc</a>.
 </p>
 
-<button id="loadFromServer">Load from server</button>
+<button id="postToServer">Post to server</button>
+<button id="getFromServer">Get from server</button>
 
 <div id="jqresult"></div>
 
 <script type="text/javascript">
   $(function() {
-    $('#loadFromServer').click(function() {
+    $('#postToServer').click(function() {
       var model = { 'UserName': 'user', 'Password': 'pass' };
 
       //$.support.cors = true;
@@ -22,11 +23,35 @@
         dataType: 'json',
         data: model
       })
-        .done(function(response) {
+        .done(function() {
           $('#jqresult').html("All OK");
+
+          // to verify the cookie
+          $.ajax('http://localhost:15091/api/Values/1', {
+            type: 'GET',
+            xhrFields: { withCredentials: true }
+          })
+            .done(function(response) {
+              $('#jqresult').html($('#jqresult').html() + response);
+            })
+            .fail(function() {
+              alert('Error!');
+            });
         })
-        .fail(function(xhr, status, error) {
-          alert('Error: ' + error);
+        .fail(function() {
+          alert('Error!');
+        });
+    });
+
+    $('#getFromServer').click(function() {
+      $.ajax('http://localhost:15091/api/Values/1', {
+        type: 'GET'
+      })
+        .done(function(response) {
+          $('#jqresult').html(response);
+        })
+        .fail(function() {
+          alert('Error!');
         });
     });
   })

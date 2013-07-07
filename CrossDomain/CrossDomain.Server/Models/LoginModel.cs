@@ -1,6 +1,6 @@
 ﻿namespace Renfield.CrossDomain.Server.Models
 {
-  public class LogOnModel
+  public class LoginModel
   {
     public string UserName { get; set; }
     public string Password { get; set; }
