@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Web.Mvc;
 
-namespace Renfield.Inventory
+namespace Renfield.Inventory.Helpers
 {
   public static class MetadataExtensions
   {

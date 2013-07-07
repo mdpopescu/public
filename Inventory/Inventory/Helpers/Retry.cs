@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Renfield.Inventory
+namespace Renfield.Inventory.Helpers
 {
   public class Retry
   {

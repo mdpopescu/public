@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Renfield.Inventory.Data;
+using Renfield.Inventory.Helpers;
 using Renfield.Inventory.Models;
 
 namespace Renfield.Inventory.Services

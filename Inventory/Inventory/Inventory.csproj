@@ -134,11 +134,11 @@
     <Compile Include="Data\Sale.cs" />
     <Compile Include="Data\SaleItem.cs" />
     <Compile Include="Data\Stock.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="MetadataExtensions.cs" />
+    <Compile Include="Helpers\MetadataExtensions.cs" />
     <Compile Include="Migrations\201306301126012_m00.cs" />
     <Compile Include="Migrations\201306301126012_m00.Designer.cs">
       <DependentUpon>201306301126012_m00.cs</DependentUpon>
@@ -170,9 +170,9 @@
     <Compile Include="Models\SaleItemModel.cs" />
     <Compile Include="Models\SaleModel.cs" />
     <Compile Include="Models\StockModel.cs" />
-    <Compile Include="MultiLevelTagBuilder.cs" />
+    <Compile Include="Helpers\MultiLevelTagBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Retry.cs" />
+    <Compile Include="Helpers\Retry.cs" />
     <Compile Include="Services\BusinessLogic.cs" />
     <Compile Include="Services\Logic.cs" />
   </ItemGroup>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Renfield.Inventory
+namespace Renfield.Inventory.Helpers
 {
   public static class Extensions
   {

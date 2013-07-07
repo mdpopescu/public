@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Renfield.Inventory.Data;
+using Renfield.Inventory.Helpers;
 
 namespace Renfield.Inventory.Models
 {

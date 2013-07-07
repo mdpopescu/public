@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text;
 using System.Web.Mvc;
 
-namespace Renfield.Inventory
+namespace Renfield.Inventory.Helpers
 {
   // from http://codereview.stackexchange.com/a/5528/27018
   /// <summary>
@@ -19,15 +18,6 @@ namespace Renfield.Inventory
     public MultiLevelTagBuilder(string tagName)
       : base(tagName)
     {
-    }
-
-    /// <summary>
-    ///   Gets the inner tag list.
-    /// </summary>
-    /// <value> The inner tag list. </value>
-    public IEnumerable<TagBuilder> InnerTags
-    {
-      get { return new ReadOnlyCollection<TagBuilder>(innerTags); }
     }
 
     /// <summary>
@@ -48,17 +38,45 @@ namespace Renfield.Inventory
     /// <returns> A <see cref="System.String" /> that represents this instance. </returns>
     public override string ToString()
     {
-      var sb = new StringBuilder();
-      foreach (var tag in innerTags)
-        sb.Append(tag + Environment.NewLine);
-
-      InnerHtml = sb.ToString();
-
-      return base.ToString();
+      return ToString(0);
     }
 
     //
 
     private readonly IList<TagBuilder> innerTags = new List<TagBuilder>();
+
+    private string ToString(int level)
+    {
+      var sb = new StringBuilder();
+      foreach (var tag in innerTags)
+      {
+        var multiTag = tag as MultiLevelTagBuilder;
+        if (multiTag != null)
+          sb.AppendLine(multiTag.ToString(level + 1));
+        else
+          sb.AppendLine(Indent(level + 1) + tag);
+      }
+
+      InnerHtml = sb.ToString();
+
+      return Prettified(level);
+    }
+
+    private string Prettified(int level)
+    {
+      return InnerHtml == ""
+               ? Indent(level + 1) + base.ToString()
+               : string.Format("{0}{1}{2}{3}{0}{4}",
+                 Indent(level),
+                 ToString(TagRenderMode.StartTag),
+                 Environment.NewLine,
+                 InnerHtml,
+                 ToString(TagRenderMode.EndTag));
+    }
+
+    private static string Indent(int level)
+    {
+      return new string(' ', level * 2);
+    }
   }
 }

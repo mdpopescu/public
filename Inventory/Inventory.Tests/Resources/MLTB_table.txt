@@ -1,0 +1,16 @@
+<table class="pure-table pure-table-horizontal pure-table-striped" id="products">
+  <thead>
+    <tr>
+      <th>header 1</th>
+      <th>header 2</th>
+      <th>header 3</th>
+    </tr>
+  </thead>
+  <tbody data-bind="foreach: data">
+    <tr>
+      <td>field 1</td>
+      <td>field 2</td>
+      <td>field 3</td>
+    </tr>
+  </tbody>
+</table>

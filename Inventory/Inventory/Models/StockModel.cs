@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Renfield.Inventory.Data;
+using Renfield.Inventory.Helpers;
 
 namespace Renfield.Inventory.Models
 {
