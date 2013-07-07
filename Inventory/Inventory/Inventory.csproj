@@ -120,6 +120,7 @@
     <Compile Include="Controllers\AcquisitionsController.cs" />
     <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Helpers\NumericAttribute.cs" />
     <Compile Include="LiveUpdateHub.cs" />
     <Compile Include="Controllers\StocksController.cs" />
     <Compile Include="Data\Acquisition.cs" />

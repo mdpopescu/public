@@ -112,10 +112,16 @@ namespace Renfield.Inventory.Helpers
     {
       var field = new TagBuilder("td");
       field.MergeAttribute("data-bind", "text: " + property.PropertyName);
-      if (Type.GetTypeCode(property.ModelType) == TypeCode.Decimal)
+      if (IsNumeric(property))
         field.MergeAttribute("class", "number");
 
       return field;
+    }
+
+    private static bool IsNumeric(ModelMetadata property)
+    {
+      return Type.GetTypeCode(property.ModelType) == TypeCode.Decimal ||
+             property.AdditionalValues.GetValue("numeric") + "" == "numeric";
     }
   }
 }

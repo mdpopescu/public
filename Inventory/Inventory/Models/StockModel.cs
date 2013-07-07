@@ -13,15 +13,19 @@ namespace Renfield.Inventory.Models
     public string Name { get; set; }
 
     [Display(Name = "Quantity")]
+    [Numeric]
     public string Quantity { get; set; }
 
     [Display(Name = "Recommended Retail Price")]
+    [Numeric]
     public string RRP { get; set; }
 
     [Display(Name = "Purchase Value")]
+    [Numeric]
     public string PurchaseValue { get; set; }
 
     [Display(Name = "Sale Value")]
+    [Numeric]
     public string SaleValue { get; set; }
 
     public static StockModel From(Stock value)

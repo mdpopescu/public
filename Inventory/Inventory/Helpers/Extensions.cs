@@ -31,5 +31,12 @@ namespace Renfield.Inventory.Helpers
     {
       return string.IsNullOrEmpty(s);
     }
+
+    public static string GetValue(this IDictionary<string, object> dict, string key)
+    {
+      object result;
+
+      return dict.TryGetValue(key, out result) ? result + "" : null;
+    }
   }
 }
