@@ -43,7 +43,7 @@ namespace Renfield.Inventory.Tests
       productsTable.Should().NotBeNull();
 
       var columns = productsTable.GetColumns();
-      columns.ShouldAllBeEquivalentTo(new[] { "Name", "Quantity", "Recommended Retail Price", "Purchase Value", "Sale Value" });
+      columns.ShouldAllBeEquivalentTo(new[] { "Product Name", "Quantity", "Recommended Retail Price", "Purchase Value", "Sale Value" });
     }
 
     [TestMethod]

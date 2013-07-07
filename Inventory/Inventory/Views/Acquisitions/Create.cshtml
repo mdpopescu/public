@@ -8,7 +8,7 @@
 
 @Html.ValidationSummary()
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "Acquisitions", FormMethod.Post, new { @class = "pure-form" }))
 {
   <div id="formHeader">
     <span>
@@ -17,19 +17,19 @@
     </span>
     <span>
       @Html.LabelFor(m => m.Date)
-      @Html.TextBoxFor(m => m.Date, new { data_bind = "value: Date" })
+      @Html.TextBoxFor(m => m.Date, new { data_bind = "value: Date", type = "date" })
     </span>
   </div>
 
   <div id="formItems">
-    <table id="acquisition_items" class="jtable">
+    <table id="acquisition_items" class="pure-table pure-table-horizontal pure-table-striped">
       <thead>
         <tr>
           <th>Product Name</th>
-          <th>Quantity</th>
-          <th>Price</th>
-          <th>Value</th>
-          <th><button data-bind="click: addItem">[+]</button></th>
+          <th class="number">Quantity</th>
+          <th class="number">Price</th>
+          <th class="number">Value</th>
+          <th><button class="pure-button" data-bind="click: addItem">[+]</button></th>
         </tr>
       </thead>
       <tbody data-bind="foreach: items">
@@ -37,24 +37,24 @@
           <td>
             <input data-bind="@Html.DataBinding(m => m.Items, it => it.ProductName)" type="text" value="" />
           </td>
-          <td>
-            <input data-bind="@Html.DataBinding(m => m.Items, it => it.Quantity)" type="text" value="" />
+          <td class="number">
+            <input data-bind="@Html.DataBinding(m => m.Items, it => it.Quantity)" type="text" value="" class="number pure-input-2-3" />
+          </td>
+          <td class="number">
+            <input data-bind="@Html.DataBinding(m => m.Items, it => it.Price)" type="text" value="" class="number pure-input-2-3" />
+          </td>
+          <td class="number">
+            <input data-bind="value: Value" readonly="readonly" type="text" value="" class="number pure-input-2-3" />
           </td>
           <td>
-            <input data-bind="@Html.DataBinding(m => m.Items, it => it.Price)" type="text" value="" />
-          </td>
-          <td>
-            <input data-bind="value: Value" readonly="readonly" type="text" value="" />
-          </td>
-          <td>
-            <button data-bind="click: $parent.delItem">[--]</button>
+            <button class="pure-button" data-bind="click: $parent.delItem">[--]</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <input type="submit" value="Submit" data-bind="click: submit" />
+  <input type="submit" value="Submit" data-bind="click: submit" class="pure-button" />
 }
 
 <script type="text/javascript">

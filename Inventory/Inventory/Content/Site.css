@@ -295,7 +295,12 @@ div#title {
 
 table th { text-align: center; }
 
-table td.number { text-align: right; }
+table th.number { text-align: right; }
+
+table td.number {
+    text-align: right;
+    margin-left: 5em;
+}
 
 table td.date { }
 
@@ -306,3 +311,7 @@ table td.date { }
 .validationMessage { color: red; }
 
 .validationElement { background: #ffeeee; }
+
+#formHeader { margin-bottom: 1em; }
+
+input.number { text-align: right; }
