@@ -29,16 +29,7 @@ namespace Renfield.Inventory.Helpers
         .Where(it => it.ShowForDisplay && (it.ModelType.IsValueType || Type.GetTypeCode(it.ModelType) == TypeCode.String))
         .ToList();
 
-      var table = new MultiLevelTagBuilder("table");
-      table.AddAttributes(htmlAttributes);
-
-      var thead = relevantProperties.CreateTableHeader();
-      table.Add(thead);
-
-      var tbody = relevantProperties.CreateTableBody(collectionName);
-      table.Add(tbody);
-
-      return new MvcHtmlString(table.ToString());
+      return CreateTable(htmlAttributes, collectionName, relevantProperties);
     }
 
     public static MvcHtmlString KnockoutTableFor<TModel, U>(this HtmlHelper<TModel> helper, Expression<Func<TModel, IEnumerable<U>>> listExpr,
@@ -55,16 +46,7 @@ namespace Renfield.Inventory.Helpers
         .Where(it => it.ShowForDisplay && (it.ModelType.IsValueType || Type.GetTypeCode(it.ModelType) == TypeCode.String))
         .ToList();
 
-      var table = new MultiLevelTagBuilder("table");
-      table.AddAttributes(htmlAttributes);
-
-      var thead = relevantProperties.CreateTableHeader();
-      table.Add(thead);
-
-      var tbody = relevantProperties.CreateTableBody(collectionName.ToLowerInvariant());
-      table.Add(tbody);
-
-      return new MvcHtmlString(table.ToString());
+      return CreateTable(htmlAttributes, collectionName.ToLowerInvariant(), relevantProperties);
     }
 
     //
@@ -88,6 +70,20 @@ namespace Renfield.Inventory.Helpers
         throw new ArgumentException("Not a member access", "expression");
 
       return memberExpression.Member as PropertyInfo;
+    }
+
+    private static MvcHtmlString CreateTable(object htmlAttributes, string collectionName, List<ModelMetadata> relevantProperties)
+    {
+      var table = new MultiLevelTagBuilder("table");
+      table.AddAttributes(htmlAttributes);
+
+      var thead = relevantProperties.CreateTableHeader();
+      table.Add(thead);
+
+      var tbody = relevantProperties.CreateTableBody(collectionName);
+      table.Add(tbody);
+
+      return new MvcHtmlString(table.ToString());
     }
 
     private static void AddAttributes(this TagBuilder tag, object htmlAttributes)
