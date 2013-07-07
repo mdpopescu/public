@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Renfield.Inventory.Helpers
+@model Renfield.Inventory.Models.AcquisitionModel
+@{
   ViewBag.Title = "Acquisitions";
 }
 
@@ -9,45 +11,13 @@
 </p>
 
 <div>
-  <p>Acquisitions</p>
-  <table id="acquisitions" class="pure-table pure-table-horizontal pure-table-striped">
-    <thead>
-      <tr>
-        <th>Company Name</th>
-        <th>Date</th>
-        <th>Total Value</th>
-      </tr>
-    </thead>
-    <tbody data-bind="foreach: data">
-      <tr data-bind="attr: { 'data-id' : Id }">
-        <td data-bind="text: CompanyName"></td>
-        <td data-bind="text: Date" class="date"></td>
-        <td data-bind="text: Value" class="number"></td>
-      </tr>
-    </tbody>
-  </table>
+  @Html.KnockoutTableForModel("data", new { id = "acquisitions", @class = "pure-table pure-table-horizontal pure-table-striped" })
 </div>
 
 <div>
   <p>Items for <span id="acquisitionId"></span></p>
-  <table id="acquisition_items" class="pure-table pure-table-horizontal pure-table-striped">
-    <thead>
-      <tr>
-        <th>Product Name</th>
-        <th>Quantity</th>
-        <th>Price</th>
-        <th>Value</th>
-      </tr>
-    </thead>
-    <tbody data-bind="foreach: items">
-      <tr>
-        <td data-bind="text: ProductName"></td>
-        <td data-bind="text: Quantity" class="number"></td>
-        <td data-bind="text: Price" class="number"></td>
-        <td data-bind="text: Value" class="number"></td>
-      </tr>
-    </tbody>
-  </table>
+  
+  @Html.KnockoutTableFor(m => m.Items, new { id = "acquisition_items", @class = "pure-table pure-table-horizontal pure-table-striped" })
 </div>
 
 <script type="text/javascript">

@@ -304,7 +304,7 @@ table td.date { }
 
 .ui-selecting, .ui-selected { background: rgb(208, 229, 245); }
 
-.jtable tr:hover { background: rgba(208, 229, 245, 0.25); }
+tr:hover { background: rgba(208, 229, 245, 0.25); }
 
 .validationMessage { color: red; }
 

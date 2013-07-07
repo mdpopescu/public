@@ -12,8 +12,8 @@ namespace Renfield.Inventory.Helpers
     public static string DataBinding<TModel, U, V>(this HtmlHelper<TModel> helper, Expression<Func<TModel, IEnumerable<U>>> listExpr,
       Expression<Func<U, V>> memberExpr)
     {
-      var meta1 = ModelMetadata.FromLambdaExpression(listExpr, helper.ViewData);
-      var listName = meta1.PropertyName;
+      var meta = ModelMetadata.FromLambdaExpression(listExpr, helper.ViewData);
+      var listName = meta.PropertyName;
 
       var itemName = GetProperty(memberExpr).Name;
 
@@ -36,6 +36,32 @@ namespace Renfield.Inventory.Helpers
       table.Add(thead);
 
       var tbody = relevantProperties.CreateTableBody(collectionName);
+      table.Add(tbody);
+
+      return new MvcHtmlString(table.ToString());
+    }
+
+    public static MvcHtmlString KnockoutTableFor<TModel, U>(this HtmlHelper<TModel> helper, Expression<Func<TModel, IEnumerable<U>>> listExpr,
+      object htmlAttributes)
+    {
+      var collectionName = ModelMetadata
+        .FromLambdaExpression(listExpr, helper.ViewData)
+        .PropertyName;
+      var meta = ModelMetadataProviders
+        .Current
+        .GetMetadataForType(null, typeof (U));
+      var relevantProperties = meta
+        .Properties
+        .Where(it => it.ShowForDisplay && (it.ModelType.IsValueType || Type.GetTypeCode(it.ModelType) == TypeCode.String))
+        .ToList();
+
+      var table = new MultiLevelTagBuilder("table");
+      table.AddAttributes(htmlAttributes);
+
+      var thead = relevantProperties.CreateTableHeader();
+      table.Add(thead);
+
+      var tbody = relevantProperties.CreateTableBody(collectionName.ToLowerInvariant());
       table.Add(tbody);
 
       return new MvcHtmlString(table.ToString());
@@ -88,7 +114,7 @@ namespace Renfield.Inventory.Helpers
     private static TagBuilder GetColumn(this ModelMetadata property)
     {
       var column = new TagBuilder("th");
-      column.SetInnerText(property.DisplayName);
+      column.SetInnerText(property.DisplayName ?? property.PropertyName);
 
       return column;
     }
@@ -99,6 +125,7 @@ namespace Renfield.Inventory.Helpers
       tbody.MergeAttribute("data-bind", "foreach: " + collectionName);
 
       var tr = new MultiLevelTagBuilder("tr");
+      tr.MergeAttribute("data-bind", "attr: { 'data-id' : Id }");
 
       var fields = properties.Select(it => it.GetField());
       foreach (var tag in fields)
