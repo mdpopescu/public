@@ -43,6 +43,8 @@ namespace Renfield.Inventory.Helpers
 
     //
 
+    private static readonly Func<int, string> GetIndent = Memoizer.Memoize<int, string>(Indent);
+
     private readonly IList<TagBuilder> innerTags = new List<TagBuilder>();
 
     private string ToString(int level)
@@ -54,7 +56,7 @@ namespace Renfield.Inventory.Helpers
         if (multiTag != null)
           sb.AppendLine(multiTag.ToString(level + 1));
         else
-          sb.AppendLine(Indent(level + 1) + tag);
+          sb.AppendLine(GetIndent(level + 1) + tag);
       }
 
       InnerHtml = sb.ToString();
@@ -65,9 +67,9 @@ namespace Renfield.Inventory.Helpers
     private string Prettified(int level)
     {
       return InnerHtml == ""
-               ? Indent(level + 1) + base.ToString()
+               ? GetIndent(level + 1) + base.ToString()
                : string.Format("{0}{1}{2}{3}{0}{4}",
-                 Indent(level),
+                 GetIndent(level),
                  ToString(TagRenderMode.StartTag),
                  Environment.NewLine,
                  InnerHtml,

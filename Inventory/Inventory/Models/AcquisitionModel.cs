@@ -8,14 +8,18 @@ namespace Renfield.Inventory.Models
 {
   public class AcquisitionModel
   {
+    [ScaffoldColumn(false)]
     public int Id { get; set; }
 
     [Display(Name = "Company Name")]
     public string CompanyName { get; set; }
 
     public string Date { get; set; }
+
+    [Numeric]
     public string Value { get; set; }
 
+    [ScaffoldColumn(false)]
     public IEnumerable<AcquisitionItemModel> Items { get; set; }
 
     public static AcquisitionModel From(Acquisition value)
