@@ -293,8 +293,6 @@ div#title {
 
 /**/
 
-table th { text-align: center; }
-
 table th.number { text-align: right; }
 
 table td.number {
@@ -315,3 +313,5 @@ table td.date { }
 #formHeader { margin-bottom: 1em; }
 
 input.number { text-align: right; }
+
+button i { color: blue; }

@@ -10,15 +10,17 @@
 
 @using (Html.BeginForm("Create", "Sales", FormMethod.Post, new { @class = "pure-form" }))
 {
-  <div id="formHeader">
-    <span>
+  <div id="formHeader" class="pure-g-r">
+    <span class="pure-u-1-4">
       @Html.LabelFor(m => m.CompanyName)
       @Html.TextBoxFor(m => m.CompanyName, new { data_bind = "value: CompanyName" })
     </span>
-    <span>
+    <span class="pure-u-1-5">
       @Html.LabelFor(m => m.Date)
-      @Html.EditorFor(m => m.Date, new { data_bind = "value: Date", type = "date" })
+      @Html.TextBoxFor(m => m.Date, new { data_bind = "value: Date", type = "date", @class = "pure-1-8" })
     </span>
+
+    <input type="submit" value="Submit" data-bind="click: submit" class="pure-u-1-10 pure-button pure-button-primary" />
   </div>
 
   <div id="formItems">
@@ -29,7 +31,11 @@
           <th class="number">Quantity</th>
           <th class="number">Price</th>
           <th class="number">Value</th>
-          <th><button class="pure-button" data-bind="click: addItem">[+]</button></th>
+          <th>
+            <button class="pure-button pure-button-small" data-bind="click: addItem">
+              <i class="icon-plus-sign"></i>
+            </button>
+          </th>
         </tr>
       </thead>
       <tbody data-bind="foreach: items">
@@ -47,14 +53,14 @@
             <input data-bind="value: Value" readonly="readonly" type="text" value="" class="number pure-input-2-3" />
           </td>
           <td>
-            <button class="pure-button" data-bind="click: $parent.delItem">[--]</button>
+            <button class="pure-button pure-button-small" data-bind="click: $parent.delItem">
+              <i class="icon-minus-sign"></i>
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-
-  <input type="submit" value="Submit" data-bind="click: submit" class="pure-button" />
 }
 
 <script type="text/javascript">
