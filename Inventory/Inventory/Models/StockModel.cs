@@ -5,8 +5,13 @@ namespace Renfield.Inventory.Models
 {
   public class StockModel
   {
+    [ScaffoldColumn(false)]
     public int Id { get; set; }
+
+    [Display(Name = "Product Name")]
     public string Name { get; set; }
+
+    [Display(Name = "Quantity")]
     public string Quantity { get; set; }
 
     [Display(Name = "Recommended Retail Price")]

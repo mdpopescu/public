@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using Renfield.Inventory.Models;
 using Renfield.Inventory.Services;
 
 namespace Renfield.Inventory.Controllers
@@ -12,7 +13,7 @@ namespace Renfield.Inventory.Controllers
 
     public ActionResult Index()
     {
-      return View();
+      return View(new StockModel());
     }
 
     public ActionResult GetStocks()
