@@ -16,6 +16,7 @@ namespace Renfield.Inventory.Models
 
     public string Date { get; set; }
 
+    [Display(Name = "Total Value")]
     [Numeric]
     public string Value { get; set; }
 
