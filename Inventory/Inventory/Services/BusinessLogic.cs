@@ -113,6 +113,7 @@ namespace Renfield.Inventory.Services
     public void AddSale(SaleModel model)
     {
       using (var repository = dbFactory.Invoke())
+      using (var transaction = repository.CreateTransaction())
       {
         var productNames = model
           .Items
@@ -248,29 +249,20 @@ namespace Renfield.Inventory.Services
       };
     }
 
-    private static void UpdateStock(Repository repository, IEnumerable<Stock> stocks, SaleItem SaleItem)
+    private static void UpdateStock(Repository repository, IEnumerable<Stock> stocks, SaleItem saleItem)
     {
-      var newQuantity = SaleItem.Quantity;
-      var product = SaleItem.Product;
+      var newQuantity = saleItem.Quantity;
+      var product = saleItem.Product;
       var productId = product.Id;
+      var productName = product.Name;
 
       var stock = stocks.FirstOrDefault(it => it.ProductId == productId);
-      if (stock != null)
-        stock.Quantity += newQuantity;
-      else
-      {
-        stock = new Stock
-        {
-          ProductId = productId,
-          Name = product.Name,
-          SalePrice = product.SalePrice,
-          Quantity = newQuantity,
-          PurchaseValue = Math.Round(newQuantity * SaleItem.Price, 2),
-          SaleValue = Math.Round(newQuantity * product.SalePrice.GetValueOrDefault(), 2),
-        };
-        repository.Stocks.Add(stock);
-      }
+      if (stock == null)
+        throw new Exception(string.Format("Unknown product [{0}]", productName));
+      if (stock.Quantity < newQuantity)
+        throw new Exception(string.Format("Insufficient quantity for product [{0}]", productName));
 
+      stock.Quantity -= newQuantity;
       repository.SaveChanges();
     }
 

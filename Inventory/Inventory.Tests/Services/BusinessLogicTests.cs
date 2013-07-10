@@ -407,40 +407,6 @@ namespace Renfield.Inventory.Tests.Services
       }
 
       [TestMethod]
-      public void IgnoresItemsWithInvalidFields()
-      {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
-        products.Add(new Product { Id = 4, Name = "d" });
-        var model = new SaleModel
-        {
-          CompanyName = "Microsoft",
-          Date = "1/1/2000",
-          Items = new[]
-          {
-            new SaleItemModel { ProductName = null, Quantity = "1", Price = "1" },
-            new SaleItemModel { ProductName = "b", Quantity = "", Price = "2" },
-            new SaleItemModel { ProductName = "c", Quantity = "3", Price = "" },
-            new SaleItemModel { ProductName = "d", Quantity = "4", Price = "4" },
-          },
-        };
-
-        sut.AddSale(model);
-
-        sales.Should().HaveCount(1);
-        var sale = sales[0];
-        sale.ShouldBeEquivalentTo(new Sale
-        {
-          Id = 1,
-          Company = new Company { Id = 1, Name = "Microsoft" },
-          Date = new DateTime(2000, 1, 1),
-          Items = new Collection<SaleItem>
-          {
-            new SaleItem { Product = new Product { Id = 4, Name = "d" }, ProductId = 4, Quantity = 4.00m, Price = 4.00m, },
-          }
-        });
-      }
-
-      [TestMethod]
       public void DoesNotAddTheRootObjectIfAllItemsAreInvalid()
       {
         companies.Add(new Company { Id = 1, Name = "Microsoft" });
@@ -465,8 +431,7 @@ namespace Renfield.Inventory.Tests.Services
       public void UpdatesTheStock()
       {
         companies.Add(new Company { Id = 1, Name = "Microsoft" });
-        products.Add(new Product { Id = 1, Name = "abc" });
-        products.Add(new Product { Id = 2, Name = "def", SalePrice = 12.34m });
+        products.Add(new Product { Id = 1, Name = "abc", SalePrice = 5.50m });
         stocks.Add(new Stock { Id = 1, ProductId = 1, Name = "abc", Quantity = 22.35m });
 
         var model = new SaleModel
@@ -475,30 +440,18 @@ namespace Renfield.Inventory.Tests.Services
           Date = "2/3/2000",
           Items = new[]
           {
-            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
-            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "6" },
           },
         };
 
         sut.AddSale(model);
 
-        stocks.Should().HaveCount(2);
-        stocks[0].Quantity.Should().Be(23.58m);
-        var addedStock = stocks[1];
-        addedStock.ShouldBeEquivalentTo(new Stock
-        {
-          Id = 2,
-          ProductId = 2,
-          Name = "def",
-          SalePrice = 12.34m,
-          Quantity = 5.67m,
-          PurchaseValue = 45.36m,
-          SaleValue = 69.97m,
-        });
+        stocks.Should().HaveCount(1);
+        stocks[0].Quantity.Should().Be(21.12m);
       }
 
       [TestMethod]
-      public void AddsTheMissingProducts()
+      public void ThrowsIfThereAreMissingProducts()
       {
         companies.Add(new Company { Id = 1, Name = "Microsoft" });
         products.Add(new Product { Id = 1, Name = "abc", SalePrice = 12.34m });
@@ -515,11 +468,95 @@ namespace Renfield.Inventory.Tests.Services
           },
         };
 
-        sut.AddSale(model);
+        Action Act = () => sut.AddSale(model);
+        Act.ShouldThrow<Exception>().WithMessage("Unknown product [def]");
+      }
 
-        products.Should().HaveCount(2);
-        products[0].Name.Should().Be("abc");
-        products[1].Name.Should().Be("def");
+      [TestMethod]
+      public void DoesNotChangeAnyQuantitiesIfThereAreMissingProducts()
+      {
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        products.Add(new Product { Id = 1, Name = "abc", SalePrice = 12.34m });
+        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
+
+        var model = new SaleModel
+        {
+          CompanyName = "Microsoft",
+          Date = "2/3/2000",
+          Items = new[]
+          {
+            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
+            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+          },
+        };
+
+        try
+        {
+          sut.AddSale(model);
+        }
+        catch (Exception)
+        {
+          // ignore
+        }
+
+        stocks[0].Quantity.Should().Be(22.35m, "the quantity for abc should be the same");
+      }
+
+      [TestMethod]
+      public void ThrowsIfAnyQuantityIsInsufficient()
+      {
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        products.Add(new Product { Id = 1, Name = "abc", SalePrice = 12.34m });
+        products.Add(new Product { Id = 2, Name = "def", SalePrice = 12.34m });
+        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
+        stocks.Add(new Stock { Id = 2, ProductId = 2, Quantity = 0.05m });
+
+        var model = new SaleModel
+        {
+          CompanyName = "Microsoft",
+          Date = "2/3/2000",
+          Items = new[]
+          {
+            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
+            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+          },
+        };
+
+        Action Act = () => sut.AddSale(model);
+        Act.ShouldThrow<Exception>().WithMessage("Insufficient quantity for product [def]");
+      }
+
+      [TestMethod]
+      public void DoesNotChangeAnyQuantitiesIfAnyQuantityIsInsufficient()
+      {
+        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        products.Add(new Product { Id = 1, Name = "abc", SalePrice = 12.34m });
+        products.Add(new Product { Id = 2, Name = "def", SalePrice = 12.34m });
+        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
+        stocks.Add(new Stock { Id = 2, ProductId = 2, Quantity = 0.05m });
+
+        var model = new SaleModel
+        {
+          CompanyName = "Microsoft",
+          Date = "2/3/2000",
+          Items = new[]
+          {
+            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
+            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+          },
+        };
+
+        try
+        {
+          sut.AddSale(model);
+        }
+        catch (Exception)
+        {
+          // ignore
+        }
+
+        stocks[0].Quantity.Should().Be(22.35m, "the quantity for abc should be the same");
+        stocks[1].Quantity.Should().Be(0.05m, "the quantity for def should be the same");
       }
 
       [TestMethod]

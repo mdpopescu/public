@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Data.Common;
+using System.Data.Entity;
 
 namespace Renfield.Inventory.Data
 {
@@ -15,6 +16,11 @@ namespace Renfield.Inventory.Data
     public InventoryDB(string nameOrConnectionString)
       : base(nameOrConnectionString)
     {
+    }
+
+    public DbTransaction CreateTransaction()
+    {
+      return Database.Connection.BeginTransaction();
     }
   }
 }
