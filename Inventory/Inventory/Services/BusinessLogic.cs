@@ -149,6 +149,8 @@ namespace Renfield.Inventory.Services
         }
         repository.SaveChanges();
 
+        transaction.Commit();
+
         UpdateAllClients();
       }
     }
