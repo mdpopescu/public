@@ -4,8 +4,8 @@ namespace Renfield.PageFaults
 {
   public class LruCache : CacheBase
   {
-    public LruCache(int count)
-      : base(count)
+    public LruCache(int cacheSize)
+      : base(cacheSize)
     {
     }
 

@@ -51,7 +51,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="FifoCacheTests.cs" />
+    <Compile Include="LineParserTests.cs" />
     <Compile Include="LruCacheTests.cs" />
+    <Compile Include="OptimalCacheTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

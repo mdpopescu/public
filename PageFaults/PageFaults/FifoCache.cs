@@ -4,8 +4,8 @@ namespace Renfield.PageFaults
 {
   public class FifoCache : CacheBase
   {
-    public FifoCache(int count)
-      : base(count)
+    public FifoCache(int cacheSize)
+      : base(cacheSize)
     {
     }
 

@@ -4,15 +4,17 @@ namespace Renfield.PageFaults
 {
   public abstract class CacheBase : Cache
   {
+    public int CacheSize { get; private set; }
     public int?[] Pages { get; private set; }
     public int PageFaults { get; protected set; }
 
-    protected CacheBase(int count)
+    protected CacheBase(int cacheSize)
     {
-      if (count < 1)
-        throw new ArgumentOutOfRangeException("count");
+      if (cacheSize < 1)
+        throw new ArgumentOutOfRangeException("cacheSize");
 
-      Pages = new int?[count];
+      CacheSize = cacheSize;
+      Pages = new int?[cacheSize];
       PageFaults = 0;
     }
 
