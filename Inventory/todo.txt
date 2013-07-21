@@ -28,3 +28,7 @@ sales:
   - change the stock
   - fail if there's not enough stock
 
+
+
+article on pessimistic concurrency with EF at
+http://www.ladislavmrnka.com/2012/09/entity-framework-and-pessimistic-concurrency/
