@@ -41,7 +41,7 @@ namespace Renfield.VideoSpinner.Library
                     var effectDuration = imgDuration / 5;
 
                     foreach (var clip in videoTrack.Clips.Skip(1))
-                        AddEffect(video, clip, effectDuration, StandardTransitions.CreatePixelate());
+                        AddVideoEffect(video, clip, effectDuration, StandardTransitions.CreatePixelate());
                 }
 
                 AddWatermark(video, spec.WatermarkText, spec.WatermarkSize, spec.WatermarkColor, duration);
@@ -145,7 +145,7 @@ namespace Renfield.VideoSpinner.Library
         /// <param name="clip">The clip to add the effect to</param>
         /// <param name="duration">The duration of the effect</param>
         /// <param name="effect">The actual effect</param>
-        private static void AddEffect(ITransitionContainer group, IClip clip, double duration,
+        private static void AddVideoEffect(ITransitionContainer group, IClip clip, double duration,
                                       TransitionDefinition effect)
         {
             group.AddTransition(clip.Offset - duration, duration, effect, true);
