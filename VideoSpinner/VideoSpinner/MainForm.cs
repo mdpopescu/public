@@ -26,17 +26,25 @@ namespace Renfield.VideoSpinner
 
         private void btnBrowse1_Click(object sender, EventArgs e)
         {
-            //
+            using (var dlg = new OpenFileDialog {Filter = "Csv Files|*.csv|All files|*.*"})
+            {
+                if (dlg.ShowDialog() == DialogResult.OK)
+                    txtCsvFile.Text = dlg.FileName;
+            }
         }
 
         private void btnBrowse2_Click(object sender, EventArgs e)
         {
-            //
+            var dlg = new FolderSelectDialog();
+            if (dlg.ShowDialog())
+                txtImages.Text = dlg.FileName;
         }
 
         private void btnBrowse3_Click(object sender, EventArgs e)
         {
-            //
+            var dlg = new FolderSelectDialog();
+            if (dlg.ShowDialog())
+                txtSounds.Text = dlg.FileName;
         }
 
         private void btnBrowse4_Click(object sender, EventArgs e)
@@ -51,7 +59,9 @@ namespace Renfield.VideoSpinner
 
         private void btnBrowse5_Click(object sender, EventArgs e)
         {
-            //
+            var dlg = new FolderSelectDialog();
+            if (dlg.ShowDialog())
+                txtOutputFolder.Text = dlg.FileName;
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -88,9 +98,8 @@ namespace Renfield.VideoSpinner
                 }
 
                 int value;
-                color = int.TryParse(text.Substring(1), NumberStyles.HexNumber, null, out value)
-                            ? Color.FromArgb(value)
-                            : Color.Red;
+                int.TryParse(text.Substring(1), NumberStyles.HexNumber, null, out value);
+                color = Color.FromArgb(value);
             }
 
             SetColor(color);
