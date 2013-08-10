@@ -29,7 +29,17 @@ The "text to voice" content will be converted to voice. It will typically be 100
 For this you can use free text to speech code from  http://www.codeproject.com/Articles/182881/Text-to-Speech
 
 To create the actual video itself, the images will be randomized, and will each appear for random 
-durations between 5 - 15 seconds. But they must NOT be still images. There must always be 
+durations between 5 - 15 seconds.
+
+
+[NOTE: I am changing this requirement, because it's overly-specified - what happens if the sound is only 3 seconds long?
+It will contradict the later requirement that "The length of the video is determined by the length of the text to speech
+audio file". So the new requirement is: the images will appear for d +/- d/2 seconds, where d = (sound duration) / N and
+N is the number of image files. Eg, if there are 10 images and the sound is 20 seconds long, each image will appear for
+between 1 and 3 seconds.]
+
+
+But they must NOT be still images. There must always be 
 movement. The videos must use as many different effects as possible so that youtube will not 
 consider them the same images just mixed around with effects. This is the main core of the 
 application, and we need more than just simple transitions between images like a slideshow.
