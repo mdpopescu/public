@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoSpinner", "VideoSpinner\VideoSpinner.csproj", "{8E60BA33-69D8-406F-A418-CA0250AA8392}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{29C310CD-E90D-49AD-A38F-032A01E52748}"
 	ProjectSection(SolutionItems) = preProject
 		Spec.txt = Spec.txt
@@ -10,20 +8,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spikes", "Spikes\Spikes.csproj", "{213E99C9-0912-4F1A-B36A-231EF9DDF0BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoSpinner.Library", "VideoSpinner.Library\VideoSpinner.Library.csproj", "{8E60BA33-69D8-406F-A418-CA0250AA8392}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8E60BA33-69D8-406F-A418-CA0250AA8392}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8E60BA33-69D8-406F-A418-CA0250AA8392}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8E60BA33-69D8-406F-A418-CA0250AA8392}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8E60BA33-69D8-406F-A418-CA0250AA8392}.Release|Any CPU.Build.0 = Release|Any CPU
 		{213E99C9-0912-4F1A-B36A-231EF9DDF0BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{213E99C9-0912-4F1A-B36A-231EF9DDF0BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{213E99C9-0912-4F1A-B36A-231EF9DDF0BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{213E99C9-0912-4F1A-B36A-231EF9DDF0BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E60BA33-69D8-406F-A418-CA0250AA8392}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E60BA33-69D8-406F-A418-CA0250AA8392}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E60BA33-69D8-406F-A418-CA0250AA8392}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E60BA33-69D8-406F-A418-CA0250AA8392}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

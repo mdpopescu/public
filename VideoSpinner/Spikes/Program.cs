@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Renfield.VideoSpinner;
+using Renfield.VideoSpinner.Library;
 
 namespace Renfield.Spikes
 {

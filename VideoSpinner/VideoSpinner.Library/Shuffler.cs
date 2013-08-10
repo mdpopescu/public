@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Renfield.VideoSpinner
+namespace Renfield.VideoSpinner.Library
 {
     public interface Shuffler
     {

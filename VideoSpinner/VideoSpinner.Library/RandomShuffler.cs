@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-namespace Renfield.VideoSpinner
+namespace Renfield.VideoSpinner.Library
 {
     public class RandomShuffler : Shuffler
     {

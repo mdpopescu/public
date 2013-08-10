@@ -7,8 +7,8 @@
     <ProjectGuid>{8E60BA33-69D8-406F-A418-CA0250AA8392}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Renfield.VideoSpinner</RootNamespace>
-    <AssemblyName>VideoSpinner</AssemblyName>
+    <RootNamespace>Renfield.VideoSpinner.Library</RootNamespace>
+    <AssemblyName>VideoSpinner.Library</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

@@ -48,9 +48,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VideoSpinner\VideoSpinner.csproj">
+    <ProjectReference Include="..\VideoSpinner.Library\VideoSpinner.Library.csproj">
       <Project>{8e60ba33-69d8-406f-a418-ca0250aa8392}</Project>
-      <Name>VideoSpinner</Name>
+      <Name>VideoSpinner.Library</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
