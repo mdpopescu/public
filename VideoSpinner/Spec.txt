@@ -1,0 +1,54 @@
+This is a windows 7 application that will create a unique and randomized video out of images. The 
+software will also use "text to voice" application to add audio to the video. The objective is to create 
+unique videos with the same source content. 
+
+How it works: 
+
+1. The user defines: 
+Part a. The CSV document that contains each file's name, and "text to voice" content. 
+Part b. Folder which contains the source images (images that are used for the video) 
+Part c. Folder for output videos 
+Part d. Watermark text that will be displayed at the bottom of all videos (the user will be 
+able to vary size and colour) 
+Part e. Folder containing list of WAV audio files (music) to be played throughout the video 
+
+Then the user clicks "start". 
+
+2. The software now creates a WMV video as per below. 
+
+Each CSV document from "Part a" will have two columns, such as below: 
+
+Keyword                            Text to voice
+Some targeted keyword              Here is text that will be converted to audio then published in the video. 
+
+Each ROW will be for one video, and there may be 500 or so rows. The "Keyword" column tells us 
+the file name for each video. In my example, the output video file will be "Some targeted 
+keyword.wmv". 
+
+The "text to voice" content will be converted to voice. It will typically be 1000 words for each video.
+For this you can use free text to speech code from  http://www.codeproject.com/Articles/182881/Text-to-Speech
+
+To create the actual video itself, the images will be randomized, and will each appear for random 
+durations between 5 - 15 seconds. But they must NOT be still images. There must always be 
+movement. The videos must use as many different effects as possible so that youtube will not 
+consider them the same images just mixed around with effects. This is the main core of the 
+application, and we need more than just simple transitions between images like a slideshow.
+
+Notes about the created video: 
+
+• It is up to you how you want to use the images to create the video, but some of the effects I 
+had in mind are: 
+1. Panning and zooming in on images 
+2. Rotating of images 
+3. Multiple images at the same time being in the video and zooming in/out 
+4. Changing of colours 
+5. Blurring 
+
+The idea is to create a video that partially resembles the original image, but will be different enough 
+so that youtube considers it a unique video at any point in the video. 
+
+So if we had 5 source images, we could create 20 x 60 second videos and they'll all be very different. 
+
+• The length of the video is determined by the length of the text to speech audio file. Again 
+the text to speech engine is free source code. The main component of this application is the 
+manipulation of images to create a unique video from the same source content. 
