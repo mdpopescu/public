@@ -1,0 +1,56 @@
+﻿using System.Collections.Generic;
+using System.Drawing;
+
+namespace Renfield.VideoSpinner.Library
+{
+    /// <summary>
+    /// Specifies the video to be generated
+    /// </summary>
+    public class VideoSpec
+    {
+        /// <summary>
+        /// The name of the generated file
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The width of the generated frames, in pixels; eg 160
+        /// </summary>
+        public int Width { get; set; }
+
+        /// <summary>
+        /// The height of the generated frames, in pixels; eg 120
+        /// </summary>
+        public int Height { get; set; }
+
+        /// <summary>
+        /// The text that will be converted to speech and played during the movie
+        /// </summary>
+        public string Text { get; set; }
+
+        /// <summary>
+        /// The text that will be converted to a watermark image and superimposed over the movie
+        /// </summary>
+        public string WatermarkText { get; set; }
+
+        /// <summary>
+        /// The size of the watermark font, in points
+        /// </summary>
+        public int WatermarkSize { get; set; }
+
+        /// <summary>
+        /// The color of the watermark font
+        /// </summary>
+        public Color WatermarkColor { get; set; }
+
+        /// <summary>
+        /// The images that will make up the movie
+        /// </summary>
+        public List<string> ImageFiles { get; set; }
+
+        /// <summary>
+        /// The sounds that will be played during the movie
+        /// </summary>
+        public List<string> SoundFiles { get; set; }
+    }
+}

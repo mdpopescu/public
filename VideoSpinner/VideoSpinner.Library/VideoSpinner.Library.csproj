@@ -30,8 +30,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DirectShowLib-2005">
+      <HintPath>..\_Lib\DirectShowLib-2005.dll</HintPath>
+    </Reference>
+    <Reference Include="Splicer">
+      <HintPath>..\_Lib\Splicer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,6 +50,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomShuffler.cs" />
     <Compile Include="Shuffler.cs" />
+    <Compile Include="VideoMaker.cs" />
+    <Compile Include="VideoSpec.cs" />
+    <Compile Include="WmvVideoMaker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
