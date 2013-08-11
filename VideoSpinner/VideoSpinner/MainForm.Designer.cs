@@ -29,28 +29,29 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.txtCsvFile = new System.Windows.Forms.TextBox();
             this.btnBrowse1 = new System.Windows.Forms.Button();
             this.btnBrowse2 = new System.Windows.Forms.Button();
-            this.txtImages = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.btnBrowse3 = new System.Windows.Forms.Button();
-            this.txtSounds = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.txtWatermark = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtWatermarkSize = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.txtColor = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.btnBrowse5 = new System.Windows.Forms.Button();
-            this.txtOutputFolder = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.btnBrowse4 = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.btnStart = new System.Windows.Forms.Button();
             this.colorStrip = new System.Windows.Forms.Panel();
+            this.txtOutputFolder = new System.Windows.Forms.TextBox();
+            this.txtColor = new System.Windows.Forms.TextBox();
+            this.txtWatermarkSize = new System.Windows.Forms.TextBox();
+            this.txtWatermark = new System.Windows.Forms.TextBox();
+            this.txtSounds = new System.Windows.Forms.TextBox();
+            this.txtImages = new System.Windows.Forms.TextBox();
+            this.txtCsvFile = new System.Windows.Forms.TextBox();
+            this.pbStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,15 +63,6 @@
             this.label1.Size = new System.Drawing.Size(44, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "CSV file";
-            // 
-            // txtCsvFile
-            // 
-            this.txtCsvFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtCsvFile.Location = new System.Drawing.Point(8, 32);
-            this.txtCsvFile.Name = "txtCsvFile";
-            this.txtCsvFile.Size = new System.Drawing.Size(552, 20);
-            this.txtCsvFile.TabIndex = 1;
             // 
             // btnBrowse1
             // 
@@ -94,15 +86,6 @@
             this.btnBrowse2.UseVisualStyleBackColor = true;
             this.btnBrowse2.Click += new System.EventHandler(this.btnBrowse2_Click);
             // 
-            // txtImages
-            // 
-            this.txtImages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtImages.Location = new System.Drawing.Point(8, 72);
-            this.txtImages.Name = "txtImages";
-            this.txtImages.Size = new System.Drawing.Size(552, 20);
-            this.txtImages.TabIndex = 3;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -123,15 +106,6 @@
             this.btnBrowse3.UseVisualStyleBackColor = true;
             this.btnBrowse3.Click += new System.EventHandler(this.btnBrowse3_Click);
             // 
-            // txtSounds
-            // 
-            this.txtSounds.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSounds.Location = new System.Drawing.Point(8, 112);
-            this.txtSounds.Name = "txtSounds";
-            this.txtSounds.Size = new System.Drawing.Size(552, 20);
-            this.txtSounds.TabIndex = 5;
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -140,16 +114,6 @@
             this.label3.Size = new System.Drawing.Size(43, 13);
             this.label3.TabIndex = 6;
             this.label3.Text = "Sounds";
-            // 
-            // txtWatermark
-            // 
-            this.txtWatermark.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtWatermark.Location = new System.Drawing.Point(8, 152);
-            this.txtWatermark.Name = "txtWatermark";
-            this.txtWatermark.Size = new System.Drawing.Size(424, 20);
-            this.txtWatermark.TabIndex = 7;
-            this.txtWatermark.Text = "(C) 2013 by Renfield Software";
             // 
             // label4
             // 
@@ -160,16 +124,6 @@
             this.label4.TabIndex = 9;
             this.label4.Text = "Watermark";
             // 
-            // txtWatermarkSize
-            // 
-            this.txtWatermarkSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtWatermarkSize.Location = new System.Drawing.Point(440, 152);
-            this.txtWatermarkSize.Name = "txtWatermarkSize";
-            this.txtWatermarkSize.Size = new System.Drawing.Size(32, 20);
-            this.txtWatermarkSize.TabIndex = 8;
-            this.txtWatermarkSize.Text = "24";
-            this.txtWatermarkSize.Leave += new System.EventHandler(this.txtWatermarkSize_Leave);
-            // 
             // label5
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -179,18 +133,6 @@
             this.label5.Size = new System.Drawing.Size(27, 13);
             this.label5.TabIndex = 11;
             this.label5.Text = "Size";
-            // 
-            // txtColor
-            // 
-            this.txtColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtColor.BackColor = System.Drawing.SystemColors.Window;
-            this.txtColor.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.txtColor.Location = new System.Drawing.Point(480, 152);
-            this.txtColor.Name = "txtColor";
-            this.txtColor.Size = new System.Drawing.Size(56, 20);
-            this.txtColor.TabIndex = 9;
-            this.txtColor.Text = "#ff0000";
-            this.txtColor.Leave += new System.EventHandler(this.txtColor_Leave);
             // 
             // label6
             // 
@@ -212,15 +154,6 @@
             this.btnBrowse5.Text = ". . .";
             this.btnBrowse5.UseVisualStyleBackColor = true;
             this.btnBrowse5.Click += new System.EventHandler(this.btnBrowse5_Click);
-            // 
-            // txtOutputFolder
-            // 
-            this.txtOutputFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtOutputFolder.Location = new System.Drawing.Point(8, 192);
-            this.txtOutputFolder.Name = "txtOutputFolder";
-            this.txtOutputFolder.Size = new System.Drawing.Size(552, 20);
-            this.txtOutputFolder.TabIndex = 11;
             // 
             // label7
             // 
@@ -245,18 +178,19 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statusLabel});
+            this.pbStatus,
+            this.lblStatus});
             this.statusStrip1.Location = new System.Drawing.Point(0, 265);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(610, 22);
             this.statusStrip1.TabIndex = 20;
             this.statusStrip1.Text = "statusStrip";
             // 
-            // statusLabel
+            // lblStatus
             // 
-            this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(26, 17);
-            this.statusLabel.Text = "Idle";
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(26, 17);
+            this.lblStatus.Text = "Idle";
             // 
             // btnStart
             // 
@@ -276,6 +210,90 @@
             this.colorStrip.Name = "colorStrip";
             this.colorStrip.Size = new System.Drawing.Size(16, 19);
             this.colorStrip.TabIndex = 21;
+            // 
+            // txtOutputFolder
+            // 
+            this.txtOutputFolder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtOutputFolder.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Renfield.VideoSpinner.Properties.Settings.Default, "outputFolder", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txtOutputFolder.Location = new System.Drawing.Point(8, 192);
+            this.txtOutputFolder.Name = "txtOutputFolder";
+            this.txtOutputFolder.Size = new System.Drawing.Size(552, 20);
+            this.txtOutputFolder.TabIndex = 11;
+            this.txtOutputFolder.Text = global::Renfield.VideoSpinner.Properties.Settings.Default.outputFolder;
+            // 
+            // txtColor
+            // 
+            this.txtColor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtColor.BackColor = System.Drawing.SystemColors.Window;
+            this.txtColor.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Renfield.VideoSpinner.Properties.Settings.Default, "watermarkColor", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txtColor.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.txtColor.Location = new System.Drawing.Point(480, 152);
+            this.txtColor.Name = "txtColor";
+            this.txtColor.Size = new System.Drawing.Size(56, 20);
+            this.txtColor.TabIndex = 9;
+            this.txtColor.Text = global::Renfield.VideoSpinner.Properties.Settings.Default.watermarkColor;
+            this.txtColor.Leave += new System.EventHandler(this.txtColor_Leave);
+            // 
+            // txtWatermarkSize
+            // 
+            this.txtWatermarkSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtWatermarkSize.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Renfield.VideoSpinner.Properties.Settings.Default, "watermarkSize", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txtWatermarkSize.Location = new System.Drawing.Point(440, 152);
+            this.txtWatermarkSize.Name = "txtWatermarkSize";
+            this.txtWatermarkSize.Size = new System.Drawing.Size(32, 20);
+            this.txtWatermarkSize.TabIndex = 8;
+            this.txtWatermarkSize.Text = global::Renfield.VideoSpinner.Properties.Settings.Default.watermarkSize;
+            this.txtWatermarkSize.Leave += new System.EventHandler(this.txtWatermarkSize_Leave);
+            // 
+            // txtWatermark
+            // 
+            this.txtWatermark.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtWatermark.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Renfield.VideoSpinner.Properties.Settings.Default, "watermarkText", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txtWatermark.Location = new System.Drawing.Point(8, 152);
+            this.txtWatermark.Name = "txtWatermark";
+            this.txtWatermark.Size = new System.Drawing.Size(424, 20);
+            this.txtWatermark.TabIndex = 7;
+            this.txtWatermark.Text = global::Renfield.VideoSpinner.Properties.Settings.Default.watermarkText;
+            // 
+            // txtSounds
+            // 
+            this.txtSounds.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSounds.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Renfield.VideoSpinner.Properties.Settings.Default, "soundsFolder", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txtSounds.Location = new System.Drawing.Point(8, 112);
+            this.txtSounds.Name = "txtSounds";
+            this.txtSounds.Size = new System.Drawing.Size(552, 20);
+            this.txtSounds.TabIndex = 5;
+            this.txtSounds.Text = global::Renfield.VideoSpinner.Properties.Settings.Default.soundsFolder;
+            // 
+            // txtImages
+            // 
+            this.txtImages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtImages.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Renfield.VideoSpinner.Properties.Settings.Default, "imagesFolder", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txtImages.Location = new System.Drawing.Point(8, 72);
+            this.txtImages.Name = "txtImages";
+            this.txtImages.Size = new System.Drawing.Size(552, 20);
+            this.txtImages.TabIndex = 3;
+            this.txtImages.Text = global::Renfield.VideoSpinner.Properties.Settings.Default.imagesFolder;
+            // 
+            // txtCsvFile
+            // 
+            this.txtCsvFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCsvFile.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Renfield.VideoSpinner.Properties.Settings.Default, "csvFile", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.txtCsvFile.Location = new System.Drawing.Point(8, 32);
+            this.txtCsvFile.Name = "txtCsvFile";
+            this.txtCsvFile.Size = new System.Drawing.Size(552, 20);
+            this.txtCsvFile.TabIndex = 1;
+            this.txtCsvFile.Text = global::Renfield.VideoSpinner.Properties.Settings.Default.csvFile;
+            // 
+            // pbStatus
+            // 
+            this.pbStatus.Name = "pbStatus";
+            this.pbStatus.Size = new System.Drawing.Size(100, 16);
             // 
             // MainForm
             // 
@@ -307,6 +325,7 @@
             this.MinimumSize = new System.Drawing.Size(500, 325);
             this.Name = "MainForm";
             this.Text = "Video Spinner";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -336,9 +355,10 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button btnBrowse4;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel statusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel lblStatus;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Panel colorStrip;
+        private System.Windows.Forms.ToolStripProgressBar pbStatus;
     }
 }
 

@@ -22,5 +22,89 @@ namespace Renfield.VideoSpinner.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string csvFile {
+            get {
+                return ((string)(this["csvFile"]));
+            }
+            set {
+                this["csvFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string imagesFolder {
+            get {
+                return ((string)(this["imagesFolder"]));
+            }
+            set {
+                this["imagesFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string soundsFolder {
+            get {
+                return ((string)(this["soundsFolder"]));
+            }
+            set {
+                this["soundsFolder"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("(C) 2013 by Renfield Software")]
+        public string watermarkText {
+            get {
+                return ((string)(this["watermarkText"]));
+            }
+            set {
+                this["watermarkText"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("24")]
+        public string watermarkSize {
+            get {
+                return ((string)(this["watermarkSize"]));
+            }
+            set {
+                this["watermarkSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#ff0000")]
+        public string watermarkColor {
+            get {
+                return ((string)(this["watermarkColor"]));
+            }
+            set {
+                this["watermarkColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string outputFolder {
+            get {
+                return ((string)(this["outputFolder"]));
+            }
+            set {
+                this["outputFolder"] = value;
+            }
+        }
     }
 }
