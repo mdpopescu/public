@@ -23,8 +23,8 @@ namespace Renfield.VideoSpinner.Library
         {
             using (ITimeline timeline = new DefaultTimeline())
             {
-                var video = timeline.AddVideoGroup(32, spec.Width, spec.Height);
-                var audio = timeline.AddAudioGroup();
+                var video = timeline.AddVideoGroup("video", 24.0, 32, spec.Width, spec.Height);
+                var audio = timeline.AddAudioGroup("audio", 24.0);
 
                 // the length of the movie is governed by the audio, so start with that
                 var voiceTrack = AddVoiceTrack(audio, spec.Text);
@@ -34,15 +34,6 @@ namespace Renfield.VideoSpinner.Library
 
                 // now add the video
                 var videoTrack = CreateVideo(video, spec.ImageFiles, duration);
-
-                if (spec.ImageFiles.Any())
-                {
-                    var imgDuration = duration / spec.ImageFiles.Count;
-                    var effectDuration = imgDuration / 5;
-
-                    foreach (var clip in videoTrack.Clips.Skip(1))
-                        AddVideoEffect(video, clip, effectDuration, StandardTransitions.CreatePixelate());
-                }
 
                 AddWatermark(video, spec.WatermarkText, spec.WatermarkSize, spec.WatermarkColor, duration);
 
@@ -127,12 +118,13 @@ namespace Renfield.VideoSpinner.Library
 
             if (imageFiles.Any())
             {
-                var imgDuration = duration / imageFiles.Count;
+                var durations = shuffler.GetRandomizedDurations(duration, imageFiles.Count).ToList();
 
                 shuffler
                     .Shuffle(imageFiles)
                     .ToList()
-                    .ForEach(fileName => videoTrack.AddImage(fileName, 0, imgDuration));
+                    .Select((fileName, i) => videoTrack.AddImage(fileName, 0, durations[i]))
+                    .ToList();
             }
 
             return videoTrack;
@@ -146,7 +138,7 @@ namespace Renfield.VideoSpinner.Library
         /// <param name="duration">The duration of the effect</param>
         /// <param name="effect">The actual effect</param>
         private static void AddVideoEffect(ITransitionContainer group, IClip clip, double duration,
-                                      TransitionDefinition effect)
+                                           TransitionDefinition effect)
         {
             group.AddTransition(clip.Offset - duration, duration, effect, true);
             group.AddTransition(clip.Offset, duration, effect, false);
