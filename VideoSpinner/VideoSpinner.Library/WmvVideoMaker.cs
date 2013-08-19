@@ -48,7 +48,7 @@ namespace Renfield.VideoSpinner.Library
         private const double FRAME_RATE = 24.0;
         private const double FRAME_DURATION = 1 / FRAME_RATE;
         private const int ALPHA = 63;
-        private const int DOT_SIZE = 4;
+        private const int DOT_SIZE = 8;
 
         private readonly string workArea;
         private readonly Shuffler shuffler;
@@ -209,8 +209,13 @@ namespace Renfield.VideoSpinner.Library
                 for (var j = 0; j < dotCount; j++)
                 {
                     var color = GetRandomColor(rnd);
-                    using (var brush = new SolidBrush(color))
-                        drawing.FillEllipse(brush, rnd.Next(width), rnd.Next(height), DOT_SIZE, DOT_SIZE);
+                    if (rnd.Next(2) == 0)
+                        using (var brush = new SolidBrush(color))
+                            drawing.FillEllipse(brush, rnd.Next(width), rnd.Next(height), rnd.Next(DOT_SIZE) + 2,
+                                rnd.Next(DOT_SIZE) + 2);
+                    else
+                        using (var pen = new Pen(color))
+                            drawing.DrawLine(pen, rnd.Next(width), rnd.Next(height), rnd.Next(width), rnd.Next(height));
                 }
 
                 drawing.Save();
