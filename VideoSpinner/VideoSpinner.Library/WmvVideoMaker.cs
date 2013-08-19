@@ -47,7 +47,8 @@ namespace Renfield.VideoSpinner.Library
 
         private const double FRAME_RATE = 24.0;
         private const double FRAME_DURATION = 1 / FRAME_RATE;
-        private const int ALPHA = 255;
+        private const int ALPHA = 63;
+        private const int DOT_SIZE = 4;
 
         private readonly string workArea;
         private readonly Shuffler shuffler;
@@ -172,16 +173,23 @@ namespace Renfield.VideoSpinner.Library
 
         private static Image AddNoise(Image img, int width, int height)
         {
-            var noise = CreateNoiseImage(width, height);
+            var rect = new Rectangle(0, 0, width, height);
 
-            using (var canvas = Graphics.FromImage(noise))
+            var result = new Bitmap(width, height);
+            using (var canvas = Graphics.FromImage(result))
             {
                 canvas.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                canvas.DrawImage(img, new Rectangle(0, 0, width, height), new Rectangle(0, 0, img.Width, img.Height),
-                    GraphicsUnit.Pixel);
+
+                // add the resized input
+                canvas.DrawImage(img, rect, new Rectangle(0, 0, img.Width, img.Height), GraphicsUnit.Pixel);
+
+                // add the noise
+                var noise = CreateNoiseImage(width, height);
+                canvas.DrawImage(noise, rect, rect, GraphicsUnit.Pixel);
+
                 canvas.Save();
 
-                return noise;
+                return result;
             }
         }
 
@@ -202,7 +210,7 @@ namespace Renfield.VideoSpinner.Library
                 {
                     var color = GetRandomColor(rnd);
                     using (var brush = new SolidBrush(color))
-                        drawing.FillEllipse(brush, rnd.Next(width), rnd.Next(height), 8, 8);
+                        drawing.FillEllipse(brush, rnd.Next(width), rnd.Next(height), DOT_SIZE, DOT_SIZE);
                 }
 
                 drawing.Save();
