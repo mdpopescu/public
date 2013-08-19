@@ -45,7 +45,7 @@ namespace Renfield.VideoSpinner
 
         private void SetColor(Color color)
         {
-            color = Color.FromArgb((int) (color.ToArgb() | 0xff000000));
+            color = Color.FromArgb((int) (((uint) color.ToArgb()) | 0xff000000));
 
             colorStrip.BackColor = color;
             txtColor.Text = string.Format("#{0:x6}", color.ToArgb() & 0xffffff);

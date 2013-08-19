@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
@@ -23,8 +24,8 @@ namespace Renfield.VideoSpinner.Library
         {
             using (ITimeline timeline = new DefaultTimeline())
             {
-                var video = timeline.AddVideoGroup("video", 24.0, 32, spec.Width, spec.Height);
-                var audio = timeline.AddAudioGroup("audio", 24.0);
+                var video = timeline.AddVideoGroup("video", FRAME_RATE, 32, spec.Width, spec.Height);
+                var audio = timeline.AddAudioGroup("audio", FRAME_RATE);
 
                 // the length of the movie is governed by the audio, so start with that
                 var voiceTrack = AddVoiceTrack(audio, spec.Text);
@@ -33,7 +34,7 @@ namespace Renfield.VideoSpinner.Library
                 var duration = Math.Max(voiceTrack.Duration, soundsTrack.Duration);
 
                 // now add the video
-                var videoTrack = CreateVideo(video, spec.ImageFiles, duration);
+                CreateVideo(video, spec.ImageFiles, duration, spec.Width, spec.Height);
 
                 AddWatermark(video, spec.WatermarkText, spec.WatermarkSize, spec.WatermarkColor, duration);
 
@@ -43,6 +44,10 @@ namespace Renfield.VideoSpinner.Library
         }
 
         //
+
+        private const double FRAME_RATE = 24.0;
+        private const double FRAME_DURATION = 1 / FRAME_RATE;
+        private const int ALPHA = 255;
 
         private readonly string workArea;
         private readonly Shuffler shuffler;
@@ -111,37 +116,104 @@ namespace Renfield.VideoSpinner.Library
         /// <param name="tracks">The track container that will hold the new track</param>
         /// <param name="imageFiles">The list of image files to add</param>
         /// <param name="duration">The total duration of the video track</param>
+        /// <param name="width">Frame image width</param>
+        /// <param name="height">Frame image height</param>
         /// <returns>The new video track</returns>
-        private ITrack CreateVideo(ITrackContainer tracks, IList<string> imageFiles, double duration)
+        private ITrack CreateVideo(ITrackContainer tracks, IList<string> imageFiles, double duration, int width,
+                                   int height)
         {
+            const double EFFECT_DURATION = 8 * FRAME_DURATION;
+
             var videoTrack = tracks.AddTrack();
 
             if (imageFiles.Any())
             {
+                imageFiles = shuffler.Shuffle(imageFiles).ToList();
                 var durations = shuffler.GetRandomizedDurations(duration, imageFiles.Count).ToList();
+                var durationSums = durations.RunningSum().ToList();
 
-                shuffler
-                    .Shuffle(imageFiles)
-                    .ToList()
-                    .Select((fileName, i) => videoTrack.AddImage(fileName, 0, durations[i]))
-                    .ToList();
+                imageFiles = CreateImageTimeline(imageFiles, duration, EFFECT_DURATION, durationSums).ToList();
+
+                // add noise to the images before adding them to the video track
+                foreach (var imageFile in imageFiles)
+                {
+                    var img = LoadImage(imageFile);
+                    img = AddNoise(img, width, height);
+
+                    videoTrack.AddImage(img, 0, EFFECT_DURATION);
+
+                    img.Dispose();
+                }
             }
 
             return videoTrack;
         }
 
-        /// <summary>
-        /// Adds an effect to a video clip
-        /// </summary>
-        /// <param name="group">The group containing the video clips</param>
-        /// <param name="clip">The clip to add the effect to</param>
-        /// <param name="duration">The duration of the effect</param>
-        /// <param name="effect">The actual effect</param>
-        private static void AddVideoEffect(ITransitionContainer group, IClip clip, double duration,
-                                           TransitionDefinition effect)
+        private static IEnumerable<string> CreateImageTimeline(IList<string> imageFiles, double duration,
+                                                               double effectDuration, IReadOnlyList<double> durationSums)
         {
-            group.AddTransition(clip.Offset - duration, duration, effect, true);
-            group.AddTransition(clip.Offset, duration, effect, false);
+            var current = 0.0;
+            var index = 0;
+
+            while (current <= duration)
+            {
+                yield return imageFiles[index];
+
+                current += effectDuration;
+                if (current > durationSums[index])
+                    index++;
+            }
+        }
+
+        private static Image LoadImage(string fileName)
+        {
+            return Image.FromFile(fileName);
+        }
+
+        private static Image AddNoise(Image img, int width, int height)
+        {
+            var noise = CreateNoiseImage(width, height);
+
+            using (var canvas = Graphics.FromImage(noise))
+            {
+                canvas.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                canvas.DrawImage(img, new Rectangle(0, 0, width, height), new Rectangle(0, 0, img.Width, img.Height),
+                    GraphicsUnit.Pixel);
+                canvas.Save();
+
+                return noise;
+            }
+        }
+
+        private static Image CreateNoiseImage(int width, int height)
+        {
+            var rnd = new Random();
+            var dotCount = width * height / 64;
+
+            var img = new Bitmap(width, height);
+
+            using (var drawing = Graphics.FromImage(img))
+            {
+                // paint the background
+                drawing.Clear(Color.FromArgb(0, 0, 0, 0));
+
+                // generate randomly-colored semi-transparent dots
+                for (var j = 0; j < dotCount; j++)
+                {
+                    var color = GetRandomColor(rnd);
+                    using (var brush = new SolidBrush(color))
+                        drawing.FillEllipse(brush, rnd.Next(width), rnd.Next(height), 8, 8);
+                }
+
+                drawing.Save();
+            }
+
+            return img;
+        }
+
+        private static Color GetRandomColor(Random rnd)
+        {
+            return Color.FromArgb(ALPHA, rnd.Next(255), rnd.Next(255), rnd.Next(255));
         }
 
         private void AddWatermark(ITrackContainer tracks, string watermarkText, int watermarkSize, Color watermarkColor,
@@ -159,7 +231,7 @@ namespace Renfield.VideoSpinner.Library
         private static Image CreateImage(string text, Font font, Color textColor, Color backColor)
         {
             //first, create a dummy bitmap just to get a graphics object
-            Image img = new Bitmap(1, 1);
+            var img = new Bitmap(1, 1);
             var drawing = Graphics.FromImage(img);
 
             //measure the string to see how big the image needs to be
@@ -197,8 +269,7 @@ namespace Renfield.VideoSpinner.Library
             var clip = videoTrack.AddImage(imageName, 0, duration);
             clip.AddEffect(0, duration, StandardEffects.CreateAlphaSetterRamp(0.5));
 
-            videoTrack.AddTransition(0,
-                duration,
+            videoTrack.AddTransition(0, duration,
                 StandardTransitions.CreateKey(KeyTransitionType.Alpha, null, null, null, null, null),
                 false);
         }

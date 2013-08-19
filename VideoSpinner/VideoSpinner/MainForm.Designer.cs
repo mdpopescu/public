@@ -41,6 +41,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.btnBrowse4 = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.pbStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.btnStart = new System.Windows.Forms.Button();
             this.colorStrip = new System.Windows.Forms.Panel();
@@ -51,7 +52,6 @@
             this.txtSounds = new System.Windows.Forms.TextBox();
             this.txtImages = new System.Windows.Forms.TextBox();
             this.txtCsvFile = new System.Windows.Forms.TextBox();
-            this.pbStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -186,6 +186,11 @@
             this.statusStrip1.TabIndex = 20;
             this.statusStrip1.Text = "statusStrip";
             // 
+            // pbStatus
+            // 
+            this.pbStatus.Name = "pbStatus";
+            this.pbStatus.Size = new System.Drawing.Size(100, 16);
+            // 
             // lblStatus
             // 
             this.lblStatus.Name = "lblStatus";
@@ -199,7 +204,7 @@
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(91, 31);
             this.btnStart.TabIndex = 13;
-            this.btnStart.Text = "Start";
+            this.btnStart.Text = "&Start";
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
@@ -289,11 +294,6 @@
             this.txtCsvFile.Size = new System.Drawing.Size(552, 20);
             this.txtCsvFile.TabIndex = 1;
             this.txtCsvFile.Text = global::Renfield.VideoSpinner.Properties.Settings.Default.csvFile;
-            // 
-            // pbStatus
-            // 
-            this.pbStatus.Name = "pbStatus";
-            this.pbStatus.Size = new System.Drawing.Size(100, 16);
             // 
             // MainForm
             // 
