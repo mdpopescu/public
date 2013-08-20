@@ -1,5 +1,5 @@
-﻿using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 
 namespace Renfield.Inventory.Data
 {
@@ -16,11 +16,8 @@ namespace Renfield.Inventory.Data
     public InventoryDB(string nameOrConnectionString)
       : base(nameOrConnectionString)
     {
-    }
-
-    public IDbTransaction CreateTransaction()
-    {
-      return Database.Connection.BeginTransaction();
+      var connection = ((IObjectContextAdapter) this).ObjectContext.Connection;
+      connection.Open();
     }
   }
 }

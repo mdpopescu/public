@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,7 +21,6 @@ namespace Renfield.Inventory.Tests.Services
     private List<Sale> sales;
     private List<SaleItem> saleItems;
     private List<Stock> stocks;
-    private Mock<IDbTransaction> transaction;
     private Mock<Repository> repository;
     private BusinessLogic sut;
 
@@ -53,10 +51,6 @@ namespace Renfield.Inventory.Tests.Services
           acquisitions.ForEach(FixItems);
           sales.ForEach(FixItems);
         });
-      transaction = new Mock<IDbTransaction>();
-      repository
-        .Setup(it => it.CreateTransaction())
-        .Returns(transaction.Object);
 
       sut = new BusinessLogic(() => repository.Object);
     }
@@ -384,30 +378,6 @@ namespace Renfield.Inventory.Tests.Services
         companies.Should().HaveCount(2);
         companies[1].Name.Should().Be("Google");
       }
-
-      [TestMethod]
-      public void CommitsTheTransaction()
-      {
-        companies.Add(new Company {Id = 1, Name = "Microsoft"});
-        products.Add(new Product {Id = 1, Name = "abc"});
-        products.Add(new Product {Id = 2, Name = "def", SalePrice = 12.34m});
-        stocks.Add(new Stock {Id = 1, ProductId = 1, Name = "abc", Quantity = 22.35m});
-
-        var model = new AcquisitionModel
-        {
-          CompanyName = "Microsoft",
-          Date = "2/3/2000",
-          Items = new[]
-          {
-            new AcquisitionItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
-            new AcquisitionItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
-          },
-        };
-
-        sut.AddAcquisition(model);
-
-        transaction.Verify(it => it.Commit());
-      }
     }
 
     [TestClass]
@@ -588,36 +558,6 @@ namespace Renfield.Inventory.Tests.Services
       }
 
       [TestMethod]
-      public void DoesNotCommitTheTransactionIfThereAreMissingProducts()
-      {
-        companies.Add(new Company {Id = 1, Name = "Microsoft"});
-        products.Add(new Product {Id = 1, Name = "abc", SalePrice = 12.34m});
-        stocks.Add(new Stock {Id = 1, ProductId = 1, Quantity = 22.35m});
-
-        var model = new SaleModel
-        {
-          CompanyName = "Microsoft",
-          Date = "2/3/2000",
-          Items = new[]
-          {
-            new SaleItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
-            new SaleItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
-          },
-        };
-
-        try
-        {
-          sut.AddSale(model);
-        }
-        catch (Exception)
-        {
-          // ignore
-        }
-
-        transaction.Verify(it => it.Commit(), Times.Never());
-      }
-
-      [TestMethod]
       public void ThrowsIfAnyQuantityIsInsufficient()
       {
         companies.Add(new Company {Id = 1, Name = "Microsoft"});
@@ -639,38 +579,6 @@ namespace Renfield.Inventory.Tests.Services
 
         Action Act = () => sut.AddSale(model);
         Act.ShouldThrow<Exception>().WithMessage("Insufficient quantity for product [def]");
-      }
-
-      [TestMethod]
-      public void DoesNotCommitTheTransactionIfAnyQuantityIsInsufficient()
-      {
-        companies.Add(new Company {Id = 1, Name = "Microsoft"});
-        products.Add(new Product {Id = 1, Name = "abc", SalePrice = 12.34m});
-        products.Add(new Product {Id = 2, Name = "def", SalePrice = 12.34m});
-        stocks.Add(new Stock {Id = 1, ProductId = 1, Quantity = 22.35m});
-        stocks.Add(new Stock {Id = 2, ProductId = 2, Quantity = 0.05m});
-
-        var model = new SaleModel
-        {
-          CompanyName = "Microsoft",
-          Date = "2/3/2000",
-          Items = new[]
-          {
-            new SaleItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
-            new SaleItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
-          },
-        };
-
-        try
-        {
-          sut.AddSale(model);
-        }
-        catch (Exception)
-        {
-          // ignore
-        }
-
-        transaction.Verify(it => it.Commit(), Times.Never());
       }
 
       [TestMethod]
@@ -696,27 +604,6 @@ namespace Renfield.Inventory.Tests.Services
 
         companies.Should().HaveCount(2);
         companies[1].Name.Should().Be("Google");
-      }
-
-      [TestMethod]
-      public void CommitsTheTransaction()
-      {
-        companies.Add(new Company {Id = 1, Name = "Microsoft"});
-        products.Add(new Product {Id = 1, Name = "abc", SalePrice = 5.50m});
-        stocks.Add(new Stock {Id = 1, ProductId = 1, Name = "abc", Quantity = 22.35m});
-        var model = new SaleModel
-        {
-          CompanyName = "Microsoft",
-          Date = "2/3/2000",
-          Items = new[]
-          {
-            new SaleItemModel {ProductName = "abc", Quantity = "1.23", Price = "6"},
-          },
-        };
-
-        sut.AddSale(model);
-
-        transaction.Verify(it => it.Commit());
       }
     }
 
