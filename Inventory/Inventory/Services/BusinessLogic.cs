@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Transactions;
 using Renfield.Inventory.Data;
 using Renfield.Inventory.Helpers;
 using Renfield.Inventory.Models;
@@ -50,7 +49,7 @@ namespace Renfield.Inventory.Services
     public void AddAcquisition(AcquisitionModel model)
     {
       using (var repository = dbFactory.Invoke())
-      using (var transaction = new TransactionScope())
+      using (var transaction = repository.CreateTransaction())
       {
         var productNames = model
           .Items
@@ -78,7 +77,7 @@ namespace Renfield.Inventory.Services
         }
         repository.SaveChanges();
 
-        transaction.Complete();
+        transaction.Commit();
 
         UpdateAllClients();
       }
@@ -109,7 +108,7 @@ namespace Renfield.Inventory.Services
     public void AddSale(SaleModel model)
     {
       using (var repository = dbFactory.Invoke())
-      using (var transaction = new TransactionScope())
+      using (var transaction = repository.CreateTransaction())
       {
         var productNames = model
           .Items
@@ -137,7 +136,7 @@ namespace Renfield.Inventory.Services
         }
         repository.SaveChanges();
 
-        transaction.Complete();
+        transaction.Commit();
 
         UpdateAllClients();
       }

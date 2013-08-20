@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Transactions;
 
 namespace Renfield.Inventory.Data
 {
@@ -18,6 +19,11 @@ namespace Renfield.Inventory.Data
     {
       var connection = ((IObjectContextAdapter) this).ObjectContext.Connection;
       connection.Open();
+    }
+
+    public TransactionBlock CreateTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+    {
+      return new TransactionScopeWrapper(isolationLevel);
     }
   }
 }

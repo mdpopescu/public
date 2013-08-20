@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Transactions;
 
 namespace Renfield.Inventory.Data
 {
@@ -14,5 +15,7 @@ namespace Renfield.Inventory.Data
     IDbSet<Stock> Stocks { get; set; }
 
     int SaveChanges();
+
+    TransactionBlock CreateTransaction(IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
   }
 }

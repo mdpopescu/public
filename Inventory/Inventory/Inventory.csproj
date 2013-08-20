@@ -133,6 +133,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Data\Entity.cs" />
     <Compile Include="Data\Item.cs" />
+    <Compile Include="Data\TransactionBlock.cs" />
+    <Compile Include="Data\TransactionScopeWrapper.cs" />
     <Compile Include="Helpers\KeyMap.cs" />
     <Compile Include="Helpers\KeyStruct.cs" />
     <Compile Include="Helpers\Memoizer.cs" />
