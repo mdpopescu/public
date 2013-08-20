@@ -1,6 +1,6 @@
 ﻿namespace Renfield.Inventory.Data
 {
-  public class SaleItem
+  public class SaleItem : Entity, Item
   {
     public int Id { get; set; }
     public int SaleId { get; set; }

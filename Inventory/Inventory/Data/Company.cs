@@ -2,7 +2,7 @@
 
 namespace Renfield.Inventory.Data
 {
-  public class Company
+  public class Company : Entity
   {
     public int Id { get; set; }
 

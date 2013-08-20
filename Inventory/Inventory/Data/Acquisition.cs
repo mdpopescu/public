@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Renfield.Inventory.Data
 {
-  public class Acquisition
+  public class Acquisition : Entity
   {
     public int Id { get; set; }
     public int CompanyId { get; set; }

@@ -49,6 +49,7 @@ namespace Renfield.Inventory.Services
     public void AddAcquisition(AcquisitionModel model)
     {
       using (var repository = dbFactory.Invoke())
+      using (var transaction = repository.CreateTransaction())
       {
         var productNames = model
           .Items
@@ -68,21 +69,15 @@ namespace Renfield.Inventory.Services
         repository.SaveChanges(); // this updates the ProductId field on the items
 
         // get the stock records for these products
-        var productIds = acquisition
-          .Items
-          .Select(it => it.ProductId)
-          .ToList();
-        var stocks = repository
-          .Stocks
-          .Where(it => productIds.Contains(it.ProductId))
-          .ToList();
-
+        var stocks = GetStocks(repository.Stocks, acquisition.Items).ToList();
         foreach (var acquisitionItem in acquisition.Items)
         {
           var item = acquisitionItem;
           Retry.Times(3, TimeSpan.FromMilliseconds(500), () => UpdateStock(repository, stocks, item));
         }
         repository.SaveChanges();
+
+        transaction.Commit();
 
         UpdateAllClients();
       }
@@ -133,15 +128,7 @@ namespace Renfield.Inventory.Services
         repository.SaveChanges(); // this updates the ProductId field on the items
 
         // get the stock records for these products
-        var productIds = sale
-          .Items
-          .Select(it => it.ProductId)
-          .ToList();
-        var stocks = repository
-          .Stocks
-          .Where(it => productIds.Contains(it.ProductId))
-          .ToList();
-
+        var stocks = GetStocks(repository.Stocks, sale.Items).ToList();
         foreach (var saleItem in sale.Items)
         {
           var item = saleItem;
@@ -172,13 +159,14 @@ namespace Renfield.Inventory.Services
       return new Acquisition
       {
         Company = repository.Companies.FirstOrDefault(it => it.Name == model.CompanyName)
-                  ?? repository.Companies.Add(new Company { Name = model.CompanyName }),
+                  ?? repository.Companies.Add(new Company {Name = model.CompanyName}),
         Date = model.Date.ParseDateNullable() ?? DateTime.Today,
         Items = items,
       };
     }
 
-    private static AcquisitionItem ToEntity(Repository repository, IEnumerable<Product> products, AcquisitionItemModel model)
+    private static AcquisitionItem ToEntity(Repository repository, IEnumerable<Product> products,
+                                            AcquisitionItemModel model)
     {
       if (!model.IsValid())
         return null;
@@ -186,7 +174,7 @@ namespace Renfield.Inventory.Services
       return new AcquisitionItem
       {
         Product = products.FirstOrDefault(it => it.Name == model.ProductName)
-                  ?? repository.Products.Add(new Product { Name = model.ProductName }),
+                  ?? repository.Products.Add(new Product {Name = model.ProductName}),
         Quantity = decimal.Parse(model.Quantity),
         Price = decimal.Parse(model.Price),
       };
@@ -231,7 +219,7 @@ namespace Renfield.Inventory.Services
       return new Sale
       {
         Company = repository.Companies.FirstOrDefault(it => it.Name == model.CompanyName)
-                  ?? repository.Companies.Add(new Company { Name = model.CompanyName }),
+                  ?? repository.Companies.Add(new Company {Name = model.CompanyName}),
         Date = model.Date.ParseDateNullable() ?? DateTime.Today,
         Items = items,
       };
@@ -245,7 +233,7 @@ namespace Renfield.Inventory.Services
       return new SaleItem
       {
         Product = products.FirstOrDefault(it => it.Name == model.ProductName)
-                  ?? repository.Products.Add(new Product { Name = model.ProductName }),
+                  ?? repository.Products.Add(new Product {Name = model.ProductName}),
         Quantity = decimal.Parse(model.Quantity),
         Price = decimal.Parse(model.Price),
       };
@@ -260,12 +248,24 @@ namespace Renfield.Inventory.Services
 
       var stock = stocks.FirstOrDefault(it => it.ProductId == productId);
       if (stock == null)
-          throw new Exception(string.Format("Unknown product [{0}]", productName));
+        throw new Exception(string.Format("Unknown product [{0}]", productName));
       if (stock.Quantity < newQuantity)
-          throw new Exception(string.Format("Insufficient quantity for product [{0}]", productName));
+        throw new Exception(string.Format("Insufficient quantity for product [{0}]", productName));
 
       stock.Quantity -= newQuantity;
       repository.SaveChanges();
+    }
+
+    private static IEnumerable<Stock> GetStocks<T>(IEnumerable<Stock> stocks, IEnumerable<T> items)
+      where T : Item
+    {
+      var productIds = items
+        .Select(it => it.ProductId)
+        .ToList();
+
+      return stocks
+        .Where(it => productIds.Contains(it.ProductId))
+        .ToList();
     }
 
     private static void UpdateAllClients()
