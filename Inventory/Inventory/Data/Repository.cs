@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Common;
+using System.Data;
 using System.Data.Entity;
 
 namespace Renfield.Inventory.Data
@@ -13,8 +13,8 @@ namespace Renfield.Inventory.Data
     IDbSet<Sale> Sales { get; set; }
     IDbSet<SaleItem> SaleItems { get; set; }
     IDbSet<Stock> Stocks { get; set; }
-    
+
     int SaveChanges();
-    DbTransaction CreateTransaction();
+    IDbTransaction CreateTransaction();
   }
 }

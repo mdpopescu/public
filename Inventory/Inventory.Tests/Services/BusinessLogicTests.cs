@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -51,6 +52,9 @@ namespace Renfield.Inventory.Tests.Services
           acquisitions.ForEach(FixItems);
           sales.ForEach(FixItems);
         });
+      repository
+        .Setup(it => it.CreateTransaction())
+        .Returns(new Mock<IDbTransaction>().Object);
 
       sut = new BusinessLogic(() => repository.Object);
     }
@@ -61,14 +65,42 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void ReturnsStockModels()
       {
-        stocks.Add(new Stock { Name = "Hammer", Quantity = 1.00m, SalePrice = 3.45m, PurchaseValue = 5.99m, SaleValue = 7.99m });
-        stocks.Add(new Stock { Name = "Nails Pack x100", Quantity = 2.00m, SalePrice = null, PurchaseValue = 0.02m, SaleValue = 0.05m });
+        stocks.Add(new Stock
+        {
+          Name = "Hammer",
+          Quantity = 1.00m,
+          SalePrice = 3.45m,
+          PurchaseValue = 5.99m,
+          SaleValue = 7.99m
+        });
+        stocks.Add(new Stock
+        {
+          Name = "Nails Pack x100",
+          Quantity = 2.00m,
+          SalePrice = null,
+          PurchaseValue = 0.02m,
+          SaleValue = 0.05m
+        });
 
         var result = sut.GetStocks().ToList();
 
         result.Should().HaveCount(2);
-        result[0].ShouldBeEquivalentTo(new StockModel { Name = "Hammer", Quantity = "1.00", RRP = "3.45", PurchaseValue = "5.99", SaleValue = "7.99" });
-        result[1].ShouldBeEquivalentTo(new StockModel { Name = "Nails Pack x100", Quantity = "2.00", RRP = "", PurchaseValue = "0.02", SaleValue = "0.05" });
+        result[0].ShouldBeEquivalentTo(new StockModel
+        {
+          Name = "Hammer",
+          Quantity = "1.00",
+          RRP = "3.45",
+          PurchaseValue = "5.99",
+          SaleValue = "7.99"
+        });
+        result[1].ShouldBeEquivalentTo(new StockModel
+        {
+          Name = "Nails Pack x100",
+          Quantity = "2.00",
+          RRP = "",
+          PurchaseValue = "0.02",
+          SaleValue = "0.05"
+        });
       }
     }
 
@@ -82,22 +114,22 @@ namespace Renfield.Inventory.Tests.Services
         {
           new Acquisition
           {
-            Company = new Company { Name = "Microsoft" },
+            Company = new Company {Name = "Microsoft"},
             Date = new DateTime(2000, 3, 4),
             Items = new[]
             {
-              new AcquisitionItem { Product = new Product { Name = "Hammer" }, Quantity = 1.23m, Price = 4.56m },
-              new AcquisitionItem { Product = new Product { Name = "Saw" }, Quantity = 20.00m, Price = 15.99m },
+              new AcquisitionItem {Product = new Product {Name = "Hammer"}, Quantity = 1.23m, Price = 4.56m},
+              new AcquisitionItem {Product = new Product {Name = "Saw"}, Quantity = 20.00m, Price = 15.99m},
             }
           },
           new Acquisition
           {
-            Company = new Company { Name = "Borland" },
+            Company = new Company {Name = "Borland"},
             Date = new DateTime(2000, 5, 6),
             Items = new[]
             {
-              new AcquisitionItem { Product = new Product { Name = "Saw" }, Quantity = 10, Price = 12.99m },
-              new AcquisitionItem { Product = new Product { Name = "Toolkit" }, Quantity = 10, Price = 29.99m },
+              new AcquisitionItem {Product = new Product {Name = "Saw"}, Quantity = 10, Price = 12.99m},
+              new AcquisitionItem {Product = new Product {Name = "Toolkit"}, Quantity = 10, Price = 29.99m},
             }
           },
         });
@@ -105,9 +137,11 @@ namespace Renfield.Inventory.Tests.Services
         var result = sut.GetAcquisitions().ToList();
 
         result.Should().HaveCount(2);
-        result[0].ShouldBeEquivalentTo(new AcquisitionModel { CompanyName = "Microsoft", Date = "03/04/2000", Value = "325.41" },
+        result[0].ShouldBeEquivalentTo(
+          new AcquisitionModel {CompanyName = "Microsoft", Date = "03/04/2000", Value = "325.41"},
           options => options.Excluding(m => m.Items));
-        result[1].ShouldBeEquivalentTo(new AcquisitionModel { CompanyName = "Borland", Date = "05/06/2000", Value = "429.80" },
+        result[1].ShouldBeEquivalentTo(
+          new AcquisitionModel {CompanyName = "Borland", Date = "05/06/2000", Value = "429.80"},
           options => options.Excluding(m => m.Items));
       }
     }
@@ -120,15 +154,39 @@ namespace Renfield.Inventory.Tests.Services
       {
         acquisitionItems.AddRange(new[]
         {
-          new AcquisitionItem { AcquisitionId = 1, Product = new Product { Name = "Hammer" }, Quantity = 1.23m, Price = 4.56m },
-          new AcquisitionItem { AcquisitionId = 1, Product = new Product { Name = "Saw" }, Quantity = 20.00m, Price = 15.99m },
+          new AcquisitionItem
+          {
+            AcquisitionId = 1,
+            Product = new Product {Name = "Hammer"},
+            Quantity = 1.23m,
+            Price = 4.56m
+          },
+          new AcquisitionItem
+          {
+            AcquisitionId = 1,
+            Product = new Product {Name = "Saw"},
+            Quantity = 20.00m,
+            Price = 15.99m
+          },
         });
 
         var result = sut.GetAcquisitionItems(1).ToList();
 
         result.Should().HaveCount(2);
-        result[0].ShouldBeEquivalentTo(new AcquisitionItemModel { ProductName = "Hammer", Quantity = "1.23", Price = "4.56", Value = "5.61" });
-        result[1].ShouldBeEquivalentTo(new AcquisitionItemModel { ProductName = "Saw", Quantity = "20.00", Price = "15.99", Value = "319.80" });
+        result[0].ShouldBeEquivalentTo(new AcquisitionItemModel
+        {
+          ProductName = "Hammer",
+          Quantity = "1.23",
+          Price = "4.56",
+          Value = "5.61"
+        });
+        result[1].ShouldBeEquivalentTo(new AcquisitionItemModel
+        {
+          ProductName = "Saw",
+          Quantity = "20.00",
+          Price = "15.99",
+          Value = "319.80"
+        });
       }
     }
 
@@ -138,17 +196,17 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void AddsTheCorrectValuesToTheRepository()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
-        products.Add(new Product { Id = 1, Name = "abc" });
-        products.Add(new Product { Id = 2, Name = "def" });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
+        products.Add(new Product {Id = 1, Name = "abc"});
+        products.Add(new Product {Id = 2, Name = "def"});
         var model = new AcquisitionModel
         {
           CompanyName = "Microsoft",
           Date = "2/3/2000",
           Items = new[]
           {
-            new AcquisitionItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
-            new AcquisitionItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+            new AcquisitionItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
+            new AcquisitionItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
           },
         };
 
@@ -159,12 +217,24 @@ namespace Renfield.Inventory.Tests.Services
         acquisition.ShouldBeEquivalentTo(new Acquisition
         {
           Id = 1,
-          Company = new Company { Id = 1, Name = "Microsoft" },
+          Company = new Company {Id = 1, Name = "Microsoft"},
           Date = new DateTime(2000, 2, 3),
           Items = new Collection<AcquisitionItem>
           {
-            new AcquisitionItem { Product = new Product { Id = 1, Name = "abc" }, ProductId = 1, Quantity = 1.23m, Price = 4.00m, },
-            new AcquisitionItem { Product = new Product { Id = 2, Name = "def" }, ProductId = 2, Quantity = 5.67m, Price = 8.00m, }
+            new AcquisitionItem
+            {
+              Product = new Product {Id = 1, Name = "abc"},
+              ProductId = 1,
+              Quantity = 1.23m,
+              Price = 4.00m,
+            },
+            new AcquisitionItem
+            {
+              Product = new Product {Id = 2, Name = "def"},
+              ProductId = 2,
+              Quantity = 5.67m,
+              Price = 8.00m,
+            }
           }
         });
         repository.Verify(it => it.SaveChanges());
@@ -173,18 +243,18 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void IgnoresItemsWithInvalidFields()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
-        products.Add(new Product { Id = 4, Name = "d" });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
+        products.Add(new Product {Id = 4, Name = "d"});
         var model = new AcquisitionModel
         {
           CompanyName = "Microsoft",
           Date = "1/1/2000",
           Items = new[]
           {
-            new AcquisitionItemModel { ProductName = null, Quantity = "1", Price = "1" },
-            new AcquisitionItemModel { ProductName = "b", Quantity = "", Price = "2" },
-            new AcquisitionItemModel { ProductName = "c", Quantity = "3", Price = "" },
-            new AcquisitionItemModel { ProductName = "d", Quantity = "4", Price = "4" },
+            new AcquisitionItemModel {ProductName = null, Quantity = "1", Price = "1"},
+            new AcquisitionItemModel {ProductName = "b", Quantity = "", Price = "2"},
+            new AcquisitionItemModel {ProductName = "c", Quantity = "3", Price = ""},
+            new AcquisitionItemModel {ProductName = "d", Quantity = "4", Price = "4"},
           },
         };
 
@@ -195,11 +265,17 @@ namespace Renfield.Inventory.Tests.Services
         acquisition.ShouldBeEquivalentTo(new Acquisition
         {
           Id = 1,
-          Company = new Company { Id = 1, Name = "Microsoft" },
+          Company = new Company {Id = 1, Name = "Microsoft"},
           Date = new DateTime(2000, 1, 1),
           Items = new Collection<AcquisitionItem>
           {
-            new AcquisitionItem { Product = new Product { Id = 4, Name = "d" }, ProductId = 4, Quantity = 4.00m, Price = 4.00m, },
+            new AcquisitionItem
+            {
+              Product = new Product {Id = 4, Name = "d"},
+              ProductId = 4,
+              Quantity = 4.00m,
+              Price = 4.00m,
+            },
           }
         });
       }
@@ -207,16 +283,16 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void DoesNotAddTheRootObjectIfAllItemsAreInvalid()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
         var model = new AcquisitionModel
         {
           CompanyName = "Microsoft",
           Date = "1/1/2000",
           Items = new[]
           {
-            new AcquisitionItemModel { ProductName = null, Quantity = "1", Price = "1" },
-            new AcquisitionItemModel { ProductName = "b", Quantity = "", Price = "2" },
-            new AcquisitionItemModel { ProductName = "c", Quantity = "3", Price = "" },
+            new AcquisitionItemModel {ProductName = null, Quantity = "1", Price = "1"},
+            new AcquisitionItemModel {ProductName = "b", Quantity = "", Price = "2"},
+            new AcquisitionItemModel {ProductName = "c", Quantity = "3", Price = ""},
           },
         };
 
@@ -228,10 +304,10 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void UpdatesTheStock()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
-        products.Add(new Product { Id = 1, Name = "abc" });
-        products.Add(new Product { Id = 2, Name = "def", SalePrice = 12.34m });
-        stocks.Add(new Stock { Id = 1, ProductId = 1, Name = "abc", Quantity = 22.35m });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
+        products.Add(new Product {Id = 1, Name = "abc"});
+        products.Add(new Product {Id = 2, Name = "def", SalePrice = 12.34m});
+        stocks.Add(new Stock {Id = 1, ProductId = 1, Name = "abc", Quantity = 22.35m});
 
         var model = new AcquisitionModel
         {
@@ -239,8 +315,8 @@ namespace Renfield.Inventory.Tests.Services
           Date = "2/3/2000",
           Items = new[]
           {
-            new AcquisitionItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
-            new AcquisitionItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+            new AcquisitionItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
+            new AcquisitionItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
           },
         };
 
@@ -264,9 +340,9 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void AddsTheMissingProducts()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
-        products.Add(new Product { Id = 1, Name = "abc", SalePrice = 12.34m });
-        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
+        products.Add(new Product {Id = 1, Name = "abc", SalePrice = 12.34m});
+        stocks.Add(new Stock {Id = 1, ProductId = 1, Quantity = 22.35m});
 
         var model = new AcquisitionModel
         {
@@ -274,8 +350,8 @@ namespace Renfield.Inventory.Tests.Services
           Date = "2/3/2000",
           Items = new[]
           {
-            new AcquisitionItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
-            new AcquisitionItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+            new AcquisitionItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
+            new AcquisitionItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
           },
         };
 
@@ -289,15 +365,15 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void AddsTheCompanyIfNeeded()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
         var model = new AcquisitionModel
         {
           CompanyName = "Google",
           Date = "2/3/2000",
           Items = new[]
           {
-            new AcquisitionItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
-            new AcquisitionItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+            new AcquisitionItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
+            new AcquisitionItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
           },
         };
 
@@ -318,22 +394,22 @@ namespace Renfield.Inventory.Tests.Services
         {
           new Sale
           {
-            Company = new Company { Name = "Microsoft" },
+            Company = new Company {Name = "Microsoft"},
             Date = new DateTime(2000, 3, 4),
             Items = new[]
             {
-              new SaleItem { Product = new Product { Name = "Hammer" }, Quantity = 1.23m, Price = 4.56m },
-              new SaleItem { Product = new Product { Name = "Saw" }, Quantity = 20.00m, Price = 15.99m },
+              new SaleItem {Product = new Product {Name = "Hammer"}, Quantity = 1.23m, Price = 4.56m},
+              new SaleItem {Product = new Product {Name = "Saw"}, Quantity = 20.00m, Price = 15.99m},
             }
           },
           new Sale
           {
-            Company = new Company { Name = "Borland" },
+            Company = new Company {Name = "Borland"},
             Date = new DateTime(2000, 5, 6),
             Items = new[]
             {
-              new SaleItem { Product = new Product { Name = "Saw" }, Quantity = 10, Price = 12.99m },
-              new SaleItem { Product = new Product { Name = "Toolkit" }, Quantity = 10, Price = 29.99m },
+              new SaleItem {Product = new Product {Name = "Saw"}, Quantity = 10, Price = 12.99m},
+              new SaleItem {Product = new Product {Name = "Toolkit"}, Quantity = 10, Price = 29.99m},
             }
           },
         });
@@ -341,9 +417,9 @@ namespace Renfield.Inventory.Tests.Services
         var result = sut.GetSales().ToList();
 
         result.Should().HaveCount(2);
-        result[0].ShouldBeEquivalentTo(new SaleModel { CompanyName = "Microsoft", Date = "03/04/2000", Value = "325.41" },
+        result[0].ShouldBeEquivalentTo(new SaleModel {CompanyName = "Microsoft", Date = "03/04/2000", Value = "325.41"},
           options => options.Excluding(m => m.Items));
-        result[1].ShouldBeEquivalentTo(new SaleModel { CompanyName = "Borland", Date = "05/06/2000", Value = "429.80" },
+        result[1].ShouldBeEquivalentTo(new SaleModel {CompanyName = "Borland", Date = "05/06/2000", Value = "429.80"},
           options => options.Excluding(m => m.Items));
       }
     }
@@ -356,15 +432,27 @@ namespace Renfield.Inventory.Tests.Services
       {
         saleItems.AddRange(new[]
         {
-          new SaleItem { SaleId = 1, Product = new Product { Name = "Hammer" }, Quantity = 1.23m, Price = 4.56m },
-          new SaleItem { SaleId = 1, Product = new Product { Name = "Saw" }, Quantity = 20.00m, Price = 15.99m },
+          new SaleItem {SaleId = 1, Product = new Product {Name = "Hammer"}, Quantity = 1.23m, Price = 4.56m},
+          new SaleItem {SaleId = 1, Product = new Product {Name = "Saw"}, Quantity = 20.00m, Price = 15.99m},
         });
 
         var result = sut.GetSaleItems(1).ToList();
 
         result.Should().HaveCount(2);
-        result[0].ShouldBeEquivalentTo(new SaleItemModel { ProductName = "Hammer", Quantity = "1.23", Price = "4.56", Value = "5.61" });
-        result[1].ShouldBeEquivalentTo(new SaleItemModel { ProductName = "Saw", Quantity = "20.00", Price = "15.99", Value = "319.80" });
+        result[0].ShouldBeEquivalentTo(new SaleItemModel
+        {
+          ProductName = "Hammer",
+          Quantity = "1.23",
+          Price = "4.56",
+          Value = "5.61"
+        });
+        result[1].ShouldBeEquivalentTo(new SaleItemModel
+        {
+          ProductName = "Saw",
+          Quantity = "20.00",
+          Price = "15.99",
+          Value = "319.80"
+        });
       }
     }
 
@@ -374,17 +462,19 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void AddsTheCorrectValuesToTheRepository()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
-        products.Add(new Product { Id = 1, Name = "abc" });
-        products.Add(new Product { Id = 2, Name = "def" });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
+        products.Add(new Product {Id = 1, Name = "abc"});
+        products.Add(new Product {Id = 2, Name = "def"});
+        stocks.Add(new Stock {Id = 1, ProductId = 1, Quantity = 22.35m});
+        stocks.Add(new Stock {Id = 2, ProductId = 2, Quantity = 10.05m});
         var model = new SaleModel
         {
           CompanyName = "Microsoft",
           Date = "2/3/2000",
           Items = new[]
           {
-            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
-            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+            new SaleItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
+            new SaleItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
           },
         };
 
@@ -395,12 +485,12 @@ namespace Renfield.Inventory.Tests.Services
         sale.ShouldBeEquivalentTo(new Sale
         {
           Id = 1,
-          Company = new Company { Id = 1, Name = "Microsoft" },
+          Company = new Company {Id = 1, Name = "Microsoft"},
           Date = new DateTime(2000, 2, 3),
           Items = new Collection<SaleItem>
           {
-            new SaleItem { Product = new Product { Id = 1, Name = "abc" }, ProductId = 1, Quantity = 1.23m, Price = 4.00m, },
-            new SaleItem { Product = new Product { Id = 2, Name = "def" }, ProductId = 2, Quantity = 5.67m, Price = 8.00m, }
+            new SaleItem {Product = new Product {Id = 1, Name = "abc"}, ProductId = 1, Quantity = 1.23m, Price = 4.00m,},
+            new SaleItem {Product = new Product {Id = 2, Name = "def"}, ProductId = 2, Quantity = 5.67m, Price = 8.00m,}
           }
         });
         repository.Verify(it => it.SaveChanges());
@@ -409,16 +499,16 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void DoesNotAddTheRootObjectIfAllItemsAreInvalid()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
         var model = new SaleModel
         {
           CompanyName = "Microsoft",
           Date = "1/1/2000",
           Items = new[]
           {
-            new SaleItemModel { ProductName = null, Quantity = "1", Price = "1" },
-            new SaleItemModel { ProductName = "b", Quantity = "", Price = "2" },
-            new SaleItemModel { ProductName = "c", Quantity = "3", Price = "" },
+            new SaleItemModel {ProductName = null, Quantity = "1", Price = "1"},
+            new SaleItemModel {ProductName = "b", Quantity = "", Price = "2"},
+            new SaleItemModel {ProductName = "c", Quantity = "3", Price = ""},
           },
         };
 
@@ -430,17 +520,16 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void UpdatesTheStock()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
-        products.Add(new Product { Id = 1, Name = "abc", SalePrice = 5.50m });
-        stocks.Add(new Stock { Id = 1, ProductId = 1, Name = "abc", Quantity = 22.35m });
-
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
+        products.Add(new Product {Id = 1, Name = "abc", SalePrice = 5.50m});
+        stocks.Add(new Stock {Id = 1, ProductId = 1, Name = "abc", Quantity = 22.35m});
         var model = new SaleModel
         {
           CompanyName = "Microsoft",
           Date = "2/3/2000",
           Items = new[]
           {
-            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "6" },
+            new SaleItemModel {ProductName = "abc", Quantity = "1.23", Price = "6"},
           },
         };
 
@@ -453,9 +542,9 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void ThrowsIfThereAreMissingProducts()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
-        products.Add(new Product { Id = 1, Name = "abc", SalePrice = 12.34m });
-        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
+        products.Add(new Product {Id = 1, Name = "abc", SalePrice = 12.34m});
+        stocks.Add(new Stock {Id = 1, ProductId = 1, Quantity = 22.35m});
 
         var model = new SaleModel
         {
@@ -463,8 +552,8 @@ namespace Renfield.Inventory.Tests.Services
           Date = "2/3/2000",
           Items = new[]
           {
-            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
-            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+            new SaleItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
+            new SaleItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
           },
         };
 
@@ -475,9 +564,9 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void DoesNotChangeAnyQuantitiesIfThereAreMissingProducts()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
-        products.Add(new Product { Id = 1, Name = "abc", SalePrice = 12.34m });
-        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
+        products.Add(new Product {Id = 1, Name = "abc", SalePrice = 12.34m});
+        stocks.Add(new Stock {Id = 1, ProductId = 1, Quantity = 22.35m});
 
         var model = new SaleModel
         {
@@ -485,8 +574,8 @@ namespace Renfield.Inventory.Tests.Services
           Date = "2/3/2000",
           Items = new[]
           {
-            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
-            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+            new SaleItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
+            new SaleItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
           },
         };
 
@@ -505,11 +594,11 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void ThrowsIfAnyQuantityIsInsufficient()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
-        products.Add(new Product { Id = 1, Name = "abc", SalePrice = 12.34m });
-        products.Add(new Product { Id = 2, Name = "def", SalePrice = 12.34m });
-        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
-        stocks.Add(new Stock { Id = 2, ProductId = 2, Quantity = 0.05m });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
+        products.Add(new Product {Id = 1, Name = "abc", SalePrice = 12.34m});
+        products.Add(new Product {Id = 2, Name = "def", SalePrice = 12.34m});
+        stocks.Add(new Stock {Id = 1, ProductId = 1, Quantity = 22.35m});
+        stocks.Add(new Stock {Id = 2, ProductId = 2, Quantity = 0.05m});
 
         var model = new SaleModel
         {
@@ -517,8 +606,8 @@ namespace Renfield.Inventory.Tests.Services
           Date = "2/3/2000",
           Items = new[]
           {
-            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
-            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+            new SaleItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
+            new SaleItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
           },
         };
 
@@ -529,11 +618,11 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void DoesNotChangeAnyQuantitiesIfAnyQuantityIsInsufficient()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
-        products.Add(new Product { Id = 1, Name = "abc", SalePrice = 12.34m });
-        products.Add(new Product { Id = 2, Name = "def", SalePrice = 12.34m });
-        stocks.Add(new Stock { Id = 1, ProductId = 1, Quantity = 22.35m });
-        stocks.Add(new Stock { Id = 2, ProductId = 2, Quantity = 0.05m });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
+        products.Add(new Product {Id = 1, Name = "abc", SalePrice = 12.34m});
+        products.Add(new Product {Id = 2, Name = "def", SalePrice = 12.34m});
+        stocks.Add(new Stock {Id = 1, ProductId = 1, Quantity = 22.35m});
+        stocks.Add(new Stock {Id = 2, ProductId = 2, Quantity = 0.05m});
 
         var model = new SaleModel
         {
@@ -541,8 +630,8 @@ namespace Renfield.Inventory.Tests.Services
           Date = "2/3/2000",
           Items = new[]
           {
-            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
-            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+            new SaleItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
+            new SaleItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
           },
         };
 
@@ -562,15 +651,19 @@ namespace Renfield.Inventory.Tests.Services
       [TestMethod]
       public void AddsTheCompanyIfNeeded()
       {
-        companies.Add(new Company { Id = 1, Name = "Microsoft" });
+        companies.Add(new Company {Id = 1, Name = "Microsoft"});
+        products.Add(new Product {Id = 1, Name = "abc", SalePrice = 1.23m});
+        products.Add(new Product {Id = 2, Name = "def", SalePrice = 1.23m});
+        stocks.Add(new Stock {Id = 1, ProductId = 1, Quantity = 22.35m});
+        stocks.Add(new Stock {Id = 2, ProductId = 2, Quantity = 10.05m});
         var model = new SaleModel
         {
           CompanyName = "Google",
           Date = "2/3/2000",
           Items = new[]
           {
-            new SaleItemModel { ProductName = "abc", Quantity = "1.23", Price = "4" },
-            new SaleItemModel { ProductName = "def", Quantity = "5.67", Price = "8" },
+            new SaleItemModel {ProductName = "abc", Quantity = "1.23", Price = "4"},
+            new SaleItemModel {ProductName = "def", Quantity = "5.67", Price = "8"},
           },
         };
 

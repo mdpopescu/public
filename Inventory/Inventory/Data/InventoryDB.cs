@@ -1,4 +1,4 @@
-﻿using System.Data.Common;
+﻿using System.Data;
 using System.Data.Entity;
 
 namespace Renfield.Inventory.Data
@@ -18,7 +18,7 @@ namespace Renfield.Inventory.Data
     {
     }
 
-    public DbTransaction CreateTransaction()
+    public IDbTransaction CreateTransaction()
     {
       return Database.Connection.BeginTransaction();
     }
