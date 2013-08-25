@@ -28,8 +28,6 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.label1 = new System.Windows.Forms.Label();
-      this.btnBrowse = new System.Windows.Forms.Button();
       this.menuStrip = new System.Windows.Forms.MenuStrip();
       this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,29 +39,8 @@
       this.label3 = new System.Windows.Forms.Label();
       this.txtMinWordLength = new System.Windows.Forms.TextBox();
       this.txtText = new System.Windows.Forms.TextBox();
-      this.txtWordlist = new System.Windows.Forms.TextBox();
       this.menuStrip.SuspendLayout();
       this.SuspendLayout();
-      // 
-      // label1
-      // 
-      this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(13, 39);
-      this.label1.Name = "label1";
-      this.label1.Size = new System.Drawing.Size(48, 13);
-      this.label1.TabIndex = 0;
-      this.label1.Text = "Word list";
-      // 
-      // btnBrowse
-      // 
-      this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnBrowse.Location = new System.Drawing.Point(566, 34);
-      this.btnBrowse.Name = "btnBrowse";
-      this.btnBrowse.Size = new System.Drawing.Size(75, 23);
-      this.btnBrowse.TabIndex = 2;
-      this.btnBrowse.Text = "Browse...";
-      this.btnBrowse.UseVisualStyleBackColor = true;
-      this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
       // 
       // menuStrip
       // 
@@ -109,7 +86,7 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(13, 66);
+      this.label2.Location = new System.Drawing.Point(13, 50);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(28, 13);
       this.label2.TabIndex = 4;
@@ -118,7 +95,7 @@
       // btnGenerate
       // 
       this.btnGenerate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnGenerate.Location = new System.Drawing.Point(566, 61);
+      this.btnGenerate.Location = new System.Drawing.Point(566, 45);
       this.btnGenerate.Name = "btnGenerate";
       this.btnGenerate.Size = new System.Drawing.Size(75, 23);
       this.btnGenerate.TabIndex = 6;
@@ -131,19 +108,19 @@
       this.txtOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.txtOutput.Location = new System.Drawing.Point(13, 96);
+      this.txtOutput.Location = new System.Drawing.Point(13, 73);
       this.txtOutput.Multiline = true;
       this.txtOutput.Name = "txtOutput";
       this.txtOutput.ReadOnly = true;
       this.txtOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-      this.txtOutput.Size = new System.Drawing.Size(628, 155);
+      this.txtOutput.Size = new System.Drawing.Size(628, 178);
       this.txtOutput.TabIndex = 7;
       // 
       // label3
       // 
       this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label3.AutoSize = true;
-      this.label3.Location = new System.Drawing.Point(433, 66);
+      this.label3.Location = new System.Drawing.Point(433, 50);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(82, 13);
       this.label3.TabIndex = 8;
@@ -153,7 +130,7 @@
       // 
       this.txtMinWordLength.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.txtMinWordLength.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Renfield.Anagrams.Properties.Settings.Default, "MinWordLength", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-      this.txtMinWordLength.Location = new System.Drawing.Point(521, 63);
+      this.txtMinWordLength.Location = new System.Drawing.Point(521, 47);
       this.txtMinWordLength.Name = "txtMinWordLength";
       this.txtMinWordLength.Size = new System.Drawing.Size(38, 20);
       this.txtMinWordLength.TabIndex = 9;
@@ -165,22 +142,11 @@
       this.txtText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.txtText.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Renfield.Anagrams.Properties.Settings.Default, "Text", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-      this.txtText.Location = new System.Drawing.Point(67, 63);
+      this.txtText.Location = new System.Drawing.Point(67, 47);
       this.txtText.Name = "txtText";
       this.txtText.Size = new System.Drawing.Size(360, 20);
       this.txtText.TabIndex = 5;
       this.txtText.Text = global::Renfield.Anagrams.Properties.Settings.Default.Text;
-      // 
-      // txtWordlist
-      // 
-      this.txtWordlist.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.txtWordlist.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Renfield.Anagrams.Properties.Settings.Default, "Wordlist", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-      this.txtWordlist.Location = new System.Drawing.Point(67, 36);
-      this.txtWordlist.Name = "txtWordlist";
-      this.txtWordlist.Size = new System.Drawing.Size(493, 20);
-      this.txtWordlist.TabIndex = 1;
-      this.txtWordlist.Text = global::Renfield.Anagrams.Properties.Settings.Default.Wordlist;
       // 
       // MainForm
       // 
@@ -193,9 +159,6 @@
       this.Controls.Add(this.btnGenerate);
       this.Controls.Add(this.txtText);
       this.Controls.Add(this.label2);
-      this.Controls.Add(this.btnBrowse);
-      this.Controls.Add(this.txtWordlist);
-      this.Controls.Add(this.label1);
       this.Controls.Add(this.menuStrip);
       this.MainMenuStrip = this.menuStrip;
       this.MinimumSize = new System.Drawing.Size(600, 300);
@@ -211,9 +174,6 @@
 
     #endregion
 
-    private System.Windows.Forms.Label label1;
-    private System.Windows.Forms.TextBox txtWordlist;
-    private System.Windows.Forms.Button btnBrowse;
     private System.Windows.Forms.MenuStrip menuStrip;
     private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;

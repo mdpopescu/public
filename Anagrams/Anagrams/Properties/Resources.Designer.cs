@@ -61,22 +61,91 @@ namespace Renfield.Anagrams.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to From http://wordlist.sourceforge.net/scowl-readme:
-        ///
-        ///The collective work is Copyright 2000-2011 by Kevin Atkinson as well
-        ///as any of the copyrights mentioned below:
-        ///
-        ///  Copyright 2000-2011 by Kevin Atkinson
-        ///
-        ///  Permission to use, copy, modify, distribute and sell these word
-        ///  lists, the associated scripts, the output created from the scripts,
-        ///  and its documentation for any purpose is hereby granted without fee,
-        ///  provided that the above copyright notice appears in all copies and
-        ///  that both that cop [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Algorithm from http://stackoverflow.com/a/1924561/31793
+        ///Word list from http://www.puzzlers.org/pub/wordlists/unixdict.txt
+        ///.
         /// </summary>
         internal static string ExternalResources {
             get {
                 return ResourceManager.GetString("ExternalResources", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 10th
+        ///1st
+        ///2nd
+        ///3rd
+        ///4th
+        ///5th
+        ///6th
+        ///7th
+        ///8th
+        ///9th
+        ///a
+        ///a&amp;m
+        ///a&amp;p
+        ///a&apos;s
+        ///aaa
+        ///aaas
+        ///aarhus
+        ///aaron
+        ///aau
+        ///aba
+        ///ababa
+        ///aback
+        ///abacus
+        ///abalone
+        ///abandon
+        ///abase
+        ///abash
+        ///abate
+        ///abater
+        ///abbas
+        ///abbe
+        ///abbey
+        ///abbot
+        ///abbott
+        ///abbreviate
+        ///abc
+        ///abdicate
+        ///abdomen
+        ///abdominal
+        ///abduct
+        ///abe
+        ///abed
+        ///abel
+        ///abelian
+        ///abelson
+        ///aberdeen
+        ///abernathy
+        ///aberrant
+        ///aberrate
+        ///abet
+        ///abetted
+        ///abetting
+        ///abeyance
+        ///abeyant
+        ///abhorred
+        ///abhorrent
+        ///abide
+        ///abidjan
+        ///abigail
+        ///abject
+        ///ablate
+        ///ablaze
+        ///able
+        ///ablution
+        ///abner
+        ///abnormal
+        ///abo
+        ///aboard
+        ///abode
+        ///aboli [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string WordsList {
+            get {
+                return ResourceManager.GetString("WordsList", resourceCulture);
             }
         }
     }

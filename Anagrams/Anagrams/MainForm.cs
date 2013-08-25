@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Renfield.Anagrams.Properties;
@@ -17,12 +16,12 @@ namespace Renfield.Anagrams
 
     private volatile bool cancelRequested;
 
-    private static Node LoadDictionary(string fileName)
+    private static Node LoadDictionary(string wordlist)
     {
       var result = new Node();
 
-      File
-        .ReadAllLines(fileName)
+      wordlist
+        .Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
         .Select(word => word.Trim().ToLowerInvariant())
         .ToList()
         .ForEach(result.Add);
@@ -32,9 +31,11 @@ namespace Renfield.Anagrams
 
     //
 
+    private Node dictionary;
+
     private void MainForm_Load(object sender, EventArgs e)
     {
-      //
+      dictionary = LoadDictionary(Resources.WordsList);
     }
 
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -55,16 +56,6 @@ namespace Renfield.Anagrams
       }
     }
 
-    private void btnBrowse_Click(object sender, EventArgs e)
-    {
-      using (var dlg = new OpenFileDialog())
-      {
-        dlg.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-        if (dlg.ShowDialog() == DialogResult.OK)
-          txtWordlist.Text = dlg.FileName;
-      }
-    }
-
     private void btnGenerate_Click(object sender, EventArgs e)
     {
       if (btnGenerate.Text == "Cancel")
@@ -73,7 +64,6 @@ namespace Renfield.Anagrams
         return;
       }
 
-      var node = LoadDictionary(txtWordlist.Text);
       var text = txtText.Text.ToLowerInvariant().Replace(" ", "");
 
       txtOutput.Clear();
@@ -82,7 +72,7 @@ namespace Renfield.Anagrams
       {
         cancelRequested = false;
 
-        var anagrams = node.GetAnagrams(text, int.Parse(txtMinWordLength.Text));
+        var anagrams = dictionary.GetAnagrams(text, int.Parse(txtMinWordLength.Text));
 
         var count = 0;
         foreach (var anagram in anagrams.TakeWhile(_ => !cancelRequested))

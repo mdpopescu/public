@@ -93,7 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ExternalResources.txt" />
-    <Content Include="wordlist.txt" />
+    <None Include="Resources\WordsList.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

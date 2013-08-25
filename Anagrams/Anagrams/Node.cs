@@ -4,9 +4,8 @@ namespace Renfield.Anagrams
 {
   public class Node
   {
-    public Node(char letter = '\0', bool final = false, int depth = 0)
+    public Node(bool final = false, int depth = 0)
     {
-      this.letter = letter;
       this.final = final;
       this.depth = depth;
 
@@ -21,7 +20,7 @@ namespace Renfield.Anagrams
       foreach (var l in letters)
       {
         if (!(node.children.ContainsKey(l)))
-          node.children[l] = new Node(l, index == lastIndex, index + 1);
+          node.children[l] = new Node(index == lastIndex, index + 1);
 
         node = node.children[l];
         index++;
@@ -39,7 +38,6 @@ namespace Renfield.Anagrams
 
     //
 
-    private char letter;
     private readonly bool final;
     private readonly int depth;
     private readonly Dictionary<char, Node> children;
@@ -64,7 +62,6 @@ namespace Renfield.Anagrams
       foreach (var child in children)
       {
         var l = child.Key;
-        var node = child.Value;
 
         var count = tiles.Get(l);
         if (count == 0)
@@ -73,6 +70,7 @@ namespace Renfield.Anagrams
         using (new Guard(() => tiles[l] = count - 1, () => tiles[l] = count))
         using (new Guard(() => path.Push(l.ToString()), path.Pop))
         {
+          var node = child.Value;
           foreach (var anagram in node.InternalGetAnagrams(tiles, path, root, minLength, minWordLength))
             yield return anagram;
         }
