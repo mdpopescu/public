@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSM.Library", "FSM.Library\FSM.Library.csproj", "{F888CF9A-970C-475F-8FE2-EE78325D4BF1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FSM.ParseNumbers", "FSM.ParseNumbers\FSM.ParseNumbers.csproj", "{D1A3D52D-97EB-4DF4-ACC6-7A09E4EDE28C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{F888CF9A-970C-475F-8FE2-EE78325D4BF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F888CF9A-970C-475F-8FE2-EE78325D4BF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F888CF9A-970C-475F-8FE2-EE78325D4BF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1A3D52D-97EB-4DF4-ACC6-7A09E4EDE28C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1A3D52D-97EB-4DF4-ACC6-7A09E4EDE28C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1A3D52D-97EB-4DF4-ACC6-7A09E4EDE28C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1A3D52D-97EB-4DF4-ACC6-7A09E4EDE28C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

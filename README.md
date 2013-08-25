@@ -11,6 +11,8 @@ Public repository - CC-by-SA 3.0
 
 * Failover: fail-over algorithm; see article at http://mdpopescu.blogspot.com/2013/06/fail-over-algorithm.html
 
+* FSM: quick implementation of a generic finite state machine; see article at http://mdpopescu.blogspot.com/2013/08/a-generic-implementation-of-finite.html
+
 * Hot Folder Windows Service: Windows service to monitor a specific folder and (for now) log the create / delete / change / rename events
 
 * Inventory: (INCOMPLETE) inventory management system - mainly to use SignalR and Knockout.js
