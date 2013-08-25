@@ -22,5 +22,41 @@ namespace Renfield.Anagrams.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Wordlist {
+            get {
+                return ((string)(this["Wordlist"]));
+            }
+            set {
+                this["Wordlist"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Text {
+            get {
+                return ((string)(this["Text"]));
+            }
+            set {
+                this["Text"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public string MinWordLength {
+            get {
+                return ((string)(this["MinWordLength"]));
+            }
+            set {
+                this["MinWordLength"] = value;
+            }
+        }
     }
 }

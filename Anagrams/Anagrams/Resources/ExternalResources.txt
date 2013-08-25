@@ -1,0 +1,2 @@
+Algorithm from http://stackoverflow.com/a/1924561/31793
+Word list from http://www.puzzlers.org/pub/wordlists/unixdict.txt
