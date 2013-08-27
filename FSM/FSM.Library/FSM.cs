@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 
@@ -8,10 +9,12 @@ namespace Renfield.FSM.Library
   public class FSM<T>
   {
     public bool IgnoreErrors { get; set; }
+    public dynamic Variables { get; private set; }
     public Action OnStart;
 
     public FSM(string initialState)
     {
+      Variables = new ExpandoObject();
       this.initialState = initialState;
 
       nodes = new List<Node<T>>();

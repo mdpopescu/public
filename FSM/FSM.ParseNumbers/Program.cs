@@ -6,33 +6,30 @@ namespace Renfield.FSM.ParseNumbers
   internal class Program
   {
     private static FSM<char> fsm;
-    private static int sign;
-    private static double number;
-    private static double divisor;
 
     private static void Main(string[] args)
     {
       fsm = new FSM<char>("start");
 
       fsm.Add("start", '+', null, "whole");
-      fsm.Add("start", '-', c => sign = -1, "whole");
+      fsm.Add("start", '-', c => fsm.Variables.sign = -1, "whole");
       fsm.Add("start", char.IsDigit, AddChar, "whole");
-      fsm.Add("start", '.', c => divisor = 0.1, "fract");
+      fsm.Add("start", '.', c => fsm.Variables.divisor = 0.1, "fract");
 
       fsm.Add("whole", char.IsDigit, AddChar);
-      fsm.Add("whole", '.', c => divisor = 0.1, "fract");
+      fsm.Add("whole", '.', c => fsm.Variables.divisor = 0.1, "fract");
 
       fsm.Add("fract", char.IsDigit, c =>
       {
-        number += divisor * (c - '0');
-        divisor /= 10;
+        fsm.Variables.number += fsm.Variables.divisor * (c - '0');
+        fsm.Variables.divisor /= 10;
       });
 
       fsm.OnStart = () =>
       {
-        sign = 1;
-        number = 0.0;
-        divisor = 0.0;
+        fsm.Variables.sign = 1;
+        fsm.Variables.number = 0.0;
+        fsm.Variables.divisor = 0.0;
       };
 
       Verify();
@@ -48,13 +45,13 @@ namespace Renfield.FSM.ParseNumbers
         foreach (var c in s)
           fsm.Handle(c);
 
-        Console.WriteLine("The number is " + sign * number);
+        Console.WriteLine("The number is " + fsm.Variables.sign * fsm.Variables.number);
       } while (true);
     }
 
     private static void AddChar(char c)
     {
-      number = number * 10 + (c - '0');
+      fsm.Variables.number = fsm.Variables.number * 10 + (c - '0');
     }
 
     private static void Verify()
@@ -85,12 +82,12 @@ namespace Renfield.FSM.ParseNumbers
       foreach (var c in s)
         fsm.Handle(c);
 
-      number *= sign;
-      if (Math.Abs(result - number) < 0.00001)
+      fsm.Variables.number *= fsm.Variables.sign;
+      if (Math.Abs(result - fsm.Variables.number) < 0.00001)
         Console.WriteLine("[{0}] ok", s);
       else
         throw new Exception(string.Format("Assertion failed: parsing {0} resulted in {1} but was expecting {2}", s,
-          number, result));
+          fsm.Variables.number, result));
     }
   }
 }
