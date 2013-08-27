@@ -37,3 +37,4 @@ connectionStrings*.config
 # NuGet.exe should be included #
 !NuGet.exe
 *.DotSettings
+*.jtconfig
