@@ -257,10 +257,9 @@ namespace Renfield.Inventory.Services
     }
 
     private static IEnumerable<Stock> GetStocks<T>(IEnumerable<Stock> stocks, IEnumerable<T> items)
-      where T : Item
     {
       var productIds = items
-        .Select(it => it.ProductId)
+        .Select(it => ((dynamic) it).ProductId)
         .ToList();
 
       return stocks

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Renfield.Inventory.Data
 {
-  public class Product : Entity
+  public class Product
   {
     public int Id { get; set; }
 
