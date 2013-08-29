@@ -122,12 +122,6 @@ namespace Renfield.SimpleViewEngine.Tests
         Assert.IsInstanceOfType(result[0], typeof (RepeaterNode));
         Assert.AreEqual("testtesttest", result[0].Eval(model));
       }
-
-      //[TestMethod]
-      //public void RepeaterEvaluatesSelf()
-      //{
-
-      //}
     }
   }
 }

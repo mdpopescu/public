@@ -172,6 +172,17 @@ namespace Renfield.SimpleViewEngine.Tests
       engine.Run(TEMPLATE, model);
     }
 
+    [TestMethod]
+    [ExpectedException(typeof (Exception))]
+    public void UnbalancedConditionalsAndRepeaters()
+    {
+      const string TEMPLATE = "{{if a}}-{{foreach b}}-{{endif}}-{{endfor}}";
+      model.a = true;
+      model.b = new[] {1, 2, 3};
+
+      engine.Run(TEMPLATE, model);
+    }
+
     //
 
     private static Lexer CreateLexer()
