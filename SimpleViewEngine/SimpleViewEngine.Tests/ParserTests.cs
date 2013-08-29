@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Dynamic;
+﻿using System.Dynamic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Renfield.SimpleViewEngine.Library;
@@ -18,7 +17,7 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         var sut = new Parser();
 
-        var result = sut.Parse("").ToList();
+        var result = sut.Parse(Enumerable.Empty<Token>()).ToList();
 
         Assert.AreEqual(0, result.Count);
       }
@@ -29,7 +28,7 @@ namespace Renfield.SimpleViewEngine.Tests
         dynamic model = new ExpandoObject();
         var sut = new Parser();
 
-        var result = sut.Parse("test").ToList();
+        var result = sut.Parse(new[] {new Token("constant", "test", new TokenPosition(0, 0, 0))}).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (ConstantNode));
@@ -43,7 +42,7 @@ namespace Renfield.SimpleViewEngine.Tests
         model.a = "x";
         var sut = new Parser();
 
-        var result = sut.Parse("{{a}}").ToList();
+        var result = sut.Parse(new[] {new Token("property", "{{a}}", new TokenPosition(0, 0, 0)),}).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (PropertyNode));

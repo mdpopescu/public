@@ -40,6 +40,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\ConstantNode.cs" />
+    <Compile Include="AST\ILexer.cs" />
+    <Compile Include="AST\Lexer.cs" />
+    <Compile Include="AST\Token.cs" />
+    <Compile Include="AST\TokenDefinition.cs" />
+    <Compile Include="AST\TokenPosition.cs" />
     <Compile Include="Caching\KeyMap.cs" />
     <Compile Include="Caching\KeyStruct.cs" />
     <Compile Include="Caching\Memoizer.cs" />

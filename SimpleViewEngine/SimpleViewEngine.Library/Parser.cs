@@ -6,29 +6,26 @@ namespace Renfield.SimpleViewEngine.Library
 {
   public class Parser
   {
-    public IEnumerable<Node> Parse(string input)
+    public IEnumerable<Node> Parse(IEnumerable<Token> tokens)
     {
-      while (!string.IsNullOrEmpty(input))
+      foreach (var token in tokens)
       {
-        var index = input.IndexOf(Constants.HANDLE_OPEN, StringComparison.Ordinal);
-        if (index < 0)
+        switch (token.Type)
         {
-          yield return new ConstantNode(input);
-          break;
+          case "constant":
+            yield return new ConstantNode(token.Value);
+            break;
+
+          case "property":
+            yield return new PropertyNode(token.Value.Substring(2, token.Value.Length - 4));
+            break;
+
+          case "(end)":
+            yield break;
+
+          default:
+            throw new Exception(string.Format("Unexpected token of type [{0}] and value [{1}]", token.Type, token.Value));
         }
-
-        if (index > 0)
-        {
-          yield return new ConstantNode(input.Substring(0, index));
-          input = input.Substring(index);
-        }
-
-        // now input starts with the {{ sequence; skip it
-        input = input.Remove(0, Constants.HANDLE_OPEN.Length);
-        index = input.IndexOf(Constants.HANDLE_CLOSE, StringComparison.Ordinal);
-        yield return new PropertyNode(input.Substring(0, index));
-
-        input = input.Substring(index + Constants.HANDLE_CLOSE.Length);
       }
     }
   }
