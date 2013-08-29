@@ -4,13 +4,13 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
 {
   public class Engine
   {
-    public Engine(ILexer lexer, Parser parser)
+    public Engine(Lexer lexer, Parser parser)
     {
       this.lexer = lexer;
       this.parser = parser;
     }
 
-    public string Run(string template, dynamic model)
+    public string Run(string template, object model)
     {
       var tokens = lexer.Tokenize(template);
       var nodes = parser.Parse(tokens);
@@ -20,7 +20,7 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
 
     //
 
-    private readonly ILexer lexer;
+    private readonly Lexer lexer;
     private readonly Parser parser;
   }
 }

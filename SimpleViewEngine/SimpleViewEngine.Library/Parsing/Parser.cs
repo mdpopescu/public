@@ -11,7 +11,7 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
     {
       var index = 0;
 
-      return InternalParse(tokens.ToList(), ref index, Lexer.EOF);
+      return InternalParse(tokens.ToList(), ref index, Token.EOF);
     }
 
     //

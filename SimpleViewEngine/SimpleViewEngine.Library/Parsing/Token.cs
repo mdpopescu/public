@@ -4,6 +4,8 @@
 
   public class Token
   {
+    public const string EOF = "(eof)";
+
     public string Type { get; private set; }
     public string Value { get; private set; }
     public TokenPosition Position { get; private set; }

@@ -9,7 +9,7 @@ namespace Renfield.SimpleViewEngine.Tests
   [TestClass]
   public class AcceptanceTests
   {
-    private ILexer lexer;
+    private Lexer lexer;
     private Parser parser;
     private Engine engine;
     private dynamic model;
@@ -185,9 +185,9 @@ namespace Renfield.SimpleViewEngine.Tests
 
     //
 
-    private static Lexer CreateLexer()
+    private static SimpleLexer CreateLexer()
     {
-      var lexer = new Lexer();
+      var lexer = new SimpleLexer();
       lexer.AddDefinition(new TokenDefinition("if", @"\{\{if \w[\w|\d]*\}\}"));
       lexer.AddDefinition(new TokenDefinition("endif", @"\{\{endif\}\}"));
       lexer.AddDefinition(new TokenDefinition("foreach", @"\{\{foreach \w[\w|\d]*\}\}"));
