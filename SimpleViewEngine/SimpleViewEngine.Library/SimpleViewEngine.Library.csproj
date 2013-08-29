@@ -47,9 +47,6 @@
     <Compile Include="Parsing\Token.cs" />
     <Compile Include="Parsing\TokenDefinition.cs" />
     <Compile Include="Parsing\TokenPosition.cs" />
-    <Compile Include="Caching\KeyMap.cs" />
-    <Compile Include="Caching\KeyStruct.cs" />
-    <Compile Include="Caching\Memoizer.cs" />
     <Compile Include="AST\Node.cs" />
     <Compile Include="Parsing\Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

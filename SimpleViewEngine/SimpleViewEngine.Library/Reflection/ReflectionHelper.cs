@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Renfield.SimpleViewEngine.Library.Caching;
 
 namespace Renfield.SimpleViewEngine.Library.Reflection
 {
@@ -21,7 +20,7 @@ namespace Renfield.SimpleViewEngine.Library.Reflection
         return ps.GetValue(model);
       };
 
-      return func.Memoize();
+      return func;
     }
   }
 }

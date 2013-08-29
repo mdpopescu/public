@@ -52,7 +52,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AcceptanceTests.cs" />
-    <Compile Include="MemoizerTests.cs" />
     <Compile Include="ParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
