@@ -1,4 +1,6 @@
-﻿using System.Dynamic;
+﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Renfield.SimpleViewEngine.Library.Parsing;
 
@@ -44,6 +46,15 @@ namespace Renfield.SimpleViewEngine.Tests
     }
 
     [TestMethod]
+    [ExpectedException(typeof (KeyNotFoundException))]
+    public void ThrowsIfPropertyDoesNotExist()
+    {
+      const string TEMPLATE = "{{a}}";
+
+      engine.Run(TEMPLATE, model);
+    }
+
+    [TestMethod]
     public void Conditionals()
     {
       const string TEMPLATE = "a-{{if b}}-c-{{endif}}-d-{{if e}}-f-{{endif}}-g";
@@ -66,6 +77,33 @@ namespace Renfield.SimpleViewEngine.Tests
       var result = engine.Run(TEMPLATE, model);
 
       Assert.AreEqual("a--c--e--f--i--j", result);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof (KeyNotFoundException))]
+    public void ThrowsIfPropertyInConditionalDoesNotExist()
+    {
+      const string TEMPLATE = "{{if a}}-{{endif}}";
+
+      engine.Run(TEMPLATE, model);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof (Exception))]
+    public void ThrowsIfConditionalIsNotClosed()
+    {
+      const string TEMPLATE = "{{if a}}";
+
+      engine.Run(TEMPLATE, model);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof (Exception))]
+    public void ThrowsOnUnexpectedEndif()
+    {
+      const string TEMPLATE = "{{endif}}";
+
+      engine.Run(TEMPLATE, model);
     }
 
     //
