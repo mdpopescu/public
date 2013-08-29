@@ -48,7 +48,6 @@
     <Compile Include="Caching\KeyMap.cs" />
     <Compile Include="Caching\KeyStruct.cs" />
     <Compile Include="Caching\Memoizer.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="AST\Node.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

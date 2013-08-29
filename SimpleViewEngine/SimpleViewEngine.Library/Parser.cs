@@ -20,7 +20,7 @@ namespace Renfield.SimpleViewEngine.Library
             yield return new PropertyNode(token.Value.Substring(2, token.Value.Length - 4));
             break;
 
-          case "(end)":
+          case "(eof)":
             yield break;
 
           default:

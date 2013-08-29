@@ -4,6 +4,8 @@ using System.Text.RegularExpressions;
 
 namespace Renfield.SimpleViewEngine.Library.AST
 {
+  // from http://blogs.msdn.com/b/drew/archive/2009/12/31/a-simple-lexer-in-c-that-uses-regular-expressions.aspx
+
   public class Lexer : ILexer
   {
     public Lexer()
@@ -63,7 +65,7 @@ namespace Renfield.SimpleViewEngine.Library.AST
         currentIndex += matchLength;
       }
 
-      yield return new Token("(end)", null, new TokenPosition(currentIndex, currentLine, currentColumn));
+      yield return new Token("(eof)", null, new TokenPosition(currentIndex, currentLine, currentColumn));
     }
 
     //
