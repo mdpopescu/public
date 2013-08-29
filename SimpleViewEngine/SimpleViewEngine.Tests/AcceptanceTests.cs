@@ -44,14 +44,28 @@ namespace Renfield.SimpleViewEngine.Tests
     }
 
     [TestMethod]
-    public void Conditionals_True()
+    public void Conditionals()
     {
-      const string TEMPLATE = "a1-{{if b1}}-c1-{{endif}}-d1";
-      model.b1 = true;
+      const string TEMPLATE = "a-{{if b}}-c-{{endif}}-d-{{if e}}-f-{{endif}}-g";
+      model.b = true;
+      model.e = false;
 
       var result = engine.Run(TEMPLATE, model);
 
-      Assert.AreEqual("a1--c1--d1", result);
+      Assert.AreEqual("a--c--d--g", result);
+    }
+
+    [TestMethod]
+    public void NestedConditionals()
+    {
+      const string TEMPLATE = "a-{{if b}}-c-{{if d}}-e-{{endif}}-f-{{if g}}-h-{{endif}}-i-{{endif}}-j";
+      model.b = true;
+      model.d = true;
+      model.g = false;
+
+      var result = engine.Run(TEMPLATE, model);
+
+      Assert.AreEqual("a--c--e--f--i--j", result);
     }
 
     //
