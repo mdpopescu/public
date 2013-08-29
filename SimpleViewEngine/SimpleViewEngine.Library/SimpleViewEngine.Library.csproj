@@ -7,8 +7,8 @@
     <ProjectGuid>{537F2CC1-0B74-42AC-B2E3-BC7C50AA6AB9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Renfield.SimpleViewEngine</RootNamespace>
-    <AssemblyName>SimpleViewEngine</AssemblyName>
+    <RootNamespace>Renfield.SimpleViewEngine.Library</RootNamespace>
+    <AssemblyName>SimpleViewEngine.Library</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,8 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="ConstantNode.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Engine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleViewEngine", "SimpleViewEngine\SimpleViewEngine.csproj", "{537F2CC1-0B74-42AC-B2E3-BC7C50AA6AB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleViewEngine.Library", "SimpleViewEngine.Library\SimpleViewEngine.Library.csproj", "{537F2CC1-0B74-42AC-B2E3-BC7C50AA6AB9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleViewEngine.Tests", "SimpleViewEngine.Tests\SimpleViewEngine.Tests.csproj", "{BDB3D6B1-6A31-4D11-8A0C-12834EE10F2D}"
 EndProject
