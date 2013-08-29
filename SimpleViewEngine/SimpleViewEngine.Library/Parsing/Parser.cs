@@ -26,27 +26,36 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
         if (token.Type == eof)
           return nodes;
 
+        var value = token.Value;
         switch (token.Type)
         {
           case "constant":
-            nodes.Add(new ConstantNode(token.Value));
+            nodes.Add(new ConstantNode(value));
             break;
 
           case "property":
-            nodes.Add(new PropertyNode(token.Value.Substring(2, token.Value.Length - 4)));
+            nodes.Add(new PropertyNode(ExtractName(value, 2)));
             break;
 
           case "if":
-            nodes.Add(new ConditionalNode(token.Value.Substring(5, token.Value.Length - 7),
-              InternalParse(tokens, ref index, "endif")));
+            nodes.Add(new ConditionalNode(ExtractName(value, 5), InternalParse(tokens, ref index, "endif")));
+            break;
+
+          case "foreach":
+            nodes.Add(new RepeaterNode(ExtractName(value, 10), InternalParse(tokens, ref index, "endfor")));
             break;
 
           default:
-            throw new Exception(string.Format("Unexpected token of type [{0}] and value [{1}]", token.Type, token.Value));
+            throw new Exception(string.Format("Unexpected token of type [{0}] and value [{1}]", token.Type, value));
         }
       }
 
       return nodes;
+    }
+
+    private static string ExtractName(string value, int start)
+    {
+      return value.Substring(start, value.Length - start - 2);
     }
   }
 }

@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="AST\ConditionalNode.cs" />
     <Compile Include="AST\ConstantNode.cs" />
+    <Compile Include="AST\RepeaterNode.cs" />
     <Compile Include="Parsing\ILexer.cs" />
     <Compile Include="Parsing\Lexer.cs" />
     <Compile Include="Parsing\Token.cs" />

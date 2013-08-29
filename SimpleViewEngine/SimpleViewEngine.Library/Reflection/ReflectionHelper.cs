@@ -6,16 +6,16 @@ namespace Renfield.SimpleViewEngine.Library.Reflection
 {
   public static class ReflectionHelper
   {
-    public static Func<string, string> GetPropertyFunc(this object model)
+    public static Func<string, object> GetPropertyFunc(this object model)
     {
-      Func<string, string> func = name =>
+      Func<string, object> func = name =>
       {
         var dict = model as IDictionary<string, object>;
         if (dict != null)
-          return dict[name].ToString();
+          return dict[name];
 
         var ps = model.GetType().GetProperty(name);
-        return ps.GetValue(model).ToString();
+        return ps.GetValue(model);
       };
 
       return func.Memoize();

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Renfield.SimpleViewEngine.Library.AST
@@ -14,7 +13,7 @@ namespace Renfield.SimpleViewEngine.Library.AST
 
     public override string Eval(object model)
     {
-      return string.Compare(base.Eval(model), "true", StringComparison.InvariantCultureIgnoreCase) == 0
+      return (bool) GetProperty(model, name)
                ? string.Join("", nodes.Select(it => it.Eval(model)))
                : "";
     }

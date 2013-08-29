@@ -9,11 +9,11 @@
 
     public override string Eval(object model)
     {
-      return GetProperty(model, name);
+      return GetProperty(model, name).ToString();
     }
 
     //
 
-    private readonly string name;
+    protected readonly string name;
   }
 }

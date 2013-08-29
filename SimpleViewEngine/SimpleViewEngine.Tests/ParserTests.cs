@@ -2,7 +2,6 @@
 using System.Dynamic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Renfield.SimpleViewEngine.Library;
 using Renfield.SimpleViewEngine.Library.AST;
 using Renfield.SimpleViewEngine.Library.Parsing;
 
@@ -35,7 +34,7 @@ namespace Renfield.SimpleViewEngine.Tests
       [TestMethod]
       public void ReturnsOneConstantNodeWithCorrectValue()
       {
-        var result = sut.Parse(new[] {new Token("constant", "test", new TokenPosition(0, 0, 0))}).ToList();
+        var result = sut.Parse(new[] {new Token("constant", "test", null)}).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (ConstantNode));
@@ -47,7 +46,7 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.a = "x";
 
-        var result = sut.Parse(new[] {new Token("property", "{{a}}", new TokenPosition(0, 0, 0)),}).ToList();
+        var result = sut.Parse(new[] {new Token("property", "{{a}}", null),}).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (PropertyNode));
@@ -61,9 +60,9 @@ namespace Renfield.SimpleViewEngine.Tests
 
         var result = sut.Parse(new[]
         {
-          new Token("property", "{{a}}", new TokenPosition(0, 0, 0)),
-          new Token("(eof)", null, new TokenPosition(5, 0, 5)),
-          new Token("constant", "test", new TokenPosition(6, 0, 6)),
+          new Token("property", "{{a}}", null),
+          new Token("(eof)", null, null),
+          new Token("constant", "test", null),
         }).ToList();
 
         Assert.AreEqual(1, result.Count);
@@ -75,7 +74,7 @@ namespace Renfield.SimpleViewEngine.Tests
       [ExpectedException(typeof (Exception))]
       public void UnknownTokenThrows()
       {
-        sut.Parse(new[] {new Token("unknown", "abc", new TokenPosition(0, 0, 0)),}).ToList();
+        sut.Parse(new[] {new Token("unknown", "abc", null),}).ToList();
       }
 
       [TestMethod]
@@ -85,14 +84,31 @@ namespace Renfield.SimpleViewEngine.Tests
 
         var result = sut.Parse(new[]
         {
-          new Token("if", "{{if b}}", new TokenPosition(0, 0, 0)),
-          new Token("constant", "test", new TokenPosition(8, 0, 8)),
-          new Token("endif", "{{endif}}", new TokenPosition(12, 0, 12)),
+          new Token("if", "{{if b}}", null),
+          new Token("constant", "test", null),
+          new Token("endif", "{{endif}}", null),
         }).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (ConditionalNode));
         Assert.AreEqual("test", result[0].Eval(model));
+      }
+
+      [TestMethod]
+      public void ReturnsRepeaterNode()
+      {
+        model.a = new[] {1, 2, 3};
+
+        var result = sut.Parse(new[]
+        {
+          new Token("foreach", "{{foreach a}}", null),
+          new Token("constant", "test", null),
+          new Token("endfor", "{{endfor}}", null),
+        }).ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.IsInstanceOfType(result[0], typeof (RepeaterNode));
+        Assert.AreEqual("testtesttest", result[0].Eval(model));
       }
     }
   }

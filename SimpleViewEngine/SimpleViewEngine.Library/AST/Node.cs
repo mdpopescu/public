@@ -8,7 +8,7 @@ namespace Renfield.SimpleViewEngine.Library.AST
 
     //
 
-    protected virtual string GetProperty(object model, string name)
+    protected virtual object GetProperty(object model, string name)
     {
       var func = model.GetPropertyFunc();
 

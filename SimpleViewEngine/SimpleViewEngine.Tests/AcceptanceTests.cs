@@ -106,6 +106,17 @@ namespace Renfield.SimpleViewEngine.Tests
       engine.Run(TEMPLATE, model);
     }
 
+    [TestMethod]
+    public void Repeater()
+    {
+      const string TEMPLATE = "{{foreach a}}-b-{{it}}-c-{{endfor}}";
+      model.a = new[] {1, 2, 3};
+
+      var result = engine.Run(TEMPLATE, model);
+
+      Assert.AreEqual("-b-1-c--b-2-c--b-3-c-", result);
+    }
+
     //
 
     private static Lexer CreateLexer()
@@ -113,6 +124,8 @@ namespace Renfield.SimpleViewEngine.Tests
       var lexer = new Lexer();
       lexer.AddDefinition(new TokenDefinition("if", @"\{\{if \w[\w|\d]*\}\}"));
       lexer.AddDefinition(new TokenDefinition("endif", @"\{\{endif\}\}"));
+      lexer.AddDefinition(new TokenDefinition("foreach", @"\{\{foreach \w[\w|\d]*\}\}"));
+      lexer.AddDefinition(new TokenDefinition("endfor", @"\{\{endfor\}\}"));
       lexer.AddDefinition(new TokenDefinition("property", @"\{\{\w[\w|\d]*\}\}"));
       lexer.AddDefinition(new TokenDefinition("constant", "[^{]+"));
 
