@@ -58,7 +58,7 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model = 123;
 
-        var result = sut.Parse(new[] {new Token("property", "{{it}}", null),}).ToList();
+        var result = sut.Parse(new[] {new Token("property", "{{}}", null),}).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (PropertyNode));

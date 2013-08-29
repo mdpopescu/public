@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleViewEngine.Tests", "S
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0A3734FE-94E6-4AC0-A55D-42A9F3D788E0}"
 	ProjectSection(SolutionItems) = preProject
-		SampleViewEngine.testsettings = SampleViewEngine.testsettings
+		SimpleViewEngine.testsettings = SimpleViewEngine.testsettings
 		todo.txt = todo.txt
 	EndProjectSection
 EndProject

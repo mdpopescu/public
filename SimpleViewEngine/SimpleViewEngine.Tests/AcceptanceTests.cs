@@ -93,6 +93,7 @@ namespace Renfield.SimpleViewEngine.Tests
     public void ThrowsIfConditionalIsNotClosed()
     {
       const string TEMPLATE = "{{if a}}";
+      model.a = true;
 
       engine.Run(TEMPLATE, model);
     }
@@ -107,9 +108,9 @@ namespace Renfield.SimpleViewEngine.Tests
     }
 
     [TestMethod]
-    public void Repeater()
+    public void RepeaterWithSelf()
     {
-      const string TEMPLATE = "{{foreach a}}-b-{{it}}-c-{{endfor}}";
+      const string TEMPLATE = "{{foreach a}}-b-{{}}-c-{{endfor}}";
       model.a = new[] {1, 2, 3};
 
       var result = engine.Run(TEMPLATE, model);
@@ -143,6 +144,34 @@ namespace Renfield.SimpleViewEngine.Tests
       Assert.AreEqual(">>-11--y=12--y=13--y=14--15--21--y=22--y=23--y=24--25-<<", result);
     }
 
+    [TestMethod]
+    [ExpectedException(typeof (KeyNotFoundException))]
+    public void ThrowsIfPropertyInRepeaterDoesNotExist()
+    {
+      const string TEMPLATE = "{{foreach a}}-{{endfor}}";
+
+      engine.Run(TEMPLATE, model);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof (Exception))]
+    public void ThrowsIfRepeaterIsNotClosed()
+    {
+      const string TEMPLATE = "{{foreach a}}";
+      model.a = new[] {1, 2, 3};
+
+      engine.Run(TEMPLATE, model);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof (Exception))]
+    public void ThrowsOnUnexpectedEndfor()
+    {
+      const string TEMPLATE = "{{endfor}}";
+
+      engine.Run(TEMPLATE, model);
+    }
+
     //
 
     private static Lexer CreateLexer()
@@ -152,7 +181,7 @@ namespace Renfield.SimpleViewEngine.Tests
       lexer.AddDefinition(new TokenDefinition("endif", @"\{\{endif\}\}"));
       lexer.AddDefinition(new TokenDefinition("foreach", @"\{\{foreach \w[\w|\d]*\}\}"));
       lexer.AddDefinition(new TokenDefinition("endfor", @"\{\{endfor\}\}"));
-      lexer.AddDefinition(new TokenDefinition("property", @"\{\{\w[\w|\d]*\}\}"));
+      lexer.AddDefinition(new TokenDefinition("property", @"\{\{[\w|\d]*\}\}"));
       lexer.AddDefinition(new TokenDefinition("constant", "[^{]+"));
 
       return lexer;

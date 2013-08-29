@@ -15,6 +15,9 @@ namespace Renfield.SimpleViewEngine.Library.Reflection
           return dict[name];
 
         var ps = model.GetType().GetProperty(name);
+        if (ps == null)
+          throw new Exception(string.Format("Unknown property [{0}]", name));
+
         return ps.GetValue(model);
       };
 
