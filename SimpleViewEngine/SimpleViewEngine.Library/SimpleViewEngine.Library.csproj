@@ -40,16 +40,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\ConstantNode.cs" />
+    <Compile Include="Caching\KeyMap.cs" />
+    <Compile Include="Caching\KeyStruct.cs" />
+    <Compile Include="Caching\Memoizer.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="AST\Node.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="AST\PropertyNode.cs" />
+    <Compile Include="Reflection\ReflectionHelper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Reflection\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
