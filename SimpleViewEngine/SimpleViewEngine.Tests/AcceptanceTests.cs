@@ -117,6 +117,32 @@ namespace Renfield.SimpleViewEngine.Tests
       Assert.AreEqual("-b-1-c--b-2-c--b-3-c-", result);
     }
 
+    [TestMethod]
+    public void RepeaterWithProperties()
+    {
+      const string TEMPLATE = ">>{{foreach a}}-b-{{a}}-c-{{b}}-d-{{endfor}}<<";
+      model.a = new[] {new {a = 1, b = "x"}, new {a = 2, b = "y"}};
+
+      var result = engine.Run(TEMPLATE, model);
+
+      Assert.AreEqual(">>-b-1-c-x-d--b-2-c-y-d-<<", result);
+    }
+
+    [TestMethod]
+    public void NestedRepeaters()
+    {
+      const string TEMPLATE = ">>{{foreach a}}-{{x}}-{{foreach c}}-y={{y}}-{{endfor}}-{{z}}-{{endfor}}<<";
+      model.a = new[]
+      {
+        new {x = 11, c = new[] {new {y = 12}, new {y = 13}, new {y = 14}}, z = 15},
+        new {x = 21, c = new[] {new {y = 22}, new {y = 23}, new {y = 24}}, z = 25},
+      };
+
+      var result = engine.Run(TEMPLATE, model);
+
+      Assert.AreEqual(">>-11--y=12--y=13--y=14--15--21--y=22--y=23--y=24--25-<<", result);
+    }
+
     //
 
     private static Lexer CreateLexer()

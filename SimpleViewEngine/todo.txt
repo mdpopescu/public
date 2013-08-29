@@ -1,0 +1,25 @@
+in ParserTests
+
+      [TestMethod]
+      public void PropertyNodeEvaluatesSubproperty()
+      {
+        model.a = new {b = 123};
+
+        var result = sut.Parse(new[] {new Token("property", "{{a.b}}", null),}).ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.IsInstanceOfType(result[0], typeof (PropertyNode));
+        Assert.AreEqual("123", result[0].Eval(model));
+      }
+
+      [TestMethod]
+      public void PropertyNodeEvaluatesSubproperty_PrefixedWithSelf()
+      {
+        model.a = new {b = 123};
+
+        var result = sut.Parse(new[] {new Token("property", "{{it.a.b}}", null),}).ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.IsInstanceOfType(result[0], typeof (PropertyNode));
+        Assert.AreEqual("123", result[0].Eval(model));
+      }

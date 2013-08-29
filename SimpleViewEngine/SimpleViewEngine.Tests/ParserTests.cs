@@ -54,6 +54,18 @@ namespace Renfield.SimpleViewEngine.Tests
       }
 
       [TestMethod]
+      public void PropertyNodeEvaluatesSelf()
+      {
+        model = 123;
+
+        var result = sut.Parse(new[] {new Token("property", "{{it}}", null),}).ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.IsInstanceOfType(result[0], typeof (PropertyNode));
+        Assert.AreEqual("123", result[0].Eval(model));
+      }
+
+      [TestMethod]
       public void EofTokenStopsTheParsing()
       {
         model.a = "x";
@@ -110,6 +122,12 @@ namespace Renfield.SimpleViewEngine.Tests
         Assert.IsInstanceOfType(result[0], typeof (RepeaterNode));
         Assert.AreEqual("testtesttest", result[0].Eval(model));
       }
+
+      //[TestMethod]
+      //public void RepeaterEvaluatesSelf()
+      //{
+
+      //}
     }
   }
 }

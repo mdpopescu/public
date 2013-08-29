@@ -19,7 +19,10 @@ namespace Renfield.SimpleViewEngine.Library.AST
 
       var list = (IEnumerable) GetProperty(model, name);
       foreach (var o in list)
-        sb.Append(string.Join("", nodes.Select(it => it.Eval(model))));
+      {
+        var copy = o;
+        sb.Append(string.Join("", nodes.Select(it => it.Eval(copy))));
+      }
 
       return sb.ToString();
     }
