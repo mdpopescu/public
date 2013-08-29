@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Renfield.SimpleViewEngine.Library.AST
+namespace Renfield.SimpleViewEngine.Library.Parsing
 {
   // from http://blogs.msdn.com/b/drew/archive/2009/12/31/a-simple-lexer-in-c-that-uses-regular-expressions.aspx
 
   public class Lexer : ILexer
   {
+    public const string EOF = "(eof)";
+
     public Lexer()
     {
       tokenDefinitions = new List<TokenDefinition>();
@@ -65,7 +67,7 @@ namespace Renfield.SimpleViewEngine.Library.AST
         currentIndex += matchLength;
       }
 
-      yield return new Token("(eof)", null, new TokenPosition(currentIndex, currentLine, currentColumn));
+      yield return new Token(EOF, null, new TokenPosition(currentIndex, currentLine, currentColumn));
     }
 
     //

@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Renfield.SimpleViewEngine.Library;
 using Renfield.SimpleViewEngine.Library.AST;
+using Renfield.SimpleViewEngine.Library.Parsing;
 
 namespace Renfield.SimpleViewEngine.Tests
 {
@@ -75,6 +76,23 @@ namespace Renfield.SimpleViewEngine.Tests
       public void UnknownTokenThrows()
       {
         sut.Parse(new[] {new Token("unknown", "abc", new TokenPosition(0, 0, 0)),}).ToList();
+      }
+
+      [TestMethod]
+      public void ReturnsConditionalNode()
+      {
+        model.b = true;
+
+        var result = sut.Parse(new[]
+        {
+          new Token("if", "{{if b}}", new TokenPosition(0, 0, 0)),
+          new Token("constant", "test", new TokenPosition(8, 0, 8)),
+          new Token("endif", "{{endif}}", new TokenPosition(12, 0, 12)),
+        }).ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.IsInstanceOfType(result[0], typeof (ConditionalNode));
+        Assert.AreEqual("test", result[0].Eval(model));
       }
     }
   }

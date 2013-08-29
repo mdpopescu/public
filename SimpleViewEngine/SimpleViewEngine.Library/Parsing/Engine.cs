@@ -1,7 +1,6 @@
 ﻿using System.Linq;
-using Renfield.SimpleViewEngine.Library.AST;
 
-namespace Renfield.SimpleViewEngine.Library
+namespace Renfield.SimpleViewEngine.Library.Parsing
 {
   public class Engine
   {

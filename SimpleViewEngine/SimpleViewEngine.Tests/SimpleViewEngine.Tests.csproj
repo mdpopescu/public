@@ -59,7 +59,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SimpleViewEngine.Library\SimpleViewEngine.Library.csproj">
       <Project>{537f2cc1-0b74-42ac-b2e3-bc7c50aa6ab9}</Project>
-      <Name>SimpleViewEngine</Name>
+      <Name>SimpleViewEngine.Library</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
