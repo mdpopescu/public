@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Dynamic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Renfield.SimpleViewEngine.Library;
 
 namespace Renfield.SimpleViewEngine.Tests
@@ -16,6 +17,20 @@ namespace Renfield.SimpleViewEngine.Tests
       var result = engine.Run(TEMPLATE, model);
 
       Assert.AreEqual(TEMPLATE, result);
+    }
+
+    [TestMethod]
+    public void PropertySubstitutions()
+    {
+      const string TEMPLATE = "c1 {{v1}} c2 {{v2}} c3";
+      dynamic model = new ExpandoObject();
+      model.v1 = "abc";
+      model.v2 = "def";
+      var engine = new Engine(new Parser());
+
+      var result = engine.Run(TEMPLATE, model);
+
+      Assert.AreEqual("c1 abc c2 def c3", result);
     }
   }
 }

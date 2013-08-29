@@ -39,11 +39,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConstantNode.cs" />
-    <Compile Include="Node.cs" />
+    <Compile Include="AST\ConstantNode.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="AST\Node.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="AST\PropertyNode.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Reflection\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

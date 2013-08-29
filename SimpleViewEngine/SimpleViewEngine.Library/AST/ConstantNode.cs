@@ -1,4 +1,4 @@
-﻿namespace Renfield.SimpleViewEngine.Library
+﻿namespace Renfield.SimpleViewEngine.Library.AST
 {
   public class ConstantNode : Node
   {
@@ -7,7 +7,7 @@
       this.text = text;
     }
 
-    public override string Eval(dynamic model)
+    public override string Eval(object model)
     {
       return text;
     }
