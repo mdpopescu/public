@@ -33,24 +33,15 @@ namespace Renfield.SimpleViewEngine.Demo
       RegisterGlobalFilters(GlobalFilters.Filters);
       RegisterRoutes(RouteTable.Routes);
 
-      var engine = new Engine(CreateLexer(), new Parser());
-      ViewEngines.Engines.Add(new Library.ViewEngine.SimpleViewEngine(engine));
+      RegisterViewEngine();
     }
 
     //
 
-    private static SimpleLexer CreateLexer()
+    private static void RegisterViewEngine()
     {
-      var lexer = new SimpleLexer();
-      lexer.AddDefinition(new TokenDefinition("if", @"\{\{if \w[\w|\d]*\}\}"));
-      lexer.AddDefinition(new TokenDefinition("else", @"\{\{else\}\}"));
-      lexer.AddDefinition(new TokenDefinition("endif", @"\{\{endif\}\}"));
-      lexer.AddDefinition(new TokenDefinition("foreach", @"\{\{foreach \w[\w|\d]*\}\}"));
-      lexer.AddDefinition(new TokenDefinition("endfor", @"\{\{endfor\}\}"));
-      lexer.AddDefinition(new TokenDefinition("property", @"\{\{[\w|\d]*\}\}"));
-      lexer.AddDefinition(new TokenDefinition("constant", "[^{]+"));
-
-      return lexer;
+      var engine = new Engine(new SimpleViewLexer(), new SimpleViewParser());
+      ViewEngines.Engines.Add(new Library.ViewEngine.SimpleViewEngine(engine));
     }
   }
 }

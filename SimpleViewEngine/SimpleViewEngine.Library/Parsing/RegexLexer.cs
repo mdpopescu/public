@@ -6,9 +6,9 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
 {
   // from http://blogs.msdn.com/b/drew/archive/2009/12/31/a-simple-lexer-in-c-that-uses-regular-expressions.aspx
 
-  public class SimpleLexer : Lexer
+  public class RegexLexer : Lexer
   {
-    public SimpleLexer()
+    public RegexLexer()
     {
       tokenDefinitions = new List<TokenDefinition>();
       endOfLineRegex = new Regex(Environment.NewLine);

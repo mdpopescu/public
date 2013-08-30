@@ -10,15 +10,15 @@ namespace Renfield.SimpleViewEngine.Tests
   public class AcceptanceTests
   {
     private Lexer lexer;
-    private Parser parser;
+    private SimpleViewParser parser;
     private Engine engine;
     private dynamic model;
 
     [TestInitialize]
     public void SetUp()
     {
-      lexer = CreateLexer();
-      parser = new Parser();
+      lexer = new SimpleViewLexer();
+      parser = new SimpleViewParser();
       engine = new Engine(lexer, parser);
       model = new ExpandoObject();
     }
@@ -195,22 +195,6 @@ namespace Renfield.SimpleViewEngine.Tests
       model.b = new[] {1, 2, 3};
 
       engine.Run(TEMPLATE, model);
-    }
-
-    //
-
-    private static SimpleLexer CreateLexer()
-    {
-      var lexer = new SimpleLexer();
-      lexer.AddDefinition(new TokenDefinition("if", @"\{\{if \w[\w|\d]*\}\}"));
-      lexer.AddDefinition(new TokenDefinition("else", @"\{\{else\}\}"));
-      lexer.AddDefinition(new TokenDefinition("endif", @"\{\{endif\}\}"));
-      lexer.AddDefinition(new TokenDefinition("foreach", @"\{\{foreach \w[\w|\d]*\}\}"));
-      lexer.AddDefinition(new TokenDefinition("endfor", @"\{\{endfor\}\}"));
-      lexer.AddDefinition(new TokenDefinition("property", @"\{\{[\w|\d]*\}\}"));
-      lexer.AddDefinition(new TokenDefinition("constant", "[^{]+"));
-
-      return lexer;
     }
   }
 }

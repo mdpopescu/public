@@ -14,13 +14,13 @@ namespace Renfield.SimpleViewEngine.Tests
     public class Parse : ParserTests
     {
       private dynamic model;
-      private Parser sut;
+      private SimpleViewParser sut;
 
       [TestInitialize]
       public void SetUp()
       {
         model = new ExpandoObject();
-        sut = new Parser();
+        sut = new SimpleViewParser();
       }
 
       [TestMethod]
