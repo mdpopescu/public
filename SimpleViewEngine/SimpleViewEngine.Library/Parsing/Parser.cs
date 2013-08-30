@@ -41,6 +41,10 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
             nodes.Add(new ConditionalNode(ExtractName(value, 5), InternalParse(tokens, ref index, "endif")));
             break;
 
+          case "else":
+            nodes.Add(new ElseNode());
+            break;
+
           case "foreach":
             nodes.Add(new RepeaterNode(ExtractName(value, 10), InternalParse(tokens, ref index, "endfor")));
             break;

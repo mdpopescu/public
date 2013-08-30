@@ -43,6 +43,7 @@ namespace Renfield.SimpleViewEngine.Demo
     {
       var lexer = new SimpleLexer();
       lexer.AddDefinition(new TokenDefinition("if", @"\{\{if \w[\w|\d]*\}\}"));
+      lexer.AddDefinition(new TokenDefinition("else", @"\{\{else\}\}"));
       lexer.AddDefinition(new TokenDefinition("endif", @"\{\{endif\}\}"));
       lexer.AddDefinition(new TokenDefinition("foreach", @"\{\{foreach \w[\w|\d]*\}\}"));
       lexer.AddDefinition(new TokenDefinition("endfor", @"\{\{endfor\}\}"));

@@ -107,6 +107,44 @@ namespace Renfield.SimpleViewEngine.Tests
       }
 
       [TestMethod]
+      public void ReturnsConditionalNodeWithElseCase1()
+      {
+        model.b = true;
+
+        var result = sut.Parse(new[]
+        {
+          new Token("if", "{{if b}}", null),
+          new Token("constant", "test1", null),
+          new Token("else", "{{else}}", null),
+          new Token("constant", "test2", null),
+          new Token("endif", "{{endif}}", null),
+        }).ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.IsInstanceOfType(result[0], typeof (ConditionalNode));
+        Assert.AreEqual("test1", result[0].Eval(model));
+      }
+
+      [TestMethod]
+      public void ReturnsConditionalNodeWithElseCase2()
+      {
+        model.b = false;
+
+        var result = sut.Parse(new[]
+        {
+          new Token("if", "{{if b}}", null),
+          new Token("constant", "test1", null),
+          new Token("else", "{{else}}", null),
+          new Token("constant", "test2", null),
+          new Token("endif", "{{endif}}", null),
+        }).ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.IsInstanceOfType(result[0], typeof (ConditionalNode));
+        Assert.AreEqual("test2", result[0].Eval(model));
+      }
+
+      [TestMethod]
       public void ReturnsRepeaterNode()
       {
         model.a = new[] {1, 2, 3};

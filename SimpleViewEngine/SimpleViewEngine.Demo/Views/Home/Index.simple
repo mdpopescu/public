@@ -10,7 +10,7 @@
         <ul>
             {{foreach People}}
             <li>
-                {{LastName}}, {{FirstName}} {{if HasPassport}}ownage!{{endif}}
+                {{LastName}}, {{FirstName}} {{if HasPassport}}ownage!{{else}}blech...{{endif}}
             </li>
             {{endfor}}
         </ul>

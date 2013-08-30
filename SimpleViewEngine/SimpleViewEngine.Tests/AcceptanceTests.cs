@@ -80,6 +80,20 @@ namespace Renfield.SimpleViewEngine.Tests
     }
 
     [TestMethod]
+    public void ConditionalWithElse()
+    {
+      const string TEMPLATE = "a{{if b}}c{{else}}d{{endif}}e";
+
+      model.b = true;
+      var r1 = engine.Run(TEMPLATE, model);
+      model.b = false;
+      var r2 = engine.Run(TEMPLATE, model);
+      var result = r1 + "-" + r2;
+
+      Assert.AreEqual("ace-ade", result);
+    }
+
+    [TestMethod]
     [ExpectedException(typeof (KeyNotFoundException))]
     public void ThrowsIfPropertyInConditionalDoesNotExist()
     {
@@ -189,6 +203,7 @@ namespace Renfield.SimpleViewEngine.Tests
     {
       var lexer = new SimpleLexer();
       lexer.AddDefinition(new TokenDefinition("if", @"\{\{if \w[\w|\d]*\}\}"));
+      lexer.AddDefinition(new TokenDefinition("else", @"\{\{else\}\}"));
       lexer.AddDefinition(new TokenDefinition("endif", @"\{\{endif\}\}"));
       lexer.AddDefinition(new TokenDefinition("foreach", @"\{\{foreach \w[\w|\d]*\}\}"));
       lexer.AddDefinition(new TokenDefinition("endfor", @"\{\{endfor\}\}"));
