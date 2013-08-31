@@ -87,7 +87,7 @@
     <Compile Include="Parsing\TokenPosition.cs" />
     <Compile Include="AST\Node.cs" />
     <Compile Include="Parsing\SimpleParser.cs" />
-    <Compile Include="Parsing\TokenStream.cs" />
+    <Compile Include="Parsing\ParsingRules.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parsing\Engine.cs" />
     <Compile Include="AST\PropertyNode.cs" />

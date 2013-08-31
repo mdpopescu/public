@@ -20,7 +20,7 @@ namespace Renfield.SimpleViewEngine.Tests
       public void SetUp()
       {
         model = new ExpandoObject();
-        sut = new SimpleParser(TokenStream.Create);
+        sut = new SimpleParser(ParsingRules.Create);
       }
 
       [TestMethod]

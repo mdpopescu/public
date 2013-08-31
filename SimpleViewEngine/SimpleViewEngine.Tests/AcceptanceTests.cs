@@ -19,7 +19,7 @@ namespace Renfield.SimpleViewEngine.Tests
     public void SetUp()
     {
       lexer = new SimpleLexer();
-      parser = new SimpleParser(TokenStream.Create);
+      parser = new SimpleParser(ParsingRules.Create);
       engine = new Engine(lexer, parser);
       model = new ExpandoObject();
     }

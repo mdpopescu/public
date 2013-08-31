@@ -6,7 +6,7 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
 {
   public class SimpleParser : Parser
   {
-    public SimpleParser(Func<IEnumerable<Token>, TokenStream> tokenStreamFactory)
+    public SimpleParser(Func<IEnumerable<Token>, ParsingRules> tokenStreamFactory)
     {
       this.tokenStreamFactory = tokenStreamFactory;
     }
@@ -20,6 +20,6 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
 
     //
 
-    private readonly Func<IEnumerable<Token>, TokenStream> tokenStreamFactory;
+    private readonly Func<IEnumerable<Token>, ParsingRules> tokenStreamFactory;
   }
 }

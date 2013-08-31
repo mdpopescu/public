@@ -5,14 +5,14 @@ using Renfield.SimpleViewEngine.Library.AST;
 
 namespace Renfield.SimpleViewEngine.Library.Parsing
 {
-  public class TokenStream
+  public class ParsingRules
   {
-    public static TokenStream Create(IEnumerable<Token> tokens)
+    public static ParsingRules Create(IEnumerable<Token> tokens)
     {
-      return new TokenStream(tokens);
+      return new ParsingRules(tokens);
     }
 
-    public TokenStream(IEnumerable<Token> tokens)
+    public ParsingRules(IEnumerable<Token> tokens)
     {
       rules = new Lazy<Dictionary<string, Func<string, Node>>>(CreateRules);
       this.tokens = tokens.ToList();
