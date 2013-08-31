@@ -13,6 +13,7 @@ namespace Renfield.SimpleViewEngine.Demo.Controllers
       var model = new IndexPageModel
       {
         Title = "sample page",
+        Boss = new Person {FirstName = "Clark", LastName = "Kent", HasPassport = false},
         People = new List<Person>
         {
           new Person {FirstName = "Gigi", LastName = "Meseriasu", HasPassport = true},

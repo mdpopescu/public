@@ -7,6 +7,8 @@
 <body>
     <div>
         <h2>{{Title}}</h2>
+		<br/>
+		<p>Boss: {{Boss.FirstName}} {{Boss.LastName}} {{if Boss.HasPassport}}ownage!{{else}}blech...{{endif}}</p>
         <ul>
             {{foreach People}}
             <li>

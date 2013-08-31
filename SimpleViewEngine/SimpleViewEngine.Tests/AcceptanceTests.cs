@@ -57,6 +57,17 @@ namespace Renfield.SimpleViewEngine.Tests
     }
 
     [TestMethod]
+    public void SubProperty()
+    {
+      const string TEMPLATE = "c1 {{v.a}} c2 {{v.b}} c3";
+      model.v = new {a = "123", b = "456"};
+
+      var result = engine.Run(TEMPLATE, model);
+
+      Assert.AreEqual("c1 123 c2 456 c3", result);
+    }
+
+    [TestMethod]
     [ExpectedException(typeof (KeyNotFoundException))]
     public void ThrowsIfPropertyDoesNotExist()
     {
