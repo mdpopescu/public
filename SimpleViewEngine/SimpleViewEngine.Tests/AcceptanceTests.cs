@@ -10,15 +10,15 @@ namespace Renfield.SimpleViewEngine.Tests
   public class AcceptanceTests
   {
     private Lexer lexer;
-    private SimpleViewParser parser;
+    private SimpleParser parser;
     private Engine engine;
     private dynamic model;
 
     [TestInitialize]
     public void SetUp()
     {
-      lexer = new SimpleViewLexer();
-      parser = new SimpleViewParser();
+      lexer = new SimpleLexer();
+      parser = new SimpleParser();
       engine = new Engine(lexer, parser);
       model = new ExpandoObject();
     }

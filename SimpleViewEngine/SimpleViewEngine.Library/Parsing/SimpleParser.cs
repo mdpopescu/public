@@ -5,7 +5,7 @@ using Renfield.SimpleViewEngine.Library.AST;
 
 namespace Renfield.SimpleViewEngine.Library.Parsing
 {
-  public class SimpleViewParser : Parser
+  public class SimpleParser : Parser
   {
     public IEnumerable<Node> Parse(IEnumerable<Token> tokens)
     {

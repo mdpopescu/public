@@ -1,4 +1,4 @@
-﻿namespace Renfield.SimpleViewEngine.Demo.Models
+﻿namespace Renfield.SimpleViewEngine.Demo.Models.Home.Index
 {
   public class Person
   {

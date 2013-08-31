@@ -99,8 +99,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\PageModel.cs" />
-    <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\Home\Acquisitions\Acquisition.cs" />
+    <Compile Include="Models\Home\Acquisitions\AcquisitionItem.cs" />
+    <Compile Include="Models\Home\Acquisitions\AcquisitionPageModel.cs" />
+    <Compile Include="Models\Home\Index\IndexPageModel.cs" />
+    <Compile Include="Models\Home\Index\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -160,15 +163,16 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <None Include="Scripts\jquery-1.7.1.intellisense.js" />
-    <Content Include="Scripts\jquery-1.7.1.js" />
-    <Content Include="Scripts\jquery-1.7.1.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\modernizr-2.5.3.js" />
+    <None Include="Scripts\External\jquery-1.7.1.intellisense.js" />
+    <Content Include="Scripts\External\jquery-1.7.1.js" />
+    <Content Include="Scripts\External\jquery-1.7.1.min.js" />
+    <None Include="Scripts\External\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\External\jquery-ui-1.8.20.js" />
+    <Content Include="Scripts\External\jquery-ui-1.8.20.min.js" />
+    <Content Include="Scripts\External\jquery.validate.js" />
+    <Content Include="Scripts\External\jquery.validate.min.js" />
+    <Content Include="Scripts\External\modernizr-2.5.3.js" />
+    <Content Include="Scripts\Home\Acquisitions\page.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -176,22 +180,24 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\MicrosoftAjax.js" />
-    <Content Include="Scripts\MicrosoftAjax.debug.js" />
-    <Content Include="Scripts\MicrosoftMvcAjax.js" />
-    <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
-    <Content Include="Scripts\MicrosoftMvcValidation.js" />
-    <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
+    <Content Include="Scripts\External\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\External\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\External\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\External\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\External\MicrosoftAjax.js" />
+    <Content Include="Scripts\External\MicrosoftAjax.debug.js" />
+    <Content Include="Scripts\External\MicrosoftMvcAjax.js" />
+    <Content Include="Scripts\External\MicrosoftMvcAjax.debug.js" />
+    <Content Include="Scripts\External\MicrosoftMvcValidation.js" />
+    <Content Include="Scripts\External\MicrosoftMvcValidation.debug.js" />
     <Content Include="Views\Web.config" />
-    <Content Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Home\Acquisitions.simple" />
     <None Include="Views\Home\Index.simple" />
+    <None Include="Views\Shared\Error.simple" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

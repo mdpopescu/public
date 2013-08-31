@@ -15,5 +15,6 @@
             {{endfor}}
         </ul>
     </div>
+	<p><a href="{{LinkToAcquisitions}}">Acquisitions</a></p>
 </body>
 </html>

@@ -8,19 +8,19 @@ using Renfield.SimpleViewEngine.Library.Parsing;
 namespace Renfield.SimpleViewEngine.Tests
 {
   [TestClass]
-  public class ParserTests
+  public class SimpleParserTests
   {
     [TestClass]
-    public class Parse : ParserTests
+    public class Parse : SimpleParserTests
     {
       private dynamic model;
-      private SimpleViewParser sut;
+      private SimpleParser sut;
 
       [TestInitialize]
       public void SetUp()
       {
         model = new ExpandoObject();
-        sut = new SimpleViewParser();
+        sut = new SimpleParser();
       }
 
       [TestMethod]

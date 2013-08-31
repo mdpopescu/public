@@ -81,12 +81,12 @@
     <Compile Include="Parsing\Lexer.cs" />
     <Compile Include="Parsing\Parser.cs" />
     <Compile Include="Parsing\RegexLexer.cs" />
-    <Compile Include="Parsing\SimpleViewLexer.cs" />
+    <Compile Include="Parsing\SimpleLexer.cs" />
     <Compile Include="Parsing\Token.cs" />
     <Compile Include="Parsing\TokenDefinition.cs" />
     <Compile Include="Parsing\TokenPosition.cs" />
     <Compile Include="AST\Node.cs" />
-    <Compile Include="Parsing\SimpleViewParser.cs" />
+    <Compile Include="Parsing\SimpleParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parsing\Engine.cs" />
     <Compile Include="AST\PropertyNode.cs" />

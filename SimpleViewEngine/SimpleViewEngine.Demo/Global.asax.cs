@@ -40,7 +40,7 @@ namespace Renfield.SimpleViewEngine.Demo
 
     private static void RegisterViewEngine()
     {
-      var engine = new Engine(new SimpleViewLexer(), new SimpleViewParser());
+      var engine = new Engine(new SimpleLexer(), new SimpleParser());
       ViewEngines.Engines.Add(new Library.ViewEngine.SimpleViewEngine(engine));
     }
   }
