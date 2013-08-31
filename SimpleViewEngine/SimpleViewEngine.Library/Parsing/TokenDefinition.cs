@@ -13,7 +13,10 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
     public TokenDefinition(string type, string pattern, bool isIgnored = false)
     {
       Type = type;
-      Regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+      Regex = new Regex(pattern, RegexOptions.Compiled |
+                                 RegexOptions.CultureInvariant |
+                                 RegexOptions.IgnoreCase |
+                                 RegexOptions.Singleline);
       IsIgnored = isIgnored;
     }
   }

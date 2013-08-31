@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Renfield.SimpleViewEngine.Library.Parsing;
+using Renfield.SimpleViewEngine.Library.Properties;
 
 namespace Renfield.SimpleViewEngine.Tests
 {
@@ -18,7 +19,7 @@ namespace Renfield.SimpleViewEngine.Tests
     public void SetUp()
     {
       lexer = new SimpleLexer();
-      parser = new SimpleParser();
+      parser = new SimpleParser(TokenStream.Create);
       engine = new Engine(lexer, parser);
       model = new ExpandoObject();
     }
@@ -205,6 +206,18 @@ namespace Renfield.SimpleViewEngine.Tests
       model.b = new[] {1, 2, 3};
 
       engine.Run(TEMPLATE, model);
+    }
+
+    [TestMethod]
+    public void Html()
+    {
+      var template = Resources.HtmlFragment;
+      model.Title = "Index";
+
+      var result = engine.Run(template, model);
+
+      var expected = template.Replace("{{Title}}", "Index");
+      Assert.AreEqual(expected, result);
     }
   }
 }

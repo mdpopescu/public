@@ -7,6 +7,11 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
 {
   public class TokenStream
   {
+    public static TokenStream Create(IEnumerable<Token> tokens)
+    {
+      return new TokenStream(tokens);
+    }
+
     public TokenStream(IEnumerable<Token> tokens)
     {
       this.tokens = tokens.ToList();

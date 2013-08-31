@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>{{Title}}</title>
+</head>
+<body>
+    <div>
+        <h2>{{Title}}</h2>
+    </div>
+    <script type="text/javascript">
+      function stuff() {
+        alert('x');
+      }
+    </script>
+</body>
+</html>
