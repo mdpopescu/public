@@ -34,6 +34,16 @@ namespace Renfield.SimpleViewEngine.Tests
     }
 
     [TestMethod]
+    public void ConstantStringWithCurlyBraces()
+    {
+      const string TEMPLATE = "testing { non-property }} sequences";
+
+      var result = engine.Run(TEMPLATE, model);
+
+      Assert.AreEqual(TEMPLATE, result);
+    }
+
+    [TestMethod]
     public void PropertySubstitutions()
     {
       const string TEMPLATE = "c1 {{v1}} c2 {{v2}} c3";
