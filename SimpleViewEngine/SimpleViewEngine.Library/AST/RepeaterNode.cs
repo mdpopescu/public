@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Renfield.SimpleViewEngine.Library.AST
 {
@@ -15,16 +14,13 @@ namespace Renfield.SimpleViewEngine.Library.AST
 
     public override string Eval(object model)
     {
-      var sb = new StringBuilder();
-
       var list = (IEnumerable) GetProperty(model, name);
-      foreach (var o in list)
-      {
-        var copy = o;
-        sb.Append(string.Join("", nodes.Select(it => it.Eval(copy))));
-      }
 
-      return sb.ToString();
+      var strings = list
+        .Cast<object>()
+        .SelectMany<object, string>(o => nodes.Select(it => it.Eval(o)));
+
+      return string.Join("", strings);
     }
 
     //

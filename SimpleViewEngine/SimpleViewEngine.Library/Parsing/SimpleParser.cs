@@ -7,6 +7,11 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
 {
   public class SimpleParser : Parser
   {
+    public SimpleParser()
+    {
+      
+    }
+
     public IEnumerable<Node> Parse(IEnumerable<Token> tokens)
     {
       var index = 0;
