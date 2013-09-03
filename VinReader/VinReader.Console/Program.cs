@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Drawing;
-using Renfield.VinReader.Library;
+using ZXing;
 
 namespace Renfield.VinReader.Command
 {
@@ -9,18 +8,23 @@ namespace Renfield.VinReader.Command
   {
     private static void Main(string[] args)
     {
-      Console.Write("File name: ");
-      var filename = Console.ReadLine();
-
-      using (var image = Image.FromFile(filename))
-      using (var bmp = new Bitmap(image))
+      do
       {
-        var codes = new ArrayList();
-        BarcodeImaging.FullScanPageCode39(ref codes, bmp, 50);
+        Console.Write("File name: ");
+        var filename = Console.ReadLine();
+        if (string.IsNullOrEmpty(filename))
+          break;
 
-        foreach (var code in codes)
-          Console.WriteLine(code.ToString());
-      }
+        using (var bmp = (Bitmap) Image.FromFile(filename))
+        {
+          var reader = new BarcodeReader();
+          var result = reader.Decode(bmp);
+          if (result == null)
+            Console.WriteLine("Could not decode " + filename);
+          else
+            Console.WriteLine("{0} => {1}", result.BarcodeFormat, result.Text);
+        }
+      } while (true);
     }
   }
 }

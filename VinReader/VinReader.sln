@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinReader.Library", "VinReader.Library\VinReader.Library.csproj", "{8BA49E19-0B66-4C52-9AF8-7BAE885437CF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinReader.Command", "VinReader.Console\VinReader.Command.csproj", "{8151818F-9CC8-447A-9494-A44B0C3DB817}"
 EndProject
 Global
@@ -11,10 +9,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8BA49E19-0B66-4C52-9AF8-7BAE885437CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8BA49E19-0B66-4C52-9AF8-7BAE885437CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8BA49E19-0B66-4C52-9AF8-7BAE885437CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8BA49E19-0B66-4C52-9AF8-7BAE885437CF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8151818F-9CC8-447A-9494-A44B0C3DB817}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8151818F-9CC8-447A-9494-A44B0C3DB817}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8151818F-9CC8-447A-9494-A44B0C3DB817}.Release|Any CPU.ActiveCfg = Release|Any CPU

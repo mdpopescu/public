@@ -36,6 +36,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="zxing">
+      <HintPath>..\..\..\lib\zxing\net4.0\zxing.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -43,12 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\VinReader.Library\VinReader.Library.csproj">
-      <Project>{8ba49e19-0b66-4c52-9af8-7bae885437cf}</Project>
-      <Name>VinReader.Library</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
