@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using ZXing;
 
 namespace Renfield.VinReader.Command
@@ -18,72 +20,65 @@ namespace Renfield.VinReader.Command
         if (string.IsNullOrEmpty(filename))
           break;
 
-        TryDecode(filename, Console.WriteLine, name => Console.WriteLine("Could not decode " + name));
+        var result = TryDecode(filename);
+        Console.WriteLine(result ?? "Could not decode " + filename);
       } while (true);
     }
 
-    private static void TryDecode(string filename, Action<string> onSuccess, Action<string> onFailure)
+    private static string TryDecode(string filename)
     {
       using (var bmp = (Bitmap) Image.FromFile(filename))
       {
-        var result = TryInvertFlipAndDecode(bmp);
-        if (result != null)
-        {
-          onSuccess(result);
-          return;
-        }
+        //var result = TryRotateAndDecode(bmp);
+        //if (result != null)
+        //  return result;
 
-        // split the image horizontally in "slices", 50 pixels high, and try with each slices until one decodes
-        var y = 0;
-        while (y < bmp.Height)
-        {
-          var rect = new Rectangle(0, y, bmp.Width, SLICE_HEIGHT);
-          var bitmap = ToGrayscale(CropImage(bmp, rect));
-          //bitmap.Save(Path.Combine(Path.GetDirectoryName(filename), string.Format("slice-{0}.jpg", y)), ImageFormat.Jpeg);
+        //// split the image horizontally in "slices", 50 pixels high, and try with each slices until one decodes
+        //var y = 0;
+        //while (y < bmp.Height)
+        //{
+        //  var rect = new Rectangle(0, y, bmp.Width, SLICE_HEIGHT);
+        //  var bitmap = ToGrayscale(CropImage(bmp, rect));
+        //  //bitmap.Save(Path.Combine(Path.GetDirectoryName(filename), string.Format("slice-{0}.jpg", y)), ImageFormat.Jpeg);
 
-          result = TryInvertFlipAndDecode(bitmap);
-          if (result != null)
-          {
-            onSuccess(result);
-            return;
-          }
+        //  result = TryRotateAndDecode(bitmap);
+        //  if (result != null)
+        //    return result;
 
-          y += SLICE_HEIGHT;
-        }
+        //  y += SLICE_HEIGHT;
+        //}
 
-        onFailure(filename);
+        var codes = new ArrayList();
+        BarcodeImaging.FullScanPageCode39(ref codes, bmp, 50);
+        var candidate = codes
+          .Cast<string>()
+          .Select(it => new string(it.Where(char.IsLetterOrDigit).ToArray()))
+          .Select(it => it.StartsWith("I") ? it.Substring(1) : it)
+          .OrderByDescending(it => it.Length)
+          .FirstOrDefault();
+
+        return candidate;
       }
     }
 
-    private static string TryInvertFlipAndDecode(Bitmap bmp)
+    private static string TryRotateAndDecode(Bitmap bmp)
     {
-      var result = Decode(bmp) ?? Decode(Invert(bmp)) ?? Decode(Flip(bmp)) ?? Decode(Flip(Invert(bmp)));
-
-      return result;
-    }
-
-    private static Bitmap Invert(Image bmp)
-    {
-      var ia = new ImageAttributes();
-      var cm = new ColorMatrix();
-      cm.Matrix00 = cm.Matrix11 = cm.Matrix22 = 0.99f;
-      cm.Matrix33 = cm.Matrix44 = 1;
-      cm.Matrix40 = cm.Matrix41 = cm.Matrix42 = .04f;
-      ia.SetColorMatrix(cm);
-
-      var bitmap = new Bitmap(bmp.Width, bmp.Height);
-      using (var g = Graphics.FromImage(bitmap))
+      for (var i = 1; i <= 4; i++)
       {
-        g.DrawImage(bmp, new Rectangle(0, 0, bmp.Width, bmp.Height), 0, 0, bmp.Width, bmp.Height, GraphicsUnit.Pixel, ia);
+        var result = Decode(bmp);
+        if (result != null)
+          return result;
 
-        return bitmap;
+        bmp = Rotate90(bmp);
       }
+
+      return null;
     }
 
-    private static Bitmap Flip(Image bmp)
+    private static Bitmap Rotate90(Image bmp)
     {
       var bitmap = new Bitmap(bmp.Width, bmp.Height);
-      bitmap.RotateFlip(RotateFlipType.RotateNoneFlipX);
+      bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
 
       return bitmap;
     }
