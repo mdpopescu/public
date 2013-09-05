@@ -14,10 +14,11 @@ namespace Renfield.VideoSpinner.Library
 {
   public class WmvVideoMaker : VideoMaker
   {
-    public WmvVideoMaker(string workArea, Shuffler shuffler)
+    public WmvVideoMaker(string workArea, Shuffler shuffler, Logger logger)
     {
       this.workArea = workArea;
       this.shuffler = shuffler;
+      this.logger = logger;
 
       transitionsList = LoadTransitions(Resources.Transitions);
       rnd = new Random();
@@ -27,6 +28,8 @@ namespace Renfield.VideoSpinner.Library
     {
       using (ITimeline timeline = new DefaultTimeline())
       {
+        logger.Log("Creating video file " + spec.Name);
+
         var video = timeline.AddVideoGroup("video", FRAME_RATE, 32, spec.Width, spec.Height);
         var audio = timeline.AddAudioGroup("audio", FRAME_RATE);
 
@@ -53,6 +56,7 @@ namespace Renfield.VideoSpinner.Library
 
     private readonly string workArea;
     private readonly Shuffler shuffler;
+    private readonly Logger logger;
     private readonly List<Guid> transitionsList;
     private readonly Random rnd;
 
@@ -142,17 +146,18 @@ namespace Renfield.VideoSpinner.Library
       if (imageFiles.Any())
       {
         imageFiles = shuffler.Shuffle(imageFiles).ToList();
+        LogList("Images", imageFiles);
         var durations = shuffler.GetRandomizedDurations(duration, imageFiles.Count).ToList();
+        LogList("Durations", durations);
         var durationSums = durations.RunningSum().ToList();
+        LogList("DurationSums", durationSums);
 
         imageFiles = CreateImageTimeline(imageFiles, duration, EFFECT_DURATION, durationSums).ToList();
+        LogList("Image list", imageFiles);
         var images = imageFiles.Select(LoadImage);
 
         foreach (var img in images)
         {
-          // add noise to the images before adding them to the video track
-          //img = AddNoise(img, width, height);
-
           videoTrack.AddImage(img, 0, EFFECT_DURATION);
 
           img.Dispose();
@@ -161,12 +166,21 @@ namespace Renfield.VideoSpinner.Library
         foreach (var time in durationSums)
         {
           var transition = GetRandomTransition();
+          logger.Log("Adding transition (true): " + transition.TransitionId);
           videoTrack.AddTransition(time - 0.3, 0.3, transition, true);
+
+          transition = GetRandomTransition();
+          logger.Log("Adding transition (false): " + transition.TransitionId);
           videoTrack.AddTransition(time, 0.3, transition, false);
         }
       }
 
       return videoTrack;
+    }
+
+    private void LogList<T>(string prefix, IEnumerable<T> list)
+    {
+      logger.Log(string.Format("{0}: {1}", prefix, string.Join(", ", list)));
     }
 
     private TransitionDefinition GetRandomTransition()

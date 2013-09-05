@@ -116,7 +116,8 @@ namespace Renfield.VideoSpinner
       using (new WaitGuard())
       using (new Guard(DisableUI, EnableUI))
       {
-        var maker = new WmvVideoMaker(Path.GetTempPath(), new RandomShuffler());
+        var logger = new FileLogger(Path.Combine(txtOutputFolder.Text, "log.txt"));
+        var maker = new WmvVideoMaker(Path.GetTempPath(), new RandomShuffler(), logger);
         var spec = CreateSpec();
 
         var data = ReadCsv(txtCsvFile.Text).ToList();
