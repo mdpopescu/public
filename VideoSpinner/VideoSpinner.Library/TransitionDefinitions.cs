@@ -3,15 +3,15 @@ using Splicer.Timeline;
 
 namespace Renfield.VideoSpinner.Library
 {
-  public static class EffectDefinitions
+  public class TransitionDefinitions
   {
-// ReSharper disable InconsistentNaming
+    // ReSharper disable InconsistentNaming
     public static readonly Guid WMTFX = new Guid("B4DC8DD9-2CC1-4081-9B2B-20D7030234EF");
-// ReSharper restore InconsistentNaming
+    // ReSharper restore InconsistentNaming
 
-    public static EffectDefinition CreateEaseInEffect()
+    public static TransitionDefinition CreateEaseInEffect()
     {
-      var definition = new EffectDefinition(WMTFX);
+      var definition = new TransitionDefinition(WMTFX);
       definition.Parameters.Add(new Parameter("InternalName", "Simple3D"));
       definition.Parameters.Add(new Parameter("InitialScaleA", 0.5));
       definition.Parameters.Add(new Parameter("ScaleA", 1.5));
@@ -20,9 +20,9 @@ namespace Renfield.VideoSpinner.Library
       return definition;
     }
 
-    public static EffectDefinition CreateEaseOutEffect()
+    public static TransitionDefinition CreateEaseOutEffect()
     {
-      var definition = new EffectDefinition(WMTFX);
+      var definition = new TransitionDefinition(WMTFX);
       definition.Parameters.Add(new Parameter("InternalName", "Simple3D"));
       definition.Parameters.Add(new Parameter("InitialScaleA", 1.5));
       definition.Parameters.Add(new Parameter("ScaleA", 0.5));
@@ -31,9 +31,9 @@ namespace Renfield.VideoSpinner.Library
       return definition;
     }
 
-    public static EffectDefinition PanUp()
+    public static TransitionDefinition PanUp()
     {
-      var definition = new EffectDefinition(WMTFX);
+      var definition = new TransitionDefinition(WMTFX);
       definition.Parameters.Add(new Parameter("InternalName", "Simple3D"));
       definition.Parameters.Add(new Parameter("InitialScaleA", 1.00));
       definition.Parameters.Add(new Parameter("ScaleA", 1.00));
@@ -43,9 +43,9 @@ namespace Renfield.VideoSpinner.Library
       return definition;
     }
 
-    public static EffectDefinition PanDown()
+    public static TransitionDefinition PanDown()
     {
-      var definition = new EffectDefinition(WMTFX);
+      var definition = new TransitionDefinition(WMTFX);
       definition.Parameters.Add(new Parameter("InternalName", "Simple3D"));
       definition.Parameters.Add(new Parameter("InitialScaleA", 1.00));
       definition.Parameters.Add(new Parameter("ScaleA", 1.00));
@@ -55,9 +55,9 @@ namespace Renfield.VideoSpinner.Library
       return definition;
     }
 
-    public static EffectDefinition PanLeft()
+    public static TransitionDefinition PanLeft()
     {
-      var definition = new EffectDefinition(WMTFX);
+      var definition = new TransitionDefinition(WMTFX);
       definition.Parameters.Add(new Parameter("InternalName", "Simple3D"));
       definition.Parameters.Add(new Parameter("InitialScaleA", 1.00));
       definition.Parameters.Add(new Parameter("ScaleA", 1.00));
@@ -67,9 +67,9 @@ namespace Renfield.VideoSpinner.Library
       return definition;
     }
 
-    public static EffectDefinition PanRight()
+    public static TransitionDefinition PanRight()
     {
-      var definition = new EffectDefinition(WMTFX);
+      var definition = new TransitionDefinition(WMTFX);
       definition.Parameters.Add(new Parameter("InternalName", "Simple3D"));
       definition.Parameters.Add(new Parameter("InitialScaleA", 1.00));
       definition.Parameters.Add(new Parameter("ScaleA", 1.00));
@@ -79,9 +79,9 @@ namespace Renfield.VideoSpinner.Library
       return definition;
     }
 
-    public static EffectDefinition RotateAndZoomOut()
+    public static TransitionDefinition RotateAndZoomOut()
     {
-      var definition = new EffectDefinition(WMTFX);
+      var definition = new TransitionDefinition(WMTFX);
       definition.Parameters.Add(new Parameter("InternalName", "Simple3D"));
       definition.Parameters.Add(new Parameter("InitialScaleA", 1.00));
       definition.Parameters.Add(new Parameter("ScaleA", "smaller"));
@@ -91,9 +91,9 @@ namespace Renfield.VideoSpinner.Library
       return definition;
     }
 
-    public static EffectDefinition FlipIn()
+    public static TransitionDefinition FlipIn()
     {
-      var definition = new EffectDefinition(WMTFX);
+      var definition = new TransitionDefinition(WMTFX);
       definition.Parameters.Add(new Parameter("InternalName", "Simple3D"));
       definition.Parameters.Add(new Parameter("InitialScaleA", 1.00));
       definition.Parameters.Add(new Parameter("ScaleA", 1.0));
@@ -103,9 +103,9 @@ namespace Renfield.VideoSpinner.Library
       return definition;
     }
 
-    public static EffectDefinition FlipOut()
+    public static TransitionDefinition FlipOut()
     {
-      var definition = new EffectDefinition(WMTFX);
+      var definition = new TransitionDefinition(WMTFX);
       definition.Parameters.Add(new Parameter("InternalName", "Simple3D"));
       definition.Parameters.Add(new Parameter("InitialScaleA", 1.00));
       definition.Parameters.Add(new Parameter("ScaleA", 1.0));
@@ -115,9 +115,9 @@ namespace Renfield.VideoSpinner.Library
       return definition;
     }
 
-    public static EffectDefinition PinWheelZoomIn()
+    public static TransitionDefinition PinWheelZoomIn()
     {
-      var definition = new EffectDefinition(WMTFX);
+      var definition = new TransitionDefinition(WMTFX);
       definition.Parameters.Add(new Parameter("InternalName", "Simple3D"));
       definition.Parameters.Add(new Parameter("InitialScaleA", 0.5));
       definition.Parameters.Add(new Parameter("ScaleA", 1.5));
@@ -127,9 +127,9 @@ namespace Renfield.VideoSpinner.Library
       return definition;
     }
 
-    public static EffectDefinition PinWheelZoomOut()
+    public static TransitionDefinition PinWheelZoomOut()
     {
-      var definition = new EffectDefinition(WMTFX);
+      var definition = new TransitionDefinition(WMTFX);
       definition.Parameters.Add(new Parameter("InternalName", "Simple3D"));
       definition.Parameters.Add(new Parameter("InitialScaleA", 1.5));
       definition.Parameters.Add(new Parameter("ScaleA", 0.5));

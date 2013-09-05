@@ -160,6 +160,8 @@ namespace Renfield.VideoSpinner.Library
         {
           var clip = videoTrack.AddImage(img, 0, EFFECT_DURATION);
           //video.AddEffect(clip.Offset, clip.Duration, GetRandomEffect());
+          //video.AddTransition(clip.Offset, clip.Duration, CreateWMTFX_Move_SmallerImage("right"));
+          //videoTrack.AddTransition(clip.Offset, clip.Duration, CreateWMTFX_Move_SmallerImage("right"));
 
           img.Dispose();
         }
@@ -169,15 +171,22 @@ namespace Renfield.VideoSpinner.Library
         {
           var clipDuration = time - previousTime;
 
-          var transition = GetRandomTransition();
-          logger.Log("Adding transition (true): " + transition.TransitionId);
-          video.AddTransition(time - 0.3, 0.3, transition, true);
+          //if (time >= 0.5)
+          //{
+          //  var transition = GetRandomTransition();
+          //  logger.Log("Adding transition (true): " + transition.TransitionId);
+          //  video.AddTransition(time - 0.5, 0.5, transition, true);
 
-          transition = GetRandomTransition();
-          logger.Log("Adding transition (false): " + transition.TransitionId);
-          video.AddTransition(time, 0.3, transition, false);
+          //  transition = GetRandomTransition();
+          //  logger.Log("Adding transition (false): " + transition.TransitionId);
+          //  video.AddTransition(time, 0.5, transition, false);
+          //}
 
-          video.AddEffect(previousTime, clipDuration, GetRandomEffect());
+          //video.AddEffect(previousTime, clipDuration, GetRandomEffect());
+          //video.AddTransition(previousTime, clipDuration, GetRandomTransition2());
+          //video.AddTransition(previousTime, clipDuration, CreateWMTFX_Move_SmallerImage("right"));
+          videoTrack.AddTransition(time - clipDuration, clipDuration / 2, CreateWMTFX_Move_SmallerImage("2"), true);
+          //videoTrack.AddTransition(time - clipDuration / 2, clipDuration / 2, CreateWMTFX_Move_SmallerImage("up"), false);
 
           previousTime = time;
         }
@@ -196,6 +205,74 @@ namespace Renfield.VideoSpinner.Library
       var index = rnd.Next(0, transitionsList.Count);
 
       return new TransitionDefinition(transitionsList[index]);
+    }
+
+    public static TransitionDefinition CreateWMTFX_Move_SmallerImage(string direction)
+    {
+      var transitionDefinition = new TransitionDefinition(new Guid("B4DC8DD9-2CC1-4081-9B2B-20D7030234EF"));
+
+      var param1 = new Parameter("InternalName", "Simple3D");
+      transitionDefinition.Parameters.Add(param1);
+
+      param1 = new Parameter("InitialScaleA", "0.70");
+      transitionDefinition.Parameters.Add(param1);
+
+      param1 = new Parameter("ScaleA", "0.70");
+      transitionDefinition.Parameters.Add(param1);
+
+      param1 = new Parameter("MoveA", direction);
+      transitionDefinition.Parameters.Add(param1);
+
+      param1 = new Parameter("MoveSpeedA", "0.50");
+      transitionDefinition.Parameters.Add(param1);
+
+      return transitionDefinition;
+    }
+
+    private TransitionDefinition GetRandomTransition2()
+    {
+      var index = rnd.Next(0, 11);
+      logger.Log("Adding transition " + index);
+
+      switch (index)
+      {
+        case 0:
+          return TransitionDefinitions.CreateEaseInEffect();
+
+        case 1:
+          return TransitionDefinitions.CreateEaseOutEffect();
+
+        case 2:
+          return TransitionDefinitions.PanUp();
+
+        case 3:
+          return TransitionDefinitions.PanDown();
+
+        case 4:
+          return TransitionDefinitions.PanLeft();
+
+        case 5:
+          return TransitionDefinitions.PanRight();
+
+        case 6:
+          return TransitionDefinitions.RotateAndZoomOut();
+
+        case 7:
+          return TransitionDefinitions.FlipIn();
+
+        case 8:
+          return TransitionDefinitions.FlipOut();
+
+        case 9:
+          return TransitionDefinitions.PinWheelZoomIn();
+
+        case 10:
+          return TransitionDefinitions.PinWheelZoomOut();
+
+        default:
+          // try again - this should never happen
+          return GetRandomTransition2();
+      }
     }
 
     private EffectDefinition GetRandomEffect()

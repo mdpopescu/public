@@ -60,6 +60,7 @@
     </Compile>
     <Compile Include="RandomShuffler.cs" />
     <Compile Include="Shuffler.cs" />
+    <Compile Include="TransitionDefinitions.cs" />
     <Compile Include="VideoMaker.cs" />
     <Compile Include="VideoSpec.cs" />
     <Compile Include="WmvVideoMaker.cs" />
