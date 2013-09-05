@@ -12,6 +12,7 @@ namespace Renfield.VinReader.Command
     {
       return GenerateEffects(bmp)
         .Select(InternalDecode)
+        .Where(it => it != null)
         .FirstOrDefault();
     }
 
@@ -39,11 +40,41 @@ namespace Renfield.VinReader.Command
         y += SLICE_SIZE;
       }
 
+      // split the image horizontally in two parts, one growing and the other one shrinking
+      y = SLICE_SIZE;
+      while (y < bmp.Height)
+      {
+        var rect = new Rectangle(0, 0, bmp.Width, y);
+        using (var slice = CropImage(bmp, rect))
+          yield return ToGrayscale(slice);
+
+        rect = new Rectangle(0, y, bmp.Width, bmp.Height - y);
+        using (var slice = CropImage(bmp, rect))
+          yield return ToGrayscale(slice);
+
+        y += SLICE_SIZE;
+      }
+
       // split the image vertically in "slices"
       var x = 0;
       while (x < bmp.Width)
       {
         var rect = new Rectangle(x, 0, SLICE_SIZE, bmp.Height);
+        using (var slice = CropImage(bmp, rect))
+          yield return ToGrayscale(slice);
+
+        x += SLICE_SIZE;
+      }
+
+      // split the image vertically in two parts, one growing and the other one shrinking
+      x = SLICE_SIZE;
+      while (x < bmp.Width)
+      {
+        var rect = new Rectangle(0, 0, x, bmp.Height);
+        using (var slice = CropImage(bmp, rect))
+          yield return ToGrayscale(slice);
+
+        rect = new Rectangle(x, 0, bmp.Width - x, bmp.Height);
         using (var slice = CropImage(bmp, rect))
           yield return ToGrayscale(slice);
 
