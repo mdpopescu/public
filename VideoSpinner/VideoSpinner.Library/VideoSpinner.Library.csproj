@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EffectDefinitions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileLogger.cs" />
     <Compile Include="Logger.cs" />

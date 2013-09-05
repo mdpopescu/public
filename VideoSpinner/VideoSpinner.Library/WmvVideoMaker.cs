@@ -30,7 +30,7 @@ namespace Renfield.VideoSpinner.Library
       {
         logger.Log("Creating video file " + spec.Name);
 
-        var video = timeline.AddVideoGroup("video", FRAME_RATE, 32, spec.Width, spec.Height);
+        var video = timeline.AddVideoGroup("video", FRAME_RATE, 24, spec.Width, spec.Height);
         var audio = timeline.AddAudioGroup("audio", FRAME_RATE);
 
         // the length of the movie is governed by the audio, so start with that
@@ -41,7 +41,7 @@ namespace Renfield.VideoSpinner.Library
         // now add the video
         var videoTrack = CreateVideo(video, spec.ImageFiles, duration, spec.Width, spec.Height);
 
-        AddWatermark(video, spec.WatermarkFile, duration, spec.Width, spec.Height);
+        //AddWatermark(video, spec.WatermarkFile, duration, spec.Width, spec.Height);
 
         // combine everything and write out the result
         RenderVideo(timeline, spec.Name);
@@ -132,16 +132,16 @@ namespace Renfield.VideoSpinner.Library
     /// <summary>
     /// Creates the video track from the image files, taken in a random order
     /// </summary>
-    /// <param name="tracks">The track container that will hold the new track</param>
+    /// <param name="video">The track container that will hold the new track</param>
     /// <param name="imageFiles">The list of image files to add</param>
     /// <param name="duration">The total duration of the video track</param>
     /// <param name="width">Frame image width</param>
     /// <param name="height">Frame image height</param>
     /// <returns>The new video track</returns>
-    private ITrack CreateVideo(ITrackContainer tracks, IList<string> imageFiles, double duration, int width,
+    private ITrack CreateVideo(IGroup video, IList<string> imageFiles, double duration, int width,
                                int height)
     {
-      var videoTrack = tracks.AddTrack();
+      var videoTrack = video.AddTrack();
 
       if (imageFiles.Any())
       {
@@ -158,20 +158,28 @@ namespace Renfield.VideoSpinner.Library
 
         foreach (var img in images)
         {
-          videoTrack.AddImage(img, 0, EFFECT_DURATION);
+          var clip = videoTrack.AddImage(img, 0, EFFECT_DURATION);
+          //video.AddEffect(clip.Offset, clip.Duration, GetRandomEffect());
 
           img.Dispose();
         }
 
+        var previousTime = 0.0;
         foreach (var time in durationSums)
         {
+          var clipDuration = time - previousTime;
+
           var transition = GetRandomTransition();
           logger.Log("Adding transition (true): " + transition.TransitionId);
-          videoTrack.AddTransition(time - 0.3, 0.3, transition, true);
+          video.AddTransition(time - 0.3, 0.3, transition, true);
 
           transition = GetRandomTransition();
           logger.Log("Adding transition (false): " + transition.TransitionId);
-          videoTrack.AddTransition(time, 0.3, transition, false);
+          video.AddTransition(time, 0.3, transition, false);
+
+          video.AddEffect(previousTime, clipDuration, GetRandomEffect());
+
+          previousTime = time;
         }
       }
 
@@ -188,6 +196,52 @@ namespace Renfield.VideoSpinner.Library
       var index = rnd.Next(0, transitionsList.Count);
 
       return new TransitionDefinition(transitionsList[index]);
+    }
+
+    private EffectDefinition GetRandomEffect()
+    {
+      var index = rnd.Next(0, 11);
+      logger.Log("Adding effect " + index);
+
+      switch (index)
+      {
+        case 0:
+          return EffectDefinitions.CreateEaseInEffect();
+
+        case 1:
+          return EffectDefinitions.CreateEaseOutEffect();
+
+        case 2:
+          return EffectDefinitions.PanUp();
+
+        case 3:
+          return EffectDefinitions.PanDown();
+
+        case 4:
+          return EffectDefinitions.PanLeft();
+
+        case 5:
+          return EffectDefinitions.PanRight();
+
+        case 6:
+          return EffectDefinitions.RotateAndZoomOut();
+
+        case 7:
+          return EffectDefinitions.FlipIn();
+
+        case 8:
+          return EffectDefinitions.FlipOut();
+
+        case 9:
+          return EffectDefinitions.PinWheelZoomIn();
+
+        case 10:
+          return EffectDefinitions.PinWheelZoomOut();
+
+        default:
+          // try again - this should never happen
+          return GetRandomEffect();
+      }
     }
 
     private static IEnumerable<string> CreateImageTimeline(IList<string> imageFiles, double duration,
