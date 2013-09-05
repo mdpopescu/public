@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Speech.Synthesis;
+using Renfield.VideoSpinner.Library.Properties;
 using Splicer.Renderer;
 using Splicer.Timeline;
 using Splicer.WindowsMedia;
@@ -18,6 +18,9 @@ namespace Renfield.VideoSpinner.Library
     {
       this.workArea = workArea;
       this.shuffler = shuffler;
+
+      transitionsList = LoadTransitions(Resources.Transitions);
+      rnd = new Random();
     }
 
     public void Create(VideoSpec spec)
@@ -28,16 +31,14 @@ namespace Renfield.VideoSpinner.Library
         var audio = timeline.AddAudioGroup("audio", FRAME_RATE);
 
         // the length of the movie is governed by the audio, so start with that
-        var audioTrack = AddVoiceTrack(audio, spec.Text);
-        var soundsTrack = AddSoundsTrack(audioTrack, spec.SoundFiles);
-
-        var duration = Math.Max(audioTrack.Duration, soundsTrack.Duration);
+        var voiceTrack = AddVoiceTrack(audio, spec.Text);
+        var duration = voiceTrack.Duration;
+        var musicTrack = AddBackgroundMusic(audio, spec.SoundFiles, duration);
 
         // now add the video
-        CreateVideo(video, spec.ImageFiles, duration, spec.Width, spec.Height);
+        var videoTrack = CreateVideo(video, spec.ImageFiles, duration, spec.Width, spec.Height);
 
-        AddWatermark(video, spec.WatermarkText, spec.WatermarkSize, spec.WatermarkColor, duration, spec.Width,
-          spec.Height);
+        AddWatermark(video, spec.WatermarkFile, duration, spec.Width, spec.Height);
 
         // combine everything and write out the result
         RenderVideo(timeline, spec.Name);
@@ -48,11 +49,21 @@ namespace Renfield.VideoSpinner.Library
 
     private const double FRAME_RATE = 24.0;
     private const double FRAME_DURATION = 1 / FRAME_RATE;
-    private const int ALPHA = 63;
-    private const int DOT_SIZE = 8;
+    private const double EFFECT_DURATION = 8 * FRAME_DURATION;
 
     private readonly string workArea;
     private readonly Shuffler shuffler;
+    private readonly List<Guid> transitionsList;
+    private readonly Random rnd;
+
+    private static List<Guid> LoadTransitions(string list)
+    {
+      return list
+        .Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
+        .Select(line => line.Substring(0, 38))
+        .Select(Guid.Parse)
+        .ToList();
+    }
 
     /// <summary>
     /// Adds the voice track
@@ -95,16 +106,20 @@ namespace Renfield.VideoSpinner.Library
     /// <summary>
     /// Adds the sound files in a random order
     /// </summary>
-    /// <param name="audioTrack">The track where the sound files should be added</param>
+    /// <param name="tracks">The track container that will hold the new track</param>
     /// <param name="soundFiles">The list of sound files to add</param>
+    /// <param name="duration"></param>
     /// <returns>The new track</returns>
-    private ITrack AddSoundsTrack(ITrack audioTrack, IList<string> soundFiles)
+    private ITrack AddBackgroundMusic(ITrackContainer tracks, IList<string> soundFiles, double duration)
     {
+      var audioTrack = tracks.AddTrack();
+
       if (soundFiles.Any())
       {
         var shuffled = shuffler.Shuffle(soundFiles);
         foreach (var soundFile in shuffled)
-          audioTrack.AddAudio(soundFile);
+          audioTrack.AddAudio(soundFile, 0, duration);
+        audioTrack.AddEffect(0, audioTrack.Duration, StandardEffects.CreateAudioEnvelope(0.05));
       }
 
       return audioTrack;
@@ -122,8 +137,6 @@ namespace Renfield.VideoSpinner.Library
     private ITrack CreateVideo(ITrackContainer tracks, IList<string> imageFiles, double duration, int width,
                                int height)
     {
-      const double EFFECT_DURATION = 8 * FRAME_DURATION;
-
       var videoTrack = tracks.AddTrack();
 
       if (imageFiles.Any())
@@ -133,20 +146,34 @@ namespace Renfield.VideoSpinner.Library
         var durationSums = durations.RunningSum().ToList();
 
         imageFiles = CreateImageTimeline(imageFiles, duration, EFFECT_DURATION, durationSums).ToList();
+        var images = imageFiles.Select(LoadImage);
 
-        // add noise to the images before adding them to the video track
-        foreach (var imageFile in imageFiles)
+        foreach (var img in images)
         {
-          var img = LoadImage(imageFile);
-          img = AddNoise(img, width, height);
+          // add noise to the images before adding them to the video track
+          //img = AddNoise(img, width, height);
 
           videoTrack.AddImage(img, 0, EFFECT_DURATION);
 
           img.Dispose();
         }
+
+        foreach (var time in durationSums)
+        {
+          var transition = GetRandomTransition();
+          videoTrack.AddTransition(time - 0.3, 0.3, transition, true);
+          videoTrack.AddTransition(time, 0.3, transition, false);
+        }
       }
 
       return videoTrack;
+    }
+
+    private TransitionDefinition GetRandomTransition()
+    {
+      var index = rnd.Next(0, transitionsList.Count);
+
+      return new TransitionDefinition(transitionsList[index]);
     }
 
     private static IEnumerable<string> CreateImageTimeline(IList<string> imageFiles, double duration,
@@ -170,110 +197,21 @@ namespace Renfield.VideoSpinner.Library
       return Image.FromFile(fileName);
     }
 
-    private static Image AddNoise(Image img, int width, int height)
+    private void AddWatermark(ITrackContainer tracks, string watermarkFile, double duration, int width, int height)
     {
-      var rect = new Rectangle(0, 0, width, height);
-
-      var result = new Bitmap(width, height);
-      using (var canvas = Graphics.FromImage(result))
+      using (var img = Image.FromFile(watermarkFile))
       {
-        canvas.InterpolationMode = InterpolationMode.HighQualityBicubic;
-
-        // add the resized input
-        canvas.DrawImage(img, rect, new Rectangle(0, 0, img.Width, img.Height), GraphicsUnit.Pixel);
-
-        // add the noise
-        var noise = CreateNoiseImage(width, height);
-        canvas.DrawImage(noise, rect, rect, GraphicsUnit.Pixel);
-
-        canvas.Save();
-
-        return result;
-      }
-    }
-
-    private static Image CreateNoiseImage(int width, int height)
-    {
-      var rnd = new Random();
-      var dotCount = width * height / 64;
-
-      var img = new Bitmap(width, height);
-
-      using (var drawing = Graphics.FromImage(img))
-      {
-        // paint the background
-        drawing.Clear(Color.FromArgb(0, 0, 0, 0));
-
-        // generate randomly-colored semi-transparent dots
-        for (var j = 0; j < dotCount; j++)
+        var watermarkImage = new Bitmap(width, height);
+        using (var g = Graphics.FromImage(watermarkImage))
         {
-          var color = GetRandomColor(rnd);
-          if (rnd.Next(2) == 0)
-            using (var brush = new SolidBrush(color))
-              drawing.FillEllipse(brush, rnd.Next(width), rnd.Next(height), rnd.Next(DOT_SIZE) + 2,
-                rnd.Next(DOT_SIZE) + 2);
-          else
-            using (var pen = new Pen(color))
-              drawing.DrawLine(pen, rnd.Next(width), rnd.Next(height), rnd.Next(width), rnd.Next(height));
+          g.DrawImage(img, width / 4, height - height / 5, width / 2, height / 5);
+          g.Save();
+
+          var imageFileName = Path.Combine(workArea, "wm.gif");
+          watermarkImage.Save(imageFileName, ImageFormat.Gif);
+
+          CreateWatermark(tracks, imageFileName, duration);
         }
-
-        drawing.Save();
-      }
-
-      return img;
-    }
-
-    private static Color GetRandomColor(Random rnd)
-    {
-      return Color.FromArgb(ALPHA, rnd.Next(255), rnd.Next(255), rnd.Next(255));
-    }
-
-    private void AddWatermark(ITrackContainer tracks, string watermarkText, int watermarkSize, Color watermarkColor,
-                              double duration, int width, int height)
-    {
-      using (var watermarkImage = CreateImage(watermarkText, new Font("Arial Black", watermarkSize, FontStyle.Bold),
-        Color.FromArgb(255, watermarkColor), Color.FromArgb(0, Color.Black), width, height))
-      {
-        var imageFileName = Path.Combine(workArea, "wm.gif");
-        watermarkImage.Save(imageFileName, ImageFormat.Gif);
-
-        CreateWatermark(tracks, imageFileName, duration);
-      }
-    }
-
-    private static Image CreateImage(string text, Font font, Color textColor, Color backColor, int width, int height)
-    {
-      var size = ComputeTextSize(text, font);
-
-      //var img = new Bitmap((int) size.Width, (int) size.Height);
-      var img = new Bitmap(width, height);
-      using (var canvas = Graphics.FromImage(img))
-      {
-        //paint the background
-        canvas.Clear(backColor);
-
-        //create a brush for the text
-        using (var textBrush = new SolidBrush(textColor))
-        {
-          canvas.ScaleTransform(width / size.Width, 1);
-          canvas.DrawString(text, font, textBrush, 0, height  - size.Height);
-          canvas.ResetTransform();
-
-          canvas.Save();
-
-          return img;
-        }
-      }
-    }
-
-    private static SizeF ComputeTextSize(string text, Font font)
-    {
-      //create a dummy bitmap just to get a graphics object
-      using (var img = new Bitmap(1, 1))
-      using (var drawing = Graphics.FromImage(img))
-      {
-        //measure the string to see how big the image needs to be
-        return drawing.MeasureString(text, font);
       }
     }
 

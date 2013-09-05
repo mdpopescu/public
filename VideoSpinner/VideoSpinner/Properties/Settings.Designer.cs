@@ -106,5 +106,17 @@ namespace Renfield.VideoSpinner.Properties {
                 this["outputFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string watermarkFile {
+            get {
+                return ((string)(this["watermarkFile"]));
+            }
+            set {
+                this["watermarkFile"] = value;
+            }
+        }
     }
 }

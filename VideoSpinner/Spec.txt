@@ -38,6 +38,7 @@ audio file". So the new requirement is: the images will appear for d +/- d/2 sec
 N is the number of image files. Eg, if there are 10 images and the sound is 20 seconds long, each image will appear for
 between 1 and 3 seconds.]
 
+Change requested: the length of the video is determined by the voice track
 
 But they must NOT be still images. There must always be 
 movement. The videos must use as many different effects as possible so that youtube will not 
