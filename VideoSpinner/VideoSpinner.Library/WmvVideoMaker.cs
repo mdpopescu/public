@@ -30,7 +30,7 @@ namespace Renfield.VideoSpinner.Library
       {
         logger.Log("Creating video file " + spec.Name);
 
-        var video = timeline.AddVideoGroup("video", FRAME_RATE, 24, spec.Width, spec.Height);
+        var video = timeline.AddVideoGroup("video", FRAME_RATE, 32, spec.Width, spec.Height);
         var audio = timeline.AddAudioGroup("audio", FRAME_RATE);
 
         // the length of the movie is governed by the audio, so start with that
@@ -41,7 +41,7 @@ namespace Renfield.VideoSpinner.Library
         // now add the video
         var videoTrack = CreateVideo(video, spec.ImageFiles, duration, spec.Width, spec.Height);
 
-        //AddWatermark(video, spec.WatermarkFile, duration, spec.Width, spec.Height);
+        AddWatermark(video, spec.WatermarkFile, duration, spec.Width, spec.Height);
 
         // combine everything and write out the result
         RenderVideo(timeline, spec.Name);
@@ -185,7 +185,7 @@ namespace Renfield.VideoSpinner.Library
           //video.AddEffect(previousTime, clipDuration, GetRandomEffect());
           //video.AddTransition(previousTime, clipDuration, GetRandomTransition2());
           //video.AddTransition(previousTime, clipDuration, CreateWMTFX_Move_SmallerImage("right"));
-          videoTrack.AddTransition(time - clipDuration, clipDuration / 2, CreateWMTFX_Move_SmallerImage("2"), true);
+          //videoTrack.AddTransition(time - clipDuration, clipDuration / 2, CreateWMTFX_Move_SmallerImage("2"), true);
           //videoTrack.AddTransition(time - clipDuration / 2, clipDuration / 2, CreateWMTFX_Move_SmallerImage("up"), false);
 
           previousTime = time;
@@ -349,7 +349,8 @@ namespace Renfield.VideoSpinner.Library
         var watermarkImage = new Bitmap(width, height);
         using (var g = Graphics.FromImage(watermarkImage))
         {
-          g.DrawImage(img, width / 4, height - height / 5, width / 2, height / 5);
+          g.Clear(Color.Transparent);
+          g.DrawImage(img, 0, height - height / 5, width, height / 5);
           g.Save();
 
           var imageFileName = Path.Combine(workArea, "wm.gif");
