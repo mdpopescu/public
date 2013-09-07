@@ -5,6 +5,11 @@ namespace Renfield.AppendOnly.Library
 {
   public class GenericAppendOnlyFile<T> : GenericAppendOnly<T>
   {
+    public long[] Index
+    {
+      get { return file.Index; }
+    }
+
     public GenericAppendOnlyFile(LowLevelAppendOnlyFile file, SerializationEngine serializationEngine)
     {
       this.file = file;

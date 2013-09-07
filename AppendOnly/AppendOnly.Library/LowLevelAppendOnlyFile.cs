@@ -1,16 +1,18 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Renfield.AppendOnly.Library
 {
   public class LowLevelAppendOnlyFile : LowLevelAppendOnly
   {
-    public long[] Index { get; private set; }
+    public long[] Index
+    {
+      get { return index.ToArray(); }
+    }
 
-    public LowLevelAppendOnlyFile(FileAccessor data, long[] index = null)
+    public LowLevelAppendOnlyFile(FileAccessor data, IEnumerable<long> index = null)
     {
       this.data = data;
-      Index = index ?? RebuildIndex().ToArray();
+      this.index = new List<long>(index ?? RebuildIndex());
     }
 
     /// <summary>
@@ -21,8 +23,9 @@ namespace Renfield.AppendOnly.Library
     {
       var position = data.get_length();
       data.write_long(position, record.Length);
+      index.Add(position);
 
-      position += sizeof(long);
+      position += sizeof (long);
       data.write_bytes(position, record);
     }
 
@@ -63,6 +66,7 @@ namespace Renfield.AppendOnly.Library
     //
 
     private readonly FileAccessor data;
+    private readonly List<long> index;
 
     private IEnumerable<long> RebuildIndex()
     {

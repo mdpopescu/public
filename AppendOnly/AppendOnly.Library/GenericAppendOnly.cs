@@ -4,6 +4,8 @@ namespace Renfield.AppendOnly.Library
 {
   public interface GenericAppendOnly<T>
   {
+    long[] Index { get; }
+
     /// <summary>
     /// Adds a record to the file
     /// </summary>
