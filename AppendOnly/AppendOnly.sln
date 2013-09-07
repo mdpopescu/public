@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppendOnly.Library", "AppendOnly.Library\AppendOnly.Library.csproj", "{F5E03FEB-11EA-4362-85E9-A9C88E1E932F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppendOnly.Tests", "AppendOnly.Tests\AppendOnly.Tests.csproj", "{D671090E-62E2-4CF9-99A5-86DAA0F83770}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F5E03FEB-11EA-4362-85E9-A9C88E1E932F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5E03FEB-11EA-4362-85E9-A9C88E1E932F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5E03FEB-11EA-4362-85E9-A9C88E1E932F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5E03FEB-11EA-4362-85E9-A9C88E1E932F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D671090E-62E2-4CF9-99A5-86DAA0F83770}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D671090E-62E2-4CF9-99A5-86DAA0F83770}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D671090E-62E2-4CF9-99A5-86DAA0F83770}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D671090E-62E2-4CF9-99A5-86DAA0F83770}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
