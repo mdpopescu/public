@@ -3,6 +3,8 @@ Public repository - CC-by-SA 3.0
 
 * Anagrams: generates anagrams for a phrase; using a unix words dictionary (see the about box for source)
 
+* AppendOnly: project for append-only files with variable-length records; I intend to use it in a CQRS project later on. See article at http://mdpopescu.blogspot.com/2013/09/append-only-files.html
+
 * BinarySearchTimings: comparing different search algorithms; see article at http://mdpopescu.blogspot.com/2013/05/optimization-implementing-binary-search.html
 
 * CompareExcelFiles: compares two Excel files with the same structure, based on the indicated columns; shows for each file what records are present in that one but not the other
