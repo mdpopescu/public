@@ -1,0 +1,6 @@
+﻿Using C:\Users\capy\AppData\Local\Temp\tmpC056.tmp - writing and reading 100000
+records
+append - time elapsed: 3176 msec
+read all - time elapsed: 1252 msec
+rebuild index - time elapsed: 273 msec
+Press any key to continue . . .
