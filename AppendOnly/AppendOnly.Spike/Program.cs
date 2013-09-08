@@ -53,7 +53,6 @@ namespace Renfield.AppendOnly.Spike
         {
           var data = new StreamAccessor(stream);
           var lFile = new LowLevelAppendOnlyFile(data);
-          var file = new GenericAppendOnlyFile<TestClass>(lFile, serializer);
         }
       });
 
