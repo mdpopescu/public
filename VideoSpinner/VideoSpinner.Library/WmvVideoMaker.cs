@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Speech.Synthesis;
+using System.Threading.Tasks;
 using Renfield.VideoSpinner.Library.Properties;
 using Splicer.Renderer;
 using Splicer.Timeline;
@@ -39,8 +40,7 @@ namespace Renfield.VideoSpinner.Library
         var musicTrack = AddBackgroundMusic(audio, spec.SoundFiles, duration);
 
         // now add the video
-        var videoTrack = CreateVideo(video, spec.ImageFiles, duration, spec.Width, spec.Height);
-
+        CreateVideo(video, spec.ImageFiles, duration, spec.Width, spec.Height);
         AddWatermark(video, spec.WatermarkFile, duration, spec.Width, spec.Height);
 
         // combine everything and write out the result

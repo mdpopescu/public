@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataAccess;
 using Renfield.VideoSpinner.Library;
@@ -21,7 +22,6 @@ namespace Renfield.VideoSpinner
     private void SetStatus(string status)
     {
       lblStatus.Text = status;
-      pbStatus.Increment(1);
     }
 
 // ReSharper disable InconsistentNaming
@@ -63,6 +63,21 @@ namespace Renfield.VideoSpinner
         .Rows
         .Select(row => new[] {row["Keyword"], row["Text to speech"]})
         .ToList();
+    }
+
+    private async Task ProcessRecords(IEnumerable<string[]> data, VideoSpec spec, VideoMaker maker)
+    {
+      foreach (var record in data)
+      {
+        spec.Name = Path.Combine(txtOutputFolder.Text, record[0] + ".wmv");
+        spec.Text = record[1];
+
+        SetStatus(spec.Name);
+
+        pbStatus.Increment(1);
+        await Task.Run(() => maker.Create(spec));
+        pbStatus.Increment(1);
+      }
     }
 
     //
@@ -109,11 +124,10 @@ namespace Renfield.VideoSpinner
         txtOutputFolder.Text = dlg.FileName;
     }
 
-    private void btnStart_Click(object sender, EventArgs e)
+    private async void btnStart_Click(object sender, EventArgs e)
     {
       Settings.Default.Save();
 
-      using (new WaitGuard())
       using (new Guard(DisableUI, EnableUI))
       {
         var logger = new FileLogger(Path.Combine(txtOutputFolder.Text, "log.txt"));
@@ -121,18 +135,11 @@ namespace Renfield.VideoSpinner
         var spec = CreateSpec();
 
         var data = ReadCsv(txtCsvFile.Text).ToList();
-        pbStatus.Maximum = data.Count;
+        pbStatus.Maximum = data.Count * 2;
         pbStatus.Value = 0;
 
-        foreach (var record in data)
-        {
-          spec.Name = Path.Combine(txtOutputFolder.Text, record[0] + ".wmv");
-          spec.Text = record[1];
-
-          SetStatus(spec.Name);
-
-          maker.Create(spec);
-        }
+        using (new WaitGuard(this))
+          await ProcessRecords(data, spec, maker);
       }
     }
 

@@ -125,7 +125,7 @@
       this.btnBrowse5.Location = new System.Drawing.Point(568, 190);
       this.btnBrowse5.Name = "btnBrowse5";
       this.btnBrowse5.Size = new System.Drawing.Size(34, 23);
-      this.btnBrowse5.TabIndex = 12;
+      this.btnBrowse5.TabIndex = 10;
       this.btnBrowse5.Text = ". . .";
       this.btnBrowse5.UseVisualStyleBackColor = true;
       this.btnBrowse5.Click += new System.EventHandler(this.btnBrowse5_Click);
@@ -167,7 +167,7 @@
       this.btnStart.Location = new System.Drawing.Point(512, 224);
       this.btnStart.Name = "btnStart";
       this.btnStart.Size = new System.Drawing.Size(91, 31);
-      this.btnStart.TabIndex = 13;
+      this.btnStart.TabIndex = 11;
       this.btnStart.Text = "&Start";
       this.btnStart.UseVisualStyleBackColor = true;
       this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
@@ -180,7 +180,7 @@
       this.txtOutputFolder.Location = new System.Drawing.Point(8, 192);
       this.txtOutputFolder.Name = "txtOutputFolder";
       this.txtOutputFolder.Size = new System.Drawing.Size(552, 20);
-      this.txtOutputFolder.TabIndex = 11;
+      this.txtOutputFolder.TabIndex = 9;
       this.txtOutputFolder.Text = global::Renfield.VideoSpinner.Properties.Settings.Default.outputFolder;
       // 
       // txtSounds
@@ -222,7 +222,7 @@
       this.btnBrowse4.Location = new System.Drawing.Point(568, 150);
       this.btnBrowse4.Name = "btnBrowse4";
       this.btnBrowse4.Size = new System.Drawing.Size(34, 23);
-      this.btnBrowse4.TabIndex = 22;
+      this.btnBrowse4.TabIndex = 8;
       this.btnBrowse4.Text = ". . .";
       this.btnBrowse4.UseVisualStyleBackColor = true;
       this.btnBrowse4.Click += new System.EventHandler(this.btnBrowse4_Click);
@@ -235,7 +235,7 @@
       this.txtWatermarkFile.Location = new System.Drawing.Point(8, 152);
       this.txtWatermarkFile.Name = "txtWatermarkFile";
       this.txtWatermarkFile.Size = new System.Drawing.Size(552, 20);
-      this.txtWatermarkFile.TabIndex = 21;
+      this.txtWatermarkFile.TabIndex = 7;
       this.txtWatermarkFile.Text = global::Renfield.VideoSpinner.Properties.Settings.Default.watermarkFile;
       // 
       // MainForm
