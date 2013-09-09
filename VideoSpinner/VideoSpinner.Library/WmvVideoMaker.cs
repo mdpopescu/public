@@ -183,7 +183,7 @@ namespace Renfield.VideoSpinner.Library
           //}
 
           //video.AddEffect(previousTime, clipDuration, GetRandomEffect());
-          //video.AddTransition(previousTime, clipDuration, GetRandomTransition2());
+          video.AddTransition(previousTime, clipDuration, GetRandomTransition2());
           //video.AddTransition(previousTime, clipDuration, CreateWMTFX_Move_SmallerImage("right"));
           //videoTrack.AddTransition(time - clipDuration, clipDuration / 2, CreateWMTFX_Move_SmallerImage("2"), true);
           //videoTrack.AddTransition(time - clipDuration / 2, clipDuration / 2, CreateWMTFX_Move_SmallerImage("up"), false);
@@ -322,7 +322,7 @@ namespace Renfield.VideoSpinner.Library
     }
 
     private static IEnumerable<string> CreateImageTimeline(IList<string> imageFiles, double duration,
-                                                           double effectDuration, IReadOnlyList<double> durationSums)
+                                                           double effectDuration, IList<double> durationSums)
     {
       var current = 0.0;
       var index = 0;

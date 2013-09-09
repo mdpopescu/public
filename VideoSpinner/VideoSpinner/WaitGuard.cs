@@ -4,8 +4,8 @@ namespace Renfield.VideoSpinner
 {
   public class WaitGuard : Guard
   {
-    public WaitGuard(Control control)
-      : base(() => control.UseWaitCursor = true, () => control.UseWaitCursor = false)
+    public WaitGuard()
+      : base(() => Cursor.Current = Cursors.WaitCursor, () => Cursor.Current = Cursors.Default)
     {
     }
   }

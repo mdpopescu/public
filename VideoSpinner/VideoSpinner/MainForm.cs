@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using DataAccess;
 using Renfield.VideoSpinner.Library;
@@ -47,8 +46,8 @@ namespace Renfield.VideoSpinner
     {
       return new VideoSpec
       {
-        Width = 160,
-        Height = 120,
+        Width = 640,
+        Height = 480,
         WatermarkFile = txtWatermarkFile.Text,
         ImageFiles = Directory.GetFiles(txtImages.Text).ToList(),
         SoundFiles = Directory.GetFiles(txtSounds.Text).ToList(),
@@ -65,7 +64,7 @@ namespace Renfield.VideoSpinner
         .ToList();
     }
 
-    private async Task ProcessRecords(IEnumerable<string[]> data, VideoSpec spec, VideoMaker maker)
+    private void ProcessRecords(IEnumerable<string[]> data, VideoSpec spec, VideoMaker maker)
     {
       foreach (var record in data)
       {
@@ -75,7 +74,7 @@ namespace Renfield.VideoSpinner
         SetStatus(spec.Name);
 
         pbStatus.Increment(1);
-        await Task.Run(() => maker.Create(spec));
+        maker.Create(spec);
         pbStatus.Increment(1);
       }
     }
@@ -124,10 +123,11 @@ namespace Renfield.VideoSpinner
         txtOutputFolder.Text = dlg.FileName;
     }
 
-    private async void btnStart_Click(object sender, EventArgs e)
+    private void btnStart_Click(object sender, EventArgs e)
     {
       Settings.Default.Save();
 
+      using (new WaitGuard())
       using (new Guard(DisableUI, EnableUI))
       {
         var logger = new FileLogger(Path.Combine(txtOutputFolder.Text, "log.txt"));
@@ -138,8 +138,7 @@ namespace Renfield.VideoSpinner
         pbStatus.Maximum = data.Count * 2;
         pbStatus.Value = 0;
 
-        using (new WaitGuard(this))
-          await ProcessRecords(data, spec, maker);
+        ProcessRecords(data, spec, maker);
       }
     }
 

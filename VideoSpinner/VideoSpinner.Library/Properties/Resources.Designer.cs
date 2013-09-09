@@ -62,15 +62,16 @@ namespace Renfield.VideoSpinner.Library.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {04921709-B159-11D1-9207-0000F8758E66}, HeightField
-        ///{16B280C5-EE70-11D1-9066-00C04FD9189D}, Fade
-        ///{16B280C8-EE70-11D1-9066-00C04FD9189D}, BasicImage
-        ///{2BC0EF29-E6BA-11D1-81DD-0000F87557DB}, Convolution
-        ///{353359C1-39E1-491B-9951-464FD8AB071C}, Movie Maker Special Effect Inplace 1 Input
-        ///{3D2807C2-43DE-11D2-9900-0000F803FF7A}, Spin
-        ///{421516C1-3CF8-11D2-952A-00C04FA34F05}, Chroma
         ///{42B07B28-2280-4937-B035-0293FB812781}, Redirect
-        ///{4ABF5A06-5568-4834-BEE3-327A6D95A685}, Matrix
-        ///{4CCEA634-FBE0-11D1-906A-00C04FD [rest of string was truncated]&quot;;.
+        ///{4CCEA634-FBE0-11D1-906A-00C04FD9189D}, Pixelate
+        ///{63500AE2-0858-11D2-8CE4-00C04F8ECB10}, CrShatter
+        ///{7312498D-E87A-11D1-81E0-0000F87557DB}, Blur
+        ///{78F30B82-48AA-11D2-9900-0000F803FF7A}, Roll
+        ///{945F5842-3A8D-11D1-9037-00C04FD9189D}, Ripple
+        ///{049F2CE6-D996-4721-897A-DB15CE9EB73D}, Iris
+        ///{164484A9-35D9-4FB7-9FAB-48273B96AA1D}, RadialWipe
+        ///{23E26328-3928-40F2-95E5-93CAD69016EB}, ZigZag
+        ///{4A03DCB9-6E17-4A39-88 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Transitions {
             get {
