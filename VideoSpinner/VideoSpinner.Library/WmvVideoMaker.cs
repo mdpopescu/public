@@ -171,19 +171,19 @@ namespace Renfield.VideoSpinner.Library
         {
           var clipDuration = time - previousTime;
 
-          //if (time >= 0.5)
-          //{
-          //  var transition = GetRandomTransition();
-          //  logger.Log("Adding transition (true): " + transition.TransitionId);
-          //  video.AddTransition(time - 0.5, 0.5, transition, true);
+          if (time >= 0.5)
+          {
+            var transition = GetRandomTransition();
+            logger.Log("Adding transition (true): " + transition.TransitionId);
+            video.AddTransition(time - 0.5, 0.5, transition, true);
 
-          //  transition = GetRandomTransition();
-          //  logger.Log("Adding transition (false): " + transition.TransitionId);
-          //  video.AddTransition(time, 0.5, transition, false);
-          //}
+            transition = GetRandomTransition();
+            logger.Log("Adding transition (false): " + transition.TransitionId);
+            video.AddTransition(time, 0.5, transition, false);
+          }
 
           //video.AddEffect(previousTime, clipDuration, GetRandomEffect());
-          video.AddTransition(previousTime, clipDuration, GetRandomTransition2());
+          //video.AddTransition(previousTime, clipDuration, GetRandomTransition2());
           //video.AddTransition(previousTime, clipDuration, CreateWMTFX_Move_SmallerImage("right"));
           //videoTrack.AddTransition(time - clipDuration, clipDuration / 2, CreateWMTFX_Move_SmallerImage("2"), true);
           //videoTrack.AddTransition(time - clipDuration / 2, clipDuration / 2, CreateWMTFX_Move_SmallerImage("up"), false);
@@ -368,7 +368,7 @@ namespace Renfield.VideoSpinner.Library
       clip.AddEffect(0, duration, StandardEffects.CreateAlphaSetterRamp(0.5));
 
       videoTrack.AddTransition(0, duration,
-        StandardTransitions.CreateKey(KeyTransitionType.Alpha, null, null, null, null, null),
+        StandardTransitions.CreateKey(KeyTransitionType.Rgb, null, null, null, 0x00FFFFFF, null),
         false);
     }
 
