@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Renfield.AppendOnly.Library
 {
@@ -9,7 +10,7 @@ namespace Renfield.AppendOnly.Library
       get { return index.ToArray(); }
     }
 
-    public LowLevelAppendOnlyFile(FileAccessor data, IEnumerable<long> index = null)
+    public LowLevelAppendOnlyFile(RandomAccessor data, IEnumerable<long> index = null)
     {
       this.data = data;
       this.index = new List<long>(index ?? RebuildIndex());
@@ -21,12 +22,15 @@ namespace Renfield.AppendOnly.Library
     /// <param name="record">Record to add</param>
     public void Append(byte[] record)
     {
-      var position = data.get_length();
-      data.write_long(position, record.Length);
-      index.Add(position);
+      lock (lockObject)
+      {
+        var position = data.get_length();
+        data.write_long(position, record.Length);
+        index.Add(position);
 
-      position += sizeof (long);
-      data.write_bytes(position, record);
+        position += sizeof (long);
+        data.write_bytes(position, record);
+      }
     }
 
     /// <summary>
@@ -36,10 +40,16 @@ namespace Renfield.AppendOnly.Library
     /// <returns>The contents of the record</returns>
     public byte[] Read(long i)
     {
+      var length = data.get_length();
       var position = Index[i];
 
       var size = data.read_long(position);
       position += sizeof (long);
+
+      if (position + size > length)
+        throw new Exception(
+          string.Format("Internal error: cannot read {0} bytes starting at {1}; i = {2}, Index[i] = {3}, length = {4}",
+            size, position, i, Index[i], length));
 
       return data.read_bytes(position, size);
     }
@@ -65,8 +75,9 @@ namespace Renfield.AppendOnly.Library
 
     //
 
-    private readonly FileAccessor data;
+    private readonly RandomAccessor data;
     private readonly List<long> index;
+    private readonly object lockObject = new object();
 
     private IEnumerable<long> RebuildIndex()
     {

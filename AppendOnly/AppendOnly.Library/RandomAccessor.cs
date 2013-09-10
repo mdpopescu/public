@@ -1,6 +1,6 @@
 ﻿namespace Renfield.AppendOnly.Library
 {
-  public interface FileAccessor
+  public interface RandomAccessor
   {
     /// <summary>
     /// Returns the length of the available data

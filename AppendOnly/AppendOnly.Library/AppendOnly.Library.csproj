@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="GenericAppendOnlyFile.cs" />
     <Compile Include="LowLevelAppendOnlyFile.cs" />
-    <Compile Include="FileAccessor.cs" />
+    <Compile Include="RandomAccessor.cs" />
     <Compile Include="GenericAppendOnly.cs" />
     <Compile Include="LowLevelAppendOnly.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

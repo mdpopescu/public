@@ -34,7 +34,10 @@ namespace Renfield.AppendOnly.Library
     public T Read(long i)
     {
       var bytes = file.Read(i);
-      return serializationEngine.Deserialize<T>(bytes);
+
+      // the serialization engine might not be thread-safe
+      lock (lockObject)
+        return serializationEngine.Deserialize<T>(bytes);
     }
 
     /// <summary>
@@ -45,12 +48,16 @@ namespace Renfield.AppendOnly.Library
     public IEnumerable<T> ReadFrom(long i)
     {
       var bytesList = file.ReadFrom(i);
-      return bytesList.Select(bytes => serializationEngine.Deserialize<T>(bytes));
+
+      // the serialization engine might not be thread-safe
+      lock (lockObject)
+        return bytesList.Select(bytes => serializationEngine.Deserialize<T>(bytes));
     }
 
     //
 
     private readonly LowLevelAppendOnlyFile file;
     private readonly SerializationEngine serializationEngine;
+    private readonly object lockObject = new object();
   }
 }

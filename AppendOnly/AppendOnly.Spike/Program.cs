@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Renfield.AppendOnly.Library;
 
 namespace Renfield.AppendOnly.Spike
 {
   internal class Program
   {
-    private const int COUNT = 100000;
+    private const int COUNT = 10000;
 
     private static readonly Random rnd = new Random();
 
@@ -17,45 +18,18 @@ namespace Renfield.AppendOnly.Spike
     {
       var serializer = new ProtoBufSerializationEngine();
 
-      var tempFile = Path.GetTempFileName();
-      Console.WriteLine("Using {0} - writing and reading {1} records", tempFile, COUNT);
-
       var list = new List<TestClass>();
-
-      using (var stream = new FileStream(tempFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
+      for (var i = 0; i < COUNT; i++)
       {
-        var data = new StreamAccessor(stream);
-        var lFile = new LowLevelAppendOnlyFile(data);
-        var file = new GenericAppendOnlyFile<TestClass>(lFile, serializer);
-
-        // append COUNT records
-        ShowTime("append", () =>
-        {
-          for (var i = 0; i < COUNT; i++)
-          {
-            var c = new TestClass {Name = GenerateRandomString(20), Address = GenerateRandomString(40)};
-            list.Add(c);
-            file.Append(c);
-          }
-        });
-
-        // read all the records
-        ShowTime("read all", () =>
-        {
-          var records = file.ReadFrom(0).ToList();
-        });
+        var c = new TestClass {Name = GenerateRandomString(20), Address = GenerateRandomString(40)};
+        list.Add(c);
       }
 
-      // close and reopen the file (rebuilds the index)
-      ShowTime("rebuild index", () =>
-      {
-        using (var stream = new FileStream(tempFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
-        {
-          var data = new StreamAccessor(stream);
-          var lFile = new LowLevelAppendOnlyFile(data);
-        }
-      });
+      var tempFile = Path.GetTempFileName();
+      Console.WriteLine("Using {0} - sequentially writing and reading {1} records", tempFile, COUNT);
+      Generate(tempFile, serializer, list, SeqForLoop);
 
+      // verify the data
       using (var stream = new FileStream(tempFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
       {
         var data = new StreamAccessor(stream);
@@ -72,6 +46,52 @@ namespace Renfield.AppendOnly.Spike
           Debug.Assert(r.Address == list[i].Address);
         }
       }
+
+      // multi-threaded test
+      tempFile = Path.GetTempFileName();
+      Console.WriteLine("Using {0} - multi-threaded writing and reading {1} records", tempFile, COUNT);
+      Generate(tempFile, serializer, list, ParForLoop);
+    }
+
+    private static void Generate(string tempFile, SerializationEngine serializer, List<TestClass> list,
+                                 Action<Action<int>> loop)
+    {
+      using (var stream = new FileStream(tempFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
+      {
+        var data = new StreamAccessor(stream);
+        var lFile = new LowLevelAppendOnlyFile(data);
+        var file = new GenericAppendOnlyFile<TestClass>(lFile, serializer);
+
+        // append COUNT records
+        ShowTime("append", () => loop(i => file.Append(list[i])));
+
+        // read all the records
+        ShowTime("read all", () => { var records = file.ReadFrom(0).ToList(); });
+
+        // read all the records, one at a time
+        ShowTime("read all, one at a time", () => loop(i => file.Read(i)));
+      }
+
+      // close and reopen the file (rebuilds the index)
+      ShowTime("rebuild index", () =>
+      {
+        using (var stream = new FileStream(tempFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+        {
+          var data = new StreamAccessor(stream);
+          var lFile = new LowLevelAppendOnlyFile(data);
+        }
+      });
+    }
+
+    private static void SeqForLoop(Action<int> action)
+    {
+      for (var i = 0; i < COUNT; i++)
+        action.Invoke(i);
+    }
+
+    private static void ParForLoop(Action<int> action)
+    {
+      Parallel.For(0, COUNT, action);
     }
 
     private static void ShowTime(string message, Action action)
@@ -82,7 +102,8 @@ namespace Renfield.AppendOnly.Spike
       action.Invoke();
 
       sw.Stop();
-      Console.WriteLine("{0} - time elapsed: {1} msec", message, sw.ElapsedMilliseconds);
+      Console.WriteLine("{0} - time elapsed: {1} msec ({2:0.00} / sec)", message, sw.ElapsedMilliseconds,
+        (double) COUNT / sw.ElapsedMilliseconds * 1000.0);
     }
 
     private static string GenerateRandomString(int maxLength)
