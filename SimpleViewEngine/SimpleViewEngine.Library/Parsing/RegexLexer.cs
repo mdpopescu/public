@@ -65,7 +65,7 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
         currentIndex += matchLength;
       }
 
-      yield return new Token(Token.EOF, Token.EOF, new TokenPosition(currentIndex, currentLine, currentColumn));
+      yield return Token.EOF;
     }
 
     //

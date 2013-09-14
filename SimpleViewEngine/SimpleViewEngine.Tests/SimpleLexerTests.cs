@@ -17,8 +17,7 @@ namespace Renfield.SimpleViewEngine.Tests
       Assert.AreEqual(2, result.Count);
       Assert.AreEqual("constant", result[0].Type);
       Assert.AreEqual("a\nb", result[0].Value);
-      Assert.AreEqual(Token.EOF, result[1].Type);
-      Assert.AreEqual(Token.EOF, result[1].Value);
+      Assert.AreEqual(Token.EOF, result[1]);
     }
   }
 }

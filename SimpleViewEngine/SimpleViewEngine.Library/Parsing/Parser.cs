@@ -5,6 +5,6 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
 {
   public interface Parser
   {
-    IEnumerable<Node> Parse(IEnumerable<Token> tokens);
+    IEnumerable<Node> Parse(TokenList tokens);
   }
 }

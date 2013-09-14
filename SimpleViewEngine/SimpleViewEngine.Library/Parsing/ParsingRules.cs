@@ -2,27 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using Renfield.SimpleViewEngine.Library.AST;
+using Renfield.SimpleViewEngine.Library.Helpers;
 
 namespace Renfield.SimpleViewEngine.Library.Parsing
 {
   public class ParsingRules
   {
-    public static ParsingRules Create(IEnumerable<Token> tokens)
+    public static ParsingRules Create(TokenList tokens)
     {
       return new ParsingRules(tokens);
     }
 
-    public ParsingRules(IEnumerable<Token> tokens)
+    public ParsingRules(TokenList tokens)
     {
       rules = new Lazy<Dictionary<string, Func<string, Node>>>(CreateRules);
-      this.tokens = tokens.ToList();
+      this.tokens = tokens;
     }
 
     public IEnumerable<Node> Parse()
     {
-      index = 0;
-
-      return InternalParse(Token.EOF);
+      return InternalParse(Token.EOF.Type);
     }
 
     //
@@ -39,21 +38,12 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
       };
     }
 
-    protected IEnumerable<Node> InternalParse(string eof)
+    protected IEnumerable<Node> InternalParse(string until)
     {
-      var nodes = new List<Node>();
-
-      while (index < tokens.Count)
-      {
-        var token = tokens[index++];
-        if (token.Type == eof)
-          return nodes;
-
-        var node = ReadNode(token.Type, token.Value);
-        nodes.Add(node);
-      }
-
-      return nodes;
+      return Generators
+        .While(() => tokens.GetNext(), token => token.Type != until)
+        .Select(ReadNode)
+        .ToList();
     }
 
     protected static string ExtractName(string value, int start)
@@ -64,16 +54,15 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
     //
 
     private readonly Lazy<Dictionary<string, Func<string, Node>>> rules;
-    private readonly List<Token> tokens;
-    private int index;
+    private readonly TokenList tokens;
 
-    private Node ReadNode(string type, string value)
+    private Node ReadNode(Token token)
     {
       Func<string, Node> handler;
-      if (!rules.Value.TryGetValue(type, out handler))
-        throw new Exception(string.Format("Unexpected token of type [{0}] and value [{1}]", type, value));
+      if (!rules.Value.TryGetValue(token.Type, out handler))
+        throw new Exception(string.Format("Unexpected token of type [{0}] and value [{1}]", token.Type, token.Value));
 
-      return handler(value);
+      return handler(token.Value);
     }
   }
 }

@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 using Renfield.SimpleViewEngine.Library.Parsing;
+using Renfield.SimpleViewEngine.Library.ViewEngine;
 
 namespace Renfield.SimpleViewEngine.Demo
 {
@@ -40,8 +41,11 @@ namespace Renfield.SimpleViewEngine.Demo
 
     private static void RegisterViewEngine()
     {
-      var engine = new Engine(new SimpleLexer(), new SimpleParser(ParsingRules.Create));
-      ViewEngines.Engines.Add(new Library.ViewEngine.SimpleViewEngine(engine));
+      var engine = new Engine();
+      var lexer = new SimpleLexer();
+      var parser = new SimpleParser(ParsingRules.Create);
+
+      ViewEngines.Engines.Add(new SimpleEngine(engine, lexer, parser));
     }
   }
 }

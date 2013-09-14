@@ -78,12 +78,15 @@
     <Compile Include="AST\ConstantNode.cs" />
     <Compile Include="AST\ElseNode.cs" />
     <Compile Include="AST\RepeaterNode.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\Generators.cs" />
     <Compile Include="Parsing\Lexer.cs" />
     <Compile Include="Parsing\Parser.cs" />
     <Compile Include="Parsing\RegexLexer.cs" />
     <Compile Include="Parsing\SimpleLexer.cs" />
     <Compile Include="Parsing\Token.cs" />
     <Compile Include="Parsing\TokenDefinition.cs" />
+    <Compile Include="Parsing\TokenList.cs" />
     <Compile Include="Parsing\TokenPosition.cs" />
     <Compile Include="AST\Node.cs" />
     <Compile Include="Parsing\SimpleParser.cs" />
@@ -98,7 +101,7 @@
     </Compile>
     <Compile Include="Reflection\ReflectionHelper.cs" />
     <Compile Include="ViewEngine\SimpleView.cs" />
-    <Compile Include="ViewEngine\SimpleViewEngine.cs" />
+    <Compile Include="ViewEngine\SimpleEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -26,7 +26,7 @@ namespace Renfield.SimpleViewEngine.Tests
       [TestMethod]
       public void ReturnsEmptyEnumerable()
       {
-        var result = sut.Parse(Enumerable.Empty<Token>()).ToList();
+        var result = sut.Parse(TokenList.Create(Enumerable.Empty<Token>())).ToList();
 
         Assert.AreEqual(0, result.Count);
       }
@@ -34,7 +34,7 @@ namespace Renfield.SimpleViewEngine.Tests
       [TestMethod]
       public void ReturnsOneConstantNodeWithCorrectValue()
       {
-        var result = sut.Parse(new[] {new Token("constant", "test", null)}).ToList();
+        var result = sut.Parse(TokenList.Create(new[] {new Token("constant", "test", null)})).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (ConstantNode));
@@ -46,7 +46,7 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.a = "x";
 
-        var result = sut.Parse(new[] {new Token("property", "{{a}}", null),}).ToList();
+        var result = sut.Parse(TokenList.Create(new[] {new Token("property", "{{a}}", null),})).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (PropertyNode));
@@ -58,7 +58,7 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model = 123;
 
-        var result = sut.Parse(new[] {new Token("property", "{{}}", null),}).ToList();
+        var result = sut.Parse(TokenList.Create(new[] {new Token("property", "{{}}", null),})).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (PropertyNode));
@@ -70,12 +70,16 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.a = "x";
 
-        var result = sut.Parse(new[]
-        {
-          new Token("property", "{{a}}", null),
-          new Token("(eof)", null, null),
-          new Token("constant", "test", null),
-        }).ToList();
+        var result = sut
+          .Parse(
+            TokenList.Create(
+              new[]
+              {
+                new Token("property", "{{a}}", null),
+                new Token("(eof)", null, null),
+                new Token("constant", "test", null),
+              }))
+          .ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (PropertyNode));
@@ -86,7 +90,7 @@ namespace Renfield.SimpleViewEngine.Tests
       [ExpectedException(typeof (Exception))]
       public void UnknownTokenThrows()
       {
-        sut.Parse(new[] {new Token("unknown", "abc", null),}).ToList();
+        sut.Parse(TokenList.Create(new[] {new Token("unknown", "abc", null),}));
       }
 
       [TestMethod]
@@ -94,12 +98,16 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.b = true;
 
-        var result = sut.Parse(new[]
-        {
-          new Token("if", "{{if b}}", null),
-          new Token("constant", "test", null),
-          new Token("endif", "{{endif}}", null),
-        }).ToList();
+        var result = sut
+          .Parse(
+            TokenList.Create(
+              new[]
+              {
+                new Token("if", "{{if b}}", null),
+                new Token("constant", "test", null),
+                new Token("endif", "{{endif}}", null),
+              }))
+          .ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (ConditionalNode));
@@ -111,14 +119,18 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.b = true;
 
-        var result = sut.Parse(new[]
-        {
-          new Token("if", "{{if b}}", null),
-          new Token("constant", "test1", null),
-          new Token("else", "{{else}}", null),
-          new Token("constant", "test2", null),
-          new Token("endif", "{{endif}}", null),
-        }).ToList();
+        var result = sut
+          .Parse(
+            TokenList.Create(
+              new[]
+              {
+                new Token("if", "{{if b}}", null),
+                new Token("constant", "test1", null),
+                new Token("else", "{{else}}", null),
+                new Token("constant", "test2", null),
+                new Token("endif", "{{endif}}", null),
+              }))
+          .ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (ConditionalNode));
@@ -130,14 +142,18 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.b = false;
 
-        var result = sut.Parse(new[]
-        {
-          new Token("if", "{{if b}}", null),
-          new Token("constant", "test1", null),
-          new Token("else", "{{else}}", null),
-          new Token("constant", "test2", null),
-          new Token("endif", "{{endif}}", null),
-        }).ToList();
+        var result = sut
+          .Parse(
+            TokenList.Create(
+              new[]
+              {
+                new Token("if", "{{if b}}", null),
+                new Token("constant", "test1", null),
+                new Token("else", "{{else}}", null),
+                new Token("constant", "test2", null),
+                new Token("endif", "{{endif}}", null),
+              }))
+          .ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (ConditionalNode));
@@ -149,12 +165,16 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.a = new[] {1, 2, 3};
 
-        var result = sut.Parse(new[]
-        {
-          new Token("foreach", "{{foreach a}}", null),
-          new Token("constant", "test", null),
-          new Token("endfor", "{{endfor}}", null),
-        }).ToList();
+        var result = sut
+          .Parse(
+            TokenList.Create(
+              new[]
+              {
+                new Token("foreach", "{{foreach a}}", null),
+                new Token("constant", "test", null),
+                new Token("endfor", "{{endfor}}", null),
+              }))
+          .ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (RepeaterNode));
