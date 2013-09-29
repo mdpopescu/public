@@ -5,27 +5,27 @@ namespace Renfield.SimpleViewEngine.Tests
 {
   public static class ObjectMother
   {
-    public static TokenList CreateEmptyTokenList()
+    public static TokenList CreateEmptyList()
     {
       return TokenList.Create(Enumerable.Empty<Token>());
     }
 
-    public static TokenList CreateTokenListWithConstantNode()
+    public static TokenList CreateConstantNode()
     {
       return TokenList.Create(new[] {new Token("constant", "test", null)});
     }
 
-    public static TokenList CreateTokenListWithOnePropertyNode()
+    public static TokenList CreateOnePropertyNode()
     {
       return TokenList.Create(new[] {new Token("property", "{{a}}", null)});
     }
 
-    public static TokenList CreateTokenListWithOnePropertyNodeEvaluatingSelf()
+    public static TokenList CreateOnePropertyNodeEvaluatingSelf()
     {
       return TokenList.Create(new[] {new Token("property", "{{}}", null)});
     }
 
-    public static TokenList CreateTokenListWithEofInMiddle()
+    public static TokenList CreateEofInMiddle()
     {
       return TokenList.Create(
         new[]
@@ -36,12 +36,12 @@ namespace Renfield.SimpleViewEngine.Tests
         });
     }
 
-    public static TokenList CreateTokenListWithUnknownToken()
+    public static TokenList CreateUnknownToken()
     {
       return TokenList.Create(new[] {new Token("unknown", "abc", null),});
     }
 
-    public static TokenList CreateTokenListWithIf()
+    public static TokenList CreateIf()
     {
       return TokenList.Create(
         new[]
@@ -52,7 +52,7 @@ namespace Renfield.SimpleViewEngine.Tests
         });
     }
 
-    public static TokenList CreateTokenListWithIfElse()
+    public static TokenList CreateIfElse()
     {
       return TokenList.Create(
         new[]
@@ -65,7 +65,7 @@ namespace Renfield.SimpleViewEngine.Tests
         });
     }
 
-    public static TokenList CreateTokenListWithForEach()
+    public static TokenList CreateForEach()
     {
       return TokenList.Create(
         new[]
@@ -73,6 +73,15 @@ namespace Renfield.SimpleViewEngine.Tests
           new Token("foreach", "{{foreach a}}", null),
           new Token("constant", "test", null),
           new Token("endfor", "{{endfor}}", null),
+        });
+    }
+
+    public static TokenList CreateInclude()
+    {
+      return TokenList.Create(
+        new[]
+        {
+          new Token("include", "{{include other a}}", null),
         });
     }
   }

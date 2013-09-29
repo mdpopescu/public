@@ -26,7 +26,7 @@ namespace Renfield.SimpleViewEngine.Tests
       [TestMethod]
       public void ReturnsEmptyEnumerable()
       {
-        var result = sut.Parse(ObjectMother.CreateEmptyTokenList()).ToList();
+        var result = sut.Parse(ObjectMother.CreateEmptyList()).ToList();
 
         Assert.AreEqual(0, result.Count);
       }
@@ -34,7 +34,7 @@ namespace Renfield.SimpleViewEngine.Tests
       [TestMethod]
       public void ReturnsOneConstantNodeWithCorrectValue()
       {
-        var result = sut.Parse(ObjectMother.CreateTokenListWithConstantNode()).ToList();
+        var result = sut.Parse(ObjectMother.CreateConstantNode()).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (ConstantNode));
@@ -46,7 +46,7 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.a = "x";
 
-        var result = sut.Parse(ObjectMother.CreateTokenListWithOnePropertyNode()).ToList();
+        var result = sut.Parse(ObjectMother.CreateOnePropertyNode()).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (PropertyNode));
@@ -58,7 +58,7 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model = 123;
 
-        var result = sut.Parse(ObjectMother.CreateTokenListWithOnePropertyNodeEvaluatingSelf()).ToList();
+        var result = sut.Parse(ObjectMother.CreateOnePropertyNodeEvaluatingSelf()).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (PropertyNode));
@@ -70,7 +70,7 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.a = "x";
 
-        var result = sut.Parse(ObjectMother.CreateTokenListWithEofInMiddle()).ToList();
+        var result = sut.Parse(ObjectMother.CreateEofInMiddle()).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (PropertyNode));
@@ -81,7 +81,7 @@ namespace Renfield.SimpleViewEngine.Tests
       [ExpectedException(typeof (Exception))]
       public void UnknownTokenThrows()
       {
-        sut.Parse(ObjectMother.CreateTokenListWithUnknownToken());
+        sut.Parse(ObjectMother.CreateUnknownToken());
       }
 
       [TestMethod]
@@ -89,7 +89,7 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.b = true;
 
-        var result = sut.Parse(ObjectMother.CreateTokenListWithIf()).ToList();
+        var result = sut.Parse(ObjectMother.CreateIf()).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (ConditionalNode));
@@ -101,7 +101,7 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.b = true;
 
-        var result = sut.Parse(ObjectMother.CreateTokenListWithIfElse()).ToList();
+        var result = sut.Parse(ObjectMother.CreateIfElse()).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (ConditionalNode));
@@ -113,7 +113,7 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.b = false;
 
-        var result = sut.Parse(ObjectMother.CreateTokenListWithIfElse()).ToList();
+        var result = sut.Parse(ObjectMother.CreateIfElse()).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (ConditionalNode));
@@ -125,7 +125,7 @@ namespace Renfield.SimpleViewEngine.Tests
       {
         model.a = new[] {1, 2, 3};
 
-        var result = sut.Parse(ObjectMother.CreateTokenListWithForEach()).ToList();
+        var result = sut.Parse(ObjectMother.CreateForEach()).ToList();
 
         Assert.AreEqual(1, result.Count);
         Assert.IsInstanceOfType(result[0], typeof (RepeaterNode));
@@ -135,7 +135,10 @@ namespace Renfield.SimpleViewEngine.Tests
       [TestMethod]
       public void ReturnsIncludeNode()
       {
-        Assert.Fail("Not implemented");
+        var result = sut.Parse(ObjectMother.CreateInclude()).ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.IsInstanceOfType(result[0], typeof (IncludeNode));
       }
     }
   }

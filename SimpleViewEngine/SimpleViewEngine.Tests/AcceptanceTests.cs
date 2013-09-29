@@ -258,7 +258,7 @@ namespace Renfield.SimpleViewEngine.Tests
     [TestMethod]
     public void IncludeOtherTemplate()
     {
-      const string MAIN_TEMPLATE = "12{{a}}45{{include other b}}67{{c}89";
+      const string MAIN_TEMPLATE = "12{{a}}45{{include other b}}67{{c}}89";
       const string OTHER_TEMPLATE = "{{x}} and {{y}}";
 
       var mainNodes = Parse(MAIN_TEMPLATE);
@@ -268,7 +268,7 @@ namespace Renfield.SimpleViewEngine.Tests
       model.b = new {x = "x", y = "y"};
       model.c = "c";
 
-      //engine.Define("other", otherNodes);
+      engine.ParseTemplate = name => otherNodes;
 
       var result = engine.Run(mainNodes, model);
 

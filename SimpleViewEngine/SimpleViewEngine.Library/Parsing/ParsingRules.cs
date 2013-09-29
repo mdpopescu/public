@@ -31,10 +31,11 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
       return new Dictionary<string, Func<string, Node>>
       {
         {"constant", value => new ConstantNode(value)},
-        {"property", value => new PropertyNode(ExtractName(value, 2))},
-        {"if", value => new ConditionalNode(ExtractName(value, 5), InternalParse("endif"))},
+        {"property", value => new PropertyNode(ExtractPart(value, 0))},
+        {"if", value => new ConditionalNode(ExtractPart(value, 1), InternalParse("endif"))},
         {"else", value => new ElseNode()},
-        {"foreach", value => new RepeaterNode(ExtractName(value, 10), InternalParse("endfor"))},
+        {"foreach", value => new RepeaterNode(ExtractPart(value, 1), InternalParse("endfor"))},
+        {"include", value => new IncludeNode(ExtractPart(value, 2), ExtractPart(value, 1))}
       };
     }
 
@@ -46,9 +47,13 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
         .ToList();
     }
 
-    protected static string ExtractName(string value, int start)
+    protected static string ExtractPart(string value, int index)
     {
-      return value.Substring(start, value.Length - start - 2);
+      var parts = value
+        .Substring(2, value.Length - 4)
+        .Split(' ');
+
+      return index < parts.Length ? parts[index] : "";
     }
 
     //

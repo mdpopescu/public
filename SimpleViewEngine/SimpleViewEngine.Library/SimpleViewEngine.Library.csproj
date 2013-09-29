@@ -77,6 +77,7 @@
     <Compile Include="AST\ConditionalNode.cs" />
     <Compile Include="AST\ConstantNode.cs" />
     <Compile Include="AST\ElseNode.cs" />
+    <Compile Include="AST\IncludeNode.cs" />
     <Compile Include="AST\RepeaterNode.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\Generators.cs" />
