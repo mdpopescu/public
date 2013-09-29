@@ -15,6 +15,7 @@
       AddDefinition(new TokenDefinition("foreach", BEGIN + "foreach " + PROPNAME + END));
       AddDefinition(new TokenDefinition("endfor", BEGIN + "endfor" + END));
       AddDefinition(new TokenDefinition("property", BEGIN + "(" + PROPNAME + ")?" + END));
+      AddDefinition(new TokenDefinition("include", BEGIN + "include " + IDENT + " " + "(" + PROPNAME + ")?" + END));
       AddDefinition(new TokenDefinition("constant", @".+?(?=$|\{\{)"));
     }
   }

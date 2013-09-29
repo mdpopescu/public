@@ -255,6 +255,32 @@ namespace Renfield.SimpleViewEngine.Tests
       Assert.AreEqual(expected, result);
     }
 
+    [TestMethod]
+    public void IncludeOtherTemplate()
+    {
+      const string MAIN_TEMPLATE = "12{{a}}45{{include other b}}67{{c}89";
+      const string OTHER_TEMPLATE = "{{x}} and {{y}}";
+
+      var mainNodes = Parse(MAIN_TEMPLATE);
+      var otherNodes = Parse(OTHER_TEMPLATE);
+
+      model.a = "a";
+      model.b = new {x = "x", y = "y"};
+      model.c = "c";
+
+      //engine.Define("other", otherNodes);
+
+      var result = engine.Run(mainNodes, model);
+
+      Assert.AreEqual("12a45x and y67c89", result);
+    }
+
+    [TestMethod]
+    public void ConditionalInclude()
+    {
+      Assert.Fail("Not implemented");
+    }
+
     //
 
     private IEnumerable<Node> Parse(string template)
