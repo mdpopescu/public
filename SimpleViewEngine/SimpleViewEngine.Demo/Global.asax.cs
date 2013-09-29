@@ -1,6 +1,9 @@
-﻿using System.Web;
+﻿using System.Collections.Generic;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Renfield.SimpleViewEngine.Library.AST;
+using Renfield.SimpleViewEngine.Library.Helpers;
 using Renfield.SimpleViewEngine.Library.Parsing;
 using Renfield.SimpleViewEngine.Library.ViewEngine;
 
@@ -39,13 +42,22 @@ namespace Renfield.SimpleViewEngine.Demo
 
     //
 
-    private static void RegisterViewEngine()
+    private void RegisterViewEngine()
     {
-      var engine = new Engine();
       var lexer = new SimpleLexer();
       var parser = new SimpleParser(ParsingRules.Create);
+      var engine = new Engine(templateName => Parse(lexer, parser, Context.Server.MapPath(templateName)));
 
       ViewEngines.Engines.Add(new SimpleEngine(engine, lexer, parser));
+    }
+
+    private static IEnumerable<Node> Parse(Lexer lexer, Parser parser, string template)
+    {
+      var tokens = lexer
+        .Tokenize(template)
+        .ToTokenList();
+
+      return parser.Parse(tokens);
     }
   }
 }

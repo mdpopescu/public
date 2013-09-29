@@ -4,7 +4,7 @@ namespace Renfield.SimpleViewEngine.Library.AST
 {
   public class IncludeNode : PropertyNode
   {
-    public Func<string, dynamic, string> EvalTemplate { get; set; }
+    public static Func<string, dynamic, string> EvalTemplate { get; set; }
 
     public IncludeNode(string name, string templateName)
       : base(name)

@@ -15,6 +15,7 @@ namespace Renfield.SimpleViewEngine.Tests
   {
     private Lexer lexer;
     private SimpleParser parser;
+    private Dictionary<string, string> templates;
     private Engine engine;
     private dynamic model;
 
@@ -23,7 +24,8 @@ namespace Renfield.SimpleViewEngine.Tests
     {
       lexer = new SimpleLexer();
       parser = new SimpleParser(ParsingRules.Create);
-      engine = new Engine();
+      templates = new Dictionary<string, string>();
+      engine = new Engine(s => Parse(templates[s]));
       model = new ExpandoObject();
     }
 
@@ -262,13 +264,12 @@ namespace Renfield.SimpleViewEngine.Tests
       const string OTHER_TEMPLATE = "{{x}} and {{y}}";
 
       var mainNodes = Parse(MAIN_TEMPLATE);
-      var otherNodes = Parse(OTHER_TEMPLATE);
 
       model.a = "a";
       model.b = new {x = "x", y = "y"};
       model.c = "c";
 
-      engine.ParseTemplate = name => otherNodes;
+      templates["other"] = OTHER_TEMPLATE;
 
       var result = engine.Run(mainNodes, model);
 
@@ -276,9 +277,36 @@ namespace Renfield.SimpleViewEngine.Tests
     }
 
     [TestMethod]
-    public void ConditionalInclude()
+    public void IncludeCalledIfConditionIsTrue()
     {
-      Assert.Fail("Not implemented");
+      const string MAIN_TEMPLATE = "-{{if a}}--{{include other b}}--{{endif}}-";
+      const string OTHER_TEMPLATE = "{{x}} and {{y}}";
+
+      var mainNodes = Parse(MAIN_TEMPLATE);
+
+      model.a = true;
+      model.b = new {x = "x", y = "y"};
+
+      templates["other"] = OTHER_TEMPLATE;
+
+      var result = engine.Run(mainNodes, model);
+
+      Assert.AreEqual("---x and y---", result);
+    }
+
+    [TestMethod]
+    public void IncludeNotCalledIfConditionIsFalse()
+    {
+      const string MAIN_TEMPLATE = "-{{if a}}--{{include other b}}--{{endif}}-";
+
+      var mainNodes = Parse(MAIN_TEMPLATE);
+
+      model.a = false;
+      model.b = new {x = "x", y = "y"};
+
+      var result = engine.Run(mainNodes, model);
+
+      Assert.AreEqual("--", result);
     }
 
     //

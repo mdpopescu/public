@@ -35,7 +35,7 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
         {"if", value => new ConditionalNode(ExtractPart(value, 1), InternalParse("endif"))},
         {"else", value => new ElseNode()},
         {"foreach", value => new RepeaterNode(ExtractPart(value, 1), InternalParse("endfor"))},
-        {"include", value => new IncludeNode(ExtractPart(value, 2), ExtractPart(value, 1))}
+        {"include", BuildIncludeNode}
       };
     }
 
@@ -68,6 +68,11 @@ namespace Renfield.SimpleViewEngine.Library.Parsing
         throw new Exception(string.Format("Unexpected token of type [{0}] and value [{1}]", token.Type, token.Value));
 
       return handler(token.Value);
+    }
+
+    private static IncludeNode BuildIncludeNode(string value)
+    {
+      return new IncludeNode(ExtractPart(value, 2), ExtractPart(value, 1));
     }
   }
 }
