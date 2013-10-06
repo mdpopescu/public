@@ -56,7 +56,7 @@ namespace Renfield.TextGeneration.Spike
 
     //
 
-    private const int LENGTH = 2;
+    private const int LENGTH = 3;
 
     private readonly List<string> words;
   }
