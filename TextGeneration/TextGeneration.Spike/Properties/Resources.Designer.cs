@@ -61,14 +61,44 @@ namespace Renfield.TextGeneration.Spike.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to  During the summer of tenth grade I took a number theory course at Johns Hopkins University with students from Alaska California and Bogota Colombia.
-        /// Similarly during the summer following eleventh grade I was one of ninety students from New Jersey selected to attend the Governor&apos;s School in the Sciences at Drew University.
-        /// At Drew I took courses in molecular orbital theory special relativity cognitive psychology and I participated in an astrophysics research project.
-        /// For my independent research projec [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to Sherlock Holmes took his bottle from the corner of the mantel-piece and
+        ///his hypodermic syringe from its neat morocco case. With his long,
+        ///white, nervous fingers he adjusted the delicate needle, and rolled back
+        ///his left shirt-cuff.  For some little time his eyes rested thoughtfully
+        ///upon the sinewy forearm and wrist all dotted and scarred with
+        ///innumerable puncture-marks. Finally he thrust the sharp point home,
+        ///pressed down the tiny piston, and sank back into the velvet-lined
+        ///arm-chair with a long sigh  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string english {
             get {
                 return ResourceManager.GetString("english", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CAPITOLUL I
+        ///
+        ///
+        ///Uraganul din 1865. Strigăte în văzduh. Un balon
+        ///luat de o trombă. învelitoarea sfîşiată Cît cuprinzi
+        ///cu ochii, numai mare. Cinci călători. Ce se petrece
+        ///în nacela balonului. Un ţărm în zare. Deznodă-
+        ///mîntul dramei.
+        ///—	Urcăm ?
+        ///—	Nu ! Dimpotrivă ! Coborîm.
+        ///—	Mai rău, domnule Cyrus, ne prăvălim !
+        ///—	Pentru dumnezeu I Atunci ce aşteptaţi ? Arun-
+        ///caţi din lest1 1
+        ///—	Uite. Am golit şi ultimul sac I
+        ///— Balonul se ridică ?
+        ///—	Nu !
+        ///—	Parcă aud un clipocit de valuri 1
+        ///—	Sîntem deasupra mării [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string romanian {
+            get {
+                return ResourceManager.GetString("romanian", resourceCulture);
             }
         }
     }

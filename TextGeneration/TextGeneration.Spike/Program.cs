@@ -20,8 +20,7 @@ namespace Renfield.TextGeneration.Spike
       var prefix = new Prefix();
 
       var words = corpus
-        .Split(new[] {Environment.NewLine}, StringSplitOptions.None)
-        .SelectMany(line => line.Split(' '))
+        .Split(new[] {Environment.NewLine, " "}, StringSplitOptions.RemoveEmptyEntries)
         .ToList();
       foreach (var word in words)
       {
