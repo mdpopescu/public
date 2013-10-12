@@ -1,0 +1,14 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "title";
+}
+
+<h2>title</h2>
+
+<div style="position: absolute;">
+    @for (var i = 0; i < 100; i++)
+    {
+        <div style="position: relative; top: @(i * 20)px; left: 20px;">Text</div>
+    }
+</div>

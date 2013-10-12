@@ -5,10 +5,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfEditor", "PdfEditor\PdfE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A3E408A4-0B48-4559-9693-9A8CBF1D06A1}"
 	ProjectSection(SolutionItems) = preProject
+		form12a.pdf = form12a.pdf
 		spec.txt = spec.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfProcessor", "PdfProcessor\PdfProcessor.csproj", "{52A25034-92EE-48E7-9865-ECF5DEFF5BA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spikes", "Spikes\Spikes.csproj", "{222A721E-93EC-4F04-AE37-2B60D0CAA659}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pdf.Tests", "Pdf.Tests\Pdf.Tests.csproj", "{7815E514-2466-47BC-8332-42663985E2E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +29,14 @@ Global
 		{52A25034-92EE-48E7-9865-ECF5DEFF5BA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52A25034-92EE-48E7-9865-ECF5DEFF5BA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52A25034-92EE-48E7-9865-ECF5DEFF5BA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{222A721E-93EC-4F04-AE37-2B60D0CAA659}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{222A721E-93EC-4F04-AE37-2B60D0CAA659}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{222A721E-93EC-4F04-AE37-2B60D0CAA659}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{222A721E-93EC-4F04-AE37-2B60D0CAA659}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7815E514-2466-47BC-8332-42663985E2E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7815E514-2466-47BC-8332-42663985E2E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7815E514-2466-47BC-8332-42663985E2E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7815E514-2466-47BC-8332-42663985E2E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
