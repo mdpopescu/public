@@ -1,0 +1,41 @@
+
+
+[PdfProcessor]
+load a PDF document
+parse all elements
+identify all elements and their position and store them in an array
+recreate the structure as HTML markup
+
+[PdfEditor]
+return the html string to the caller who will render it on the specified view
+after the user have completed the necessary information the form will be returned to the server
+
+[PdfProcessor]
+iTextSharp will then take the values entered by the user and will plug them into the original PDF file.
+
+
+
+
+
+
+
+
+
+
+
+    public PdfRectangle GetRect(string name)
+    {
+      var fieldPositions = Form.GetFieldPositions(name);
+      if (fieldPositions == null || fieldPositions.Count <= 0)
+        throw new ApplicationException("Error locating field");
+
+      var fieldPosition = fieldPositions[0];
+      var left = fieldPosition.position.Left;
+      var right = fieldPosition.position.Right;
+      var top = fieldPosition.position.Top;
+      var bottom = fieldPosition.position.Bottom;
+
+      return new PdfRectangle(left, bottom, right, top);
+    }
+http://stackoverflow.com/questions/2375674/itextsharp-how-to-get-the-position-of-word-on-a-page
+https://github.com/coolwanglu/pdf2htmlEX/wiki/Building
