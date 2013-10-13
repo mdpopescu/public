@@ -1,10 +1,14 @@
-﻿@model dynamic
+﻿@model string
 
 @{
     ViewBag.Title = "title";
 }
 
 <h2>title</h2>
+
+<div>
+    @Html.Raw(Model)
+</div>
 
 <div style="position: absolute;">
     @for (var i = 0; i < 100; i++)

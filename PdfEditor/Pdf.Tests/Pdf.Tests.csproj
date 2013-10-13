@@ -54,9 +54,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PdfProcessor\PdfProcessor.csproj">
-      <Project>{52a25034-92ee-48e7-9865-ecf5deff5ba3}</Project>
-      <Name>PdfProcessor</Name>
+    <ProjectReference Include="..\Pdf.Library\Pdf.Library.csproj">
+      <Project>{8462d8ae-343d-42b1-a446-37378e49e4e7}</Project>
+      <Name>Pdf.Library</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
