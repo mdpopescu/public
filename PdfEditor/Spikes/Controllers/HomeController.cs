@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using Pdf.Library;
+using iTextSharp.text.pdf;
 
 namespace Spikes.Controllers
 {
@@ -7,10 +8,14 @@ namespace Spikes.Controllers
   {
     public ActionResult Index()
     {
-      var processor = new PdfProcessor();
-      var html = processor.ConvertToHtml(@"..\..\form12a.pdf");
+      using (var reader = new PdfReader(@"S:\git\PdfEditor\form12a.pdf"))
+      {
+        var processor = new PdfProcessor();
+        var html = processor.ConvertToHtml(reader, 1);
 
-      return View(html);
+        //return View(html);
+        return Content(html);
+      }
     }
   }
 }
