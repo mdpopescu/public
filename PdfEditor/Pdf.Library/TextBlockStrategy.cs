@@ -19,7 +19,7 @@ namespace Pdf.Library
       foreach (var block in blocks)
       {
         var rect = block.Rectangle;
-        block.Rectangle = new Rectangle(rect.Left, /*PAGE_HEIGHT - */rect.Top, rect.Right, rect.Bottom);
+        block.Rectangle = new Rectangle(rect.Left, PAGE_HEIGHT - rect.Top, rect.Right, PAGE_HEIGHT - rect.Bottom);
       }
     }
 
@@ -47,8 +47,8 @@ namespace Pdf.Library
       var curBaseline = renderInfo.GetBaseline().GetStartPoint();
       var topRight = renderInfo.GetAscentLine().GetEndPoint();
       var rect = MakeRectangle(curBaseline, topRight);
-      block.FontSize = rect.Height;
-      //block.FontSize = rect.Height * 1.32f;
+      //block.FontSize = rect.Height;
+      block.FontSize = rect.Height * 1.33f;
       block.Rectangle = rect;
 
       block.Value = renderInfo.GetText();

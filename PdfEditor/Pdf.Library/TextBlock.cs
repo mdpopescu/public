@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 
 namespace Pdf.Library
 {
@@ -20,8 +19,8 @@ namespace Pdf.Library
     {
       return
         string.Format(
-          "<span style='font-family: {0}; font-size: {1}; {2}position: absolute; top: {3}; left: {4}; '>{5}</span>",
-          FontName, FontSize, ForceBold ? "font-weight:bold; " : "", Rectangle.Top, Rectangle.Left, Value);
+          "<span style='font-family: {0}; font-size: {1}; {2}position: absolute; top: {3}; left: {4};'>{5}</span>",
+          FontName, FontSize, ForceBold ? "font-weight:bold; " : "", (int) Rectangle.Top, (int) Rectangle.Left, Value);
     }
 
     //
