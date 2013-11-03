@@ -17,10 +17,11 @@ namespace Pdf.Library
 
     public override string ToString()
     {
-      return
-        string.Format(
-          "<span style='font-family: {0}; font-size: {1}; {2}position: absolute; top: {3}; left: {4};'>{5}</span>",
-          FontName, FontSize, ForceBold ? "font-weight:bold; " : "", (int) Rectangle.Top, (int) Rectangle.Left, Value);
+      const string SPAN_FORMAT =
+        "<span style='font-family: {0}; font-size: {1}; {2}position: absolute; top: {3}; left: {4};'>{5}</span>";
+
+      return string.Format(SPAN_FORMAT,
+        FontName, FontSize, ForceBold ? "font-weight:bold; " : "", (int) Rectangle.Top, (int) Rectangle.Left, Value);
     }
 
     //
