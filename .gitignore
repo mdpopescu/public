@@ -33,8 +33,9 @@ TestResults/
 _bin_deployableAssemblies/
 App_Data/
 connectionStrings*.config
-
-# NuGet.exe should be included #
-!NuGet.exe
 *.DotSettings
 *.jtconfig
+
+# These should be included #
+!NuGet.exe
+!packages/**/*.targets
