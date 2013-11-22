@@ -4,6 +4,11 @@
   ViewBag.Title = "Join";
 }
 
+@{
+  const int CANVAS_WIDTH = 640;
+  const int CANVAS_HEIGHT = 480;
+}
+
 @section scripts {
   <script src="~/Scripts/HexagonTools.js"></script>
   <script src="~/Scripts/HexCalc.js"></script>
@@ -11,7 +16,15 @@
 
   <script type="text/javascript">
     $(function () {
-      setWHS(70, 50, 30);
+      // magic constants - I like the way the result looks with them
+      var f1 = 400 / 70;
+      var f2 = 320 / 60;
+      var f3 = 320 / 30;
+
+      const canvasWidth = @CANVAS_WIDTH;
+      const canvasHeight = @CANVAS_HEIGHT;
+
+      setWHS(@CANVAS_WIDTH / f1, @CANVAS_HEIGHT / f2, @CANVAS_HEIGHT / f3);
       drawHexGrid();
     });
   </script>
@@ -22,5 +35,5 @@
 Guid: @Model.Id
 
 <div id="board">
-  <canvas id="hexCanvas" width="400" height="320"></canvas>
+  <canvas id="hexCanvas" width="@CANVAS_WIDTH" height="@CANVAS_HEIGHT"></canvas>
 </div>
