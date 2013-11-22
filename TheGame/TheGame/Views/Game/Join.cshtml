@@ -1,9 +1,26 @@
 ﻿@model TheGame.Models.Game
 
 @{
-    ViewBag.Title = "Join";
+  ViewBag.Title = "Join";
+}
+
+@section scripts {
+  <script src="~/Scripts/HexagonTools.js"></script>
+  <script src="~/Scripts/HexCalc.js"></script>
+  <script src="~/Scripts/HexGrid.js"></script>
+
+  <script type="text/javascript">
+    $(function () {
+      setWHS(70, 50, 30);
+      drawHexGrid();
+    });
+  </script>
 }
 
 <h2>Join</h2>
 
 Guid: @Model.Id
+
+<div id="board">
+  <canvas id="hexCanvas" width="400" height="320"></canvas>
+</div>
