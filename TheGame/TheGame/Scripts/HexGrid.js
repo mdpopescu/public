@@ -1,4 +1,6 @@
-﻿/**
+﻿// from https://github.com/mpalmerlee/HexagonTools
+
+/**
  * A Grid is the model of the playfield containing hexes
  * @constructor
  */

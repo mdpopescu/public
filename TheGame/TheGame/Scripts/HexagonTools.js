@@ -1,4 +1,6 @@
-﻿var HT = HT || {};
+﻿// from https://github.com/mpalmerlee/HexagonTools
+
+var HT = HT || {};
 /**
  * A Point is simply x and y coordinates
  * @constructor
@@ -91,8 +93,7 @@ HT.Hexagon.prototype.draw = function (ctx) {
     ctx.closePath();
     ctx.stroke();
 
-    if (this.selected)
-    {
+    if (this.selected) {
         ctx.fillStyle = '#8ED6FF';
         ctx.fill();
     }
@@ -152,7 +153,6 @@ HT.Hexagon.prototype.isInBounds = function (x, y) {
     return this.Contains(new HT.Point(x, y));
 };
 
-
 /**
  * Returns true if the point is inside this hexagon, it is a quick contains
  * @this {HT.Hexagon}
@@ -206,10 +206,11 @@ HT.Hexagon.Orientation = {
     Rotated: 1
 };
 
+//hexagons will have 25 unit sides for now
 HT.Hexagon.Static = {
-    HEIGHT: 91.14378277661477
-					, WIDTH: 91.14378277661477
-					, SIDE: 50.0
-					, ORIENTATION: HT.Hexagon.Orientation.Normal
-					, DRAWSTATS: false
-};//hexagons will have 25 unit sides for now
+    HEIGHT: 91.14378277661477,
+    WIDTH: 91.14378277661477,
+    SIDE: 50.0,
+    ORIENTATION: HT.Hexagon.Orientation.Normal,
+    DRAWSTATS: false
+};

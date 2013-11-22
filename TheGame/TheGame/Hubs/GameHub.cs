@@ -8,9 +8,9 @@ namespace TheGame.Hubs
 {
   public class GameHub : Hub
   {
-    public void Hello()
+    public void Select(object p)
     {
-      Clients.All.hello();
+      Clients.All.select(p);
     }
   }
 }

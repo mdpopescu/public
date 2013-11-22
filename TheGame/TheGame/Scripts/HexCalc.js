@@ -1,4 +1,5 @@
-﻿
+﻿// from https://github.com/mpalmerlee/HexagonTools
+
 function findHexWithSideLengthZAndRatio() {
     var z = parseFloat(document.getElementById("sideLength").value);
     var r = parseFloat(document.getElementById("whRatio").value);
@@ -64,6 +65,8 @@ function drawHexGrid() {
     for (var h in grid.Hexes) {
         grid.Hexes[h].draw(ctx);
     }
+
+    return grid;
 }
 
 function getHexGridZR() {
