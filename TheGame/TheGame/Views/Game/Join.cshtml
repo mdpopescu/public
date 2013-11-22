@@ -10,12 +10,15 @@
 }
 
 @section scripts {
+  <script src="~/Scripts/jquery.signalR-2.0.0.min.js"></script>
+  <script src="~/signalr/hubs"></script>
+  
   <script src="~/Scripts/HexagonTools.js"></script>
   <script src="~/Scripts/HexCalc.js"></script>
   <script src="~/Scripts/HexGrid.js"></script>
 
   <script type="text/javascript">
-    $(function () {
+    function initBoard(){
       // magic constants - I like the way the result looks with them
       var f1 = 400 / 70;
       var f2 = 320 / 60;
@@ -26,6 +29,24 @@
 
       setWHS(@CANVAS_WIDTH / f1, @CANVAS_HEIGHT / f2, @CANVAS_HEIGHT / f3);
       drawHexGrid();
+    }
+    
+    $(function () {
+      initBoard();
+
+      var game = $.connection.gameHub;
+      game.client.hello = function(){
+        //
+      }
+
+      $.connection.hub.start().done(function () {
+        //$('#sendmessage').click(function () {
+        //  // Call the Send method on the hub. 
+        //  chat.server.send($('#displayname').val(), $('#message').val());
+        //  // Clear text box and reset focus for next comment. 
+        //  $('#message').val('').focus();
+        //});
+      });
     });
   </script>
 }
