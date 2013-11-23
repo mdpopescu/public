@@ -43,7 +43,7 @@
       $('body').on('click', '#hexCanvas', function(e){
         var posX = $(this).position().left,
             posY = $(this).position().top;
-        var p = new HT.Point(posX, posY);
+        var p = new HT.Point(e.pageX - posX, e.pageY - posY);
         game.server.select(p);
       });
 
