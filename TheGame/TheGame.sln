@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame", "TheGame\TheGame.csproj", "{DE5AFE25-68DA-41BB-831B-46210F2D8785}"
 EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "TheGame.Azure", "TheGame.Azure\TheGame.Azure.ccproj", "{1E20E8CC-2B8C-4C52-BE30-E7D77253C7B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{DE5AFE25-68DA-41BB-831B-46210F2D8785}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE5AFE25-68DA-41BB-831B-46210F2D8785}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE5AFE25-68DA-41BB-831B-46210F2D8785}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E20E8CC-2B8C-4C52-BE30-E7D77253C7B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E20E8CC-2B8C-4C52-BE30-E7D77253C7B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E20E8CC-2B8C-4C52-BE30-E7D77253C7B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E20E8CC-2B8C-4C52-BE30-E7D77253C7B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

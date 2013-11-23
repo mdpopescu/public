@@ -36,6 +36,10 @@ connectionStrings*.config
 *.DotSettings
 *.jtconfig
 
+# Azure folders
+csx/
+rcf/
+
 # These should be included #
 !NuGet.exe
 !packages/**/*.targets
