@@ -9,8 +9,8 @@
     <AzureEnableRemoteDesktop>True</AzureEnableRemoteDesktop>
     <AzureEnableWebDeploy>False</AzureEnableWebDeploy>
     <AzureFallbackToDeleteAndRecreateIfUpgradeFails>False</AzureFallbackToDeleteAndRecreateIfUpgradeFails>
-    <AzureHostedServiceLabel>e7757d21-7dcc-4958-b2f4-f96e8ae25ac4</AzureHostedServiceLabel>
-    <AzureHostedServiceName>e7757d21-7dcc-4958-b2f4-f96e8ae25ac4</AzureHostedServiceName>
+    <AzureHostedServiceLabel>marcel</AzureHostedServiceLabel>
+    <AzureHostedServiceName>marcel</AzureHostedServiceName>
     <AzureEnableIntelliTrace>False</AzureEnableIntelliTrace>
     <AzureEnableProfiling>False</AzureEnableProfiling>
     <AzureServiceConfiguration>Cloud</AzureServiceConfiguration>

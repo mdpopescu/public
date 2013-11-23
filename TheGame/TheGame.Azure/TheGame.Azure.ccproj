@@ -56,7 +56,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PublishProfile Include="Profiles\e7757d21-7dcc-4958-b2f4-f96e8ae25ac4Production.azurePubxml" />
+    <PublishProfile Include="Profiles\thegame.azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
