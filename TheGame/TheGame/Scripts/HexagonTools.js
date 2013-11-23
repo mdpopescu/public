@@ -93,10 +93,8 @@ HT.Hexagon.prototype.draw = function (ctx) {
     ctx.closePath();
     ctx.stroke();
 
-    if (this.selected) {
-        ctx.fillStyle = '#8ED6FF';
-        ctx.fill();
-    }
+    ctx.fillStyle = this.selected ? '#8ED6FF' : '#FFFFFF';
+    ctx.fill();
     ctx.strokeStyle = "black";
     ctx.stroke();
 
