@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="TheGame.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2013-10.2.2">
+  <Role name="TheGame">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=portalvhdsr6kj7ksb3lfyj;AccountKey=4g2LNzDG7bLHq1mtjFn2TgXtF09U085SlpFe2cmVk9216Kv3fMc8Pf1WNS0wCCxLFAstQ714SMdhowfWzC/kog==" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>
