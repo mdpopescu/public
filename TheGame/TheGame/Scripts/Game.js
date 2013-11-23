@@ -32,7 +32,7 @@
         game.client.selectMany = selectMany;
 
         $.connection.hub.start().done(function () {
-            //
+            game.server.init(gameId);
         });
     }
 
@@ -50,6 +50,6 @@
     // public methods
     this.Start = function () {
         init();
-        connect();
+        connect(gameId);
     }
 }

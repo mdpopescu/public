@@ -17,7 +17,7 @@ namespace TheGame.Controllers
 
     public ActionResult Join(string id)
     {
-      var model = new Game { Id = id };
+      var model = new Game(id);
       return View(model);
     }
   }
