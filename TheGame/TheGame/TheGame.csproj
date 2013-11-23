@@ -237,6 +237,7 @@
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Game.js" />
     <Content Include="Scripts\HexagonTools.js" />
     <Content Include="Scripts\HexCalc.js" />
     <Content Include="Scripts\HexGrid.js" />

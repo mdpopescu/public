@@ -17,51 +17,11 @@
   <script src="~/Scripts/HexCalc.js"></script>
   <script src="~/Scripts/HexGrid.js"></script>
 
+  <script src="~/Scripts/Game.js"></script>
+
   <script type="text/javascript">
-    var canvas = document.getElementById("hexCanvas");
-    var ctx = canvas.getContext('2d');
-    var grid = null;
-
-    function initBoard(){
-      // magic constants - I like the way the result looks with them
-      var f1 = 400 / 70;
-      var f2 = 320 / 60;
-      var f3 = 320 / 30;
-
-      const canvasWidth = @CANVAS_WIDTH;
-      const canvasHeight = @CANVAS_HEIGHT;
-
-      setWHS(@CANVAS_WIDTH / f1, @CANVAS_HEIGHT / f2, @CANVAS_HEIGHT / f3);
-      grid = drawHexGrid();
-    }
-
-    $(function () {
-      initBoard();
-
-      var game = $.connection.gameHub;
-      
-      $('body').on('click', '#hexCanvas', function(e){
-        var posX = $(this).position().left,
-            posY = $(this).position().top;
-        var p = new HT.Point(e.pageX - posX, e.pageY - posY);
-        game.server.select(p);
-      });
-
-      game.client.select = function(p) {
-        var hex = grid.GetHexAt(p);
-        hex.selected = !hex.selected;
-        hex.draw(ctx);
-      }
-
-      $.connection.hub.start().done(function () {
-        //$('#sendmessage').click(function () {
-        //  // Call the Send method on the hub.
-        //  chat.server.send($('#displayname').val(), $('#message').val());
-        //  // Clear text box and reset focus for next comment.
-        //  $('#message').val('').focus();
-        //});
-      });
-    });
+    var game = new Game('@Model.Id', @CANVAS_WIDTH, @CANVAS_HEIGHT);
+    game.Start();
   </script>
 }
 
