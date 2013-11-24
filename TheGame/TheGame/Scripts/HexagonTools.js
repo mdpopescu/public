@@ -82,6 +82,7 @@ HT.Hexagon = function (id, x, y) {
  * @this {HT.Hexagon}
  */
 HT.Hexagon.prototype.draw = function (ctx) {
+    const drawColor = '#000000';
 
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -95,12 +96,12 @@ HT.Hexagon.prototype.draw = function (ctx) {
 
     ctx.fillStyle = this.selected ? '#8ED6FF' : '#FFFFFF';
     ctx.fill();
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = drawColor;
     ctx.stroke();
 
     if (this.Id) {
         //draw text for debugging
-        ctx.fillStyle = "black"
+        ctx.fillStyle = drawColor;
         ctx.font = "bolder 8pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle';
@@ -110,7 +111,7 @@ HT.Hexagon.prototype.draw = function (ctx) {
 
     if (this.PathCoOrdX !== null && this.PathCoOrdY !== null && typeof (this.PathCoOrdX) != "undefined" && typeof (this.PathCoOrdY) != "undefined") {
         //draw co-ordinates for debugging
-        ctx.fillStyle = "black"
+        ctx.fillStyle = drawColor;
         ctx.font = "bolder 8pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = 'middle';
@@ -129,7 +130,7 @@ HT.Hexagon.prototype.draw = function (ctx) {
         ctx.closePath();
         ctx.stroke();
 
-        ctx.fillStyle = "black"
+        ctx.fillStyle = "black";
         ctx.font = "bolder 8pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif";
         ctx.textAlign = "left";
         ctx.textBaseline = 'middle';

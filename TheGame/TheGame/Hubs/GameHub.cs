@@ -24,7 +24,6 @@ namespace TheGame.Hubs
         return;
 
       game.Toggle(Clients.Client, id);
-      //Clients.All.select(id);
     }
 
     //

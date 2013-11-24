@@ -1,0 +1,57 @@
+I am using the word "spell" below, but the game should call them "programs"
+
+- turn-based, 30 seconds per turn
+- each player starts with 4 characters, starting on the 4 hexes on the row closest to the player
+- the game ends when one player loses all his characters; if both of them lose the last character
+  at the same time, the game is a draw
+- after 30 turns have been played, sudden death is initiated: all characters on the board take 1 damage,
+  then 2, then 3 and so on until one player runs out of characters; if both of them lose their last
+  characters at the same time, the game is a draw
+- there is an amount of available energy for actions; it starts at 1 and grows 1 each turn, until the
+  limit of 10 is reached
+- each turn, the player chooses one character to do something: attack, move, use an item or cast a spell
+  (aka run a program); attacks and moves take 1 energy, items and spells have an energy cost; if there's
+  remaining energy, the player can choose another character (or the same one) for another action
+- attacks can be melee and ranged; melee attacks require the characters to be on adjacent hexes; ranged
+  attacks lose precision based on distance (the farther apart the two characters are, the more likely it
+  becomes for the attack to miss)
+  - some special attacks, like burst and full auto, have worse chance of hitting (the probability of
+    hitting the target decays faster with the distance)
+- attacks and spells are grouped in classes (makes sense for attacks with two weapons); after a character
+  uses an attack / spell in a given class, that character has a cooldown period for that class; eg,
+  if character A uses a spell from class X, that character cannot cast another spell from class X for 3
+  more turns (but another character can use one)
+- attributes:
+  - intelligence - is added to the spell strength to determine the result; a spell that does damage for
+    3 will do 5 instead if cast by a character with int = 2; one that heals for 2 will heal for 4
+  - strength - is added to the attack of the weapon to determine the attack value
+  - stamina - is multiplied by 3 to determine the base health; a character with stamina = 3 starts with
+    health = 9; if it takes 5 damage, its new health is 4; if now someone buffs his stamina by 1, its
+	new base health becomes 12, so remaining health is 7
+  - agility - is the character's base speed
+- the maximum damage that can be done by a single attack / spell is half the base health of the target,
+  rounded up (to prevent any problem with a character with a base health = 1)
+- keep statistics on everything; watch out for characters / spells that are used too much or too
+  little, or characters who are winning too many / too few games (I guess that fits into the "used too
+  much" part)
+- there are items: weapons and general buffs / heals (less powerful than the specialized spells but
+  can be used by anyone)
+- each character has an amount of RAM for buffs; RAM can only be buffed by items
+- if the player wants to delete a buff to make space for another one, that takes 1 energy
+- debuffs do not take up RAM
+- carrying items reduces agility, each item has an agility cost (normally 1 but can be different);
+  agility can be reduced below zero by the last item added, but no more items can be added after that
+- adding or removing items from a character takes 1 energy
+- there is a hard limit of 10 items that can be carried
+- there should be 20+ specialties; each specialty has bonuses / drawbacks (for example, Demolisher has
+  higher strength / lower intelligence)
+- players can pre-construct teams: 4 specific characters plus 50 items and spells; a team can not have
+  more than one character of the same specialty
+- some spells and items are specialty-specific; if that character dies, those spells and items become
+  useless, so it pays to prepare lots of generic spells / items
+- root spells reduce the speed of the character to zero until dispelled, but the character can still
+  attack / cast
+- calm spells make the character unable to take any action, though it can still be affected by others;
+  calm spells have a set duration (say two turns) and also break if the character is attacked
+- when the game starts, each player gets a random choice of three spells and two items; they can choose
+  to "mulligan" some / all of them and replace them with others (also at random)
