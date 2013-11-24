@@ -24,10 +24,11 @@ I am using the word "spell" below, but the game should call them "programs"
 - attributes:
   - intelligence - is added to the spell strength to determine the result; a spell that does damage for
     3 will do 5 instead if cast by a character with int = 2; one that heals for 2 will heal for 4
-  - strength - is added to the attack of the weapon to determine the attack value
-  - stamina - is multiplied by 3 to determine the base health; a character with stamina = 3 starts with
-    health = 9; if it takes 5 damage, its new health is 4; if now someone buffs his stamina by 1, its
-	new base health becomes 12, so remaining health is 7
+  - strength - is added to the attack of the weapon to determine the attack value (weaponless characters
+    hit with this value, only melee)
+  - stamina - is multiplied by 5 to determine the base health; a character with stamina = 3 starts with
+    health = 15; if it takes 3 damage, its new health is 12; if now someone buffs his stamina by 1, its
+	new base health becomes 20, so remaining health is 17
   - agility - is the character's base speed
 - the maximum damage that can be done by a single attack / spell is half the base health of the target,
   rounded up (to prevent any problem with a character with a base health = 1)
