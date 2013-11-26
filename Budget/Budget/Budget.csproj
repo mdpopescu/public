@@ -162,12 +162,18 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Data\Expense.cs" />
+    <Compile Include="Data\LongTermExpenses.cs" />
+    <Compile Include="Data\MonthlyExpenses.cs" />
+    <Compile Include="Data\Persistence.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BusinessLogic.cs" />
+    <Compile Include="Services\Logic.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
