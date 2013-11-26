@@ -7,5 +7,6 @@ namespace Budget.Data
 {
   public interface Persistence
   {
+    IEnumerable<Expense> GetExpenses();
   }
 }

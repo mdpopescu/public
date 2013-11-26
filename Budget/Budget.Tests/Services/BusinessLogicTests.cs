@@ -6,9 +6,5 @@ namespace Budget.Tests
   [TestClass]
   public class BusinessLogicTests
   {
-    [TestMethod]
-    public void CanAddAndRetrieve()
-    {
-    }
   }
 }
