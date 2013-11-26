@@ -1,0 +1,311 @@
+Creating video file S:\git\VideoSpinner\_work\output\keyword 1.wmv
+Images: S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Durations: 1.76833468760625, 2.07160492473221, 2.53289755817918, 1.85360282948236
+DurationSums: 1.76833468760625, 3.83993961233846, 6.37283717051764, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Adding effect 5
+Adding effect 10
+Adding effect 10
+Adding effect 9
+Adding effect 4
+Adding effect 7
+Adding effect 3
+Adding effect 10
+Adding effect 8
+Adding effect 7
+Adding effect 0
+Adding effect 2
+Adding effect 10
+Adding effect 10
+Adding effect 10
+Adding effect 6
+Adding effect 5
+Adding effect 4
+Adding effect 2
+Adding effect 2
+Adding effect 2
+Adding effect 1
+Adding effect 10
+Adding effect 5
+Adding effect 0
+Adding transition (true): 9a4a4a51-fb3a-4f4b-9b57-a2912a289769
+Adding transition (false): d1c5a1e7-cc47-4e32-bdd2-4b3c5fc50af5
+Adding transition (true): 23e26328-3928-40f2-95e5-93cad69016eb
+Adding transition (false): 945f5842-3a8d-11d1-9037-00c04fd9189d
+Adding transition (true): b3ee7802-8224-4787-a1ea-f0de16deabd3
+Adding transition (false): 42b07b28-2280-4937-b035-0293fb812781
+Adding transition (true): 5ae1dae0-1461-11d2-a484-00c04f8efb69
+Adding transition (false): 63500ae2-0858-11d2-8ce4-00c04f8ecb10
+Creating video file S:\git\VideoSpinner\_work\output\keyword 2.wmv
+Images: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Durations: 2.04224530509748, 1.71452975008649, 1.91516765264778, 2.55449729216825
+DurationSums: 2.04224530509748, 3.75677505518397, 5.67194270783175, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Adding effect 8
+Adding effect 1
+Adding effect 8
+Adding effect 4
+Adding effect 3
+Adding effect 5
+Adding effect 3
+Adding effect 6
+Adding effect 10
+Adding effect 1
+Adding effect 4
+Adding effect 3
+Adding effect 7
+Adding effect 2
+Adding effect 2
+Adding effect 8
+Adding effect 7
+Adding effect 7
+Adding effect 9
+Adding effect 1
+Adding effect 10
+Adding effect 2
+Adding effect 4
+Adding effect 0
+Adding effect 5
+Adding transition (true): b3ee7802-8224-4787-a1ea-f0de16deabd3
+Adding transition (false): 4ccea634-fbe0-11d1-906a-00c04fd9189d
+Adding transition (true): 8241f015-84d3-11d2-97e6-0000f803ff7a
+Adding transition (false): 9a4a4a51-fb3a-4f4b-9b57-a2912a289769
+Adding transition (true): 5ae1dae0-1461-11d2-a484-00c04f8efb69
+Adding transition (false): b96f67a2-30c2-47e8-bd85-70a2c948b50f
+Adding transition (true): 4ccea634-fbe0-11d1-906a-00c04fd9189d
+Adding transition (false): 164484a9-35d9-4fb7-9fab-48273b96aa1d
+Creating video file S:\git\VideoSpinner\_work\output\keyword 3.wmv
+Images: S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Durations: 2.14885058913078, 2.13172494586522, 1.58790435584459, 2.35796010915941
+DurationSums: 2.14885058913078, 4.280575534996, 5.86847989084059, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Adding effect 0
+Adding effect 2
+Adding effect 9
+Adding effect 1
+Adding effect 1
+Adding effect 1
+Adding effect 10
+Adding effect 10
+Adding effect 6
+Adding effect 3
+Adding effect 10
+Adding effect 5
+Adding effect 2
+Adding effect 3
+Adding effect 6
+Adding effect 7
+Adding effect 7
+Adding effect 6
+Adding effect 1
+Adding effect 3
+Adding effect 5
+Adding effect 2
+Adding effect 5
+Adding effect 8
+Adding effect 8
+Adding transition (true): b96f67a2-30c2-47e8-bd85-70a2c948b50f
+Adding transition (false): 4a03dcb9-6e17-4a39-8845-4ee7dc5331a5
+Adding transition (true): d1c5a1e7-cc47-4e32-bdd2-4b3c5fc50af5
+Adding transition (false): 4ccea634-fbe0-11d1-906a-00c04fd9189d
+Adding transition (true): 9a4a4a51-fb3a-4f4b-9b57-a2912a289769
+Adding transition (false): 78f30b82-48aa-11d2-9900-0000f803ff7a
+Adding transition (true): 7312498d-e87a-11d1-81e0-0000f87557db
+Adding transition (false): b3ee7802-8224-4787-a1ea-f0de16deabd3
+Creating video file S:\git\VideoSpinner\_work\output\keyword 1.wmv
+Images: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Durations: 1.58035264548753, 2.45867644576832, 2.04243061520985, 2.1449802935343
+DurationSums: 1.58035264548753, 4.03902909125585, 6.0814597064657, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 1.wmv
+Images: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Durations: 2.39443917091387, 2.02889474451887, 1.99568733222005, 1.8074187523472
+DurationSums: 2.39443917091387, 4.42333391543274, 6.4190212476528, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 1.wmv
+Images: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Durations: 1.98286641188611, 1.76549787417725, 2.2472442603462, 2.23083145359043
+DurationSums: 1.98286641188611, 3.74836428606337, 5.99560854640957, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Adding transition (true): 23e26328-3928-40f2-95e5-93cad69016eb
+Adding transition (false): b96f67a2-30c2-47e8-bd85-70a2c948b50f
+Creating video file S:\git\VideoSpinner\_work\output\keyword 1.wmv
+Images: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Durations: 1.88479831648387, 1.76563512700527, 2.44890619297667, 2.12710036353419
+DurationSums: 1.88479831648387, 3.65043344348914, 6.09933963646581, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 2.wmv
+Images: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Durations: 1.6981601497079, 1.9559967276307, 2.20792908546892, 2.36435403719248
+DurationSums: 1.6981601497079, 3.65415687733859, 5.86208596280752, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 3.wmv
+Images: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Durations: 2.02368828843979, 1.59617221031137, 3.01583920155202, 1.59074029969682
+DurationSums: 2.02368828843979, 3.61986049875116, 6.63569970030318, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 1.wmv
+Images: S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Durations: 1.56727500918981, 2.63153792032583, 1.5352118476237, 2.49241522286066
+DurationSums: 1.56727500918981, 4.19881292951564, 5.73402477713934, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 2.wmv
+Images: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Durations: 1.64750428029002, 2.75564152375681, 1.50711016103944, 2.31618403491373
+DurationSums: 1.64750428029002, 4.40314580404683, 5.91025596508628, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 3.wmv
+Images: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number6.jpg
+Durations: 2.17325786015934, 2.02836558215834, 2.13447747762541, 1.89033908005691
+DurationSums: 2.17325786015934, 4.20162344231769, 6.3361009199431, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 1.wmv
+Images: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Durations: 2.37932218604723, 2.07135026802772, 2.04670656884547, 1.72906097707958
+DurationSums: 2.37932218604723, 4.45067245407496, 6.49737902292042, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 2.wmv
+Images: S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number6.jpg
+Durations: 2.10988304240891, 2.09594814444104, 2.41188628416334, 1.60872252898671
+DurationSums: 2.10988304240891, 4.20583118684995, 6.61771747101329, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 3.wmv
+Images: S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Durations: 2.06504252218669, 2.36640572192406, 1.70800700498192, 2.08698475090733
+DurationSums: 2.06504252218669, 4.43144824411075, 6.13945524909267, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 1.wmv
+Images: S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Durations: 1.7101609056848, 2.44546056831304, 2.15681265448649, 1.91400587151567
+DurationSums: 1.7101609056848, 4.15562147399784, 6.31243412848433, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 2.wmv
+Images: S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Durations: 2.02066456891861, 1.78169328410846, 1.94033456889041, 2.48374757808253
+DurationSums: 2.02066456891861, 3.80235785302707, 5.74269242191747, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 3.wmv
+Images: S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Durations: 1.89783051452263, 1.76180860617124, 2.16658688405954, 2.40021399524659
+DurationSums: 1.89783051452263, 3.65963912069387, 5.82622600475341, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 1.wmv
+Images: S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Durations: 1.57583573337566, 2.96018870059725, 1.50544272604704, 2.18497283998005
+DurationSums: 1.57583573337566, 4.53602443397292, 6.04146716001995, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Adding transition 2
+Adding transition 8
+Adding transition 7
+Adding transition 5
+Creating video file S:\git\VideoSpinner\_work\output\keyword 2.wmv
+Images: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Durations: 1.80834586243572, 2.00607916097242, 2.21909623480151, 2.19291874179036
+DurationSums: 1.80834586243572, 3.81442502340814, 6.03352125820964, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Adding transition 0
+Adding transition 10
+Adding transition 0
+Adding transition 10
+Creating video file S:\git\VideoSpinner\_work\output\keyword 3.wmv
+Images: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number6.jpg
+Durations: 2.52581123036622, 1.43364267527968, 1.85904936153219, 2.40793673282191
+DurationSums: 2.52581123036622, 3.9594539056459, 5.81850326717809, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg
+Adding transition 10
+Adding transition 8
+Adding transition 7
+Adding transition 3
+Creating video file S:\git\VideoSpinner\_work\output\keyword 1.wmv
+Images: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Durations: 2.33662572991958, 1.33801475066185, 2.65058935314431, 1.90121016627425
+DurationSums: 2.33662572991958, 3.67464048058144, 6.32522983372575, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 2.wmv
+Images: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Durations: 2.49114232480589, 1.12186796136288, 2.23776445050323, 2.37566526332801
+DurationSums: 2.49114232480589, 3.61301028616876, 5.85077473667199, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 3.wmv
+Images: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Durations: 1.80168655930263, 2.17178403552359, 2.11991072559635, 2.13305867957742
+DurationSums: 1.80168655930263, 3.97347059482622, 6.09338132042258, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Creating video file S:\git\VideoSpinner\_work\output\keyword 1.wmv
+Images: S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg
+Durations: 2.13183630556069, 2.38434176931363, 2.10247977541344, 1.60778214971224
+DurationSums: 2.13183630556069, 4.51617807487432, 6.61865785028776, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg
+Adding transition (true): 4ccea634-fbe0-11d1-906a-00c04fd9189d
+Adding transition (false): d1c5a1e7-cc47-4e32-bdd2-4b3c5fc50af5
+Adding transition (true): 78f30b82-48aa-11d2-9900-0000f803ff7a
+Adding transition (false): 7312498d-e87a-11d1-81e0-0000f87557db
+Adding transition (true): ec9ba17d-60b5-462b-a6d8-14b89057e22a
+Adding transition (false): 4ccea634-fbe0-11d1-906a-00c04fd9189d
+Adding transition (true): ec9ba17d-60b5-462b-a6d8-14b89057e22a
+Adding transition (false): 76f363f2-7e9f-4ed7-a6a7-ee30351b6628
+Creating video file S:\git\VideoSpinner\_work\output\keyword 2.wmv
+Images: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Durations: 1.77959618506002, 2.24317592151483, 2.04551131355694, 2.15815657986821
+DurationSums: 1.77959618506002, 4.02277210657485, 6.06828342013179, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg
+Adding transition (true): 945f5842-3a8d-11d1-9037-00c04fd9189d
+Adding transition (false): 164484a9-35d9-4fb7-9fab-48273b96aa1d
+Adding transition (true): 42b07b28-2280-4937-b035-0293fb812781
+Adding transition (false): 78f30b82-48aa-11d2-9900-0000f803ff7a
+Adding transition (true): 049f2ce6-d996-4721-897a-db15ce9eb73d
+Adding transition (false): 4a03dcb9-6e17-4a39-8845-4ee7dc5331a5
+Adding transition (true): 164484a9-35d9-4fb7-9fab-48273b96aa1d
+Adding transition (false): 23e26328-3928-40f2-95e5-93cad69016eb
+Creating video file S:\git\VideoSpinner\_work\output\keyword 3.wmv
+Images: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Durations: 2.04869935986265, 2.01067927520419, 2.13211163937367, 2.03494972555949
+DurationSums: 2.04869935986265, 4.05937863506684, 6.19149027444051, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Adding transition (true): 164484a9-35d9-4fb7-9fab-48273b96aa1d
+Adding transition (false): 5ae1dae0-1461-11d2-a484-00c04f8efb69
+Adding transition (true): 42b07b28-2280-4937-b035-0293fb812781
+Adding transition (false): 5ae1dae0-1461-11d2-a484-00c04f8efb69
+Adding transition (true): d1c5a1e7-cc47-4e32-bdd2-4b3c5fc50af5
+Adding transition (false): 8241f015-84d3-11d2-97e6-0000f803ff7a
+Adding transition (true): d1c5a1e7-cc47-4e32-bdd2-4b3c5fc50af5
+Adding transition (false): 4a03dcb9-6e17-4a39-8845-4ee7dc5331a5
+Creating video file S:\git\VideoSpinner\_work\output\keyword 1.wmv
+Images: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Durations: 2.03825105363177, 2.44815371027871, 1.54945429779827, 2.19058093829125
+DurationSums: 2.03825105363177, 4.48640476391048, 6.03585906170875, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg
+Adding transition (true): 7312498d-e87a-11d1-81e0-0000f87557db
+Adding transition (false): 76f363f2-7e9f-4ed7-a6a7-ee30351b6628
+Adding transition (true): b96f67a2-30c2-47e8-bd85-70a2c948b50f
+Adding transition (false): 164484a9-35d9-4fb7-9fab-48273b96aa1d
+Adding transition (true): b96f67a2-30c2-47e8-bd85-70a2c948b50f
+Adding transition (false): 945f5842-3a8d-11d1-9037-00c04fd9189d
+Adding transition (true): b96f67a2-30c2-47e8-bd85-70a2c948b50f
+Adding transition (false): 8241f015-84d3-11d2-97e6-0000f803ff7a
+Creating video file S:\git\VideoSpinner\_work\output\keyword 2.wmv
+Images: S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Durations: 1.6051795145986, 2.53351090428536, 2.49642862967553, 1.59132095144052
+DurationSums: 1.6051795145986, 4.13869041888395, 6.63511904855948, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Adding transition (true): d1c5a1e7-cc47-4e32-bdd2-4b3c5fc50af5
+Adding transition (false): 4a03dcb9-6e17-4a39-8845-4ee7dc5331a5
+Adding transition (true): 8241f015-84d3-11d2-97e6-0000f803ff7a
+Adding transition (false): 4ccea634-fbe0-11d1-906a-00c04fd9189d
+Adding transition (true): 945f5842-3a8d-11d1-9037-00c04fd9189d
+Adding transition (false): 945f5842-3a8d-11d1-9037-00c04fd9189d
+Adding transition (true): 5ae1dae0-1461-11d2-a484-00c04f8efb69
+Adding transition (false): 4ccea634-fbe0-11d1-906a-00c04fd9189d
+Creating video file S:\git\VideoSpinner\_work\output\keyword 3.wmv
+Images: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Durations: 1.99367671200616, 2.16008587262797, 2.37812395260195, 1.69455346276393
+DurationSums: 1.99367671200616, 4.15376258463413, 6.53188653723607, 8.22644
+Image list: S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number10.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number6.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number7.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg, S:\git\VideoSpinner\_work\img\number5.jpg
+Adding transition (true): 23e26328-3928-40f2-95e5-93cad69016eb
+Adding transition (false): 945f5842-3a8d-11d1-9037-00c04fd9189d
+Adding transition (true): 4ccea634-fbe0-11d1-906a-00c04fd9189d
+Adding transition (false): 164484a9-35d9-4fb7-9fab-48273b96aa1d
+Adding transition (true): 4a03dcb9-6e17-4a39-8845-4ee7dc5331a5
+Adding transition (false): 945f5842-3a8d-11d1-9037-00c04fd9189d
+Adding transition (true): 7312498d-e87a-11d1-81e0-0000f87557db
+Adding transition (false): b96f67a2-30c2-47e8-bd85-70a2c948b50f
