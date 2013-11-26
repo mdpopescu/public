@@ -12,5 +12,10 @@ namespace Budget.Services
     {
       return new List<Expense>();
     }
+
+    public IEnumerable<Expense> GetLongTermExpenses()
+    {
+      return new List<Expense>();
+    }
   }
 }

@@ -17,7 +17,7 @@ namespace Budget.Tests.Controllers
     public class Index : ExpensesControllerTests
     {
       [TestMethod]
-      public void GetsCurrentExpensesFromBusinessLogic()
+      public void GetsRecurringExpensesFromBusinessLogic()
       {
         var logic = new Mock<Logic>();
         GlobalSettings.SystemTime = () => new DateTime(2000, 1, 2, 3, 4, 5);
@@ -26,6 +26,17 @@ namespace Budget.Tests.Controllers
         sut.Index();
 
         logic.Verify(it => it.GetRecurringExpensesFor(2000, 1));
+      }
+
+      [TestMethod]
+      public void GetsLongTermExpensesFromBusinessLogic()
+      {
+        var logic = new Mock<Logic>();
+        var sut = new ExpensesController(logic.Object);
+
+        sut.Index();
+
+        logic.Verify(it => it.GetLongTermExpenses());
       }
     }
   }

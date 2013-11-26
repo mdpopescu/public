@@ -17,7 +17,8 @@ namespace Budget.Controllers
     public ActionResult Index()
     {
       var now = GlobalSettings.SystemTime();
-      var model = logic.GetRecurringExpensesFor(now.Year, now.Month);
+      var recurring = logic.GetRecurringExpensesFor(now.Year, now.Month);
+      var longTerm = logic.GetLongTermExpenses();
 
       return View();
     }
