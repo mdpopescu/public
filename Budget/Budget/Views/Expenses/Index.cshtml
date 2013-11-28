@@ -1,0 +1,60 @@
+﻿@{
+  ViewBag.Title = "Index";
+}
+
+<h2>Expenses</h2>
+
+<style>
+  .scrollable {
+    width: 400px;
+    height: 400px;
+    border: 1px solid #555;
+    overflow: hidden;
+  }
+</style>
+
+<div class="scrollable">
+  <div class="month">
+    <span class="title">November 2013</span>
+    <p>... data ...</p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum felis tincidunt orci varius laoreet. Curabitur id lobortis felis, et elementum ligula. Phasellus consectetur mi eleifend dolor scelerisque placerat. Sed elementum consequat augue gravida dapibus. Vestibulum id odio rutrum, interdum urna et, volutpat ante. Praesent tincidunt ipsum in augue sagittis accumsan. Suspendisse posuere molestie varius. Donec mattis diam sit amet auctor eleifend. Nulla mauris lorem, dapibus et varius non, mollis nec lacus. Donec varius ultrices mi, dapibus dapibus quam pulvinar ac. Aenean mollis nisi ac magna bibendum molestie ut facilisis arcu. Cras pulvinar sodales massa, quis pharetra quam volutpat et. Ut vehicula dapibus convallis. Suspendisse dolor nulla, varius eu adipiscing eget, condimentum at elit. Praesent commodo, quam sed volutpat lacinia, nibh ante scelerisque metus, nec vehicula augue eros vitae augue.
+    </p>
+
+    <p>
+      Nullam placerat nunc nec dui interdum pellentesque. Mauris tincidunt tellus sit amet tellus luctus adipiscing. In at faucibus lorem. Nullam dignissim arcu id bibendum adipiscing. Curabitur sed venenatis lorem. Aenean aliquam felis dui, a congue sapien blandit sit amet. Integer et eleifend lacus. Phasellus a sapien lacus. Vivamus auctor velit malesuada augue interdum porttitor.
+    </p>
+
+    <p>
+      In non nisl et sapien placerat aliquet. Sed pharetra sollicitudin velit ut lobortis. Pellentesque justo libero, condimentum quis vehicula aliquet, ultricies quis justo. Ut condimentum eros quam, nec pulvinar dolor fermentum in. Donec aliquet lectus at diam convallis, a porttitor nunc tempor. Proin accumsan quam in ipsum rutrum pretium. In aliquam mauris in lacus accumsan, id lacinia nunc ullamcorper. Nunc eu cursus est. Fusce suscipit ipsum vel nulla consequat scelerisque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque egestas euismod enim, at elementum est convallis nec. Morbi eleifend est sodales ullamcorper tincidunt. Integer mattis dapibus elit quis facilisis.
+    </p>
+
+    <p>
+      Vivamus ipsum purus, ornare sed ipsum eu, venenatis volutpat sapien. Donec non erat aliquet, accumsan tortor non, scelerisque mi. Sed urna sapien, semper eget nisi quis, imperdiet imperdiet odio. In et leo quam. Vestibulum metus ante, lacinia quis metus congue, mollis eleifend ante. Phasellus aliquam sollicitudin consequat. Proin dui quam, aliquet viverra nulla a, tincidunt aliquet eros. Etiam sagittis, felis nec tristique tincidunt, tortor dolor varius metus, quis consectetur ante risus in nibh. Phasellus ultrices vehicula eros a consectetur. Morbi sed vehicula nunc. Vestibulum aliquam nunc vel dapibus posuere. Mauris id porta diam. Donec fringilla, urna sed gravida aliquam, eros ligula sodales turpis, eu commodo arcu risus ac purus. Praesent eleifend condimentum consectetur. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+    </p>
+
+    <p>
+      Sed iaculis nulla euismod, pellentesque lacus nec, aliquet magna. Donec a metus erat. Phasellus molestie, mi sed feugiat pharetra, velit dui molestie libero, nec molestie massa tellus ac orci. Morbi volutpat facilisis massa. In augue nisl, mollis et ultrices non, semper sed lorem. In hac habitasse platea dictumst. Etiam dapibus tempor felis, ut imperdiet massa cursus vitae. Ut sollicitudin tellus leo, quis condimentum erat sagittis ut. In et tellus molestie, malesuada nulla ut, fringilla leo. Integer pharetra risus convallis turpis sagittis, nec gravida risus vestibulum. Pellentesque vel tortor quam.
+    </p>
+  </div>
+  <div class="pagination">
+    <div class="next">
+      <a href="#">Next</a>
+    </div>
+  </div>
+</div>
+
+@section scripts {
+  <script type="text/javascript" src="~/Scripts/jquery-ias.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      jQuery.ias({
+        container: '.scrollable',
+        item: '.month',
+        pagination: '.pagination',
+        next: '.next a',
+        loader: '<img src="~/Content/Images/loader.gif"/>'
+      });
+    });
+  </script>
+}
