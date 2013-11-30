@@ -1,4 +1,5 @@
-﻿using Budget.Services;
+﻿using Budget.Models;
+using Budget.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,20 @@ namespace Budget.Controllers
       var longTerm = logic.GetLongTermExpenses();
 
       return View();
+    }
+
+    public ActionResult Load(int year, int month)
+    {
+      var model = new MonthModel(year, month);
+
+      return Request.IsAjaxRequest()
+        ? PartialView("_Month", model)
+        : (ActionResult) View("_Month", model);
+    }
+
+    public ActionResult Test()
+    {
+      return PartialView();
     }
 
     //
