@@ -5,6 +5,11 @@ VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUIDService", "GUIDService\GUIDService.csproj", "{4A8453B9-C923-43B6-9164-0BF8F2187E6E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CA4EA04E-9423-4616-8154-32BA38802479}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(CodealikeProperties) = postSolution
 		SolutionGuid = ca76321f-adfe-4dd1-89b6-20df964e9bc4

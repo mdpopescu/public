@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
-namespace GUIDService
+namespace Renfield.GUIDService.App_Start
 {
   public class BundleConfig
   {
