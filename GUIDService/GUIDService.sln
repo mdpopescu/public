@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUIDService", "GUIDService\GUIDService.csproj", "{4A8453B9-C923-43B6-9164-0BF8F2187E6E}"
+EndProject
+Global
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = ca76321f-adfe-4dd1-89b6-20df964e9bc4
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A8453B9-C923-43B6-9164-0BF8F2187E6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A8453B9-C923-43B6-9164-0BF8F2187E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A8453B9-C923-43B6-9164-0BF8F2187E6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A8453B9-C923-43B6-9164-0BF8F2187E6E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
