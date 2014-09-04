@@ -1,0 +1,15 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Acquisitions</title>
+</head>
+<body>
+    <h2>Acquisitions</h2>
+
+	<p><a id="acquisitions_create" href="{{LinkToCreate}}">Create</a></p>
+
+	<script type="text/javascript" src="{{ScriptUrl}}">
+	</script>
+</body>
+</html>

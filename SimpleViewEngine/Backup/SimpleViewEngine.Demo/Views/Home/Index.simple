@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>{{Title}}</title>
+</head>
+<body>
+    <div>
+        <h2>{{Title}}</h2>
+		<br/>
+		<p>Boss: {{Boss.FirstName}} {{Boss.LastName}} {{if Boss.HasPassport}}ownage!{{else}}blech...{{endif}}</p>
+        <ul>
+            {{foreach People}}
+            <li>
+                {{LastName}}, {{FirstName}} {{if HasPassport}}ownage!{{else}}blech...{{endif}}
+            </li>
+            {{endfor}}
+        </ul>
+    </div>
+	<p><a href="{{LinkToAcquisitions}}">Acquisitions</a></p>
+</body>
+</html>
