@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppendOnly.Library", "AppendOnly.Library\AppendOnly.Library.csproj", "{F5E03FEB-11EA-4362-85E9-A9C88E1E932F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppendOnly.Tests", "AppendOnly.Tests\AppendOnly.Tests.csproj", "{D671090E-62E2-4CF9-99A5-86DAA0F83770}"
@@ -15,6 +17,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppendOnly.Spike", "AppendOnly.Spike\AppendOnly.Spike.csproj", "{1CE1542C-3F33-48F7-8BC1-17B54C6F9ADD}"
 EndProject
 Global
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = 5446a2b0-a486-4441-a801-11a8fbc160f0
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
