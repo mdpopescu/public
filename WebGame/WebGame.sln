@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Default.testsettings = Default.testsettings
 		notes.txt = notes.txt
+		readme.md = readme.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGame.Library", "WebGame.Library\WebGame.Library.csproj", "{5424E21F-C49E-4605-81ED-76061680B633}"
