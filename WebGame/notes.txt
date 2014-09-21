@@ -1,0 +1,8 @@
+Architecture:
+
+MVC -> Library (Domain Logic) <- Data Layer
+ |                                   ^
+ +-----------------------------------+
+
+Article for OAuth2 with Facebook and Google: http://www.asp.net/mvc/tutorials/mvc-5/create-an-aspnet-mvc-5-app-with-facebook-and-google-oauth2-and-openid-sign-on
+(Haven't done the OAuth2 part yet)

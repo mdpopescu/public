@@ -5,10 +5,17 @@ VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGame", "WebGame\WebGame.csproj", "{3B07AC6C-F63A-4873-85B8-87DAC33A7840}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{057B4BFC-1819-4619-A1E3-C271B69B570B}"
+	ProjectSection(SolutionItems) = preProject
+		Default.testsettings = Default.testsettings
+		notes.txt = notes.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGame.Library", "WebGame.Library\WebGame.Library.csproj", "{5424E21F-C49E-4605-81ED-76061680B633}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebGame.Tests", "WebGame.Tests\WebGame.Tests.csproj", "{88EC1FBD-F051-4BA4-84F5-4FB8895997F8}"
+EndProject
 Global
-	GlobalSection(CodealikeProperties) = postSolution
-		SolutionGuid = 59d2fc5d-3228-45d8-aa11-9ef24af2a1d4
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -18,8 +25,19 @@ Global
 		{3B07AC6C-F63A-4873-85B8-87DAC33A7840}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B07AC6C-F63A-4873-85B8-87DAC33A7840}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B07AC6C-F63A-4873-85B8-87DAC33A7840}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5424E21F-C49E-4605-81ED-76061680B633}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5424E21F-C49E-4605-81ED-76061680B633}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5424E21F-C49E-4605-81ED-76061680B633}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5424E21F-C49E-4605-81ED-76061680B633}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88EC1FBD-F051-4BA4-84F5-4FB8895997F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88EC1FBD-F051-4BA4-84F5-4FB8895997F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88EC1FBD-F051-4BA4-84F5-4FB8895997F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88EC1FBD-F051-4BA4-84F5-4FB8895997F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(CodealikeProperties) = postSolution
+		SolutionGuid = 59d2fc5d-3228-45d8-aa11-9ef24af2a1d4
 	EndGlobalSection
 EndGlobal
