@@ -1,0 +1,15 @@
+﻿<Window x:Class="DesktopClock.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="872" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Initialized="Window_Initialized">
+    <Window.Background>
+        <SolidColorBrush Opacity="0.0" Color="White"/>
+    </Window.Background>
+    <Grid>
+        <TextBlock x:Name="LblClock" Margin="36,11,36,0" TextWrapping="Wrap" Text="05 Oct 2014 00:00:00" VerticalAlignment="Top" FontFamily="Bookman Old Style" FontSize="72" Width="800" HorizontalAlignment="Center" TextAlignment="Center">
+            <TextBlock.Effect>
+                <DropShadowEffect/>
+            </TextBlock.Effect>
+        </TextBlock>
+    </Grid>
+</Window>

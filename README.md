@@ -13,6 +13,8 @@ Public repository - CC-by-SA 3.0
 
 * CompareExcelFiles2: the same project as above but started from scratch using TDD; article at http://mdpopescu.blogspot.com/2013/06/comparing-excel-files-take-two.html
 
+* DesktopClock: a simple desktop wallpaper clock - trying to learn WPF
+
 * Failover: fail-over algorithm; see article at http://mdpopescu.blogspot.com/2013/06/fail-over-algorithm.html
 
 * FSM: quick implementation of a generic finite state machine; see article at http://mdpopescu.blogspot.com/2013/08/a-generic-implementation-of-finite.html
