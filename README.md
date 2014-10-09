@@ -29,6 +29,8 @@ Public repository - CC-by-SA 3.0
 
 * RecursiveCompare: recursive comparison of two objects' properties (if some of those properties are objects, compare those using the same algorithm); incomplete
 
+* RxProblem: how to implement the pipeline pattern using Rx, allowing an entire stream to be processed even if some of the filters in the pipeline throw exceptions
+
 * SafeRedir: time-limited URL redirection; the shortened link will redirect to the real one for only a limited time (default 5 minutes) and then redirect to a "safe" link afterwards; deployed at http://red.renfieldsoftware.com/
 
 * SimpleViewEngine: a view engine with only two directives, {{if}} / {{else}} / {{endif}} and {{foreach}} / {{endfor}}. Evaluates expressions with {{name}} and the current item itself in a foreach is {{}}.
