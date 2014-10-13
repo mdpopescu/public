@@ -17,12 +17,12 @@ namespace MaxRecursion
       }
       else
       {
-        var result = BinarySearch(1, int.MaxValue, RecursiveMethod);
+        var result = BinarySearch(1, int.MaxValue);
         Console.WriteLine(result);
       }
     }
 
-    private static int BinarySearch(int min, int max, Action<int> action)
+    private static int BinarySearch(int min, int max)
     {
       var l = min;
       var r = max;
