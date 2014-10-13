@@ -5,11 +5,11 @@
     <Window.Background>
         <SolidColorBrush Opacity="0.0" Color="White"/>
     </Window.Background>
-    <Grid>
-        <TextBlock x:Name="LblClock" Margin="36,11,36,0" TextWrapping="Wrap" Text="05 Oct 2014 00:00:00" VerticalAlignment="Top" FontFamily="Bookman Old Style" FontSize="72" Width="800" HorizontalAlignment="Center" TextAlignment="Center">
+    <Grid Name="Main">
+        <!--<TextBlock x:Name="LblClock" Margin="36,11,36,0" Text="05 Oct 2014 00:00:00" VerticalAlignment="Top" FontFamily="Bookman Old Style" FontSize="72" Width="800" HorizontalAlignment="Center" TextAlignment="Center">
             <TextBlock.Effect>
                 <DropShadowEffect/>
             </TextBlock.Effect>
-        </TextBlock>
+        </TextBlock>-->
     </Grid>
 </Window>
