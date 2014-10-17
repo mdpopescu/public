@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using EventStore.Library.Contracts;
-using EventStore.Library.Models;
 using EventStore.Library.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -10,6 +9,18 @@ namespace WebStore.Tests.Services
   [TestClass]
   public class EventProcessorTests
   {
+    [TestMethod]
+    public void ClearsTheRepositoryOnStart()
+    {
+      var store = new Mock<AppendOnlyCollection<Event>>();
+      var repository = new Mock<Repository>();
+      var sut = new EventProcessor(store.Object, repository.Object);
+
+      sut.Start();
+
+      repository.Verify(it => it.Clear());
+    }
+
     [TestMethod]
     public void ReplaysTheEventHistoryOnStart()
     {

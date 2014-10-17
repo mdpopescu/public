@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using EventStore.Library.Contracts;
-using EventStore.Library.Models;
 
 namespace EventStore.Library.Services
 {
   public class CommandProcessor : Processor<Command>
   {
-    public CommandProcessor(Processor<Event> next)
+    public CommandProcessor(Repository repository, Processor<Event> next)
     {
+      this.repository = repository;
       this.next = next;
     }
 
-    public void Register<T>(Func<Command, Event> func)
+    public void Register<T>()
       where T : Command
     {
-      handlers[typeof (T)] = func;
+      handlers[typeof (T)] = cmd => cmd.Handle(repository);
     }
 
     public void Process(Command command)
@@ -30,6 +30,7 @@ namespace EventStore.Library.Services
     //
 
     private readonly Dictionary<Type, Func<Command, Event>> handlers = new Dictionary<Type, Func<Command, Event>>();
+    private readonly Repository repository;
     private readonly Processor<Event> next;
   }
 }

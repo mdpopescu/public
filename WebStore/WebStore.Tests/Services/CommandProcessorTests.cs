@@ -1,6 +1,5 @@
 ﻿using System;
 using EventStore.Library.Contracts;
-using EventStore.Library.Models;
 using EventStore.Library.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -11,6 +10,7 @@ namespace WebStore.Tests.Services
   [TestClass]
   public class CommandProcessorTests
   {
+    private Mock<Repository> repository;
     private Mock<Processor<Event>> next;
 
     private CommandProcessor sut;
@@ -18,22 +18,23 @@ namespace WebStore.Tests.Services
     [TestInitialize]
     public void SetUp()
     {
+      repository = new Mock<Repository>();
       next = new Mock<Processor<Event>>();
 
-      sut = new CommandProcessor(next.Object);
+      sut = new CommandProcessor(repository.Object, next.Object);
     }
 
     [TestMethod]
     public void CallsTheProperHandler()
     {
       var success = false;
-      sut.Register<SomeCommand>(cmd =>
+      sut.Register<SomeCommand>();
+
+      sut.Process(new SomeCommand(_ =>
       {
         success = true;
         return null;
-      });
-
-      sut.Process(new SomeCommand());
+      }));
 
       Assert.IsTrue(success);
     }
@@ -42,9 +43,9 @@ namespace WebStore.Tests.Services
     public void CallsTheNextLinkInTheChain()
     {
       var ev = new SomeEvent();
-      sut.Register<SomeCommand>(_ => ev);
+      sut.Register<SomeCommand>();
 
-      sut.Process(new SomeCommand());
+      sut.Process(new SomeCommand(_ => ev));
 
       next.Verify(it => it.Process(ev));
     }
@@ -52,7 +53,7 @@ namespace WebStore.Tests.Services
     [TestMethod]
     public void DoesNotCallTheNextLinkIfUnknownCommand()
     {
-      sut.Process(new SomeCommand());
+      sut.Process(new SomeCommand(_ => null));
 
       next.Verify(it => it.Process(It.IsAny<Event>()), Times.Never);
     }
@@ -60,11 +61,11 @@ namespace WebStore.Tests.Services
     [TestMethod]
     public void DoesNotCallTheNextLinkIfAnErrorIsThrown()
     {
-      sut.Register<SomeCommand>(_ => { throw new Exception(); });
+      sut.Register<SomeCommand>();
 
       try
       {
-        sut.Process(new SomeCommand());
+        sut.Process(new SomeCommand(_ => { throw new Exception(); }));
       }
       catch
       {

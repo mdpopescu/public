@@ -1,6 +1,4 @@
-﻿using EventStore.Library.Contracts;
-
-namespace EventStore.Library.Models
+﻿namespace EventStore.Library.Contracts
 {
   public interface Event
   {
