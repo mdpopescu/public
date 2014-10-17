@@ -45,4 +45,6 @@ Public repository - CC-by-SA 3.0
 
 * VinReader: code to read a VIN barcode; written for https://www.guru.com/jobs/.NET-VIN-Barcode-Application/978230
 
+* WebStore: Another implementation of an inventory management system, using an event store
+
 * YelpSearch: search Yelp for businesses (eg hotels) near a given zip; solution for https://www.odesk.com/jobs/~~d5624935369d26d1 (I didn't get the job so the code is mine)
