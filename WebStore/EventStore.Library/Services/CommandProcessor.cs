@@ -7,6 +7,11 @@ namespace EventStore.Library.Services
 {
   public class CommandProcessor : Processor<Command>
   {
+    public CommandProcessor(Processor<Event> next)
+    {
+      this.next = next;
+    }
+
     public void Register<T>(Func<Command, Event> func)
       where T : Command
     {
@@ -15,11 +20,16 @@ namespace EventStore.Library.Services
 
     public void Process(Command command)
     {
-      handlers[command.GetType()](command);
+      var key = command.GetType();
+      var ev = handlers.ContainsKey(key) ? handlers[key](command) : null;
+
+      if (ev != null)
+        next.Process(ev);
     }
 
     //
 
     private readonly Dictionary<Type, Func<Command, Event>> handlers = new Dictionary<Type, Func<Command, Event>>();
+    private readonly Processor<Event> next;
   }
 }

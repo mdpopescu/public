@@ -53,6 +53,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Models\SomeEvent.cs" />
     <Compile Include="Services\CommandProcessorTests.cs" />
     <Compile Include="Models\SomeCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
