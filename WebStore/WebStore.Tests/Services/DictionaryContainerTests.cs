@@ -1,6 +1,6 @@
 ﻿using EventStore.Library.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using WebStore.Tests.Models;
+using WebStore.Tests.Models.Commands;
 
 namespace WebStore.Tests.Services
 {

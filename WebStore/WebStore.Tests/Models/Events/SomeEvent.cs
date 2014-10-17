@@ -2,7 +2,7 @@
 using System.Reactive;
 using EventStore.Library.Contracts;
 
-namespace WebStore.Tests.Models
+namespace WebStore.Tests.Models.Events
 {
   public class SomeEvent : Event
   {

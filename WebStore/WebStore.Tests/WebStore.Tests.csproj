@@ -65,12 +65,21 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Models\SomeEvent.cs" />
+    <Compile Include="IntegrationTests.cs" />
+    <Compile Include="Models\Commands\AddInventoryCommand.cs" />
+    <Compile Include="Models\Commands\CreateProductCommand.cs" />
+    <Compile Include="Models\Events\ProductSoldEvent.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\Events\ProductAddedEvent.cs" />
+    <Compile Include="Models\Events\ProductCreatedEvent.cs" />
+    <Compile Include="Models\Commands\SellCommand.cs" />
+    <Compile Include="Models\Events\SomeEvent.cs" />
     <Compile Include="Services\CommandProcessorTests.cs" />
-    <Compile Include="Models\SomeCommand.cs" />
+    <Compile Include="Models\Commands\SomeCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DictionaryContainerTests.cs" />
     <Compile Include="Services\EventProcessorTests.cs" />
+    <Compile Include="Services\InMemoryEventStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EventStore.Library\EventStore.Library.csproj">
@@ -85,6 +94,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

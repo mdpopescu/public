@@ -7,17 +7,21 @@ Architecture:
 ===================== WebAPI =====================
    |            ^                       |    ^
    | commands   | ? ERR                 |    |
+   v            |                query  v    |  reply
+==================== service =====================
+   |            ^                       |    ^
+   | commands   | ? ERR                 |    |
    v            |                       |    |
-  Command processor --- query ----+     |    |
+  Command processor --- query ----\     |    |
 ? log    |                        |     |    |
  cmds    | events              ...|.....|....|....
 .........|......................  |     v    |   .
          |                        +-- Repository .
-         | --- (Event Store DB)   |              .
-         |                        |              .
-         | events                 |              .
-         v                        |              .
-   Event processor --- update --- +              .
+     +---+---- (Event Store DB)   |              .
+     |   |                        |              .
+     |   | events                 |              .
+     |   v                        |              .
+   Event processor --- update --- /              .
                                                  .
                  [ replay on restart ]           .
 ..................................................

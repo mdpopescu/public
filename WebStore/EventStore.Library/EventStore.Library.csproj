@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Contracts\AppendOnlyCollection.cs" />
     <Compile Include="Contracts\Container.cs" />
+    <Compile Include="Contracts\Entity.cs" />
     <Compile Include="Contracts\Handler.cs" />
     <Compile Include="Contracts\Processor.cs" />
     <Compile Include="Contracts\Repository.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Services\CommandProcessor.cs" />
     <Compile Include="Services\DictionaryContainer.cs" />
     <Compile Include="Services\EventProcessor.cs" />
+    <Compile Include="Services\FileEventStore.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

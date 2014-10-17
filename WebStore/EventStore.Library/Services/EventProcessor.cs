@@ -17,8 +17,6 @@ namespace EventStore.Library.Services
 
     public void Start()
     {
-      repository.Clear();
-
       foreach (var ev in store.Get())
       {
         ev.Handle(repository);

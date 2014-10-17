@@ -1,7 +1,7 @@
 ﻿using System;
 using EventStore.Library.Contracts;
 
-namespace WebStore.Tests.Models
+namespace WebStore.Tests.Models.Commands
 {
   public class SomeCommand : Command
   {

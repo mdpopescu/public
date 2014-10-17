@@ -3,7 +3,7 @@ using EventStore.Library.Contracts;
 using EventStore.Library.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using WebStore.Tests.Models;
+using WebStore.Tests.Models.Events;
 
 namespace WebStore.Tests.Services
 {
@@ -22,14 +22,6 @@ namespace WebStore.Tests.Services
       repository = new Mock<Repository>();
 
       sut = new EventProcessor(store.Object, repository.Object);
-    }
-
-    [TestMethod]
-    public void ClearsTheRepositoryOnStart()
-    {
-      sut.Start();
-
-      repository.Verify(it => it.Clear());
     }
 
     [TestMethod]
