@@ -10,9 +10,9 @@ namespace EventStore.Library.Services
       this.repository = repository;
     }
 
-    public void Process(Event input)
+    public void Process(Event ev)
     {
-      //
+      ev.Handle(repository);
     }
 
     public void Start()

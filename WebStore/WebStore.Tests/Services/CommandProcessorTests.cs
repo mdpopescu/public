@@ -41,11 +41,11 @@ namespace WebStore.Tests.Services
     [TestMethod]
     public void CallsTheNextLinkInTheChain()
     {
-      var ev = new SomeEvent();
+      var ev = new Mock<Event>();
 
-      sut.Process(new SomeCommand(_ => ev));
+      sut.Process(new SomeCommand(_ => ev.Object));
 
-      next.Verify(it => it.Process(ev));
+      next.Verify(it => it.Process(ev.Object));
     }
 
     [TestMethod]
