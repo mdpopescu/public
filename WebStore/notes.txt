@@ -2,21 +2,22 @@ Architecture:
 
 =================== Web  (MVC) ===================
    |            ^                       |    ^
-   | commands   | OK / ERR              |    |
+   | commands   | ? ERR                 |    |
    v            |                query  v    |  reply
 ===================== WebAPI =====================
    |            ^                       |    ^
-   | commands   | OK / ERR              |    |
+   | commands   | ? ERR                 |    |
    v            |                       |    |
   Command processor --- query ----+     |    |
-         |                        |     |    |
-         | events              ...|.....|....|....
-........ v......................  |     v    |   .
-     Event store --- (ES DB)      +-- Repository .
+? log    |                        |     |    |
+ cmds    | events              ...|.....|....|....
+.........|......................  |     v    |   .
+         |                        +-- Repository .
+         | --- (Event Store DB)   |              .
          |                        |              .
          | events                 |              .
          v                        |              .
    Event processor --- update --- +              .
                                                  .
-                          on restart             .
+                 [ replay on restart ]           .
 ..................................................

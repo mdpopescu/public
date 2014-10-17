@@ -58,6 +58,7 @@
     <Compile Include="Models\SomeCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DictionaryContainerTests.cs" />
+    <Compile Include="Services\EventProcessorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EventStore.Library\EventStore.Library.csproj">
