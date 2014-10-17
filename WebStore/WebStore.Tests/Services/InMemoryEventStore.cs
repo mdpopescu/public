@@ -5,6 +5,11 @@ namespace WebStore.Tests.Services
 {
   public class InMemoryEventStore : AppendOnlyCollection<Event>
   {
+    public InMemoryEventStore(IEnumerable<Event> events)
+    {
+      this.events = new List<Event>(events);
+    }
+
     public IEnumerable<Event> Get()
     {
       return events;
@@ -17,6 +22,6 @@ namespace WebStore.Tests.Services
 
     //
 
-    private readonly List<Event> events = new List<Event>();
+    private readonly List<Event> events;
   }
 }
