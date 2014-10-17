@@ -1,5 +1,4 @@
 ﻿using EventStore.Library.Contracts;
-using EventStore.Library.Models;
 
 namespace EventStore.Library.Services
 {
@@ -18,6 +17,8 @@ namespace EventStore.Library.Services
 
     public void Start()
     {
+      repository.Clear();
+
       foreach (var ev in store.Get())
       {
         ev.Handle(repository);
