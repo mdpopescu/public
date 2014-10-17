@@ -1,0 +1,22 @@
+Architecture:
+
+=================== Web  (MVC) ===================
+   |            ^                       |    ^
+   | commands   | OK / ERR              |    |
+   v            |                query  v    |  reply
+===================== WebAPI =====================
+   |            ^                       |    ^
+   | commands   | OK / ERR              |    |
+   v            |                       |    |
+  Command processor --- query ----+     |    |
+         |                        |     |    |
+         | events              ...|.....|....|....
+........ v......................  |     v    |   .
+     Event store --- (ES DB)      +-- Repository .
+         |                        |              .
+         | events                 |              .
+         v                        |              .
+   Event processor --- update --- +              .
+                                                 .
+                          on restart             .
+..................................................

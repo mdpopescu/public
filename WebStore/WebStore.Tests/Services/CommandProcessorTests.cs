@@ -1,8 +1,9 @@
-﻿using EventStore.Library.Services;
+﻿using EventStore.Library.Models;
+using EventStore.Library.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebStore.Tests.Models;
 
-namespace WebStore.Tests
+namespace WebStore.Tests.Services
 {
   [TestClass]
   public class CommandProcessorTests
@@ -22,5 +23,17 @@ namespace WebStore.Tests
 
       Assert.IsTrue(success);
     }
+
+    //[TestMethod]
+    //public void CallsTheNextLinkInTheChain()
+    //{
+    //  Assert.Fail();
+    //}
+
+    //[TestMethod]
+    //public void CallsTheNextLinkWithDefaultValue()
+    //{
+    //  Assert.Fail();
+    //}
   }
 }

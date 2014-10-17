@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using EventStore.Library.Contracts;
 using EventStore.Library.Models;
 
 namespace EventStore.Library.Services
 {
-  public class CommandProcessor
+  public class CommandProcessor : Processor<Command>
   {
     public void Register<T>(Func<Command, Event> func)
       where T : Command
     {
-      dict[typeof (T)] = func;
+      handlers[typeof (T)] = func;
     }
 
-    public Event Process(Command command)
+    public void Process(Command command)
     {
-      return dict[command.GetType()](command);
+      handlers[command.GetType()](command);
     }
 
     //
 
-    private readonly Dictionary<Type, Func<Command, Event>> dict = new Dictionary<Type, Func<Command, Event>>();
+    private readonly Dictionary<Type, Func<Command, Event>> handlers = new Dictionary<Type, Func<Command, Event>>();
   }
 }
