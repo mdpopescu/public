@@ -1,7 +1,6 @@
 ﻿namespace EventStore.Library.Contracts
 {
-  public interface Command
+  public interface Command : Handler<Event>
   {
-    Event Handle(Repository repository);
   }
 }

@@ -1,7 +1,8 @@
-﻿namespace EventStore.Library.Contracts
+﻿using System.Reactive;
+
+namespace EventStore.Library.Contracts
 {
-  public interface Event
+  public interface Event : Handler<Unit>
   {
-    void Handle(Repository repository);
   }
 }

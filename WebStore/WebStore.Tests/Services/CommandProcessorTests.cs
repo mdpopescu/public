@@ -25,7 +25,7 @@ namespace WebStore.Tests.Services
     }
 
     [TestMethod]
-    public void CallsTheProperHandler()
+    public void CallsTheHandler()
     {
       var success = false;
 
