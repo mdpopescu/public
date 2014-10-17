@@ -6,8 +6,8 @@ namespace WebStore.Library.Services
 {
   public class InMemoryRepository : Repository
   {
-    public IEnumerable<T> Get<T, TKey>()
-      where T : class, Entity<TKey>
+    public IEnumerable<T> Get<T>()
+      where T : class
     {
       return list.OfType<T>();
     }
@@ -21,14 +21,14 @@ namespace WebStore.Library.Services
         .FirstOrDefault();
     }
 
-    public void Add<T, TKey>(T entity)
-      where T : class, Entity<TKey>
+    public void Add<T>(T entity)
+      where T : class
     {
       list.Add(entity);
     }
 
-    public void Update<T, TKey>(T entity)
-      where T : class, Entity<TKey>
+    public void Update<T>(T entity)
+      where T : class
     {
       // do nothing, the object is already in the list
     }

@@ -4,16 +4,16 @@ namespace EventStore.Library.Contracts
 {
   public interface Repository
   {
-    IEnumerable<T> Get<T, TKey>()
-      where T : class, Entity<TKey>;
+    IEnumerable<T> Get<T>()
+      where T : class;
 
     T GetById<T, TKey>(TKey id)
       where T : class, Entity<TKey>;
 
-    void Add<T, TKey>(T entity)
-      where T : class, Entity<TKey>;
+    void Add<T>(T entity)
+      where T : class;
 
-    void Update<T, TKey>(T entity)
-      where T : class, Entity<TKey>;
+    void Update<T>(T entity)
+      where T : class;
   }
 }

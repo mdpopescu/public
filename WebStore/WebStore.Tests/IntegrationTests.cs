@@ -17,8 +17,8 @@ namespace WebStore.Tests
     [TestMethod]
     public void FirstRun()
     {
-      var store = new InMemoryEventStore(Enumerable.Empty<Event>());
-      var repository = new InMemoryRepository();
+      AppendOnlyCollection<Event> store = new InMemoryEventStore(Enumerable.Empty<Event>());
+      Repository repository = new InMemoryRepository();
       var eventProcessor = new EventProcessor(store, repository);
       var commandProcessor = new CommandProcessor(repository, eventProcessor);
 
@@ -33,7 +33,7 @@ namespace WebStore.Tests
       commandProcessor.Process(new SellCommand("prod1", 5));
       commandProcessor.Process(new SellCommand("prod2", 5));
 
-      var products = repository.Get<Product, int>().ToList();
+      var products = repository.Get<Product>().ToList();
       Assert.AreEqual(2, products.Count);
       Assert.AreEqual("prod1", products[0].Name);
       Assert.AreEqual(15.50m, products[0].Price);
@@ -54,8 +54,8 @@ namespace WebStore.Tests
         new ProductSoldEvent("prod1", 10.00m),
       };
 
-      var store = new InMemoryEventStore(events);
-      var repository = new InMemoryRepository();
+      AppendOnlyCollection<Event> store = new InMemoryEventStore(events);
+      Repository repository = new InMemoryRepository();
       var eventProcessor = new EventProcessor(store, repository);
       var commandProcessor = new CommandProcessor(repository, eventProcessor);
 
@@ -64,7 +64,7 @@ namespace WebStore.Tests
       commandProcessor.Process(new AddInventoryCommand("prod1", 100.00m));
       commandProcessor.Process(new SellCommand("prod1", 20.00m));
 
-      var products = repository.Get<Product, int>().ToList();
+      var products = repository.Get<Product>().ToList();
       Assert.AreEqual(1, products.Count);
       Assert.AreEqual("prod1", products[0].Name);
       Assert.AreEqual(124.35m, products[0].Price);

@@ -16,7 +16,7 @@ namespace WebStore.Tests.Models.Commands
     public Event Handle(Repository repository)
     {
       // the product must exist
-      var existing = repository.Get<Product, int>().Where(it => it.Name == name).FirstOrDefault();
+      var existing = repository.Get<Product>().Where(it => it.Name == name).FirstOrDefault();
       if (existing == null)
         throw new Exception("The product " + name + " does not exist.");
 
