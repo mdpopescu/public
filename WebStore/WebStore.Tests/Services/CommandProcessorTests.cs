@@ -1,4 +1,5 @@
-﻿using EventStore.Library.Contracts;
+﻿using System;
+using EventStore.Library.Contracts;
 using EventStore.Library.Models;
 using EventStore.Library.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -56,10 +57,21 @@ namespace WebStore.Tests.Services
       next.Verify(it => it.Process(It.IsAny<Event>()), Times.Never);
     }
 
-    //[TestMethod]
-    //public void DoesNotCallTheNextLinkIfAnErrorIsThrown()
-    //{
-    //  Assert.Fail();
-    //}
+    [TestMethod]
+    public void DoesNotCallTheNextLinkIfAnErrorIsThrown()
+    {
+      sut.Register<SomeCommand>(_ => { throw new Exception(); });
+
+      try
+      {
+        sut.Process(new SomeCommand());
+      }
+      catch
+      {
+        // do nothing
+      }
+
+      next.Verify(it => it.Process(It.IsAny<Event>()), Times.Never);
+    }
   }
 }
