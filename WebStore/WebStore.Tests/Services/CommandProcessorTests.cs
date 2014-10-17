@@ -28,7 +28,6 @@ namespace WebStore.Tests.Services
     public void CallsTheProperHandler()
     {
       var success = false;
-      sut.Register<SomeCommand>();
 
       sut.Process(new SomeCommand(_ =>
       {
@@ -43,7 +42,6 @@ namespace WebStore.Tests.Services
     public void CallsTheNextLinkInTheChain()
     {
       var ev = new SomeEvent();
-      sut.Register<SomeCommand>();
 
       sut.Process(new SomeCommand(_ => ev));
 
@@ -51,18 +49,8 @@ namespace WebStore.Tests.Services
     }
 
     [TestMethod]
-    public void DoesNotCallTheNextLinkIfUnknownCommand()
-    {
-      sut.Process(new SomeCommand(_ => null));
-
-      next.Verify(it => it.Process(It.IsAny<Event>()), Times.Never);
-    }
-
-    [TestMethod]
     public void DoesNotCallTheNextLinkIfAnErrorIsThrown()
     {
-      sut.Register<SomeCommand>();
-
       try
       {
         sut.Process(new SomeCommand(_ => { throw new Exception(); }));
