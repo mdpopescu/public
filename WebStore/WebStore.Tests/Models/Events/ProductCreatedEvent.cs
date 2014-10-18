@@ -13,7 +13,7 @@ namespace WebStore.Tests.Models.Events
 
     public Unit Handle(Repository repository)
     {
-      var product = new Product { Name = name, Price = price };
+      var product = new Product(name, price);
       repository.Add(product);
 
       return Unit.Default;

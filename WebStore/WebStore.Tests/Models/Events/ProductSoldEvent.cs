@@ -15,7 +15,7 @@ namespace WebStore.Tests.Models.Events
     public Unit Handle(Repository repository)
     {
       var existing = repository.Get<Product>().Where(it => it.Name == name).First();
-      existing.Quantity -= quantity;
+      existing.DecQuantity(quantity);
       repository.Update(existing);
 
       return Unit.Default;
