@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EventStore.Library.Contracts;
 using EventStore.Library.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,13 +15,23 @@ namespace WebStore.Tests
   [TestClass]
   public class IntegrationTests
   {
+    private AppendOnlyCollection<Event> store;
+    private Repository repository;
+    private EventProcessor eventProcessor;
+    private CommandProcessor commandProcessor;
+
+    public void Initialize(IEnumerable<Event> events)
+    {
+      store = new InMemoryEventStore(events);
+      repository = new InMemoryRepository();
+      eventProcessor = new EventProcessor(store, repository);
+      commandProcessor = new CommandProcessor(repository, eventProcessor);
+    }
+
     [TestMethod]
     public void FirstRun()
     {
-      AppendOnlyCollection<Event> store = new InMemoryEventStore(Enumerable.Empty<Event>());
-      Repository repository = new InMemoryRepository();
-      var eventProcessor = new EventProcessor(store, repository);
-      var commandProcessor = new CommandProcessor(repository, eventProcessor);
+      Initialize(Enumerable.Empty<Event>());
 
       eventProcessor.Start();
 
@@ -53,11 +64,7 @@ namespace WebStore.Tests
         new ProductAddedEvent("prod1", 3.00m),
         new ProductSoldEvent("prod1", 10.00m),
       };
-
-      AppendOnlyCollection<Event> store = new InMemoryEventStore(events);
-      Repository repository = new InMemoryRepository();
-      var eventProcessor = new EventProcessor(store, repository);
-      var commandProcessor = new CommandProcessor(repository, eventProcessor);
+      Initialize(events);
 
       eventProcessor.Start();
 
@@ -69,6 +76,30 @@ namespace WebStore.Tests
       Assert.AreEqual("prod1", products[0].Name);
       Assert.AreEqual(124.35m, products[0].Price);
       Assert.AreEqual(87.50m, products[0].Quantity);
+    }
+
+    [TestMethod]
+    public void ConcurrencyTest()
+    {
+      Initialize(Enumerable.Empty<Event>());
+
+      eventProcessor.Start();
+
+      commandProcessor.Process(new CreateProductCommand("prod1", 15.50m));
+
+      var tasks = Enumerable
+        .Range(1, 50)
+        .Select(_ => Task.Run(() =>
+        {
+          commandProcessor.Process(new AddInventoryCommand("prod1", 10.00m));
+          commandProcessor.Process(new SellCommand("prod1", 9.00m));
+        }))
+        .ToArray();
+      Task.WaitAll(tasks);
+
+      var products = repository.Get<Product>().ToList();
+      Assert.AreEqual(1, products.Count);
+      Assert.AreEqual(50.00m, products[0].Quantity);
     }
   }
 }

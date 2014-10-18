@@ -58,7 +58,6 @@
     <Compile Include="Contracts\Repository.cs" />
     <Compile Include="Contracts\Command.cs" />
     <Compile Include="Contracts\Event.cs" />
-    <Compile Include="Models\NullEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CommandProcessor.cs" />
     <Compile Include="Services\DictionaryContainer.cs" />
@@ -67,6 +66,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
