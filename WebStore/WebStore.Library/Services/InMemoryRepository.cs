@@ -12,15 +12,6 @@ namespace WebStore.Library.Services
       return list.OfType<T>();
     }
 
-    public T GetById<T, TKey>(TKey id)
-      where T : class, Entity<TKey>
-    {
-      return list
-        .OfType<T>()
-        .Where(it => Equals(it.Id, id))
-        .FirstOrDefault();
-    }
-
     public void Add<T>(T entity)
       where T : class
     {

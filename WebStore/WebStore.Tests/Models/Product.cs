@@ -1,8 +1,6 @@
-﻿using EventStore.Library.Contracts;
-
-namespace WebStore.Tests.Models
+﻿namespace WebStore.Tests.Models
 {
-  public class Product : Entity<int>
+  public class Product
   {
     public int Id { get; set; }
     public string Name { get; set; }

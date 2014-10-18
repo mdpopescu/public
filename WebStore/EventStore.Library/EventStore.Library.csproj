@@ -53,7 +53,6 @@
   <ItemGroup>
     <Compile Include="Contracts\AppendOnlyCollection.cs" />
     <Compile Include="Contracts\Container.cs" />
-    <Compile Include="Contracts\Entity.cs" />
     <Compile Include="Contracts\Handler.cs" />
     <Compile Include="Contracts\Processor.cs" />
     <Compile Include="Contracts\Repository.cs" />

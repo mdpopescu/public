@@ -7,9 +7,6 @@ namespace EventStore.Library.Contracts
     IEnumerable<T> Get<T>()
       where T : class;
 
-    T GetById<T, TKey>(TKey id)
-      where T : class, Entity<TKey>;
-
     void Add<T>(T entity)
       where T : class;
 
