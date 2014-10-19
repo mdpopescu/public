@@ -80,6 +80,7 @@
     <Compile Include="Services\DictionaryContainerTests.cs" />
     <Compile Include="Services\EventProcessorTests.cs" />
     <Compile Include="Services\InMemoryEventStore.cs" />
+    <Compile Include="Services\StringEventSerializerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EventStore.Library\EventStore.Library.csproj">

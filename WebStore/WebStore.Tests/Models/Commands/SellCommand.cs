@@ -24,7 +24,7 @@ namespace WebStore.Tests.Models.Commands
       if (existing.Quantity < quantity)
         throw new Exception("Insufficient quantity for product " + name + " cannot sell " + quantity);
 
-      return new ProductSoldEvent(name, quantity);
+      return new ProductSoldEvent { Name = name, Quantity = quantity };
     }
 
     //

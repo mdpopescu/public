@@ -20,7 +20,7 @@ namespace WebStore.Tests.Models.Commands
       if (existing == null)
         throw new Exception("The product " + name + " does not exist.");
 
-      return new ProductAddedEvent(name, quantity);
+      return new ProductAddedEvent { Name = name, Quantity = quantity };
     }
 
     //

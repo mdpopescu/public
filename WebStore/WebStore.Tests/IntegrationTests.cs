@@ -59,10 +59,10 @@ namespace WebStore.Tests
     {
       var events = new List<Event>
       {
-        new ProductCreatedEvent("prod1", 124.35m),
-        new ProductAddedEvent("prod1", 14.50m),
-        new ProductAddedEvent("prod1", 3.00m),
-        new ProductSoldEvent("prod1", 10.00m),
+        new ProductCreatedEvent { Name = "prod1", Price = 124.35m },
+        new ProductAddedEvent { Name = "prod1", Quantity = 14.50m },
+        new ProductAddedEvent { Name = "prod1", Quantity = 3.00m },
+        new ProductSoldEvent { Name = "prod1", Quantity = 10.00m },
       };
       Initialize(events);
 

@@ -20,7 +20,7 @@ namespace WebStore.Tests.Models.Commands
       if (existing != null)
         throw new Exception("The product " + name + " already exists.");
 
-      return new ProductCreatedEvent(name, price);
+      return new ProductCreatedEvent { Name = name, Price = price };
     }
 
     //

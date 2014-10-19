@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\packages\ServiceStack.Text.4.0.32\lib\net40\ServiceStack.Text.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Reactive.Core">
@@ -53,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Contracts\AppendOnlyCollection.cs" />
     <Compile Include="Contracts\Container.cs" />
+    <Compile Include="Contracts\EventSerializer.cs" />
     <Compile Include="Contracts\Handler.cs" />
     <Compile Include="Contracts\Processor.cs" />
     <Compile Include="Contracts\Repository.cs" />
@@ -63,6 +67,7 @@
     <Compile Include="Services\DictionaryContainer.cs" />
     <Compile Include="Services\EventProcessor.cs" />
     <Compile Include="Services\FileEventStore.cs" />
+    <Compile Include="Services\StringEventSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
