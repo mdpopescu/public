@@ -56,10 +56,10 @@
     <Compile Include="Services\BackgroundImageWriter.cs" />
     <Compile Include="Services\ByteArrayComparer.cs" />
     <Compile Include="Services\ConsoleLogger.cs" />
-    <Compile Include="Services\FileCache.cs" />
+    <Compile Include="Services\ImageCache.cs" />
     <Compile Include="Services\ImageProcessor.cs" />
     <Compile Include="Services\NativeMethods.cs" />
-    <Compile Include="Services\Utilities.cs" />
+    <Compile Include="Services\NullImageCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -5,9 +5,9 @@ using FindDuplicates.Contracts;
 
 namespace FindDuplicates.Services
 {
-  public class FileCache : Cache<string, Image>
+  public class ImageCache : Cache<string, Bitmap>
   {
-    public FileCache(ImageWriter writer, string rootFolder)
+    public ImageCache(ImageWriter writer, string rootFolder)
     {
       this.writer = writer;
       this.rootFolder = rootFolder;
@@ -16,12 +16,12 @@ namespace FindDuplicates.Services
       Directory.CreateDirectory(rootFolder);
     }
 
-    public Image Get(string key, Func<string, Image> func)
+    public Bitmap Get(string key, Func<string, Bitmap> func)
     {
       var path = Path.Combine(rootFolder, key + ".bmp");
 
       if (File.Exists(path))
-        return Image.FromFile(path);
+        return (Bitmap) Image.FromFile(path);
 
       var image = func(key);
       writer.Save(image, path);
