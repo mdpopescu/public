@@ -33,7 +33,10 @@ namespace FindDuplicates.Services
     {
       foreach (var tuple in pending.GetConsumingEnumerable())
       {
-        tuple.Item1.Save(tuple.Item2, ImageFormat.Bmp);
+        lock (tuple.Item1)
+        {
+          tuple.Item1.Save(tuple.Item2, ImageFormat.Bmp);
+        }
       }
     }
   }

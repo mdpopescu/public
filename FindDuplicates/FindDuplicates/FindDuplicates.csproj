@@ -53,6 +53,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Services\BackgroundImageWriter.cs" />
+    <Compile Include="Services\ByteArrayComparer.cs" />
     <Compile Include="Services\FileCache.cs" />
     <Compile Include="Services\ImageProcessor.cs" />
     <Compile Include="Services\NativeMethods.cs" />

@@ -36,8 +36,12 @@ namespace FindDuplicates.Services
 
     public byte[] GetHash(Image image)
     {
-      var converter = new ImageConverter();
-      var rawImageData = converter.ConvertTo(image, typeof (byte[])) as byte[];
+      byte[] rawImageData;
+      lock (image)
+      {
+        var converter = new ImageConverter();
+        rawImageData = converter.ConvertTo(image, typeof(byte[])) as byte[];
+      }
 
       // TODO: check out the optimization from http://www.vcskicks.com/image-hash2.php
 
