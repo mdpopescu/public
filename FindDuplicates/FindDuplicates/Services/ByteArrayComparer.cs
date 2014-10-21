@@ -15,8 +15,11 @@ namespace FindDuplicates.Services
       unchecked
       {
         var result = 0;
+        
+        // ReSharper disable once LoopCanBeConvertedToQuery
         foreach (var b in obj)
           result = (result * 31) ^ b;
+
         return result;
       }
     }

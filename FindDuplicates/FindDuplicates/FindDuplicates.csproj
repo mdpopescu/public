@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Contracts\Cache.cs" />
     <Compile Include="Contracts\ImageWriter.cs" />
+    <Compile Include="Contracts\Logger.cs" />
     <Compile Include="Models\Minified.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -54,9 +55,11 @@
     </Compile>
     <Compile Include="Services\BackgroundImageWriter.cs" />
     <Compile Include="Services\ByteArrayComparer.cs" />
+    <Compile Include="Services\ConsoleLogger.cs" />
     <Compile Include="Services\FileCache.cs" />
     <Compile Include="Services\ImageProcessor.cs" />
     <Compile Include="Services\NativeMethods.cs" />
+    <Compile Include="Services\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

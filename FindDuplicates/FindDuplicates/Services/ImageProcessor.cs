@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Security.Cryptography;
 
 namespace FindDuplicates.Services
 {
@@ -34,21 +33,17 @@ namespace FindDuplicates.Services
       return destImage;
     }
 
-    public byte[] GetHash(Image image)
+    public byte[] GetBytes(Image image)
     {
       byte[] rawImageData;
       lock (image)
       {
         var converter = new ImageConverter();
-        rawImageData = converter.ConvertTo(image, typeof(byte[])) as byte[];
+        rawImageData = converter.ConvertTo(image, typeof (byte[])) as byte[];
       }
 
-      // TODO: check out the optimization from http://www.vcskicks.com/image-hash2.php
-
-      var md5 = new MD5CryptoServiceProvider();
-
       Debug.Assert(rawImageData != null, "rawImageData != null");
-      return md5.ComputeHash(rawImageData);
+      return rawImageData;
     }
   }
 }

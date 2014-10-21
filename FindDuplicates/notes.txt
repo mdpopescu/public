@@ -1,0 +1,1 @@
+Program for finding duplicates / similar images in a given folder. Based on the second idea from http://stackoverflow.com/a/83486/31793
