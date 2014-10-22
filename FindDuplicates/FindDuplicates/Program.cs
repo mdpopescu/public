@@ -53,7 +53,7 @@ namespace FindDuplicates
         var distances = (from x in minified
                          from y in minified
                          where string.Compare(x.FileName, y.FileName, StringComparison.InvariantCultureIgnoreCase) < 0
-                         let d = GetDistance(x.Bytes, y.Bytes)
+                         let d = GetDistance(x.Hash, y.Hash)
                          where d <= 10
                          select new { x = x.FileName, y = y.FileName, d })
           .OrderBy(it => it.d);
@@ -91,23 +91,19 @@ namespace FindDuplicates
       }
     }
 
-    // Calculates the Manhattan distance - http://en.wikipedia.org/wiki/Taxicab_geometry
-    private static int GetDistance(byte[] x, byte[] y)
+    private static int GetDistance(ulong x, ulong y)
     {
-      if (x.Length != y.Length)
-        return -1;
-
       unchecked
       {
-        var sum = 0;
-
-        // ReSharper disable once LoopCanBeConvertedToQuery
-        for (var i = 0; i < x.Length; i++)
+        int result;
+        
+        var v = x ^ y;
+        for (result = 0; v != 0; result++)
         {
-          sum += Math.Abs(x[i] - y[i]);
+          v &= v - 1;
         }
 
-        return sum;
+        return result;
       }
     }
   }
