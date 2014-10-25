@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -52,19 +53,38 @@ namespace FindDuplicates
 
         logger.WriteLine("Looking for similar images...");
 
-        var distances = (from x in minified
-                         from y in minified
-                         where string.Compare(x.FileName, y.FileName, StringComparison.InvariantCultureIgnoreCase) < 0
-                         let d = GetDistance(x.Hash, y.Hash)
-                         where d <= 10
-                         select new { x = x.FileName, y = y.FileName, d })
-          .OrderBy(it => it.d);
-
+        var distances = GetDistances(minified);
         foreach (var distance in distances)
         {
-          logger.WriteLine(string.Format("{0} .. {1} = {2}", distance.x, distance.y, distance.d));
+          logger.WriteLine(string.Format("{0} .. {1} = {2}", distance.Item1, distance.Item2, distance.Item3));
         }
       }
+    }
+
+    private static IEnumerable<Tuple<string, string, int>> GetDistances(List<Minified> minified)
+    {
+      for (var i = 0; i < minified.Count - 1; i++)
+      {
+        var x = minified[i];
+        for (var j = i + 1; j < minified.Count; j++)
+        {
+          var y = minified[j];
+          var d = GetDistance(x.Hash, y.Hash);
+
+          if (d <= 10)
+          {
+            yield return Tuple.Create(x.FileName, y.FileName, d);
+          }
+        }
+      }
+
+      //return (from x in minified
+      //        from y in minified
+      //        where string.Compare(x.FileName, y.FileName, StringComparison.InvariantCultureIgnoreCase) < 0
+      //        let d = GetDistance(x.Hash, y.Hash)
+      //        where d <= 10
+      //        select Tuple.Create(x.FileName, y.FileName, d))
+      //  .OrderBy(it => it.Item3);
     }
 
     private static Minified CreateMinified(string fileName)

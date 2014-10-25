@@ -37,8 +37,16 @@ namespace FindDuplicates.Services
     {
       var lines = File.Exists(path) ? File.ReadAllLines(path) : new string[0];
       return lines
-        .Select(line => line.Split('=', ','))
-        .ToDictionary(line => line[0], line => Tuple.Create(long.Parse(line[1]), long.Parse(line[2])));
+        .Select(GetParts)
+        .ToDictionary(parts => parts[0], line => Tuple.Create(long.Parse(line[1]), long.Parse(line[2])));
+    }
+
+    private static string[] GetParts(string line)
+    {
+      var i = line.IndexOf('=');
+      var j = line.IndexOf(',', i);
+
+      return new[] { line.Substring(0, i), line.Substring(i + 1, j - i - 1), line.Substring(j + 1) };
     }
   }
 }
