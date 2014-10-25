@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
@@ -31,19 +30,6 @@ namespace FindDuplicates.Services
           return minified;
         }
       }
-    }
-
-    public byte[] GetBytes(Image image)
-    {
-      byte[] rawImageData;
-      lock (image)
-      {
-        var converter = new ImageConverter();
-        rawImageData = converter.ConvertTo(image, typeof (byte[])) as byte[];
-      }
-
-      Debug.Assert(rawImageData != null, "rawImageData != null");
-      return rawImageData;
     }
 
     // based on http://www.hackerfactor.com/blog/index.php?/archives/529-Kind-of-Like-That.html

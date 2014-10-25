@@ -74,10 +74,9 @@ namespace FindDuplicates
         var key = Path.GetFileNameWithoutExtension(fileName);
 
         var minified = cache.Get(key, _ => ActualMinify(fileName));
-        var bytes = processor.GetBytes(minified);
         var hash = processor.GetDiffHash(minified);
 
-        return new Minified(fileName, minified, bytes, hash);
+        return new Minified(fileName, minified, hash);
       }
       catch (OutOfMemoryException)
       {
