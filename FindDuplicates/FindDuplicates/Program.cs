@@ -20,7 +20,9 @@ namespace FindDuplicates
 
       using (var writer = new BackgroundImageWriter())
       {
-        cache = new ImageCache(writer, Path.Combine(folder, @"cache\"));
+        //cache = new ImageCache(writer, Path.Combine(folder, @"cache\"));
+        var rootFolder = Path.Combine(folder, @"cache\");
+        cache = new ImageCache2(rootFolder, new TextFileIndex(Path.Combine(rootFolder, "thumb.index")));
         //cache = new NullImageCache();
         processor = new ImageProcessor();
 
@@ -96,7 +98,7 @@ namespace FindDuplicates
       unchecked
       {
         int result;
-        
+
         var v = x ^ y;
         for (result = 0; v != 0; result++)
         {
