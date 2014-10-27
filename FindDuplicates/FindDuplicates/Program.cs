@@ -12,12 +12,21 @@ namespace FindDuplicates
 {
   internal class Program
   {
+    private const int THRESHOLD = 5;
+
     private static Cache<string, Bitmap> cache;
     private static ImageProcessor processor;
 
     private static void Main(string[] args)
     {
       var folder = args.Length > 0 ? args[0] : Environment.CurrentDirectory;
+
+      // if there are any duplicates already identified, move everything back to the main folder first
+      var dups = Directory.GetFiles(Path.Combine(folder, "dups"), "*.*", SearchOption.AllDirectories);
+      foreach (var duplicate in dups)
+      {
+        TryMoveToFolder(duplicate, folder);
+      }
 
       var rootFolder = Path.Combine(folder, @"cache\");
       cache = new ImageCache2(rootFolder, new TextFileIndex(Path.Combine(rootFolder, "thumb.index")));
@@ -50,15 +59,25 @@ namespace FindDuplicates
       logger.WriteLine("Looking for similar images...");
 
       var similars = GetSimilars(minified);
+      var i = 0;
       foreach (var item in similars)
       {
+        var dupsFolder = Path.Combine(folder, "dups", i.ToString());
+        Directory.CreateDirectory(dupsFolder);
+
         logger.WriteLine(item.FileName);
+        TryMoveToFolder(item.FileName, dupsFolder);
 
         foreach (var similar in item.List)
         {
           logger.WriteLine(string.Format("  {0} = {1}", similar.FileName, similar.Distance));
+          TryMoveToFolder(similar.FileName, dupsFolder);
         }
+
+        i++;
       }
+
+      logger.WriteLine("Total number of similar groups: " + i);
     }
 
     private static IEnumerable<Similars> GetSimilars(IReadOnlyList<Minified> minified)
@@ -76,7 +95,7 @@ namespace FindDuplicates
           var y = minified[j];
           var d = GetDistance(x.Hash, y.Hash);
 
-          if (d <= 10)
+          if (d <= THRESHOLD)
           {
             similars.List.Add(new Similar(y.FileName, d));
           }
@@ -125,6 +144,19 @@ namespace FindDuplicates
         }
 
         return result;
+      }
+    }
+
+    private static void TryMoveToFolder(string source, string destFolder)
+    {
+      try
+      {
+        // ReSharper disable once AssignNullToNotNullAttribute
+        File.Move(source, Path.Combine(destFolder, Path.GetFileName(source)));
+      }
+      catch (IOException)
+      {
+        // do nothing
       }
     }
   }
