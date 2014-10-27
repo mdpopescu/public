@@ -48,6 +48,8 @@
     <Compile Include="Contracts\Logger.cs" />
     <Compile Include="ImageExtensions.cs" />
     <Compile Include="Models\Minified.cs" />
+    <Compile Include="Models\Similar.cs" />
+    <Compile Include="Models\Similars.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
