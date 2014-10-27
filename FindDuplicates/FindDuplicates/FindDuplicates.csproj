@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\Cache.cs" />
-    <Compile Include="Contracts\ImageWriter.cs" />
     <Compile Include="Contracts\Index.cs" />
     <Compile Include="Contracts\Logger.cs" />
     <Compile Include="ImageExtensions.cs" />
@@ -57,14 +56,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Services\BackgroundImageWriter.cs" />
     <Compile Include="Services\ByteArrayComparer.cs" />
     <Compile Include="Services\ConsoleLogger.cs" />
-    <Compile Include="Services\ImageCache.cs" />
     <Compile Include="Services\ImageCache2.cs" />
     <Compile Include="Services\ImageProcessor.cs" />
     <Compile Include="Services\NativeMethods.cs" />
-    <Compile Include="Services\NullImageCache.cs" />
     <Compile Include="Services\TextFileIndex.cs" />
   </ItemGroup>
   <ItemGroup>

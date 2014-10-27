@@ -19,49 +19,44 @@ namespace FindDuplicates
     {
       var folder = args.Length > 0 ? args[0] : Environment.CurrentDirectory;
 
-      using (var writer = new BackgroundImageWriter())
+      var rootFolder = Path.Combine(folder, @"cache\");
+      cache = new ImageCache2(rootFolder, new TextFileIndex(Path.Combine(rootFolder, "thumb.index")));
+      processor = new ImageProcessor();
+
+      var logger = new ConsoleLogger();
+
+      var extensions = Settings
+        .Default
+        .ImageExtensions
+        .Cast<string>()
+        .Select(it => it.Trim())
+        .Where(it => !string.IsNullOrEmpty(it))
+        .ToList();
+
+      var files = Directory
+        .GetFiles(folder)
+        .Where(name => extensions.Any(name.EndsWith))
+        .ToList();
+
+      logger.WriteLine("Processing " + files.Count() + " files...");
+
+      var minified = files
+        .Select(CreateMinified)
+        .Where(it => it != null)
+        .ToList();
+
+      logger.WriteLine("done.");
+
+      logger.WriteLine("Looking for similar images...");
+
+      var similars = GetSimilars(minified);
+      foreach (var item in similars)
       {
-        //cache = new ImageCache(writer, Path.Combine(folder, @"cache\"));
-        var rootFolder = Path.Combine(folder, @"cache\");
-        cache = new ImageCache2(rootFolder, new TextFileIndex(Path.Combine(rootFolder, "thumb.index")));
-        //cache = new NullImageCache();
-        processor = new ImageProcessor();
+        logger.WriteLine(item.FileName);
 
-        var logger = new ConsoleLogger();
-
-        var extensions = Settings
-          .Default
-          .ImageExtensions
-          .Cast<string>()
-          .Select(it => it.Trim())
-          .Where(it => !string.IsNullOrEmpty(it))
-          .ToList();
-
-        var files = Directory
-          .GetFiles(folder)
-          .Where(name => extensions.Any(name.EndsWith))
-          .ToList();
-
-        logger.WriteLine("Processing " + files.Count() + " files...");
-
-        var minified = files
-          .Select(CreateMinified)
-          .Where(it => it != null)
-          .ToList();
-
-        logger.WriteLine("done.");
-
-        logger.WriteLine("Looking for similar images...");
-
-        var similars = GetSimilars(minified);
-        foreach (var item in similars)
+        foreach (var similar in item.List)
         {
-          logger.WriteLine(item.FileName);
-
-          foreach (var similar in item.List)
-          {
-            logger.WriteLine(string.Format("  {0} = {1}", similar.FileName, similar.Distance));
-          }
+          logger.WriteLine(string.Format("  {0} = {1}", similar.FileName, similar.Distance));
         }
       }
     }
