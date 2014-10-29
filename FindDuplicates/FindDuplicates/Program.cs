@@ -12,7 +12,7 @@ namespace FindDuplicates
 {
   internal class Program
   {
-    private const int THRESHOLD = 5;
+    private const int THRESHOLD = 1;
 
     private static Cache<string, Bitmap> cache;
     private static ImageProcessor processor;
@@ -22,11 +22,17 @@ namespace FindDuplicates
       var folder = args.Length > 0 ? args[0] : Environment.CurrentDirectory;
 
       // if there are any duplicates already identified, move everything back to the main folder first
-      var dups = Directory.GetFiles(Path.Combine(folder, "dups"), "*.*", SearchOption.AllDirectories);
+      var dupsFolder = Path.Combine(folder, "dups");
+      var dups = Directory.GetFiles(dupsFolder, "*.*", SearchOption.AllDirectories);
       foreach (var duplicate in dups)
       {
         TryMoveToFolder(duplicate, folder);
       }
+
+      // if all files have been successfully moved, delete the dups folder
+      dups = Directory.GetFiles(dupsFolder, "*.*", SearchOption.AllDirectories);
+      if (!dups.Any())
+        TryDeleteFolder(dupsFolder);
 
       var rootFolder = Path.Combine(folder, @"cache\");
       cache = new ImageCache2(rootFolder, new TextFileIndex(Path.Combine(rootFolder, "thumb.index")));
@@ -62,7 +68,7 @@ namespace FindDuplicates
       var i = 0;
       foreach (var item in similars)
       {
-        var dupsFolder = Path.Combine(folder, "dups", i.ToString());
+        dupsFolder = Path.Combine(folder, "dups", i.ToString());
         Directory.CreateDirectory(dupsFolder);
 
         logger.WriteLine(item.FileName);
@@ -153,6 +159,18 @@ namespace FindDuplicates
       {
         // ReSharper disable once AssignNullToNotNullAttribute
         File.Move(source, Path.Combine(destFolder, Path.GetFileName(source)));
+      }
+      catch (IOException)
+      {
+        // do nothing
+      }
+    }
+
+    private static void TryDeleteFolder(string path)
+    {
+      try
+      {
+        Directory.Delete(path, true);
       }
       catch (IOException)
       {
