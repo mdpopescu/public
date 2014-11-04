@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31010.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStore.Library", "WebStore.Library\WebStore.Library.csproj", "{50A293C9-6837-44CA-8AB9-AA7CAF85D080}"
 EndProject
@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		notes.txt = notes.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebStore.Api", "WebStore.Api\WebStore.Api.csproj", "{81C26E8E-40F5-47F6-8CDC-5FABC108C741}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventStore.Data.EF", "EventStore.Data.EF\EventStore.Data.EF.csproj", "{1195DB34-C268-4EAB-9CA8-5A22D178917A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{1439AC3B-CCE4-434E-8174-1FE5D8E36237}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1439AC3B-CCE4-434E-8174-1FE5D8E36237}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1439AC3B-CCE4-434E-8174-1FE5D8E36237}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81C26E8E-40F5-47F6-8CDC-5FABC108C741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81C26E8E-40F5-47F6-8CDC-5FABC108C741}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81C26E8E-40F5-47F6-8CDC-5FABC108C741}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81C26E8E-40F5-47F6-8CDC-5FABC108C741}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1195DB34-C268-4EAB-9CA8-5A22D178917A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1195DB34-C268-4EAB-9CA8-5A22D178917A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1195DB34-C268-4EAB-9CA8-5A22D178917A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1195DB34-C268-4EAB-9CA8-5A22D178917A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
