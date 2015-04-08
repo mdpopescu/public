@@ -12,7 +12,7 @@ namespace FindDuplicates
 {
   internal class Program
   {
-    private const int THRESHOLD = 1;
+    private const int THRESHOLD = 2;
 
     private static Cache<string, Bitmap> cache;
     private static ImageProcessor processor;
