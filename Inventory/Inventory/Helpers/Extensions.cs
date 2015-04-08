@@ -38,5 +38,10 @@ namespace Renfield.Inventory.Helpers
 
       return dict.TryGetValue(key, out result) ? result + "" : null;
     }
+
+    public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> sequence)
+    {
+      return sequence ?? Enumerable.Empty<T>();
+    }
   }
 }

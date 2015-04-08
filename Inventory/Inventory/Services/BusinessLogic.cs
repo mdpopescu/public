@@ -53,6 +53,7 @@ namespace Renfield.Inventory.Services
       {
         var productNames = model
           .Items
+          .EmptyIfNull()
           .Select(it => it.ProductName)
           .Where(it => !it.IsNullOrEmpty())
           .ToList();
@@ -112,6 +113,7 @@ namespace Renfield.Inventory.Services
       {
         var productNames = model
           .Items
+          .EmptyIfNull()
           .Select(it => it.ProductName)
           .Where(it => !it.IsNullOrEmpty())
           .ToList();
@@ -150,6 +152,7 @@ namespace Renfield.Inventory.Services
     {
       var items = model
         .Items
+        .EmptyIfNull()
         .Select(it => ToEntity(repository, products, it))
         .Where(it => it != null)
         .ToList();
@@ -159,14 +162,13 @@ namespace Renfield.Inventory.Services
       return new Acquisition
       {
         Company = repository.Companies.FirstOrDefault(it => it.Name == model.CompanyName)
-                  ?? repository.Companies.Add(new Company {Name = model.CompanyName}),
+                  ?? repository.Companies.Add(new Company { Name = model.CompanyName }),
         Date = model.Date.ParseDateNullable() ?? DateTime.Today,
         Items = items,
       };
     }
 
-    private static AcquisitionItem ToEntity(Repository repository, IEnumerable<Product> products,
-                                            AcquisitionItemModel model)
+    private static AcquisitionItem ToEntity(Repository repository, IEnumerable<Product> products, AcquisitionItemModel model)
     {
       if (!model.IsValid())
         return null;
@@ -174,7 +176,7 @@ namespace Renfield.Inventory.Services
       return new AcquisitionItem
       {
         Product = products.FirstOrDefault(it => it.Name == model.ProductName)
-                  ?? repository.Products.Add(new Product {Name = model.ProductName}),
+                  ?? repository.Products.Add(new Product { Name = model.ProductName }),
         Quantity = decimal.Parse(model.Quantity),
         Price = decimal.Parse(model.Price),
       };
@@ -219,7 +221,7 @@ namespace Renfield.Inventory.Services
       return new Sale
       {
         Company = repository.Companies.FirstOrDefault(it => it.Name == model.CompanyName)
-                  ?? repository.Companies.Add(new Company {Name = model.CompanyName}),
+                  ?? repository.Companies.Add(new Company { Name = model.CompanyName }),
         Date = model.Date.ParseDateNullable() ?? DateTime.Today,
         Items = items,
       };
@@ -233,7 +235,7 @@ namespace Renfield.Inventory.Services
       return new SaleItem
       {
         Product = products.FirstOrDefault(it => it.Name == model.ProductName)
-                  ?? repository.Products.Add(new Product {Name = model.ProductName}),
+                  ?? repository.Products.Add(new Product { Name = model.ProductName }),
         Quantity = decimal.Parse(model.Quantity),
         Price = decimal.Parse(model.Price),
       };
