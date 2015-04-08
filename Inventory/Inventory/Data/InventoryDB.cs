@@ -17,7 +17,7 @@ namespace Renfield.Inventory.Data
     public InventoryDB(string nameOrConnectionString)
       : base(nameOrConnectionString)
     {
-      var connection = ((IObjectContextAdapter) this).ObjectContext.Connection;
+      var connection = ((IObjectContextAdapter)this).ObjectContext.Connection;
       connection.Open();
     }
 

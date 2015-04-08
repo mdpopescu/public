@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 
 namespace Renfield.Inventory.Models
 {
-
   public class ChangePasswordModel
   {
     [Required]

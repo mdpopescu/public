@@ -269,7 +269,7 @@ namespace Renfield.Inventory.Services
 
     private static void UpdateAllClients()
     {
-      LiveUpdateHub.Instance.Value.All.updateStocks();
+      LiveUpdateHub.INSTANCE.Value.All.updateStocks();
     }
   }
 }

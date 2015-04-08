@@ -1,7 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using StackExchange.Profiling;
 
 namespace Renfield.Inventory
 {
@@ -28,25 +27,10 @@ namespace Renfield.Inventory
 
     protected void Application_Start()
     {
-      // Register the default hubs route: ~/signalr
-      RouteTable.Routes.MapHubs();
-      
       AreaRegistration.RegisterAllAreas();
 
       RegisterGlobalFilters(GlobalFilters.Filters);
       RegisterRoutes(RouteTable.Routes);
-
-      MiniProfilerEF.InitializeEF42(false);
-    }
-
-    protected void Application_BeginRequest()
-    {
-      MiniProfiler.Start();
-    }
-
-    protected void Application_EndRequest()
-    {
-      MiniProfiler.Stop();
     }
   }
 }

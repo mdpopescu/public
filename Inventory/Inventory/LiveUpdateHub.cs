@@ -6,7 +6,7 @@ namespace Renfield.Inventory
 {
   public class LiveUpdateHub : Hub
   {
-    public static readonly Lazy<IHubConnectionContext> Instance =
-      new Lazy<IHubConnectionContext>(() => GlobalHost.ConnectionManager.GetHubContext<LiveUpdateHub>().Clients);
+    public static readonly Lazy<IHubConnectionContext<dynamic>> INSTANCE =
+      new Lazy<IHubConnectionContext<dynamic>>(() => GlobalHost.ConnectionManager.GetHubContext<LiveUpdateHub>().Clients);
   }
 }

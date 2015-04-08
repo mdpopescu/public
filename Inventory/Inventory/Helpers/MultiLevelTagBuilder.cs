@@ -67,13 +67,13 @@ namespace Renfield.Inventory.Helpers
     private string Prettified(int level)
     {
       return InnerHtml == ""
-               ? getIndent(level + 1) + base.ToString()
-               : string.Format("{0}{1}{2}{3}{0}{4}",
-                 getIndent(level),
-                 ToString(TagRenderMode.StartTag),
-                 Environment.NewLine,
-                 InnerHtml,
-                 ToString(TagRenderMode.EndTag));
+        ? getIndent(level + 1) + base.ToString()
+        : string.Format("{0}{1}{2}{3}{0}{4}",
+          getIndent(level),
+          ToString(TagRenderMode.StartTag),
+          Environment.NewLine,
+          InnerHtml,
+          ToString(TagRenderMode.EndTag));
     }
 
     private static string Indent(int level)
