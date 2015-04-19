@@ -1,4 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TweetNicer.Library;
+using TweetNicer.Library.Services;
 
 namespace TweetNicer.Tests
 {
@@ -6,8 +9,14 @@ namespace TweetNicer.Tests
   public class AcceptanceTests
   {
     [TestMethod]
-    public void TestMethod1()
+    public void GetsListOfTweets()
     {
+      var authenticator = new TweetAuthenticator(Constants.API_KEY, Constants.API_SECRET);
+      var api = authenticator.Authenticate();
+
+      var tweets = api.GetTweets().ToList();
+
+      Assert.AreNotEqual(0, tweets.Count);
     }
   }
 }
