@@ -43,6 +43,8 @@ Public repository - CC-by-SA 3.0
 
 * TextGeneration: (for now) using Markov chains to generate plausibly-looking texts.
 
+* TweetNicer: a WinForms replacement for TweetDeck with some additional features (work in progress)
+
 * VideoSpinner: (INCOMPLETE) Solution for https://www.odesk.com/applications/247465623 which I did not get (I will admit that it took me far too long). However, the project was quite interesting so I wanted to finish it. I do NOT like the resulting design of the code - I was too busy trying to make it work to ensure a proper design, unfortunately. Like they say - make it work, make it good, make it fast; this is only at the "make it work" stage.
 
 * VinReader: code to read a VIN barcode; written for https://www.guru.com/jobs/.NET-VIN-Barcode-Application/978230
