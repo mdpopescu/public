@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using CQRS.Library;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,39 +20,6 @@ namespace CQRS.Tests
     }
 
     [TestMethod]
-    public void TheEventHandlersAreCalledAsynchronously()
-    {
-      var obj = new MyClass1();
-
-      var sw = new Stopwatch();
-      sw.Start();
-      EventBus.Send("E2");
-      sw.Stop();
-
-      Assert.IsTrue(sw.ElapsedMilliseconds < 1000);
-    }
-
-    [TestMethod]
-    public void AnExceptionInTheCalledMethodCallsTheExceptionHandler()
-    {
-      try
-      {
-        var obj = new MyClass1();
-        var called = false;
-        EventBus.UnhandledException = _ => { called = true; };
-
-        EventBus.Send("E3");
-
-        Thread.Sleep(10);
-        Assert.IsTrue(called);
-      }
-      finally
-      {
-        EventBus.UnhandledException = null;
-      }
-    }
-
-    [TestMethod]
     public void ObjectsCanUnsubscribeFromEvents()
     {
       var obj = new MyClass1();
@@ -65,19 +31,6 @@ namespace CQRS.Tests
 
       Thread.Sleep(10);
       Assert.AreEqual(1, obj.E4Calls);
-    }
-
-    [TestMethod]
-    public void TerminatesTheApplicationIfAnExceptionIsThrownAndNoHandlerIsDefined()
-    {
-      var obj = new MyClass1();
-      var terminated = false;
-      WinSystem.Terminate = () => terminated = true;
-
-      EventBus.Send("E3");
-
-      Thread.Sleep(10);
-      Assert.IsTrue(terminated);
     }
 
     //

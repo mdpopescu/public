@@ -5,11 +5,13 @@ Commands
       - the method is a void public instance method and called asynchronously (the caller doesn't wait for it to finish)
       - if the method cannot be found, the library looks for a NotImplemented method with a void MethodMissing(string name, params object[] args) signature
       - if neither can be found, the library throws an exception at the caller site
-    - the Command class exposes an UnhandledException event that gets raised if the called method throws
 
 Events
   - syntax: "name"[, arg]...
   - sent globally
     - objects have to register their interest in event names
     - the registrations return IDisposable objects that can be used for de-registration
-    - the EventBus class exposes an UnhandledException event that gets raised if the called method throws
+
+MethodCaller
+  - used to do the actual calling (common code for both commands and events)
+  - exposes an UnhandledException event that gets raised if the called method throws

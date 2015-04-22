@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using CQRS.Library;
@@ -39,85 +38,6 @@ namespace CQRS.Tests
       var obj = new object();
 
       obj.SendCommand("M1");
-    }
-
-    [TestMethod]
-    public void TheMethodIsCalledAsynchronously()
-    {
-      var obj = new MyClass1();
-
-      var sw = new Stopwatch();
-      sw.Start();
-      obj.SendCommand("M3");
-      sw.Stop();
-
-      Assert.IsTrue(sw.ElapsedMilliseconds < 1000);
-    }
-
-    [TestMethod]
-    public void MethodMissingIsCalledAsynchronously()
-    {
-      var obj = new MyClass1();
-
-      var sw = new Stopwatch();
-      sw.Start();
-      obj.SendCommand("M2");
-      sw.Stop();
-
-      Assert.IsTrue(sw.ElapsedMilliseconds < 1000);
-    }
-
-    [TestMethod]
-    public void AnExceptionInTheCalledMethodCallsTheExceptionHandler()
-    {
-      try
-      {
-        var obj = new MyClass2();
-        var called = false;
-        Command.UnhandledException = _ => { called = true; };
-
-        obj.SendCommand("M1");
-
-        Thread.Sleep(10);
-        Assert.IsTrue(called);
-      }
-      finally
-      {
-        Command.UnhandledException = null;
-      }
-    }
-
-    [TestMethod]
-    public void AnExceptionInMethodMissingCallsTheExceptionHandler()
-    {
-      try
-      {
-        var obj = new MyClass2();
-        var called = false;
-        Command.UnhandledException = _ => { called = true; };
-
-        obj.SendCommand("M2");
-
-        Thread.Sleep(10);
-        Assert.IsTrue(called);
-      }
-      finally
-      {
-        Command.UnhandledException = null;
-      }
-    }
-
-    [TestMethod]
-    public void TerminatesTheApplicationIfAnExceptionIsThrownAndNoHandlerIsDefined()
-    {
-      var obj = new MyClass2();
-      var terminated = false;
-      WinSystem.Terminate = () => terminated = true;
-
-      obj.SendCommand("M1");
-
-      Thread.Sleep(10);
-      Assert.IsTrue(terminated);
     }
 
     //

@@ -4,23 +4,23 @@ using System.Threading.Tasks;
 
 namespace CQRS.Library
 {
-  public class MethodCaller
+  public static class MethodCaller
   {
-    public Action<Exception> UnhandledException { get; set; }
+    public static Action<Exception> UnhandledException { get; set; }
 
-    public void Call(MethodInfo method, object target, params object[] args)
+    public static void Call(MethodInfo method, object target, params object[] args)
     {
       Call(() => method.Invoke(target, args));
     }
 
     //
 
-    private void Call(Action action)
+    private static void Call(Action action)
     {
       Task.Run(() => TryCall(action));
     }
 
-    private void TryCall(Action action)
+    private static void TryCall(Action action)
     {
       try
       {
@@ -32,7 +32,7 @@ namespace CQRS.Library
       }
     }
 
-    private void RaiseUnhandledExceptionEvent(Exception ex)
+    private static void RaiseUnhandledExceptionEvent(Exception ex)
     {
       if (UnhandledException == null)
         WinSystem.Terminate();

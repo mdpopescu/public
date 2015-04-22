@@ -6,12 +6,6 @@ namespace CQRS.Library
 {
   public static class EventBus
   {
-    public static Action<Exception> UnhandledException
-    {
-      get { return caller.UnhandledException; }
-      set { caller.UnhandledException = value; }
-    }
-
     public static IDisposable Subscribe(object obj, params string[] names)
     {
       return new CompositeDisposable(names.Select(name => AddSubscription(obj, name)).ToList());
@@ -32,7 +26,6 @@ namespace CQRS.Library
     // ReSharper disable InconsistentNaming
     private static readonly ConcurrentDictionary<string, ConcurrentBag<object>> subscriptions = new ConcurrentDictionary<string, ConcurrentBag<object>>();
     private static readonly object subscriptionsLock = new object();
-    private static readonly MethodCaller caller = new MethodCaller();
     // ReSharper enable InconsistentNaming
 
     private static IDisposable AddSubscription(object obj, string name)
@@ -60,7 +53,7 @@ namespace CQRS.Library
     {
       var method = target.FindMethod(name);
       if (method != null)
-        caller.Call(method, target, args);
+        MethodCaller.Call(method, target, args);
     }
   }
 }
