@@ -69,6 +69,19 @@ namespace CQRS.Tests
       Assert.AreEqual(1, obj.E4Calls);
     }
 
+    [TestMethod]
+    public void TerminatesTheApplicationIfAnExceptionIsThrownAndNoHandlerIsDefined()
+    {
+      var obj = new MyClass1();
+      var terminated = false;
+      WinSystem.Terminate = () => terminated = true;
+
+      EventBus.Send("E3");
+
+      Thread.Sleep(10);
+      Assert.IsTrue(terminated);
+    }
+
     //
 
     private class MyClass1
