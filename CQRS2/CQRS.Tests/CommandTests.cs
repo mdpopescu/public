@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using CQRS.Library;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,6 +17,7 @@ namespace CQRS.Tests
 
       obj.SendCommand("M1", 5);
 
+      Thread.Sleep(10);
       Assert.AreEqual(5, obj.X);
     }
 
@@ -37,6 +40,19 @@ namespace CQRS.Tests
       obj.SendCommand("M1");
     }
 
+    [TestMethod]
+    public void TheMethodIsCalledAsynchronously()
+    {
+      var obj = new MyClass1();
+
+      var sw = new Stopwatch();
+      sw.Start();
+      obj.SendCommand("M3");
+      sw.Stop();
+
+      Assert.IsTrue(sw.ElapsedMilliseconds < 1000);
+    }
+
     //
 
     private class MyClass1
@@ -52,6 +68,11 @@ namespace CQRS.Tests
       public void M1(int x)
       {
         X = x;
+      }
+
+      public void M3()
+      {
+        Thread.Sleep(2000);
       }
     }
   }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace CQRS.Library
 {
@@ -9,7 +10,7 @@ namespace CQRS.Library
     {
       var method = FindMethod(target, name);
       if (method != null)
-        method.Invoke(target, args);
+        Task.Run(() => method.Invoke(target, args));
       else
       {
         method = FindMethod(target, "MethodMissing");
