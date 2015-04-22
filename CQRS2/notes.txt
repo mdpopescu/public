@@ -10,3 +10,5 @@ Commands
 Events
   - syntax: "name"[, arg]...
   - sent globally
+    - objects have to register their interest in event names
+    - the registrations return IDisposable objects that can be used for de-registration
