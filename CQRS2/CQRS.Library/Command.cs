@@ -15,7 +15,7 @@ namespace CQRS.Library
       {
         method = FindMethod(target, "MethodMissing");
         if (method != null)
-          method.Invoke(target, new object[] { name, args });
+          Task.Run(() => method.Invoke(target, new object[] { name, args }));
         else
           throw new MissingMethodException(target.GetType().FullName, name);
       }

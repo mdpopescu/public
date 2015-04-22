@@ -28,6 +28,7 @@ namespace CQRS.Tests
 
       obj.SendCommand("M2", 3);
 
+      Thread.Sleep(10);
       Assert.AreEqual("M2(3)", obj.MissingMethodCall);
     }
 
@@ -53,6 +54,19 @@ namespace CQRS.Tests
       Assert.IsTrue(sw.ElapsedMilliseconds < 1000);
     }
 
+    [TestMethod]
+    public void MethodMissingIsCalledAsynchronously()
+    {
+      var obj = new MyClass1();
+
+      var sw = new Stopwatch();
+      sw.Start();
+      obj.SendCommand("M2");
+      sw.Stop();
+
+      Assert.IsTrue(sw.ElapsedMilliseconds < 1000);
+    }
+
     //
 
     private class MyClass1
@@ -63,6 +77,7 @@ namespace CQRS.Tests
       public void MethodMissing(string name, params object[] args)
       {
         MissingMethodCall = name + "(" + string.Join(",", args.Select(it => it.ToString())) + ")";
+        Thread.Sleep(2000);
       }
 
       public void M1(int x)
