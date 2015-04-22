@@ -11,7 +11,7 @@ namespace CQRS.Tests
     {
       var obj = new MyClass1();
 
-      Command.Send(obj, "M1", 5);
+      obj.SendCommand("M1", 5);
 
       Assert.AreEqual(5, obj.X);
     }
