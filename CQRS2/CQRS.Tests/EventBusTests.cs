@@ -55,15 +55,32 @@ namespace CQRS.Tests
       }
     }
 
+    [TestMethod]
+    public void ObjectsCanUnsubscribeFromEvents()
+    {
+      var obj = new MyClass1();
+
+      EventBus.Send("E4");
+      EventBus.Send("NoE4");
+      Thread.Sleep(10); // give it time for the de-registration to execute
+      EventBus.Send("E4");
+
+      Thread.Sleep(10);
+      Assert.AreEqual(1, obj.E4Calls);
+    }
+
     //
 
     private class MyClass1
     {
       public int X { get; private set; }
+      public int E4Calls { get; private set; }
 
       public MyClass1()
       {
         EventBus.Subscribe(this, "E1", "E2", "E3");
+        subscription = EventBus.Subscribe(this, "E4");
+        EventBus.Subscribe(this, "NoE4");
       }
 
       public void E1(int x)
@@ -80,6 +97,20 @@ namespace CQRS.Tests
       {
         throw new Exception("test");
       }
+
+      public void E4()
+      {
+        E4Calls++;
+      }
+
+      public void NoE4()
+      {
+        subscription.Dispose();
+      }
+
+      //
+
+      private readonly IDisposable subscription;
     }
   }
 }

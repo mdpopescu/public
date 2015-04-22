@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CQRS.Library
@@ -8,10 +9,9 @@ namespace CQRS.Library
   {
     public static event UnhandledExceptionEventHandler UnhandledException;
 
-    public static void Subscribe(object obj, params string[] names)
+    public static IDisposable Subscribe(object obj, params string[] names)
     {
-      foreach (var name in names)
-        AddSubscription(obj, name);
+      return new CompositeDisposable(names.Select(name => AddSubscription(obj, name)).ToList());
     }
 
     public static void Send(string name, params object[] args)
@@ -31,13 +31,24 @@ namespace CQRS.Library
     private static readonly object subscriptionsLock = new object();
     // ReSharper enable InconsistentNaming
 
-    private static void AddSubscription(object obj, string name)
+    private static IDisposable AddSubscription(object obj, string name)
     {
       lock (subscriptionsLock)
       {
         var list = subscriptions.GetOrAdd(name, _ => new ConcurrentBag<object>());
         list.Add(obj);
         subscriptions[name] = list;
+
+        return new DisposableGuard(() => Remove(name, obj));
+      }
+    }
+
+    private static void Remove(string name, object obj)
+    {
+      // assumes that subscriptions[name] exists, since Remove is only called after it was created
+      lock (subscriptionsLock)
+      {
+        subscriptions[name] = new ConcurrentBag<object>(subscriptions[name].Where(it => it != obj));
       }
     }
 
