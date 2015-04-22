@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TweetNicer.Library", "Tweet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TweetNicer.Tests", "TweetNicer.Tests\TweetNicer.Tests.csproj", "{FE9C5407-6D6A-47A4-8E77-C883E5D2F9B3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F1C73482-B99D-4D1C-BAE6-F9DB03EB3815}"
+	ProjectSection(SolutionItems) = preProject
+		notes.txt = notes.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

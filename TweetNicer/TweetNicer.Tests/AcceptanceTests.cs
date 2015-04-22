@@ -11,7 +11,7 @@ namespace TweetNicer.Tests
     [TestMethod]
     public void GetsListOfTweets()
     {
-      var authenticator = new TweetAuthenticator(Constants.API_KEY, Constants.API_SECRET);
+      var authenticator = new TweetInviAuthenticator(Constants.API_KEY, Constants.API_SECRET);
       var api = authenticator.Authenticate();
 
       var tweets = api.GetTweets().ToList();

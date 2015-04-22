@@ -1,0 +1,6 @@
+WinForms app to evolve into a TweetDeck replacement
+
+First feature: schedule a post to be sent at a specific time and, optionally, repeated at a specified interval N times / until given date/time.
+
+007 @gblock
+We need timebombed tweets. Send a tweet with a lifetime before it auto removes itself :p
