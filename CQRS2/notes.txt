@@ -2,7 +2,7 @@ Commands
   - syntax: "name"[, arg]...
   - sent to a specific object
     - gets translated by the library into a method call
-      - the method is always void and called asynchronously (the caller doesn't wait for it to finish)
+      - the method is a void public instance method and called asynchronously (the caller doesn't wait for it to finish)
       - if the method cannot be found, the library looks for a NotImplemented method with a void NotImplemented(params object[] args) signature
       - if neither can be found, the library throws an exception at the caller site
 
