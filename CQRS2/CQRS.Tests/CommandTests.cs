@@ -89,6 +89,28 @@ namespace CQRS.Tests
       }
     }
 
+    [TestMethod]
+    public void AnExceptionInMethodMissingCallsTheExceptionHandler()
+    {
+      var obj = new MyClass2();
+
+      var called = false;
+      UnhandledExceptionEventHandler handler = (sender, e) => { called = true; };
+
+      try
+      {
+        Command.UnhandledException += handler;
+        obj.SendCommand("M2");
+
+        Thread.Sleep(10);
+        Assert.IsTrue(called);
+      }
+      finally
+      {
+        Command.UnhandledException -= handler;
+      }
+    }
+
     //
 
     private class MyClass1
@@ -115,6 +137,11 @@ namespace CQRS.Tests
 
     private class MyClass2
     {
+      public void MethodMissing(string name, params object[] args)
+      {
+        throw new Exception("test2");
+      }
+
       public void M1()
       {
         throw new Exception("test");
