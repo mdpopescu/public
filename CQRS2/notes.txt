@@ -12,3 +12,4 @@ Events
   - sent globally
     - objects have to register their interest in event names
     - the registrations return IDisposable objects that can be used for de-registration
+    - the EventBus class exposes an UnhandledException event that gets raised if the called method throws

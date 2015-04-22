@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace CQRS.Library
@@ -19,7 +18,8 @@ namespace CQRS.Library
       if (!subscriptions.TryGetValue(name, out list))
         return;
 
-      Parallel.ForEach(list.AsEnumerable(), target => Send(target, name, args));
+      foreach (var target in list.AsEnumerable())
+        Send(target, name, args);
     }
 
     //
@@ -41,15 +41,9 @@ namespace CQRS.Library
 
     private static void Send(object target, string name, params object[] args)
     {
-      var method = FindMethod(target, name);
+      var method = target.FindMethod(name);
       if (method != null)
-        method.Invoke(target, args);
-    }
-
-    private static MethodInfo FindMethod(object target, string name)
-    {
-      var type = target.GetType();
-      return type.GetMethod(name, BindingFlags.Instance | BindingFlags.Public);
+        Task.Run(() => method.Invoke(target, args));
     }
   }
 }
