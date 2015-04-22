@@ -36,14 +36,12 @@ namespace CQRS.Tests
     [TestMethod]
     public void AnExceptionInTheCalledMethodCallsTheExceptionHandler()
     {
-      var obj = new MyClass1();
-
-      var called = false;
-      UnhandledExceptionEventHandler handler = (sender, e) => { called = true; };
-
       try
       {
-        EventBus.UnhandledException += handler;
+        var obj = new MyClass1();
+        var called = false;
+        EventBus.UnhandledException = _ => { called = true; };
+
         EventBus.Send("E3");
 
         Thread.Sleep(10);
@@ -51,7 +49,7 @@ namespace CQRS.Tests
       }
       finally
       {
-        EventBus.UnhandledException -= handler;
+        EventBus.UnhandledException = null;
       }
     }
 

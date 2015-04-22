@@ -70,14 +70,12 @@ namespace CQRS.Tests
     [TestMethod]
     public void AnExceptionInTheCalledMethodCallsTheExceptionHandler()
     {
-      var obj = new MyClass2();
-
-      var called = false;
-      UnhandledExceptionEventHandler handler = (sender, e) => { called = true; };
-
       try
       {
-        Command.UnhandledException += handler;
+        var obj = new MyClass2();
+        var called = false;
+        Command.UnhandledException = _ => { called = true; };
+
         obj.SendCommand("M1");
 
         Thread.Sleep(10);
@@ -85,21 +83,19 @@ namespace CQRS.Tests
       }
       finally
       {
-        Command.UnhandledException -= handler;
+        Command.UnhandledException = null;
       }
     }
 
     [TestMethod]
     public void AnExceptionInMethodMissingCallsTheExceptionHandler()
     {
-      var obj = new MyClass2();
-
-      var called = false;
-      UnhandledExceptionEventHandler handler = (sender, e) => { called = true; };
-
       try
       {
-        Command.UnhandledException += handler;
+        var obj = new MyClass2();
+        var called = false;
+        Command.UnhandledException = _ => { called = true; };
+
         obj.SendCommand("M2");
 
         Thread.Sleep(10);
@@ -107,7 +103,7 @@ namespace CQRS.Tests
       }
       finally
       {
-        Command.UnhandledException -= handler;
+        Command.UnhandledException = null;
       }
     }
 

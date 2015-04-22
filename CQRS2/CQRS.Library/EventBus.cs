@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CQRS.Library
 {
   public static class EventBus
   {
-    public static event UnhandledExceptionEventHandler UnhandledException;
+    public static Action<Exception> UnhandledException
+    {
+      get { return caller.UnhandledException; }
+      set { caller.UnhandledException = value; }
+    }
 
     public static IDisposable Subscribe(object obj, params string[] names)
     {
@@ -29,6 +32,7 @@ namespace CQRS.Library
     // ReSharper disable InconsistentNaming
     private static readonly ConcurrentDictionary<string, ConcurrentBag<object>> subscriptions = new ConcurrentDictionary<string, ConcurrentBag<object>>();
     private static readonly object subscriptionsLock = new object();
+    private static readonly MethodCaller caller = new MethodCaller();
     // ReSharper enable InconsistentNaming
 
     private static IDisposable AddSubscription(object obj, string name)
@@ -56,33 +60,7 @@ namespace CQRS.Library
     {
       var method = target.FindMethod(name);
       if (method != null)
-        Call(() => method.Invoke(target, args));
-    }
-
-    private static void Call(Action action)
-    {
-      Task.Run(() => TryCall(action));
-    }
-
-    private static void TryCall(Action action)
-    {
-      try
-      {
-        action();
-      }
-      catch (Exception ex)
-      {
-        RaiseUnhandledExceptionEvent(ex);
-      }
-    }
-
-    private static void RaiseUnhandledExceptionEvent(Exception ex)
-    {
-      var handler = UnhandledException;
-      if (handler != null)
-        handler(null, new UnhandledExceptionEventArgs(ex, true));
-      else
-        WinSystem.Terminate();
+        caller.Call(method, target, args);
     }
   }
 }
