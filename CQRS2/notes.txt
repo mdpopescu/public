@@ -5,6 +5,7 @@ Commands
       - the method is a void public instance method and called asynchronously (the caller doesn't wait for it to finish)
       - if the method cannot be found, the library looks for a NotImplemented method with a void MethodMissing(string name, params object[] args) signature
       - if neither can be found, the library throws an exception at the caller site
+    - the Command class exposes an UnhandledException event that gets raised if the called method throws
 
 Events
   - syntax: "name"[, arg]...

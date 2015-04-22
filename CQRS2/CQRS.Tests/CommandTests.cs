@@ -67,6 +67,28 @@ namespace CQRS.Tests
       Assert.IsTrue(sw.ElapsedMilliseconds < 1000);
     }
 
+    [TestMethod]
+    public void AnExceptionInTheCalledMethodCallsTheExceptionHandler()
+    {
+      var obj = new MyClass2();
+
+      var called = false;
+      UnhandledExceptionEventHandler handler = (sender, e) => { called = true; };
+
+      try
+      {
+        Command.UnhandledException += handler;
+        obj.SendCommand("M1");
+
+        Thread.Sleep(10);
+        Assert.IsTrue(called);
+      }
+      finally
+      {
+        Command.UnhandledException -= handler;
+      }
+    }
+
     //
 
     private class MyClass1
@@ -88,6 +110,14 @@ namespace CQRS.Tests
       public void M3()
       {
         Thread.Sleep(2000);
+      }
+    }
+
+    private class MyClass2
+    {
+      public void M1()
+      {
+        throw new Exception("test");
       }
     }
   }
