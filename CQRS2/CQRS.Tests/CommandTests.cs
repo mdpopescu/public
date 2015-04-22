@@ -1,4 +1,5 @@
-﻿using CQRS.Library;
+﻿using System.Linq;
+using CQRS.Library;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CQRS.Tests
@@ -16,11 +17,27 @@ namespace CQRS.Tests
       Assert.AreEqual(5, obj.X);
     }
 
+    [TestMethod]
+    public void CallsMethodMissingIfMethodIsNotFound()
+    {
+      var obj = new MyClass1();
+
+      obj.SendCommand("M2", 3);
+
+      Assert.AreEqual("M2(3)", obj.MissingMethodCall);
+    }
+
     //
 
     private class MyClass1
     {
       public int X { get; private set; }
+      public string MissingMethodCall { get; private set; }
+
+      public void MethodMissing(string name, params object[] args)
+      {
+        MissingMethodCall = name + "(" + string.Join(",", args.Select(it => it.ToString())) + ")";
+      }
 
       public void M1(int x)
       {
