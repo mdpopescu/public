@@ -46,6 +46,8 @@ namespace CQRS.Library
       var handler = UnhandledException;
       if (handler != null)
         handler(null, new UnhandledExceptionEventArgs(ex, true));
+      else
+        WinSystem.Terminate();
     }
   }
 }

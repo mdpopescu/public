@@ -111,6 +111,19 @@ namespace CQRS.Tests
       }
     }
 
+    [TestMethod]
+    public void TerminatesTheApplicationIfAnExceptionIsThrownAndNoHandlerIsDefined()
+    {
+      var obj = new MyClass2();
+      var terminated = false;
+      WinSystem.Terminate = () => terminated = true;
+
+      obj.SendCommand("M1");
+
+      Thread.Sleep(10);
+      Assert.IsTrue(terminated);
+    }
+
     //
 
     private class MyClass1
