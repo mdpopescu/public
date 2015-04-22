@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace CQRS.Library
 {
@@ -12,7 +13,10 @@ namespace CQRS.Library
       else
       {
         method = FindMethod(target, "MethodMissing");
-        method.Invoke(target, new object[] { name, args });
+        if (method != null)
+          method.Invoke(target, new object[] { name, args });
+        else
+          throw new MissingMethodException(target.GetType().FullName, name);
       }
     }
 
