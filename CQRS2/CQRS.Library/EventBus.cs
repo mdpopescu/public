@@ -45,7 +45,7 @@ namespace CQRS.Library
       // assumes that subscriptions[name] exists, since Remove is only called after it was created
       lock (subscriptionsLock)
       {
-        subscriptions[name] = new ConcurrentBag<object>(subscriptions[name].Where(it => it != obj));
+        subscriptions[name] = new ConcurrentBag<object>(subscriptions[name].Where(it => !ReferenceEquals(it, obj)));
       }
     }
 
