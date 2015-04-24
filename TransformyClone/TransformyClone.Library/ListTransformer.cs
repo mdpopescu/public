@@ -8,12 +8,15 @@ namespace TransformyClone.Library
   {
     public IEnumerable<string> Transform(IEnumerable<string> inputs, string sample)
     {
-      if (inputs == null || !inputs.Any())
+      if (inputs == null)
+        throw new ArgumentException("Argument must not be null or empty.", "inputs");
+      inputs = inputs.ToList();
+      if (!inputs.Any())
         throw new ArgumentException("Argument must not be null or empty.", "inputs");
       if (string.IsNullOrEmpty(sample))
         throw new ArgumentException("String must not be null or empty.", "sample");
 
-      return new List<string> { sample };
+      return inputs.Select(_ => sample);
     }
   }
 }

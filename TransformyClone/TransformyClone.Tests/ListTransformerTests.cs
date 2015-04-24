@@ -52,5 +52,13 @@ namespace TransformyClone.Tests
 
       CollectionAssert.AreEqual(new[] { "2" }, result.ToArray());
     }
+
+    [TestMethod]
+    public void TransformsMultipleElementsToConstants()
+    {
+      var result = sut.Transform(new[] { "1", "2", "3" }, "a");
+
+      CollectionAssert.AreEqual(new[] { "a", "a", "a" }, result.ToArray());
+    }
   }
 }
