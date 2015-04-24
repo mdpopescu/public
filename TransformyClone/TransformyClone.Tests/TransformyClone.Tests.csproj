@@ -53,8 +53,35 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="AcceptanceTests.cs" />
+    <Compile Include="ListTransformerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TransformyClone.Library\TransformyClone.Library.csproj">
+      <Project>{a67aca26-ef35-4a04-ac5a-79cd8fb5ea3b}</Project>
+      <Name>TransformyClone.Library</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Sample1.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Sample2.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Sample3.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -1,0 +1,11 @@
+3, Roberto Carlos, soccer, Brazil
+35, Michael Jordan, baseball, USA
+6, James Lebron, basketball, USA
+10, Shinji Kagawa, soccer, Japan
+
+CARLOS, jersey number 3|
+
+CARLOS, jersey number 3
+JORDAN, jersey number 35
+LEBRON, jersey number 6
+KAGAWA, jersey number 10

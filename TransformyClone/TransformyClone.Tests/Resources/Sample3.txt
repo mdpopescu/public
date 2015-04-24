@@ -1,0 +1,11 @@
+Joel, 1949, piano
+Lennon, 1940, guitar
+Grohl, 1969, drums
+Burton, 1962, bass
+
+{name: 'Joel', instrument: 'piano'}
+
+{name: 'Joel', instrument: 'piano'}
+{name: 'Lennon', intrument: 'guitar'}
+{name: 'Grohl', instrument: 'drums'}
+{name: 'Burton', instrument: 'bass'}
