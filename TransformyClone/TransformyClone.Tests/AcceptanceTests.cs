@@ -31,7 +31,7 @@ namespace TransformyClone.Tests
 
       var result = sut.Transform(inputs, sample);
 
-      CollectionAssert.AreEqual(outputs, result);
+      CollectionAssert.AreEqual(outputs.ToArray(), result.ToArray());
     }
 
     private static void Extract(string value, out List<string> inputs, out string sample, out List<string> outputs)

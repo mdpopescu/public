@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TransformyClone.Library;
 
@@ -42,6 +43,14 @@ namespace TransformyClone.Tests
     public void ThrowsOnEmptySample()
     {
       sut.Transform(new List<string> { "a" }, "");
+    }
+
+    [TestMethod]
+    public void TransformsSingleElementToConstant()
+    {
+      var result = sut.Transform(new[] { "1" }, "2");
+
+      CollectionAssert.AreEqual(new[] { "2" }, result.ToArray());
     }
   }
 }
