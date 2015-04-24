@@ -60,5 +60,21 @@ namespace TransformyClone.Tests
 
       CollectionAssert.AreEqual(new[] { "a", "a", "a" }, result.ToArray());
     }
+
+    [TestMethod]
+    public void TransformsSingleElementAccordingToSample()
+    {
+      var result = sut.Transform(new[] { "word" }, "some word and stuff");
+
+      CollectionAssert.AreEqual(new[] { "some word and stuff" }, result.ToArray());
+    }
+
+    [TestMethod]
+    public void TransformsMultipleElementsAccordingToSample()
+    {
+      var result = sut.Transform(new[] { "word", "thing" }, "some word and stuff");
+
+      CollectionAssert.AreEqual(new[] { "some word and stuff", "some thing and stuff" }, result.ToArray());
+    }
   }
 }
