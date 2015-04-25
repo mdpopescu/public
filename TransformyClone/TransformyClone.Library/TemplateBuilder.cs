@@ -5,7 +5,7 @@ namespace TransformyClone.Library
 {
   public class TemplateBuilder : Builder
   {
-    public string Build(string line, string sample, IEnumerable<string> words)
+    public string Build(string sample, IEnumerable<string> words)
     {
       sample = sample.DuplicateCurlyBraces();
 

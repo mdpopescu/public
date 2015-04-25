@@ -4,6 +4,6 @@ namespace TransformyClone.Library
 {
   public interface Builder
   {
-    string Build(string line, string sample, IEnumerable<string> words);
+    string Build(string sample, IEnumerable<string> words);
   }
 }

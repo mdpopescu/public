@@ -30,7 +30,7 @@ namespace TransformyClone.Library
     private string GetTemplate(string firstLine, string sample)
     {
       var words = splitter.Split(firstLine);
-      return builder.Build(firstLine, sample, words);
+      return builder.Build(sample, words);
     }
 
     //

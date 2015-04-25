@@ -17,7 +17,7 @@ namespace TransformyClone.Tests
     [TestMethod]
     public void ReturnsUnchangedSampleWhenItDoesntMatchAnyWords()
     {
-      var result = sut.Build("1 2 3", "abc", new[] { "1", "2", "3" });
+      var result = sut.Build("abc", new[] { "1", "2", "3" });
 
       Assert.AreEqual("abc", result);
     }
@@ -25,7 +25,7 @@ namespace TransformyClone.Tests
     [TestMethod]
     public void ReplacesSingleMatchingWordWithPlaceholder()
     {
-      var result = sut.Build("1 2 3", "a 1 b", new[] { "1", "2", "3" });
+      var result = sut.Build("a 1 b", new[] { "1", "2", "3" });
 
       Assert.AreEqual("a {0} b", result);
     }
@@ -33,7 +33,7 @@ namespace TransformyClone.Tests
     [TestMethod]
     public void ReplacesMultipleMatchingWords()
     {
-      var result = sut.Build("1 2 3", "a 1 b 2", new[] { "1", "2", "3" });
+      var result = sut.Build("a 1 b 2", new[] { "1", "2", "3" });
 
       Assert.AreEqual("a {0} b {1}", result);
     }
@@ -41,7 +41,7 @@ namespace TransformyClone.Tests
     [TestMethod]
     public void ReplacesMultipleMatchingWordsWhenSkippingSome()
     {
-      var result = sut.Build("1 2 3", "a 3 1 c", new[] { "1", "2", "3" });
+      var result = sut.Build("a 3 1 c", new[] { "1", "2", "3" });
 
       Assert.AreEqual("a {2} {0} c", result);
     }
@@ -49,7 +49,7 @@ namespace TransformyClone.Tests
     [TestMethod]
     public void DoublesOpeningCurlyBraces()
     {
-      var result = sut.Build("1 2", "2 { 3", new[] { "1", "2" });
+      var result = sut.Build("2 { 3", new[] { "1", "2" });
 
       Assert.AreEqual("{1} {{ 3", result);
     }
