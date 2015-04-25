@@ -14,9 +14,9 @@ namespace TransformyClone.Tests
     [TestMethod]
     public void TestUsingSamples()
     {
-      //TestUsingResource(Resources.Sample1, "Sample1");
-      //TestUsingResource(Resources.Sample2, "Sample2");
       TestUsingResource(Resources.Sample3, "Sample3");
+      TestUsingResource(Resources.Sample1, "Sample1");
+      TestUsingResource(Resources.Sample2, "Sample2");
     }
 
     //

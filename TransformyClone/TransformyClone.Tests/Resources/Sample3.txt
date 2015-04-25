@@ -6,6 +6,6 @@ Burton, 1962, bass
 {name: 'Joel', instrument: 'piano'}
 
 {name: 'Joel', instrument: 'piano'}
-{name: 'Lennon', intrument: 'guitar'}
+{name: 'Lennon', instrument: 'guitar'}
 {name: 'Grohl', instrument: 'drums'}
 {name: 'Burton', instrument: 'bass'}
