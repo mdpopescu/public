@@ -4,14 +4,12 @@ using System.Text.RegularExpressions;
 
 namespace TransformyClone.Library
 {
-  public class WordSplitter
+  public class WordSplitter: Splitter
   {
     public IEnumerable<string> Split(string s)
     {
-      s = s + "";
-
       return Regex
-        .Split(s, @"\b")
+        .Split(s + "", @"\b")
         .Select(it => it.Trim())
         .Where(it => it != "");
     }

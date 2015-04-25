@@ -27,7 +27,7 @@ namespace TransformyClone.Tests
       string sample;
 
       Extract(value, out inputs, out sample, out outputs);
-      var sut = new ListTransformer();
+      var sut = new ListTransformer(new WordSplitter(), null);
 
       var result = sut.Transform(inputs, sample);
 

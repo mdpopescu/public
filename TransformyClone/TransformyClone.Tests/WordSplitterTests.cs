@@ -54,11 +54,11 @@ namespace TransformyClone.Tests
     [TestMethod]
     public void ReturnsNonSpaceCharactersAsWords()
     {
-      var result = sut.Split("a--b c>d").ToList();
+      var result = sut.Split("a->b c>d").ToList();
 
       Assert.AreEqual(6, result.Count);
       Assert.AreEqual("a", result[0]);
-      Assert.AreEqual("--", result[1]);
+      Assert.AreEqual("->", result[1]);
       Assert.AreEqual("b", result[2]);
       Assert.AreEqual("c", result[3]);
       Assert.AreEqual(">", result[4]);
