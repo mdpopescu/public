@@ -14,9 +14,7 @@ namespace TransformyClone.Library
 
     public IEnumerable<string> Transform(IEnumerable<string> inputs, string sample)
     {
-      if (inputs == null)
-        throw new ArgumentException("Argument must not be null or empty.", "inputs");
-      var list = inputs.ToList();
+      var list = (inputs ?? Enumerable.Empty<string>()).ToList();
       if (!list.Any())
         throw new ArgumentException("Argument must not be null or empty.", "inputs");
       if (string.IsNullOrEmpty(sample))

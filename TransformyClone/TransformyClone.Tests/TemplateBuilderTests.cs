@@ -45,5 +45,13 @@ namespace TransformyClone.Tests
 
       Assert.AreEqual("a {2} {0} c", result);
     }
+
+    [TestMethod]
+    public void DoublesOpeningCurlyBraces()
+    {
+      var result = sut.Build("1 2", "2 { 3", new[] { "1", "2" });
+
+      Assert.AreEqual("{1} {{ 3", result);
+    }
   }
 }
