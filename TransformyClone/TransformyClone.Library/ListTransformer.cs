@@ -22,12 +22,17 @@ namespace TransformyClone.Library
       if (string.IsNullOrEmpty(sample))
         throw new ArgumentException("String must not be null or empty.", "sample");
 
-      var firstLine = list[0];
-      var words = splitter.Split(firstLine);
-      var template = builder.Build(firstLine, sample, words);
+      var template = GetTemplate(list[0], sample);
 
-      // ReSharper disable once CoVariantArrayConversion
-      return list.Select(line => string.Format(template, splitter.Split(line).ToArray()));
+      return list
+        .Select(line => splitter.Split(line).Select(it => (object) it).ToArray())
+        .Select(parts => string.Format(template, parts));
+    }
+
+    private string GetTemplate(string firstLine, string sample)
+    {
+      var words = splitter.Split(firstLine);
+      return builder.Build(firstLine, sample, words);
     }
 
     //
