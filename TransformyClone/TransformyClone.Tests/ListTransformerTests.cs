@@ -80,19 +80,37 @@ namespace TransformyClone.Tests
       CollectionAssert.AreEqual(new[] { "a", "a", "a" }, result.ToArray());
     }
 
-    [Ignore]
     [TestMethod]
     public void TransformsWhenSampleIncludesFirstItem()
     {
+      splitter
+        .Setup(it => it.Split("word"))
+        .Returns(new[] { "word" });
+      splitter
+        .Setup(it => it.Split("thing"))
+        .Returns(new[] { "thing" });
+      builder
+        .Setup(it => it.Build("word", "some word and stuff", new[] { "word" }))
+        .Returns("some {0} and stuff");
+
       var result = sut.Transform(new[] { "word", "thing" }, "some word and stuff");
 
       CollectionAssert.AreEqual(new[] { "some word and stuff", "some thing and stuff" }, result.ToArray());
     }
 
-    [Ignore]
     [TestMethod]
     public void TransformsWhenSampleIncludesAllWordsFromFirstItem()
     {
+      splitter
+        .Setup(it => it.Split("a b"))
+        .Returns(new[] { "a", "b" });
+      splitter
+        .Setup(it => it.Split("dd eee"))
+        .Returns(new[] { "dd", "eee" });
+      builder
+        .Setup(it => it.Build("a b", "a 1 b 2", new[] { "a", "b" }))
+        .Returns("{0} 1 {1} 2");
+
       var result = sut.Transform(new[] { "a b", "dd eee" }, "a 1 b 2");
 
       CollectionAssert.AreEqual(new[] { "a 1 b 2", "dd 1 eee 2" }, result.ToArray());

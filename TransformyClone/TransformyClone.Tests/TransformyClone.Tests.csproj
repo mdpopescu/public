@@ -64,6 +64,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TemplateBuilderTests.cs" />
     <Compile Include="WordSplitterTests.cs" />
   </ItemGroup>
   <ItemGroup>

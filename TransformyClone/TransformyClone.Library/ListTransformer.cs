@@ -26,7 +26,8 @@ namespace TransformyClone.Library
       var words = splitter.Split(firstLine);
       var template = builder.Build(firstLine, sample, words);
 
-      return list.Select(it => string.Format(template, it));
+      // ReSharper disable once CoVariantArrayConversion
+      return list.Select(line => string.Format(template, splitter.Split(line).ToArray()));
     }
 
     //
