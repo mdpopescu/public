@@ -16,6 +16,9 @@ namespace TransformyClone.Library
       if (string.IsNullOrEmpty(sample))
         throw new ArgumentException("String must not be null or empty.", "sample");
 
+      var firstLine = list[0];
+      //var words = word
+
       sample = sample.Replace(list[0], "{0}");
 
       return list.Select(it => string.Format(sample, it));

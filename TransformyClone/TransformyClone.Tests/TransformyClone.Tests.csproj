@@ -61,6 +61,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="WordSplitterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TransformyClone.Library\TransformyClone.Library.csproj">
