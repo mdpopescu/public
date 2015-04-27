@@ -8,12 +8,12 @@ namespace CQRS.Library
     {
       var method = target.FindMethod(name);
       if (method != null)
-        MethodCaller.Call(method, target, args);
+        MethodCaller.CallAsync(method, target, args);
       else
       {
         method = target.FindMethod("MethodMissing");
         if (method != null)
-          MethodCaller.Call(method, target, new object[] { name, args });
+          MethodCaller.CallAsync(method, target, new object[] { name, args });
         else
           throw new MissingMethodException(target.GetType().FullName, name);
       }

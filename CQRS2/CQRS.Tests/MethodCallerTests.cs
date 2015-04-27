@@ -16,7 +16,7 @@ namespace CQRS.Tests
 
       var sw = new Stopwatch();
       sw.Start();
-      MethodCaller.Call(method, obj);
+      MethodCaller.CallAsync(method, obj);
       sw.Stop();
 
       Assert.IsTrue(sw.ElapsedMilliseconds < 1000);
@@ -32,7 +32,7 @@ namespace CQRS.Tests
         var obj = new MyClass1();
         var method = obj.GetType().GetMethod("Method2");
 
-        MethodCaller.Call(method, obj);
+        MethodCaller.CallAsync(method, obj);
 
         Thread.Sleep(10);
         Assert.IsTrue(called);
@@ -51,7 +51,7 @@ namespace CQRS.Tests
       var obj = new MyClass1();
       var method = obj.GetType().GetMethod("Method2");
 
-      MethodCaller.Call(method, obj);
+      MethodCaller.CallAsync(method, obj);
 
       Thread.Sleep(10);
       Assert.IsTrue(terminated);

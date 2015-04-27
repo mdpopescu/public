@@ -8,16 +8,16 @@ namespace CQRS.Library
   {
     public static Action<Exception> UnhandledException { get; set; }
 
-    public static void Call(MethodInfo method, object target, params object[] args)
+    public static Task CallAsync(MethodInfo method, object target, params object[] args)
     {
-      Call(() => method.Invoke(target, args));
+      return CallActionAsync(() => method.Invoke(target, args));
     }
 
     //
 
-    private static void Call(Action action)
+    private static Task CallActionAsync(Action action)
     {
-      Task.Run(() => TryCall(action));
+      return Task.Run(() => TryCall(action));
     }
 
     private static void TryCall(Action action)
