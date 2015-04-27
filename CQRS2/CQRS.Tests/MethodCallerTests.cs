@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Threading;
+﻿using System.Threading.Tasks;
 using CQRS.Library;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -9,32 +8,17 @@ namespace CQRS.Tests
   public class MethodCallerTests
   {
     [TestMethod]
-    public void CallsTheMethodAsynchronously()
-    {
-      var obj = new MyClass1();
-      var method = obj.GetType().GetMethod("Method1");
-
-      var sw = new Stopwatch();
-      sw.Start();
-      MethodCaller.CallAsync(method, obj);
-      sw.Stop();
-
-      Assert.IsTrue(sw.ElapsedMilliseconds < 1000);
-    }
-
-    [TestMethod]
-    public void AnExceptionInTheCalledMethodCallsTheExceptionHandler()
+    public async Task AnExceptionInTheCalledMethodCallsTheExceptionHandler()
     {
       try
       {
         var called = false;
         MethodCaller.UnhandledException = _ => { called = true; };
-        var obj = new MyClass1();
-        var method = obj.GetType().GetMethod("Method2");
+        var obj = new object();
+        var method = obj.GetType().GetMethod("Method");
 
-        MethodCaller.CallAsync(method, obj);
+        await MethodCaller.CallAsync(method, obj);
 
-        Thread.Sleep(10);
         Assert.IsTrue(called);
       }
       finally
@@ -44,27 +28,16 @@ namespace CQRS.Tests
     }
 
     [TestMethod]
-    public void TerminatesTheApplicationIfAnExceptionIsThrownAndNoHandlerIsDefined()
+    public async Task TerminatesTheApplicationIfAnExceptionIsThrownAndNoHandlerIsDefined()
     {
       var terminated = false;
       WinSystem.Terminate = () => terminated = true;
-      var obj = new MyClass1();
-      var method = obj.GetType().GetMethod("Method2");
+      var obj = new object();
+      var method = obj.GetType().GetMethod("Method");
 
-      MethodCaller.CallAsync(method, obj);
+      await MethodCaller.CallAsync(method, obj);
 
-      Thread.Sleep(10);
       Assert.IsTrue(terminated);
-    }
-
-    //
-
-    private class MyClass1
-    {
-      public void Method1()
-      {
-        Thread.Sleep(2000);
-      }
     }
   }
 }
