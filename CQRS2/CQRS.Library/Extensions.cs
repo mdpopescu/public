@@ -1,12 +1,14 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace CQRS.Library
 {
   public static class Extensions
   {
-    public static void SendCommand(this object target, string name, params object[] args)
+    public static Task SendCommandAsync<T>(this T target, Action<T> action)
     {
-      Command.Send(target, name, args);
+      return Command.SendAsync(target, action);
     }
 
     public static MethodInfo FindMethod(this object target, string name)

@@ -1,22 +1,13 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace CQRS.Library
 {
   public static class Command
   {
-    public static void Send(object target, string name, params object[] args)
+    public static Task SendAsync<T>(T target, Action<T> action)
     {
-      var method = target.FindMethod(name);
-      if (method != null)
-        MethodCaller.CallAsync(method, target, args);
-      else
-      {
-        method = target.FindMethod("MethodMissing");
-        if (method != null)
-          MethodCaller.CallAsync(method, target, new object[] { name, args });
-        else
-          throw new MissingMethodException(target.GetType().FullName, name);
-      }
+      return MethodCaller.CallActionAsync(() => action(target));
     }
   }
 }
