@@ -13,12 +13,12 @@ namespace CQRS.Library
       return CallActionAsync(() => method.Invoke(target, args));
     }
 
-    public static Task CallActionAsync(Action action)
+    //
+
+    private static Task CallActionAsync(Action action)
     {
       return Task.Run(() => TryCall(action));
     }
-
-    //
 
     private static void TryCall(Action action)
     {
