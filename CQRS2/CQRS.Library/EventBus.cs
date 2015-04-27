@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CQRS.Library
@@ -13,7 +14,7 @@ namespace CQRS.Library
 
     public static void Send(string name, params object[] args)
     {
-      ConcurrentBag<object> list;
+      HashSet<object> list;
       if (!subscriptions.TryGetValue(name, out list))
         return;
 
@@ -24,7 +25,7 @@ namespace CQRS.Library
     //
 
     // ReSharper disable InconsistentNaming
-    private static readonly ConcurrentDictionary<string, ConcurrentBag<object>> subscriptions = new ConcurrentDictionary<string, ConcurrentBag<object>>();
+    private static readonly ConcurrentDictionary<string, HashSet<object>> subscriptions = new ConcurrentDictionary<string, HashSet<object>>();
     private static readonly object subscriptionsLock = new object();
     // ReSharper enable InconsistentNaming
 
@@ -32,7 +33,7 @@ namespace CQRS.Library
     {
       lock (subscriptionsLock)
       {
-        var list = subscriptions.GetOrAdd(name, _ => new ConcurrentBag<object>());
+        var list = subscriptions.GetOrAdd(name, _ => new HashSet<object>());
         list.Add(obj);
         subscriptions[name] = list;
 
@@ -45,7 +46,7 @@ namespace CQRS.Library
       // assumes that subscriptions[name] exists, since Remove is only called after it was created
       lock (subscriptionsLock)
       {
-        subscriptions[name] = new ConcurrentBag<object>(subscriptions[name].Where(it => !ReferenceEquals(it, obj)));
+        subscriptions[name].Remove(obj);
       }
     }
 
