@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using CQRS.Library;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -31,6 +32,20 @@ namespace CQRS.Tests
 
       Thread.Sleep(10);
       Assert.AreEqual(1, obj.E4Calls);
+    }
+
+    [TestMethod]
+    public void MethodsAreInvokedAsynchronously()
+    {
+      var obj = new MyClass1();
+
+      var sw = new Stopwatch();
+      sw.Start();
+      EventBus.Send("E2");
+      sw.Stop();
+
+      Thread.Sleep(10);
+      Assert.IsTrue(sw.ElapsedMilliseconds < 1000);
     }
 
     //
