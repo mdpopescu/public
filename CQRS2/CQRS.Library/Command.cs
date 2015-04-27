@@ -7,7 +7,7 @@ namespace CQRS.Library
   {
     public static Task SendAsync<T>(T target, Action<T> action)
     {
-      return MethodCaller.CallActionAsync(() => action(target));
+      return Task.Run(() => action(target));
     }
   }
 }
