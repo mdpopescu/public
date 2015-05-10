@@ -53,6 +53,8 @@ Public repository - CC-by-SA 3.0
 
 * VinReader: code to read a VIN barcode; written for https://www.guru.com/jobs/.NET-VIN-Barcode-Application/978230
 
+* Virtual Machine Interpreter: implements the VM described at http://courses.cms.caltech.edu/cs11/material/c/mike/lab8/lab8.html
+
 * WebStore: Another implementation of an inventory management system, using an event store
 
 * YelpSearch: search Yelp for businesses (eg hotels) near a given zip; solution for https://www.odesk.com/jobs/~~d5624935369d26d1 (I didn't get the job so the code is mine)
