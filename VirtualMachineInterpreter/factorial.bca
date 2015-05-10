@@ -1,0 +1,62 @@
+#
+# FILE: factorial.bca
+#
+
+#
+# N.B. ".bca" suffix means "byte-code assembler"
+#
+
+#
+# Assembler code for computing factorials.
+#
+# Register contents:
+#
+# 0 -- count
+# 1 -- result
+#
+
+#
+# We want to compute factorial(10).
+# First load 10 into register 0 and load 1 into register 1.
+#
+
+  push  10
+  store 0
+  push  1
+  store 1
+
+#
+# Put the counter value on the stack.  If it's 0, we're done
+# and register 1 contains the final result.
+#
+
+1 load  0   # The "1" is a label.
+  jz    2
+
+#
+# Every time through the loop, we compute:
+#
+
+# result = result * count
+
+  load  1       # result
+  load  0       # count
+  mul
+  store 1       # new result
+
+# count  = count - 1
+
+  load  0
+  push  1
+  sub
+  store 0
+
+# Go back and loop until done.
+
+  jmp   1
+
+# When we get here, we're done.
+
+2 load  1       # Put the result value on the stack.  The "2" is a label.
+  print         # Print it to stdout.
+  stop          # Stop the program.
