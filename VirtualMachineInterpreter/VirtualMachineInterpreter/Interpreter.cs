@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Renfield.VM
 {
@@ -6,7 +7,7 @@ namespace Renfield.VM
   {
     public Interpreter()
     {
-      stack = new int[STACK_SIZE];
+      stack = new Stack<int>(STACK_SIZE);
       registers = new int[REG_COUNT];
       memory = new byte[MEM_SIZE];
 
@@ -19,10 +20,10 @@ namespace Renfield.VM
       if (bytes.Length > MEM_SIZE)
         throw new Exception(string.Format("Program too large - {0} bytes greater than memory size of {1} bytes.", bytes.Length, MEM_SIZE));
 
-      Array.Copy(bytes, memory, bytes.Length);
-
-      sp = 0;
+      stack.Clear();
       ip = 0;
+
+      Array.Copy(bytes, memory, bytes.Length);
 
       do
       {
@@ -48,8 +49,7 @@ namespace Renfield.VM
     private const byte REG_MASK = REG_COUNT - 1;
     private const int MEM_SIZE = 65536;
 
-    private readonly int[] stack;
-    private byte sp;
+    private readonly Stack<int> stack;
     private readonly int[] registers;
     private readonly byte[] memory;
     private ushort ip;
@@ -97,16 +97,6 @@ namespace Renfield.VM
       }
     }
 
-    private void Push(int n)
-    {
-      stack[sp++] = n;
-    }
-
-    private int Pop()
-    {
-      return stack[--sp];
-    }
-
     private void DoNop()
     {
       //
@@ -115,26 +105,26 @@ namespace Renfield.VM
     private void DoPush()
     {
       var arg = GetInteger();
-      Push(arg);
+      stack.Push(arg);
     }
 
     private void DoPop()
     {
-      Pop();
+      stack.Pop();
     }
 
     private void DoLoad()
     {
       var arg = GetByte();
       var r = arg & REG_MASK;
-      Push(registers[r]);
+      stack.Push(registers[r]);
     }
 
     private void DoStore()
     {
       var arg = GetByte();
       var r = arg & REG_MASK;
-      registers[r] = Pop();
+      registers[r] = stack.Pop();
     }
 
     private void DoJmp()
@@ -145,49 +135,49 @@ namespace Renfield.VM
 
     private void DoJz()
     {
-      var tos = Pop();
+      var tos = stack.Pop();
       if (tos == 0)
         ip = GetUShort();
     }
 
     private void DoJnz()
     {
-      var tos = Pop();
+      var tos = stack.Pop();
       if (tos != 0)
         ip = GetUShort();
     }
 
     private void DoAdd()
     {
-      var s1 = Pop();
-      var s2 = Pop();
-      Push(s2 + s1);
+      var s1 = stack.Pop();
+      var s2 = stack.Pop();
+      stack.Push(s2 + s1);
     }
 
     private void DoSub()
     {
-      var s1 = Pop();
-      var s2 = Pop();
-      Push(s2 - s1);
+      var s1 = stack.Pop();
+      var s2 = stack.Pop();
+      stack.Push(s2 - s1);
     }
 
     private void DoMul()
     {
-      var s1 = Pop();
-      var s2 = Pop();
-      Push(s2 * s1);
+      var s1 = stack.Pop();
+      var s2 = stack.Pop();
+      stack.Push(s2 * s1);
     }
 
     private void DoDiv()
     {
-      var s1 = Pop();
-      var s2 = Pop();
-      Push(s2 / s1);
+      var s1 = stack.Pop();
+      var s2 = stack.Pop();
+      stack.Push(s2 / s1);
     }
 
     private void DoPrint()
     {
-      var tos = Pop();
+      var tos = stack.Pop();
       Console.WriteLine(tos);
     }
 
