@@ -8,8 +8,8 @@ namespace Renfield.VM
     public Interpreter()
     {
       stack = new Stack<int>(STACK_SIZE);
+      memory = new Memory(MEM_SIZE);
       registers = new int[REG_COUNT];
-      memory = new byte[MEM_SIZE];
 
       instructions = new Action[256];
       RegisterInstructions();
@@ -20,14 +20,14 @@ namespace Renfield.VM
       if (bytes.Length > MEM_SIZE)
         throw new Exception(string.Format("Program too large - {0} bytes greater than memory size of {1} bytes.", bytes.Length, MEM_SIZE));
 
-      stack.Clear();
-      ip = 0;
+      memory.Set(bytes);
 
-      Array.Copy(bytes, memory, bytes.Length);
+      stack.Clear();
+      memory.Jump(0);
 
       do
       {
-        var instruction = GetByte();
+        var instruction = memory.GetByte();
         var action = instructions[instruction];
 
         try
@@ -50,9 +50,8 @@ namespace Renfield.VM
     private const int MEM_SIZE = 65536;
 
     private readonly Stack<int> stack;
+    private readonly Memory memory;
     private readonly int[] registers;
-    private readonly byte[] memory;
-    private ushort ip;
 
     private readonly Action[] instructions;
 
@@ -76,27 +75,6 @@ namespace Renfield.VM
       instructions[0x0D] = DoStop;
     }
 
-    private byte GetByte()
-    {
-      return memory[ip++];
-    }
-
-    private ushort GetUShort()
-    {
-      unchecked
-      {
-        return (ushort) (GetByte() + 256 * GetByte());
-      }
-    }
-
-    private int GetInteger()
-    {
-      unchecked
-      {
-        return GetUShort() + 65536 * GetUShort();
-      }
-    }
-
     private void DoNop()
     {
       //
@@ -104,7 +82,7 @@ namespace Renfield.VM
 
     private void DoPush()
     {
-      var arg = GetInteger();
+      var arg = memory.GetInteger();
       stack.Push(arg);
     }
 
@@ -115,36 +93,42 @@ namespace Renfield.VM
 
     private void DoLoad()
     {
-      var arg = GetByte();
+      var arg = memory.GetByte();
       var r = arg & REG_MASK;
       stack.Push(registers[r]);
     }
 
     private void DoStore()
     {
-      var arg = GetByte();
+      var arg = memory.GetByte();
       var r = arg & REG_MASK;
       registers[r] = stack.Pop();
     }
 
     private void DoJmp()
     {
-      var arg = GetUShort();
-      ip = arg;
+      var arg = memory.GetUShort();
+      memory.Jump(arg);
     }
 
     private void DoJz()
     {
       var tos = stack.Pop();
       if (tos == 0)
-        ip = GetUShort();
+      {
+        var address = memory.GetUShort();
+        memory.Jump(address);
+      }
     }
 
     private void DoJnz()
     {
       var tos = stack.Pop();
       if (tos != 0)
-        ip = GetUShort();
+      {
+        var address = memory.GetUShort();
+        memory.Jump(address);
+      }
     }
 
     private void DoAdd()
