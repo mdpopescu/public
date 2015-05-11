@@ -9,7 +9,7 @@ namespace Renfield.VM
     {
       stack = new Stack<int>(STACK_SIZE);
       memory = new Memory(MEM_SIZE);
-      registers = new int[REG_COUNT];
+      registers = new Registers(REG_COUNT);
 
       instructions = new Action[256];
       RegisterInstructions();
@@ -45,13 +45,12 @@ namespace Renfield.VM
     //
 
     private const int STACK_SIZE = 256;
-    private const int REG_COUNT = 16;
-    private const byte REG_MASK = REG_COUNT - 1;
     private const int MEM_SIZE = 65536;
+    private const int REG_COUNT = 16;
 
     private readonly Stack<int> stack;
     private readonly Memory memory;
-    private readonly int[] registers;
+    private readonly Registers registers;
 
     private readonly Action[] instructions;
 
@@ -94,15 +93,13 @@ namespace Renfield.VM
     private void DoLoad()
     {
       var arg = memory.GetByte();
-      var r = arg & REG_MASK;
-      stack.Push(registers[r]);
+      stack.Push(registers[arg]);
     }
 
     private void DoStore()
     {
       var arg = memory.GetByte();
-      var r = arg & REG_MASK;
-      registers[r] = stack.Pop();
+      registers[arg] = stack.Pop();
     }
 
     private void DoJmp()
