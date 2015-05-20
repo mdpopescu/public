@@ -25,6 +25,8 @@ Public repository - CC-by-SA 3.0
 
 * Hot Folder Windows Service: Windows service to monitor a specific folder and (for now) log the create / delete / change / rename events
 
+* httpd: Simple web server (only static files)
+
 * Inventory: (INCOMPLETE) inventory management system - mainly to use SignalR and Knockout.js
 
 * MaxRecursion: answer to a problem posed by Karl Seguin on Twitter https://twitter.com/karlseguin/status/521592595282006016 - Write code that prints out the maximum depth of recursion allowed.
