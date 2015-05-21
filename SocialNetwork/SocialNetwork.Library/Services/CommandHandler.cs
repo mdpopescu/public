@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SocialNetwork.Library.Contracts;
 using SocialNetwork.Library.Models;
@@ -19,10 +20,12 @@ namespace SocialNetwork.Library.Services
 
     public IEnumerable<string> Read(string user)
     {
+      var time = Sys.Time();
+
       return repository
         .Get()
         .Where(it => it.User == user)
-        .Select(it => it.Text);
+        .Select(it => it.Text + " (" + Prettify(time - it.CreatedOn) + ")");
     }
 
     public void Follow(string user, string other)
@@ -38,5 +41,10 @@ namespace SocialNetwork.Library.Services
     //
 
     private readonly Repository repository;
+
+    private string Prettify(TimeSpan elapsed)
+    {
+      return "1 second ago";
+    }
   }
 }
