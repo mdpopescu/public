@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SocialNetwork.Library.Contracts;
@@ -34,6 +35,23 @@ namespace SocialNetwork.Tests.Services
           m.CreatedOn == new DateTime(2000, 1, 2, 3, 4, 5) &&
           m.User == "Alice" &&
           m.Text == "message")));
+      }
+    }
+
+    [TestClass]
+    public class Read : CommandHandlerTests
+    {
+      [TestMethod]
+      public void ReadsMessagesBelongingToGivenUser()
+      {
+        repository
+          .Setup(it => it.Get())
+          .Returns(new[] { new Message(new DateTime(2000, 1, 2, 3, 4, 5), "Alice", "message") });
+
+        var result = sut.Read("Alice").ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.IsTrue(result[0].StartsWith("message"));
       }
     }
   }

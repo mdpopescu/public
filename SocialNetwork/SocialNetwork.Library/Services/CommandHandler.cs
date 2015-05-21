@@ -19,7 +19,10 @@ namespace SocialNetwork.Library.Services
 
     public IEnumerable<string> Read(string user)
     {
-      return Enumerable.Empty<string>();
+      return repository
+        .Get()
+        .Where(it => it.User == user)
+        .Select(it => it.Text);
     }
 
     public void Follow(string user, string other)

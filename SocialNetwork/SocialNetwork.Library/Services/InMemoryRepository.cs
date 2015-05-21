@@ -1,4 +1,6 @@
-﻿using SocialNetwork.Library.Contracts;
+﻿using System.Collections.Generic;
+using System.Linq;
+using SocialNetwork.Library.Contracts;
 using SocialNetwork.Library.Models;
 
 namespace SocialNetwork.Library.Services
@@ -8,6 +10,11 @@ namespace SocialNetwork.Library.Services
     public void Add(Message message)
     {
       //
+    }
+
+    public IEnumerable<Message> Get()
+    {
+      return Enumerable.Empty<Message>();
     }
   }
 }
