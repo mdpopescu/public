@@ -56,6 +56,7 @@
     <Compile Include="AcceptanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CommandHandlerTests.cs" />
+    <Compile Include="Services\TimeFormatterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SocialNetwork.Library\SocialNetwork.Library.csproj">
