@@ -12,13 +12,15 @@ namespace SocialNetwork.Tests.Services
   public class CommandHandlerTests
   {
     private Mock<Repository> repository;
+    private Mock<UserRepository> users;
     private CommandHandler sut;
 
     [TestInitialize]
     public void SetUp()
     {
       repository = new Mock<Repository>();
-      sut = new CommandHandler(repository.Object, new TimeFormatter());
+      users = new Mock<UserRepository>();
+      sut = new CommandHandler(repository.Object, users.Object, new TimeFormatter());
     }
 
     [TestClass]
@@ -84,6 +86,18 @@ namespace SocialNetwork.Tests.Services
         Assert.AreEqual(2, result.Count);
         Assert.AreEqual("message2 (1 second ago)", result[0]);
         Assert.AreEqual("message1 (5 seconds ago)", result[1]);
+      }
+    }
+
+    [TestClass]
+    public class Follow : CommandHandlerTests
+    {
+      [TestMethod]
+      public void AddsOtherUserToListOfFollowedUsers()
+      {
+        sut.Follow("Alfa", "Beta");
+
+        users.Verify(it => it.AddFollower("Alfa", "Beta"));
       }
     }
   }

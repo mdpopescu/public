@@ -8,9 +8,10 @@ namespace SocialNetwork.Library.Services
 {
   public class CommandHandler : API
   {
-    public CommandHandler(Repository repository, TimeFormatter timeFormatter)
+    public CommandHandler(Repository repository, UserRepository users, TimeFormatter timeFormatter)
     {
       this.repository = repository;
+      this.users = users;
       this.timeFormatter = timeFormatter;
     }
 
@@ -32,7 +33,7 @@ namespace SocialNetwork.Library.Services
 
     public void Follow(string user, string other)
     {
-      //
+      users.AddFollower(user, other);
     }
 
     public IEnumerable<string> Wall(string user)
@@ -43,6 +44,7 @@ namespace SocialNetwork.Library.Services
     //
 
     private readonly Repository repository;
+    private readonly UserRepository users;
     private readonly TimeFormatter timeFormatter;
 
     private string Prettify(TimeSpan timeSpan)

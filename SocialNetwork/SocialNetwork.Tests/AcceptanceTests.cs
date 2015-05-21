@@ -13,7 +13,7 @@ namespace SocialNetwork.Tests
     [TestInitialize]
     public void SetUp()
     {
-      sut = new CommandHandler(new InMemoryRepository(), new TimeFormatter());
+      sut = new CommandHandler(new InMemoryRepository(), null, new TimeFormatter());
     }
 
     [TestMethod]
