@@ -22,13 +22,9 @@ namespace SocialNetwork.Library.Services
 
     public IEnumerable<string> Read(string user)
     {
-      var time = Sys.Time();
-
-      return messages
-        .Get()
-        .Where(it => it.User == user)
+      return GetUserMessages(user)
         .OrderByDescending(it => it.CreatedOn)
-        .Select(it => it.Text + Prettify(time - it.CreatedOn));
+        .Select(FormattedMessage);
     }
 
     public void Follow(string user, string other)
@@ -38,8 +34,13 @@ namespace SocialNetwork.Library.Services
 
     public IEnumerable<string> Wall(string user)
     {
-      return Read(user)
-        .Select(it => string.Format("{0} - {1}", user, it));
+      var list = users.GetFollowers(user).ToList();
+      list.Insert(0, user);
+
+      return from u in list
+             from message in GetUserMessages(u)
+             orderby message.CreatedOn descending
+             select string.Format("{0} - {1}", u, FormattedMessage(message));
     }
 
     //
@@ -47,6 +48,18 @@ namespace SocialNetwork.Library.Services
     private readonly MessageRepository messages;
     private readonly UserRepository users;
     private readonly TimeFormatter timeFormatter;
+
+    private IEnumerable<Message> GetUserMessages(string user)
+    {
+      return messages
+        .Get()
+        .Where(it => it.User == user);
+    }
+
+    private string FormattedMessage(Message message)
+    {
+      return message.Text + Prettify(Sys.Time() - message.CreatedOn);
+    }
 
     private string Prettify(TimeSpan timeSpan)
     {

@@ -122,6 +122,30 @@ namespace SocialNetwork.Tests.Services
         Assert.AreEqual("Alfa - message2 (1 second ago)", result[0]);
         Assert.AreEqual("Alfa - message1 (5 seconds ago)", result[1]);
       }
+
+      [TestMethod]
+      public void ReturnsTheMessagesOfFollowedUsersPrefixedWithTheirName()
+      {
+        Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 10);
+        messages
+          .Setup(it => it.Get())
+          .Returns(new[]
+          {
+            new Message(new DateTime(2000, 1, 2, 3, 4, 5), "Alfa", "message-a1"),
+            new Message(new DateTime(2000, 1, 2, 3, 4, 6), "Beta", "message-b1"),
+            new Message(new DateTime(2000, 1, 2, 3, 4, 9), "Alfa", "message-a2"),
+          });
+        users
+          .Setup(it => it.GetFollowers("Alfa"))
+          .Returns(new[] { "Beta" });
+
+        var result = sut.Wall("Alfa").ToList();
+
+        Assert.AreEqual(3, result.Count);
+        Assert.AreEqual("Alfa - message-a2 (1 second ago)", result[0]);
+        Assert.AreEqual("Beta - message-b1 (4 seconds ago)", result[1]);
+        Assert.AreEqual("Alfa - message-a1 (5 seconds ago)", result[2]);
+      }
     }
   }
 }

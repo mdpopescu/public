@@ -1,4 +1,6 @@
-﻿using SocialNetwork.Library.Contracts;
+﻿using System.Collections.Generic;
+using System.Linq;
+using SocialNetwork.Library.Contracts;
 
 namespace SocialNetwork.Library.Services
 {
@@ -7,6 +9,11 @@ namespace SocialNetwork.Library.Services
     public void AddFollower(string user, string other)
     {
       //
+    }
+
+    public IEnumerable<string> GetFollowers(string user)
+    {
+      return Enumerable.Empty<string>();
     }
   }
 }
