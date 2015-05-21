@@ -14,7 +14,7 @@ namespace SocialNetwork.Library.Services
 
     public void Post(string user, string message)
     {
-      repository.Add(new Message(user, message));
+      repository.Add(new Message(Sys.Time(), user, message));
     }
 
     public IEnumerable<string> Read(string user)

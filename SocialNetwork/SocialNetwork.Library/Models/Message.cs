@@ -1,5 +1,4 @@
 ﻿using System;
-using SocialNetwork.Library.Services;
 
 namespace SocialNetwork.Library.Models
 {
@@ -9,9 +8,9 @@ namespace SocialNetwork.Library.Models
     public string User { get; private set; }
     public string Text { get; private set; }
 
-    public Message(string user, string text)
+    public Message(DateTime createdOn, string user, string text)
     {
-      CreatedOn = Sys.Time();
+      CreatedOn = createdOn;
       User = user;
       Text = text;
     }
