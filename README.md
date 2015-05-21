@@ -43,6 +43,8 @@ Public repository - CC-by-SA 3.0
 
 * SimpleViewEngine: a view engine with only two directives, {{if}} / {{else}} / {{endif}} and {{foreach}} / {{endfor}}. Evaluates expressions with {{name}} and the current item itself in a foreach is {{}}.
 
+* SocialNetwork: what the name says; written for a job interview.
+
 * Sudoku: a Sudoku solver based on Peter Norvig's article at http://norvig.com/sudoku.html
 
 * TextGeneration: (for now) using Markov chains to generate plausibly-looking texts.
