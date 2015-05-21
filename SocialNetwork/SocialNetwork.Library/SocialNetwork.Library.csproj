@@ -49,6 +49,7 @@
     <Compile Include="Services\CommandHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\InMemoryMessageRepository.cs" />
+    <Compile Include="Services\InMemoryUserRepository.cs" />
     <Compile Include="Services\Sys.cs" />
     <Compile Include="Services\TimeFormatter.cs" />
   </ItemGroup>
