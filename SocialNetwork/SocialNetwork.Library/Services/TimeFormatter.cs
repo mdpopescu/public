@@ -6,7 +6,25 @@ namespace SocialNetwork.Library.Services
   {
     public string Format(TimeSpan timeSpan)
     {
-      return "1 second ago";
+      string unit;
+      int value;
+
+      if (timeSpan.Minutes > 0)
+      {
+        unit = "minute";
+        value = timeSpan.Minutes;
+      }
+      else
+      {
+        unit = "second";
+        value = timeSpan.Seconds;
+      }
+
+      var suffix = "";
+      if (value != 1)
+        suffix = "s";
+
+      return string.Format("{0} {1}{2} ago", value, unit, suffix);
     }
   }
 }
