@@ -5,9 +5,9 @@ using SocialNetwork.Library.Models;
 
 namespace SocialNetwork.Library.Services
 {
-  public class InMemoryRepository : Repository
+  public class InMemoryMessageRepository : MessageRepository
   {
-    public InMemoryRepository()
+    public InMemoryMessageRepository()
     {
       messages = new List<Message>();
     }

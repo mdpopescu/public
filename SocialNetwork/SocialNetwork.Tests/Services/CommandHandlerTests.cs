@@ -11,16 +11,16 @@ namespace SocialNetwork.Tests.Services
   [TestClass]
   public class CommandHandlerTests
   {
-    private Mock<Repository> repository;
+    private Mock<MessageRepository> messages;
     private Mock<UserRepository> users;
     private CommandHandler sut;
 
     [TestInitialize]
     public void SetUp()
     {
-      repository = new Mock<Repository>();
+      messages = new Mock<MessageRepository>();
       users = new Mock<UserRepository>();
-      sut = new CommandHandler(repository.Object, users.Object, new TimeFormatter());
+      sut = new CommandHandler(messages.Object, users.Object, new TimeFormatter());
     }
 
     [TestClass]
@@ -33,7 +33,7 @@ namespace SocialNetwork.Tests.Services
 
         sut.Post("Alice", "message");
 
-        repository.Verify(it => it.Add(It.Is<Message>(m =>
+        messages.Verify(it => it.Add(It.Is<Message>(m =>
           m.CreatedOn == new DateTime(2000, 1, 2, 3, 4, 5) &&
           m.User == "Alice" &&
           m.Text == "message")));
@@ -46,7 +46,7 @@ namespace SocialNetwork.Tests.Services
       [TestMethod]
       public void ReadsMessagesBelongingToGivenUser()
       {
-        repository
+        messages
           .Setup(it => it.Get())
           .Returns(new[] { new Message(new DateTime(2000, 1, 2, 3, 4, 5), "Alice", "message") });
 
@@ -60,7 +60,7 @@ namespace SocialNetwork.Tests.Services
       public void ReturnsTheTimeSinceTheMessageWasPosted_1Second()
       {
         Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 6);
-        repository
+        messages
           .Setup(it => it.Get())
           .Returns(new[] { new Message(new DateTime(2000, 1, 2, 3, 4, 5), "Alice", "message") });
 
@@ -73,7 +73,7 @@ namespace SocialNetwork.Tests.Services
       public void ReturnsTheMessagesInReverseOrder()
       {
         Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 10);
-        repository
+        messages
           .Setup(it => it.Get())
           .Returns(new[]
           {

@@ -43,12 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\API.cs" />
-    <Compile Include="Contracts\Repository.cs" />
+    <Compile Include="Contracts\MessageRepository.cs" />
     <Compile Include="Contracts\UserRepository.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Services\CommandHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\InMemoryRepository.cs" />
+    <Compile Include="Services\InMemoryMessageRepository.cs" />
     <Compile Include="Services\Sys.cs" />
     <Compile Include="Services\TimeFormatter.cs" />
   </ItemGroup>

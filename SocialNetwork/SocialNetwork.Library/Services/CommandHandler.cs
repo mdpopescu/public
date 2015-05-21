@@ -8,23 +8,23 @@ namespace SocialNetwork.Library.Services
 {
   public class CommandHandler : API
   {
-    public CommandHandler(Repository repository, UserRepository users, TimeFormatter timeFormatter)
+    public CommandHandler(MessageRepository messages, UserRepository users, TimeFormatter timeFormatter)
     {
-      this.repository = repository;
+      this.messages = messages;
       this.users = users;
       this.timeFormatter = timeFormatter;
     }
 
     public void Post(string user, string message)
     {
-      repository.Add(new Message(Sys.Time(), user, message));
+      messages.Add(new Message(Sys.Time(), user, message));
     }
 
     public IEnumerable<string> Read(string user)
     {
       var time = Sys.Time();
 
-      return repository
+      return messages
         .Get()
         .Where(it => it.User == user)
         .OrderByDescending(it => it.CreatedOn)
@@ -43,7 +43,7 @@ namespace SocialNetwork.Library.Services
 
     //
 
-    private readonly Repository repository;
+    private readonly MessageRepository messages;
     private readonly UserRepository users;
     private readonly TimeFormatter timeFormatter;
 
