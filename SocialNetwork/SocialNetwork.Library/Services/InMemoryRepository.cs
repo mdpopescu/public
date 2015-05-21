@@ -7,14 +7,23 @@ namespace SocialNetwork.Library.Services
 {
   public class InMemoryRepository : Repository
   {
+    public InMemoryRepository()
+    {
+      messages = new List<Message>();
+    }
+
     public void Add(Message message)
     {
-      //
+      messages.Add(message);
     }
 
     public IEnumerable<Message> Get()
     {
-      return Enumerable.Empty<Message>();
+      return messages.AsEnumerable();
     }
+
+    //
+
+    private readonly List<Message> messages;
   }
 }
