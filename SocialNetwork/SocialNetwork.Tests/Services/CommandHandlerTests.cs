@@ -20,7 +20,7 @@ namespace SocialNetwork.Tests.Services
     {
       messages = new Mock<MessageRepository>();
       users = new Mock<UserRepository>();
-      sut = new CommandHandler(messages.Object, users.Object, new TimeFormatter());
+      sut = new CommandHandler(messages.Object, users.Object);
     }
 
     [TestClass]

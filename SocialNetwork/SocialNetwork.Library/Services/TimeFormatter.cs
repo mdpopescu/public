@@ -2,9 +2,9 @@
 
 namespace SocialNetwork.Library.Services
 {
-  public class TimeFormatter
+  public static class TimeFormatter
   {
-    public string Format(TimeSpan timeSpan)
+    public static string Format(TimeSpan timeSpan)
     {
       string unit;
       int value;

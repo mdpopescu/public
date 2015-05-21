@@ -9,7 +9,7 @@ namespace SocialNetwork
   {
     private static void Main(string[] args)
     {
-      var handler = new CommandHandler(new InMemoryMessageRepository(), new InMemoryUserRepository(), new TimeFormatter());
+      var handler = new CommandHandler(new InMemoryMessageRepository(), new InMemoryUserRepository());
 
       Console.WriteLine("Social Network");
       Console.WriteLine();

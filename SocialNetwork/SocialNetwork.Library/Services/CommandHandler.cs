@@ -8,11 +8,10 @@ namespace SocialNetwork.Library.Services
 {
   public class CommandHandler : API
   {
-    public CommandHandler(MessageRepository messages, UserRepository users, TimeFormatter timeFormatter)
+    public CommandHandler(MessageRepository messages, UserRepository users)
     {
       this.messages = messages;
       this.users = users;
-      this.timeFormatter = timeFormatter;
     }
 
     public void Post(string user, string message)
@@ -47,7 +46,6 @@ namespace SocialNetwork.Library.Services
 
     private readonly MessageRepository messages;
     private readonly UserRepository users;
-    private readonly TimeFormatter timeFormatter;
 
     private IEnumerable<Message> GetUserMessages(string user)
     {
@@ -63,7 +61,7 @@ namespace SocialNetwork.Library.Services
 
     private string Prettify(TimeSpan timeSpan)
     {
-      return " (" + timeFormatter.Format(timeSpan) + ")";
+      return " (" + TimeFormatter.Format(timeSpan) + ")";
     }
   }
 }
