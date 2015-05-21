@@ -52,10 +52,10 @@ namespace SocialNetwork.Tests
       sut.Follow("Charlie", "Bob");
       var response2 = sut.Wall("Charlie").ToList();
       Assert.AreEqual(4, response2.Count);
-      Assert.AreEqual("Charlie - I'm in New York today! Anyone want to have a coffee? (2 seconds ago)", response1[0]);
-      Assert.AreEqual("Bob - Good game though. (1 minute ago)", response1[1]);
-      Assert.AreEqual("Bob - Damn! We lost! (2 minutes ago)", response1[2]);
-      Assert.AreEqual("Alice - I love the weather today (5 minutes ago)", response1[3]);
+      Assert.AreEqual("Charlie - I'm in New York today! Anyone want to have a coffee? (2 seconds ago)", response2[0]);
+      Assert.AreEqual("Bob - Good game though. (1 minute ago)", response2[1]);
+      Assert.AreEqual("Bob - Damn! We lost! (2 minutes ago)", response2[2]);
+      Assert.AreEqual("Alice - I love the weather today (5 minutes ago)", response2[3]);
     }
 
     //
