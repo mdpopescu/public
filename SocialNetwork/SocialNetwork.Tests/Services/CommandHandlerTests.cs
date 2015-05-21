@@ -18,7 +18,7 @@ namespace SocialNetwork.Tests.Services
     public void SetUp()
     {
       repository = new Mock<Repository>();
-      sut = new CommandHandler(repository.Object);
+      sut = new CommandHandler(repository.Object, new TimeFormatter());
     }
 
     [TestClass]

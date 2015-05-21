@@ -8,9 +8,10 @@ namespace SocialNetwork.Library.Services
 {
   public class CommandHandler : API
   {
-    public CommandHandler(Repository repository)
+    public CommandHandler(Repository repository, TimeFormatter timeFormatter)
     {
       this.repository = repository;
+      this.timeFormatter = timeFormatter;
     }
 
     public void Post(string user, string message)
@@ -25,7 +26,7 @@ namespace SocialNetwork.Library.Services
       return repository
         .Get()
         .Where(it => it.User == user)
-        .Select(it => it.Text + " (" + Prettify(time - it.CreatedOn) + ")");
+        .Select(it => it.Text + Prettify(time - it.CreatedOn));
     }
 
     public void Follow(string user, string other)
@@ -41,10 +42,11 @@ namespace SocialNetwork.Library.Services
     //
 
     private readonly Repository repository;
+    private readonly TimeFormatter timeFormatter;
 
-    private string Prettify(TimeSpan elapsed)
+    private string Prettify(TimeSpan timeSpan)
     {
-      return "1 second ago";
+      return " (" + timeFormatter.Format(timeSpan) + ")";
     }
   }
 }
