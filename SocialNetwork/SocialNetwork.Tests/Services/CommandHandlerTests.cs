@@ -100,5 +100,28 @@ namespace SocialNetwork.Tests.Services
         users.Verify(it => it.AddFollower("Alfa", "Beta"));
       }
     }
+
+    [TestClass]
+    public class Wall : CommandHandlerTests
+    {
+      [TestMethod]
+      public void ReturnsOwnMessagesPrefixedWithTheUserName()
+      {
+        Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 10);
+        messages
+          .Setup(it => it.Get())
+          .Returns(new[]
+          {
+            new Message(new DateTime(2000, 1, 2, 3, 4, 5), "Alfa", "message1"),
+            new Message(new DateTime(2000, 1, 2, 3, 4, 9), "Alfa", "message2"),
+          });
+
+        var result = sut.Wall("Alfa").ToList();
+
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual("Alfa - message2 (1 second ago)", result[0]);
+        Assert.AreEqual("Alfa - message1 (5 seconds ago)", result[1]);
+      }
+    }
   }
 }

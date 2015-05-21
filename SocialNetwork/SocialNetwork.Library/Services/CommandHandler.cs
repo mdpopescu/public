@@ -38,7 +38,8 @@ namespace SocialNetwork.Library.Services
 
     public IEnumerable<string> Wall(string user)
     {
-      return Enumerable.Empty<string>();
+      return Read(user)
+        .Select(it => string.Format("{0} - {1}", user, it));
     }
 
     //
