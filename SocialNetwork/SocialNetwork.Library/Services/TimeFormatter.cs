@@ -9,7 +9,12 @@ namespace SocialNetwork.Library.Services
       string unit;
       int value;
 
-      if (timeSpan.Minutes > 0)
+      if (timeSpan.Hours > 0)
+      {
+        unit = "hour";
+        value = timeSpan.Hours;
+      }
+      else if (timeSpan.Minutes > 0)
       {
         unit = "minute";
         value = timeSpan.Minutes;

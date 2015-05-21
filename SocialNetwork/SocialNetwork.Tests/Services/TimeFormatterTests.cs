@@ -46,5 +46,29 @@ namespace SocialNetwork.Tests.Services
 
       Assert.AreEqual("12 minutes ago", result);
     }
+
+    [TestMethod]
+    public void ReturnsOneHour()
+    {
+      var result = TimeFormatter.Format(new TimeSpan(1, 0, 0));
+
+      Assert.AreEqual("1 hour ago", result);
+    }
+
+    [TestMethod]
+    public void ReturnsTwoHours()
+    {
+      var result = TimeFormatter.Format(new TimeSpan(2, 0, 0));
+
+      Assert.AreEqual("2 hours ago", result);
+    }
+
+    [TestMethod]
+    public void IgnoresMinutesAndSecondsWhenReturningHours()
+    {
+      var result = TimeFormatter.Format(new TimeSpan(3, 4, 5));
+
+      Assert.AreEqual("3 hours ago", result);
+    }
   }
 }
