@@ -26,6 +26,7 @@ namespace SocialNetwork.Library.Services
       return repository
         .Get()
         .Where(it => it.User == user)
+        .OrderByDescending(it => it.CreatedOn)
         .Select(it => it.Text + Prettify(time - it.CreatedOn));
     }
 

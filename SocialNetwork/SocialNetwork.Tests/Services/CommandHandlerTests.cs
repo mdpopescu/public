@@ -66,6 +66,25 @@ namespace SocialNetwork.Tests.Services
 
         Assert.AreEqual("message (1 second ago)", result[0]);
       }
+
+      [TestMethod]
+      public void ReturnsTheMessagesInReverseOrder()
+      {
+        Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 10);
+        repository
+          .Setup(it => it.Get())
+          .Returns(new[]
+          {
+            new Message(new DateTime(2000, 1, 2, 3, 4, 5), "Alice", "message1"),
+            new Message(new DateTime(2000, 1, 2, 3, 4, 9), "Alice", "message2"),
+          });
+
+        var result = sut.Read("Alice").ToList();
+
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual("message2 (1 second ago)", result[0]);
+        Assert.AreEqual("message1 (5 seconds ago)", result[1]);
+      }
     }
   }
 }
