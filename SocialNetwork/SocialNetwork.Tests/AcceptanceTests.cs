@@ -12,7 +12,7 @@ namespace SocialNetwork.Tests
     [TestInitialize]
     public void SetUp()
     {
-      sut = new CommandHandler();
+      sut = new CommandHandler(new InMemoryRepository());
 
       Scenario1_Posting();
     }
