@@ -13,8 +13,6 @@ namespace SocialNetwork.Tests
     public void SetUp()
     {
       sut = new CommandHandler(new InMemoryRepository(), new TimeFormatter());
-
-      Scenario1_Posting();
     }
 
     [TestMethod]
