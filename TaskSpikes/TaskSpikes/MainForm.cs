@@ -10,29 +10,41 @@ namespace TaskSpikes
     {
       InitializeComponent();
 
-      runner = new TaskRunner();
+      runner = new TaskRunner<Void>(LongRunningMethod);
     }
 
     //
 
-    private readonly TaskRunner runner;
+    private readonly TaskRunner<Void> runner;
 
-    private void LongRunningMethod(CancellationToken token)
+    private Void LongRunningMethod(CancellationToken token)
     {
+      this.UIChange(() => lbItems.Items.Clear());
+
       for (var i = 0; i < 100000; i++)
       {
-        if (lbItems.Items.Count > 100)
-          lbItems.Items.Clear();
+        token.ThrowIfCancellationRequested();
 
-        lbItems.Items.Add(i.ToString());
+        var s = i.ToString();
+        this.UIChange(() =>
+        {
+          if (lbItems.Items.Count > 100)
+            lbItems.Items.Clear();
+
+          lbItems.Items.Add(s);
+        });
+
+        Thread.Sleep(100);
       }
+
+      return Void.Singleton;
     }
 
     //
 
     private void btnStart_Click(object sender, EventArgs e)
     {
-      runner.Start(LongRunningMethod);
+      runner.Start();
 
       btnStart.Enabled = false;
       btnCancel.Enabled = true;
