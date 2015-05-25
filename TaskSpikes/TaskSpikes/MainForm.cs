@@ -17,7 +17,7 @@ namespace TaskSpikes
 
     private readonly TaskRunner<Void> runner;
 
-    private Void LongRunningMethod(CancellationToken token)
+    private Void LongRunningMethod(CancellationToken token, object state)
     {
       this.UIChange(() => lbItems.Items.Clear());
 
@@ -44,7 +44,7 @@ namespace TaskSpikes
 
     private void btnStart_Click(object sender, EventArgs e)
     {
-      runner.Start();
+      runner.Start(null);
 
       btnStart.Enabled = false;
       btnCancel.Enabled = true;

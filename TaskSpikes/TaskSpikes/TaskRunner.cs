@@ -6,7 +6,7 @@ namespace TaskSpikes
 {
   public class TaskRunner<T>
   {
-    public TaskRunner(Func<CancellationToken, T> func)
+    public TaskRunner(Func<CancellationToken, object, T> func)
     {
       this.func = func;
 
@@ -14,7 +14,7 @@ namespace TaskSpikes
     }
 
     // ReSharper disable once UnusedMethodReturnValue.Global
-    public Task<T> Start()
+    public Task<T> Start(object state)
     {
       Cancel();
 
@@ -22,7 +22,7 @@ namespace TaskSpikes
       {
         try
         {
-          return func(cts.Token);
+          return func(cts.Token, state);
         }
         catch (OperationCanceledException)
         {
@@ -39,7 +39,7 @@ namespace TaskSpikes
 
     //
 
-    private readonly Func<CancellationToken, T> func;
+    private readonly Func<CancellationToken, object, T> func;
 
     private CancellationTokenSource cts;
   }
