@@ -47,6 +47,8 @@ Public repository - CC-by-SA 3.0
 
 * Sudoku: a Sudoku solver based on Peter Norvig's article at http://norvig.com/sudoku.html
 
+* TaskSpikes: I need a long-running, cancelable task that might need to interact with the UI
+
 * TextGeneration: (for now) using Markov chains to generate plausibly-looking texts.
 
 * TransformyClone: library based on the idea from http://www.transformy.io/
