@@ -19,7 +19,13 @@ namespace TaskSpikes
 
     private void LongRunningMethod(CancellationToken token)
     {
-      //
+      for (var i = 0; i < 100000; i++)
+      {
+        if (lbItems.Items.Count > 100)
+          lbItems.Items.Clear();
+
+        lbItems.Items.Add(i.ToString());
+      }
     }
 
     //
