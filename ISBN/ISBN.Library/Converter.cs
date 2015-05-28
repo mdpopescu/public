@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace ISBN.Library
 {
@@ -22,7 +23,15 @@ namespace ISBN.Library
 
     private string GetControlDigit(string s)
     {
-      return "x";
+      var sum = s
+        .Select(c => int.Parse(c.ToString()))
+        .Select((digit, index) => digit * (10 - index))
+        .Sum();
+      var mod = sum % 11;
+
+      var result = (11 - mod) % 11;
+
+      return result == 10 ? "x" : result.ToString();
     }
   }
 }
