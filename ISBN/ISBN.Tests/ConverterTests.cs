@@ -26,6 +26,18 @@ namespace ISBN.Tests
       Check("978140007917", "1400079179");
     }
 
+    [TestMethod]
+    public void Test3()
+    {
+      Check("978037541457", "0375414576");
+    }
+
+    [TestMethod]
+    public void Test4()
+    {
+      Check("978037428158", "0374281580");
+    }
+
     //
 
     private void Check(string given, string expected)
