@@ -12,7 +12,8 @@ class App:
         self.storage.add(Message(user, text))
 
     def get(self, user):
-        "something"
+        messages = self.storage.get()
+        return [m.text for m in messages]
 
     def follows(self, user, other):
         "something"
