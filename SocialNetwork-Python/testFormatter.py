@@ -25,11 +25,12 @@ class testFormatter(unittest.TestCase):
 
         self.assertEquals("25 seconds", result)
 
-def suite():
-    suite = unittest.TestSuite()
+    def test_returns_one_minute(self):
+        result = self.sut.Format(datetime.timedelta(minutes = 1))
 
-    suite.addTest(testFormatter("test_returns_zero_seconds"))
-    suite.addTest(testFormatter("test_returns_one_second"))
-    suite.addTest(testFormatter("test_returns_many_seconds"))
+        self.assertEquals("1 minute", result)
 
-    return suite
+    def test_returns_many_minutes(self):
+        result = self.sut.Format(datetime.timedelta(minutes = 15))
+
+        self.assertEquals("15 minutes", result)

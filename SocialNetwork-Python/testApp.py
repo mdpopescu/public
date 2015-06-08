@@ -62,11 +62,3 @@ class testApp(unittest.TestCase):
 
         self.assertEquals(1, len(lines))
         self.assertEquals("abcd (5 seconds ago)", lines[0])
-
-def suite():
-    suite = unittest.TestSuite()
-
-    suite.addTest(testApp("test_post_stores_message"))
-    suite.addTest(testApp("test_get_returns_message"))
-
-    return suite
