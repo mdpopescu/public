@@ -11,19 +11,25 @@ class testFormatter(unittest.TestCase):
         self.sut = Formatter()
 
     def test_returns_zero_seconds(self):
-        result = self.sut.Format(datetime.time(0, 0, 0))
+        result = self.sut.Format(datetime.timedelta(seconds = 0))
 
-        self.assertEquals(result, "0 seconds")
+        self.assertEquals("0 seconds", result)
 
     def test_returns_one_second(self):
-        result = self.sut.Format(datetime.time(0, 0, 1))
+        result = self.sut.Format(datetime.timedelta(seconds = 1))
 
-        self.assertEquals(result, "1 second")
+        self.assertEquals("1 second", result)
+
+    def test_returns_many_seconds(self):
+        result = self.sut.Format(datetime.timedelta(seconds = 25))
+
+        self.assertEquals("25 seconds", result)
 
 def suite():
     suite = unittest.TestSuite()
 
     suite.addTest(testFormatter("test_returns_zero_seconds"))
     suite.addTest(testFormatter("test_returns_one_second"))
+    suite.addTest(testFormatter("test_returns_many_seconds"))
 
     return suite

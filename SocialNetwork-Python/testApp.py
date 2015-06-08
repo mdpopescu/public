@@ -5,51 +5,50 @@ import mock
 
 import datetime
 
-from App import App
 from Storage import Storage
+from Formatter import Formatter
 from Message import Message
 from Clock import Clock
+from App import App
 
 class testApp(unittest.TestCase):
 
     def setUp(self):
         self.storage = Storage()
-        self.sut = App(self.storage)
+        self.sut = App(self.storage, Formatter())
 
     def test_post_stores_message(self):
         self.storage.add = mock.MagicMock()
-        Clock.set_now(datetime.datetime(2000, 1, 2, 3, 4, 5))
+        Clock.now = staticmethod(lambda: datetime.datetime(2000, 1, 2, 3, 4, 5))
 
         self.sut.post("Marcel", "abcd")
 
         message = Message("Marcel", "abcd", datetime.datetime(2000, 1, 2, 3, 4, 5))
         self.storage.add.assert_called_once_with(message)
 
-    @unittest.skip("for now")
     def test_get_returns_message(self):
         self.storage.get = mock.MagicMock()
         self.storage.get.return_value = [ Message("Marcel", "abcd", datetime.datetime(2000, 1, 2, 3, 4, 5)) ]
-        Clock.set_now(datetime.datetime(2000, 1, 2, 3, 4, 8))
+        Clock.now = staticmethod(lambda: datetime.datetime(2000, 1, 2, 3, 4, 8))
 
         lines = self.sut.get("Marcel")
 
-        self.assertEquals(len(lines), 1)
-        self.assertEquals(lines[0], "abcd (3 seconds ago)")
+        self.assertEquals(1, len(lines))
+        self.assertEquals("abcd (3 seconds ago)", lines[0])
 
-    @unittest.skip("for now")
     def test_get_returns_messages_in_reverse_order(self):
         self.storage.get = mock.MagicMock()
         self.storage.get.return_value = [
             Message("Marcel", "abcd", datetime.datetime(2000, 1, 2, 3, 4, 0)),
             Message("Marcel", "efgh", datetime.datetime(2000, 1, 2, 3, 4, 2))
         ]
-        Clock.set_now(datetime.datetime(2000, 1, 2, 3, 4, 3))
+        Clock.now = staticmethod(lambda: datetime.datetime(2000, 1, 2, 3, 4, 3))
 
         lines = self.sut.get("Marcel")
 
-        self.assertEquals(len(lines), 2)
-        self.assertEquals(lines[0], "efgh (1 second ago)")
-        self.assertEquals(lines[1], "abcd (3 seconds ago)")
+        self.assertEquals(2, len(lines))
+        self.assertEquals("efgh (1 second ago)", lines[0])
+        self.assertEquals("abcd (3 seconds ago)", lines[1])
 
 def suite():
     suite = unittest.TestSuite()
