@@ -50,6 +50,19 @@ class testApp(unittest.TestCase):
         self.assertEquals("efgh (1 second ago)", lines[0])
         self.assertEquals("abcd (3 seconds ago)", lines[1])
 
+    def test_get_only_returns_messages_from_given_user(self):
+        self.storage.get = mock.MagicMock()
+        self.storage.get.return_value = [
+            Message("Marcel", "abcd", datetime.datetime(2000, 1, 2, 3, 4, 0)),
+            Message("Gigi", "efgh", datetime.datetime(2000, 1, 2, 3, 4, 2))
+        ]
+        Clock.now = staticmethod(lambda: datetime.datetime(2000, 1, 2, 3, 4, 5))
+
+        lines = self.sut.get("Marcel")
+
+        self.assertEquals(1, len(lines))
+        self.assertEquals("abcd (5 seconds ago)", lines[0])
+
 def suite():
     suite = unittest.TestSuite()
 

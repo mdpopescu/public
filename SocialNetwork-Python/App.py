@@ -17,7 +17,7 @@ class App:
 
     def get(self, user):
         messages = sorted(self.storage.get(), key = lambda item: item.createdOn, reverse = True)
-        return [self.__format_message(m) for m in messages]
+        return [self.__format_message(m) for m in messages if m.user == user]
 
     def follows(self, user, other):
         "something"
