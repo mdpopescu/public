@@ -1,6 +1,9 @@
 __author__ = 'marcel'
 
+import datetime
+
 from Message import Message
+from Clock import Clock
 
 class App:
     " The main class "
@@ -9,7 +12,7 @@ class App:
         self.storage = storage
 
     def post(self, user, text):
-        self.storage.add(Message(user, text))
+        self.storage.add(Message(user, text, Clock.now()))
 
     def get(self, user):
         messages = self.storage.get()
