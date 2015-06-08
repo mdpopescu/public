@@ -2,16 +2,17 @@ __author__ = 'marcel'
 
 import unittest
 
+from Storage import Storage
 from Formatter import Formatter
 from App import App
 
 class testAcceptance(unittest.TestCase):
 
     def setUp(self):
+        storage = Storage()
         formatter = Formatter()
-        self.sut = App(None, formatter)
+        self.sut = App(storage, formatter)
 
-    @unittest.expectedFailure
     def test_1(self):
         self.sut.post("Marcel", "Hello World!")
         self.sut.post("Marcel", "How is everyone?")
