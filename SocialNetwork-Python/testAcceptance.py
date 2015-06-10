@@ -18,7 +18,6 @@ class testAcceptance(unittest.TestCase):
         formatter = Formatter()
         self.sut = App(storage, users, formatter)
 
-    @unittest.skip("skip")
     def test_1(self):
         Clock.now = staticmethod(lambda: datetime.datetime(2000, 1, 2, 3, 4, 5))
         self.sut.post("Marcel", "Hello World!")

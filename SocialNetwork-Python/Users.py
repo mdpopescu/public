@@ -6,7 +6,10 @@ class Users:
         self.dict = {}
 
     def add(self, user, other):
-        self.dict[user] = []
+        list = self.get(user)
+        if not (other in list):
+            list.append(other)
+        self.dict[user] = list
 
     def get(self, user):
-        " do something "
+        return self.dict.get(user) or []

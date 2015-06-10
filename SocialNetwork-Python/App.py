@@ -17,17 +17,20 @@ class App:
         self.storage.add(Message(user, text, Clock.now()))
 
     def get(self, user):
-        messages = sorted(self.storage.get(), key = lambda item: item.createdOn, reverse = True)
+        messages = self.__get_messages()
         return [self.__format_message(m) for m in messages if m.user == user]
 
     def follows(self, user, other):
         self.users.add(user, other)
 
     def wall(self, user):
-        messages = sorted(self.storage.get(), key = lambda item: item.createdOn, reverse = True)
+        messages = self.__get_messages()
         followed = self.users.get(user)
         relevant = followed + [user]
         return [self.__format_message_with_user(m) for m in messages if m.user in relevant]
+
+    def __get_messages(self):
+        return sorted(self.storage.get(), key = lambda item: item.createdOn, reverse = True)
 
     def __format_message(self, m):
         return m.text + " (" + self.formatter.Format(Clock.now() - m.createdOn) + " ago)"
