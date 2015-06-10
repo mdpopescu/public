@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7788f23e-e228-44d4-9279-0e3d14a4b107" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Users.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/testUsers.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/App.py" afterPath="$PROJECT_DIR$/App.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testAcceptance.py" afterPath="$PROJECT_DIR$/testAcceptance.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testApp.py" afterPath="$PROJECT_DIR$/testApp.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="untitled.iws" />
@@ -24,11 +28,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="App.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="App.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/App.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4447236">
-              <caret line="19" column="77" selection-start-line="19" selection-start-column="77" selection-end-line="19" selection-end-column="77" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
               <folding>
                 <element signature="e#23#38#0" expanded="true" />
               </folding>
@@ -40,8 +44,32 @@
         <entry file="file://$PROJECT_DIR$/testApp.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+              <caret line="21" column="39" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
+              <folding>
+                <element signature="e#23#38#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Users.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Users.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="testUsers.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/testUsers.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.72613066">
+              <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+              <folding>
+                <element signature="e#23#38#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -70,7 +98,7 @@
         <entry file="file://$PROJECT_DIR$/testAcceptance.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+              <caret line="20" column="24" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="24" />
               <folding>
                 <element signature="e#23#38#0" expanded="true" />
               </folding>
@@ -107,12 +135,14 @@
         <option value="$PROJECT_DIR$/AppTests.py" />
         <option value="$PROJECT_DIR$/Message.py" />
         <option value="$PROJECT_DIR$/Clock.py" />
-        <option value="$PROJECT_DIR$/App.py" />
-        <option value="$PROJECT_DIR$/testApp.py" />
         <option value="$PROJECT_DIR$/testFormatter.py" />
         <option value="$PROJECT_DIR$/Formatter.py" />
         <option value="$PROJECT_DIR$/Storage.py" />
+        <option value="$PROJECT_DIR$/testApp.py" />
+        <option value="$PROJECT_DIR$/App.py" />
         <option value="$PROJECT_DIR$/testAcceptance.py" />
+        <option value="$PROJECT_DIR$/Users.py" />
+        <option value="$PROJECT_DIR$/testUsers.py" />
       </list>
     </option>
   </component>
@@ -386,7 +416,13 @@
       <option name="project" value="LOCAL" />
       <updated>1433748506180</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="changed the acceptance test to account for time">
+      <created>1433879057752</created>
+      <option name="number" value="00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1433879057752</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -433,10 +469,13 @@
     <MESSAGE value="get only returns messages from the given user" />
     <MESSAGE value="can show elapsed time in minutes or seconds" />
     <MESSAGE value="implemented the Storage class" />
-    <option name="LAST_COMMIT_MESSAGE" value="implemented the Storage class" />
+    <MESSAGE value="changed the acceptance test to account for time" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed the acceptance test to account for time" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <option name="time" value="2" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
@@ -461,7 +500,7 @@
         <state vertical-scroll-proportion="0.78643215">
           <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
           <folding>
-            <element signature="e#23#38#0" expanded="true" />
+            <element signature="e#23#38#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -485,15 +524,7 @@
     <entry file="file://$PROJECT_DIR$/testApp.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testAcceptance.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+          <caret line="21" column="39" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
           <folding>
             <element signature="e#23#38#0" expanded="true" />
           </folding>
@@ -502,8 +533,36 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/App.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4447236">
-          <caret line="19" column="77" selection-start-line="19" selection-start-column="77" selection-end-line="19" selection-end-column="77" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding>
+            <element signature="e#23#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testAcceptance.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="20" column="24" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="24" />
+          <folding>
+            <element signature="e#23#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Users.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testUsers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.72613066">
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding>
             <element signature="e#23#38#0" expanded="true" />
           </folding>

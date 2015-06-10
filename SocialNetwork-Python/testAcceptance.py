@@ -5,6 +5,7 @@ import unittest
 import datetime
 
 from Storage import Storage
+from Users import Users
 from Formatter import Formatter
 from Clock import Clock
 from App import App
@@ -13,9 +14,11 @@ class testAcceptance(unittest.TestCase):
 
     def setUp(self):
         storage = Storage()
+        users = Users()
         formatter = Formatter()
-        self.sut = App(storage, formatter)
+        self.sut = App(storage, users, formatter)
 
+    @unittest.skip("skip")
     def test_1(self):
         Clock.now = staticmethod(lambda: datetime.datetime(2000, 1, 2, 3, 4, 5))
         self.sut.post("Marcel", "Hello World!")
