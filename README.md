@@ -31,6 +31,8 @@ Public repository - CC-by-SA 3.0
 
 * ISBN: Program for converting a product code (12 digits) to an ISBN number (10 digits)
 
+* Logfind: Implements http://projectsthehardway.com/2015/06/16/project-1-logfind-2/
+
 * MaxRecursion: answer to a problem posed by Karl Seguin on Twitter https://twitter.com/karlseguin/status/521592595282006016 - Write code that prints out the maximum depth of recursion allowed.
 
 * PageFaults: project from https://www.freelancer.com/projects/C-Sharp-Programming/FIFO-OPTIMAL-LRU.html (I included the detailed spec in the project); apparently someone else is taking the same exam - https://www.freelancer.com/projects/C-Sharp-Programming/lab-rep-project-repost.4718106.html
