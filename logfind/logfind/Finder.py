@@ -6,5 +6,6 @@ class Finder:
 
     def find(self, words, options=""):
         self.wordParser.parse(words)
+        self.optionsParser.parse(options)
 
         return []

@@ -14,3 +14,8 @@ class finder_tests:
         self.sut.find("Lorem ipsum")
 
         self.wordParser.parse.assert_called_once_with("Lorem ipsum")
+
+    def test_parses_the_options(self):
+        self.sut.find("Lorem ipsum", "-o")
+
+        self.optionsParser.parse.assert_called_once_with("-o")
