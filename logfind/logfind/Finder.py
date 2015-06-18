@@ -10,6 +10,9 @@ class Finder:
         self.optionsParser.parse(options)
 
         pattern = self.fileSystem.load(".logfind")
-        self.fileSystem.get_files(pattern)
+        file_list = self.fileSystem.get_files(pattern)
+        print file_list
+        for fileName in file_list:
+            self.fileSystem.load(fileName)
 
         return []

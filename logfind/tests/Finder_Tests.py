@@ -1,15 +1,12 @@
-from mock import Mock
-from logfind.WordParser import WordParser
-from logfind.OptionsParser import OptionsParser
+from mock import MagicMock
 from logfind.Finder import Finder
-from logfind.FileSystem import FileSystem
 
 class finder_tests:
 
     def __init__(self):
-        self.wordParser = Mock(WordParser)
-        self.optionsParser = Mock(OptionsParser)
-        self.fileSystem = Mock(FileSystem)
+        self.wordParser = MagicMock()
+        self.optionsParser = MagicMock()
+        self.fileSystem = MagicMock()
         self.sut = Finder(self.wordParser, self.optionsParser, self.fileSystem)
 
     def test_parses_the_words(self):
@@ -33,3 +30,12 @@ class finder_tests:
         self.sut.find("Lorem ipsum")
 
         self.fileSystem.get_files.assert_called_with("*.log")
+
+    def test_loads_all_files_returned_by_get_files(self):
+        self.fileSystem.load.return_value = "*.log"
+        self.fileSystem.get_files.return_value = ["a.log", "b.log"]
+
+        self.sut.find("Lorem ipsum")
+
+        self.fileSystem.load.assert_any_call("a.log")
+        self.fileSystem.load.assert_any_call("b.log")
