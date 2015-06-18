@@ -1,17 +1,14 @@
 from nose.tools import *
-import logfind
+from logfind.WordParser import WordParser
+from logfind.OptionsParser import OptionsParser
 from logfind.Finder import Finder
 
 class acceptance_tests:
 
     def __init__(self):
-        self.sut = None
-
-    def setup(self):
-        self.sut = Finder()
-
-    def teardown(self):
-        """ teardown """
+        wordParser = WordParser()
+        optionsParser = OptionsParser()
+        self.sut = Finder(wordParser, optionsParser)
 
     def test_finds_test_log_with_and(self):
         files = self.sut.find("Lorem ipsum")
