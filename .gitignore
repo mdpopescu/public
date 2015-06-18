@@ -43,3 +43,7 @@ rcf/
 # These should be included #
 !NuGet.exe
 !packages/**/*.targets
+
+# Python
+.idea
+*.pyc
