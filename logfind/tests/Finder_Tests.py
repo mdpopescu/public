@@ -22,7 +22,14 @@ class finder_tests:
 
         self.optionsParser.parse.assert_called_once_with("-o")
 
-    def test_reads_the_logfind_file(self):
+    def test_loads_the_logfind_file(self):
         self.sut.find("Lorem ipsum")
 
         self.fileSystem.load.assert_called_once_with(".logfind")
+
+    def test_asks_for_names_of_files_matching_the_logfind_specifications(self):
+        self.fileSystem.load.return_value = "*.log"
+
+        self.sut.find("Lorem ipsum")
+
+        self.fileSystem.get_files.assert_called_with("*.log")

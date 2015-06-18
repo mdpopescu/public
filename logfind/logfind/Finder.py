@@ -9,6 +9,7 @@ class Finder:
         self.wordParser.parse(words)
         self.optionsParser.parse(options)
 
-        self.fileSystem.load(".logfind")
+        pattern = self.fileSystem.load(".logfind")
+        self.fileSystem.get_files(pattern)
 
         return []

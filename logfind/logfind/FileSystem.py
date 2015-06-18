@@ -5,3 +5,6 @@ class FileSystem:
 
     def load(self, fileName):
         return []
+
+    def get_files(self, pattern):
+        return []
