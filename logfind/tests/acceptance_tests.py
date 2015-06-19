@@ -2,6 +2,7 @@ from nose.tools import *
 from logfind.Parser import Parser
 from logfind.Finder import Finder
 from logfind.FileSystem import FileSystem
+from logfind.Matcher import Matcher
 
 class acceptance_tests:
 

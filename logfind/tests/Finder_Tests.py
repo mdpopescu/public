@@ -1,3 +1,4 @@
+from nose.tools import *
 from mock import MagicMock
 from logfind.Finder import Finder
 from logfind.Logical import Logical
@@ -51,3 +52,15 @@ class finder_tests:
 
         self.matcher.match.assert_any_call("aaa", ["Lorem", "ipsum"], Logical.And)
         self.matcher.match.assert_any_call("bbb", ["Lorem", "ipsum"], Logical.And)
+
+    def test_returns_each_matched_file(self):
+        self.parser.parse_words.return_value = ["Lorem", "ipsum"]
+        self.parser.parse_options.return_value = Logical.And
+        self.fileSystem.load.side_effect = ["*.log", "aaa", "bbb"]
+        self.fileSystem.get_files.return_value = ["a.log", "b.log"]
+        self.matcher.match.side_effect = [False, True]
+
+        result = self.sut.find("Lorem ipsum")
+
+        assert_equal(1, len(result))
+        assert_equal("b.log", result[0])
