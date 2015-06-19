@@ -12,10 +12,8 @@ class Finder:
         pattern = self.fileSystem.load(".logfind")
         file_list = self.fileSystem.get_files(pattern)
 
-        result = []
-        for fileName in file_list:
-            contents = self.fileSystem.load(fileName)
-            if self.matcher.match(contents, word_list, operation):
-                result.append(fileName)
+        return [file_name for file_name in file_list if self.__content_matches(file_name, word_list, operation)]
 
-        return result
+    def __content_matches(self, file_name, word_list, operation):
+        contents = self.fileSystem.load(file_name)
+        return self.matcher.match(contents, word_list, operation)
