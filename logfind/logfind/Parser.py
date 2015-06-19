@@ -4,7 +4,7 @@ class Parser:
         """ initialization """
 
     def parse_words(self, words):
-        return None
+        return words.split()
 
     def parse_options(self, options):
         return None
