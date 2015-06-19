@@ -1,3 +1,5 @@
+from logfind.Logical import Logical
+
 class Parser:
 
     def __init__(self):
@@ -7,4 +9,7 @@ class Parser:
         return words.split()
 
     def parse_options(self, options):
-        return None
+        if options == "-o":
+            return Logical.Or
+        else:
+            return Logical.And
