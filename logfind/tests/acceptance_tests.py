@@ -1,16 +1,14 @@
 from nose.tools import *
-from logfind.WordParser import WordParser
-from logfind.OptionsParser import OptionsParser
+from logfind.Parser import Parser
 from logfind.Finder import Finder
 from logfind.FileSystem import FileSystem
 
 class acceptance_tests:
 
     def __init__(self):
-        wordParser = WordParser()
-        optionsParser = OptionsParser()
+        parser = Parser()
         fileSystem = FileSystem()
-        self.sut = Finder(wordParser, optionsParser, fileSystem)
+        self.sut = Finder(parser, fileSystem)
 
     @nottest
     def test_finds_test_log_with_and(self):
