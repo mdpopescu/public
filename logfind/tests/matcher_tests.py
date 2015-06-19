@@ -16,3 +16,13 @@ class matcher_tests:
         result = self.sut.match("Lorem dolor", ["Lorem", "ipsum"], Logical.And)
 
         assert_equal(False, result)
+
+    def test_match_returns_true_if_some_words_are_found_in_contents(self):
+        result = self.sut.match("Lorem dolor", ["Lorem", "ipsum"], Logical.Or)
+
+        assert_equal(True, result)
+
+    def test_match_returns_false_if_no_words_are_found_in_contents(self):
+        result = self.sut.match("None at all", ["Lorem", "ipsum"], Logical.Or)
+
+        assert_equal(False, result)
