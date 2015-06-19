@@ -1,4 +1,5 @@
-from glob import glob
+import fnmatch
+import os
 
 class FileSystem:
 
@@ -10,4 +11,11 @@ class FileSystem:
             return f.read()
 
     def get_files(self, pattern):
-        return glob(pattern)
+        pattern = pattern.strip()
+
+        matches = []
+        for root, dirnames, filenames in os.walk("."):
+            for filename in fnmatch.filter(filenames, pattern):
+                matches.append(os.path.join(root, filename))
+
+        return matches
