@@ -10,7 +10,7 @@ config = {
     'download_url': 'https://github.com/mdpopescu/public',
     'author_email': 'mdpopescu@gmail.com',
     'version': '0.1',
-    'install_requires': ['nose', 'mock'],
+    'install_requires': ['nose', 'enum', 'mock'],
     'packages': ['logfind'],
     'scripts': [],
     'name': 'logfind'

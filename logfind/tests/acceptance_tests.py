@@ -8,7 +8,8 @@ class acceptance_tests:
     def __init__(self):
         parser = Parser()
         fileSystem = FileSystem()
-        self.sut = Finder(parser, fileSystem)
+        matcher = Matcher()
+        self.sut = Finder(parser, fileSystem, matcher)
 
     @nottest
     def test_finds_test_log_with_and(self):
