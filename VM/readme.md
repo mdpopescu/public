@@ -49,7 +49,7 @@ Instructions (variable size):
   POP reg             10010reg        Pops the value from the stack and sets the register to that value (reg = mem[SP++])
 
                       10011000
-                      ........        Undefined
+                      ........        Undefined; equivalent to NOP
                       11111110
 
   HALT                11111111        Halts the program

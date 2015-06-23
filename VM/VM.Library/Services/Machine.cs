@@ -1,25 +1,33 @@
 ﻿using VM.Library.Contracts;
+using VM.Library.Models;
 
 namespace VM.Library.Services
 {
   public class Machine
   {
-    public Machine(LineIO io, byte[] ram, ushort[] reg)
+    public Machine(State state, Decoder decoder, LineIO io)
     {
+      this.state = state;
+      this.decoder = decoder;
       this.io = io;
-      this.ram = ram;
-      this.reg = reg;
     }
 
-    public void Execute(uint start)
+    public void Execute()
     {
-      //
+      while (true)
+      {
+        var b = state.Memory[state.ProgramCounter++];
+        if (b == 0xFF)
+          return;
+
+        decoder.Execute(state, 0x00);
+      }
     }
 
     //
 
-    private LineIO io;
-    private byte[] ram;
-    private ushort[] reg;
+    private readonly State state;
+    private readonly Decoder decoder;
+    private readonly LineIO io;
   }
 }
