@@ -5,15 +5,15 @@ Specifications:
   Word size: 16-bit
   Number of registers: 8 (16-bit registers) plus SP (stack pointer) and PC (program counter)
     Register 0 is the accumulator
-    The stack grows downwards - PUSH decrements SP, POP increments it
+    The stack grows downwards - PUSH decrements SP, POP increments it; SP starts at 0
   64KB of memory shared between program and data
 
 Instructions (variable size):
 
   xxx                 any value 0 to 7
-  reg                 register number, 0 to 7
+  reg                 register number, 0 to 7 (r0 to r7 in assembly)
   value               16-bit value in little-endian format
-  addr, AA            16-bit address in little-endian format
+  addr                16-bit address in little-endian format
 
 
   Assembly            Machine code    Description
@@ -42,8 +42,8 @@ Instructions (variable size):
   CALL addr           10000100 addr   Pushes the current value of PC to the stack and then jumps to the given address (sets PC to addr)
   RET                 10000101        Pops the value from the stack and sets PC to that value
 
-  READ addr           10000110 addr   Reads a line from the console and stores the string at the given address, zero-terminated
-  WRITE addr          10000111 addr   Writes a line to the console starting at the given address until the first zero byte
+  GETS addr           10000110 addr   Reads a line from the console and stores the string at the given address, zero-terminated
+  PUTS addr           10000111 addr   Writes a line to the console starting at the given address until the first zero byte
 
   PUSH reg            10001reg        Pushes the value in the register to the stack (mem[--SP] = reg)
   POP reg             10010reg        Pops the value from the stack and sets the register to that value (reg = mem[SP++])
@@ -52,7 +52,7 @@ Instructions (variable size):
                       ........        Undefined
                       11111110
 
-  HLT                 11111111        Halts the program
+  HALT                11111111        Halts the program
 
 Assembly directives:
 
