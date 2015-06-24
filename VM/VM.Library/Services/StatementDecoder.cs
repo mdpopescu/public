@@ -31,7 +31,6 @@ namespace VM.Library.Services
       {
         var rr = r;
 
-        actions[(byte) (0x00 + r)] = _ => { };
         actions[(byte) (0x08 + r)] = state => state.Registers[rr] = 0;
         actions[(byte) (0x10 + r)] = state => state.Registers[rr]++;
         actions[(byte) (0x18 + r)] = state => state.Registers[rr]--;
