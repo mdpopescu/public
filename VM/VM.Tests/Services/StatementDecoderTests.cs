@@ -391,6 +391,18 @@ namespace VM.Tests.Services
       }, r => Assert.AreEqual(0x1234, state.Registers[r]));
     }
 
+    [TestMethod]
+    public void ReturnsTheLastStatement()
+    {
+      state.ProgramCounter = 0;
+      state.AddByte(0xFF);
+
+      state.ProgramCounter = 0;
+      var result = sut.Execute(state);
+
+      Assert.AreEqual(0xFF, result);
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)

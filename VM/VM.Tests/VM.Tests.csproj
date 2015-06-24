@@ -55,7 +55,6 @@
   <ItemGroup>
     <Compile Include="AcceptanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\MachineTests.cs" />
     <Compile Include="Services\StatementDecoderTests.cs" />
   </ItemGroup>
   <ItemGroup>

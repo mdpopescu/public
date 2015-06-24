@@ -13,14 +13,11 @@ namespace VM.Library.Services
 
     public void Execute()
     {
-      while (true)
+      byte code;
+      do
       {
-        var b = state.Memory[state.ProgramCounter++];
-        if (b == 0xFF)
-          return;
-
-        decoder.Execute(state);
-      }
+        code = decoder.Execute(state);
+      } while (code != 0xFF);
     }
 
     //

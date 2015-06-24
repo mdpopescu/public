@@ -11,7 +11,6 @@ namespace VM.Tests
   public class AcceptanceTests
   {
     [TestMethod]
-    [Ignore]
     public void AddsTwoNumbersAndWritesTheResult()
     {
       var ram = new byte[65536];
@@ -43,11 +42,11 @@ namespace VM.Tests
       ram[0x03] = 0x29; // SET r1, 3
       ram[0x04] = 0x03;
       ram[0x05] = 0x00;
-      ram[0x06] = 0x81; // ADD r1 -- r0 = 8
+      ram[0x06] = 0x41; // ADD r1 -- r0 = 8
       ram[0x07] = 0x29; // SET r1, '0'
       ram[0x08] = 0x30;
       ram[0x09] = 0x00;
-      ram[0x0A] = 0x81; // ADD r1 -- adds '0' to the value so it can be printed
+      ram[0x0A] = 0x41; // ADD r1 -- adds '0' to the value so it can be printed
       ram[0x0B] = 0x38; // STOR r0, [00F0]
       ram[0x0C] = 0xF0;
       ram[0x0D] = 0x00;

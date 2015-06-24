@@ -17,12 +17,14 @@ namespace VM.Library.Services
       SetUpDecodingTable();
     }
 
-    public void Execute(State state)
+    public byte Execute(State state)
     {
       var code = state.GetByte();
       var action = actions[code];
       if (action != null)
         action(state);
+
+      return code;
     }
 
     //
