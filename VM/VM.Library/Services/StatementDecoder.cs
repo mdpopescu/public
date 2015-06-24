@@ -14,9 +14,9 @@ namespace VM.Library.Services
       SetUpDecodingTable();
     }
 
-    public void Execute(State state, params byte[] bytes)
+    public void Execute(State state)
     {
-      var code = bytes[0];
+      var code = GetNextByte(state);
       if (!actions.ContainsKey(code))
         return;
 
@@ -38,7 +38,13 @@ namespace VM.Library.Services
         actions[(byte) (0x10 + r)] = state => state.Registers[rr]++;
         actions[(byte) (0x18 + r)] = state => state.Registers[rr]--;
         actions[(byte) (0x20 + r)] = state => state.Registers[rr] = (ushort) ~state.Registers[rr];
+        actions[(byte) (0x28 + r)] = state => state.Registers[rr] = (ushort) (GetNextByte(state) + (GetNextByte(state) << 8));
       }
+    }
+
+    private static byte GetNextByte(State state)
+    {
+      return state.Memory[state.ProgramCounter++];
     }
   }
 }

@@ -20,7 +20,7 @@ namespace VM.Library.Services
         if (b == 0xFF)
           return;
 
-        decoder.Execute(state, 0x00);
+        decoder.Execute(state);
       }
     }
 

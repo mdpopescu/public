@@ -4,6 +4,6 @@ namespace VM.Library.Contracts
 {
   public interface Decoder
   {
-    void Execute(State state, params byte[] bytes);
+    void Execute(State state);
   }
 }

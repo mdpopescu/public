@@ -37,7 +37,7 @@ namespace VM.Tests.Services
 
       sut.Execute();
 
-      decoder.Verify(it => it.Execute(state, 0x00));
+      decoder.Verify(it => it.Execute(state));
     }
 
     [TestMethod]
@@ -50,7 +50,7 @@ namespace VM.Tests.Services
 
       sut.Execute();
 
-      decoder.Verify(it => it.Execute(state, It.IsAny<byte[]>()), Times.Exactly(3));
+      decoder.Verify(it => it.Execute(state), Times.Exactly(3));
     }
 
     [TestMethod]
@@ -64,7 +64,7 @@ namespace VM.Tests.Services
 
       sut.Execute();
 
-      decoder.Verify(it => it.Execute(state, It.IsAny<byte[]>()), Times.Exactly(1));
+      decoder.Verify(it => it.Execute(state), Times.Exactly(1));
     }
 
     [TestMethod]

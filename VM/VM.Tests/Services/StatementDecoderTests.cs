@@ -29,9 +29,11 @@ namespace VM.Tests.Services
     {
       ForRegisters(r =>
       {
+        state.Memory[0] = (byte) (0x08 + r);
         state.Registers[r] = 1;
+        state.ProgramCounter = 0;
 
-        sut.Execute(state, (byte) (0x08 + r));
+        sut.Execute(state);
 
         Assert.AreEqual(0, state.Registers[r]);
       });
@@ -42,9 +44,11 @@ namespace VM.Tests.Services
     {
       ForRegisters(r =>
       {
+        state.Memory[0] = (byte) (0x10 + r);
         state.Registers[r] = 1;
+        state.ProgramCounter = 0;
 
-        sut.Execute(state, (byte) (0x10 + r));
+        sut.Execute(state);
 
         Assert.AreEqual(2, state.Registers[r]);
       });
@@ -55,9 +59,11 @@ namespace VM.Tests.Services
     {
       ForRegisters(r =>
       {
+        state.Memory[0] = (byte) (0x18 + r);
         state.Registers[r] = 3;
+        state.ProgramCounter = 0;
 
-        sut.Execute(state, (byte) (0x18 + r));
+        sut.Execute(state);
 
         Assert.AreEqual(2, state.Registers[r]);
       });
@@ -68,11 +74,29 @@ namespace VM.Tests.Services
     {
       ForRegisters(r =>
       {
+        state.Memory[0] = (byte) (0x20 + r);
         state.Registers[r] = 0x5555;
+        state.ProgramCounter = 0;
 
-        sut.Execute(state, (byte) (0x20 + r));
+        sut.Execute(state);
 
         Assert.AreEqual(0xAAAA, state.Registers[r]);
+      });
+    }
+
+    [TestMethod]
+    public void SetsTheRegisterToTheGivenValue()
+    {
+      ForRegisters(r =>
+      {
+        state.Memory[0] = (byte) (0x28 + r);
+        state.Memory[1] = 0xFF;
+        state.Memory[2] = 0x00;
+        state.ProgramCounter = 0;
+
+        sut.Execute(state);
+
+        Assert.AreEqual(255, state.Registers[r]);
       });
     }
 
