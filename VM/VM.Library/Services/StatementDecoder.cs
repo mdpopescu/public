@@ -39,6 +39,7 @@ namespace VM.Library.Services
         actions[(byte) (0x28 + r)] = state => state.Registers[rr] = state.GetWord();
         actions[(byte) (0x30 + r)] = state => state.Registers[rr] = state.LoadWord(state.GetWord());
         actions[(byte) (0x38 + r)] = state => state.SaveWord(state.GetWord(), state.Registers[rr]);
+        actions[(byte) (0x40 + r)] = state => state.Registers[0] += state.Registers[rr];
       }
     }
   }

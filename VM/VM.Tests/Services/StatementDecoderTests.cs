@@ -104,6 +104,17 @@ namespace VM.Tests.Services
       });
     }
 
+    [TestMethod]
+    public void AddsTheRegisterToTheAccumulator()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x40 + r));
+        state.Registers[0] = 5;
+        state.Registers[r] = 5;
+      }, r => Assert.AreEqual(10, state.Registers[0]));
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)
