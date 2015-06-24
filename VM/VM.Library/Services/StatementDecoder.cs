@@ -72,6 +72,11 @@ namespace VM.Library.Services
         // jump to the subroutine
         state.ProgramCounter = addr;
       };
+      actions[0x85] = state =>
+      {
+        var addr = (ushort) (state.Memory[state.StackPointer++] + (state.Memory[state.StackPointer++] << 8));
+        state.ProgramCounter = addr;
+      };
     }
   }
 }

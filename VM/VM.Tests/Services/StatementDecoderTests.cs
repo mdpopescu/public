@@ -322,6 +322,21 @@ namespace VM.Tests.Services
       Assert.AreEqual(0x1111, state.ProgramCounter);
     }
 
+    [TestMethod]
+    public void ReturnsFromSubroutine()
+    {
+      state.ProgramCounter = 0;
+      state.AddByte(0x85);
+      // save the return address on the stack -- high byte first because the stack grows downwards
+      state.Memory[--state.StackPointer] = 0x11;
+      state.Memory[--state.StackPointer] = 0x12;
+
+      state.ProgramCounter = 0;
+      sut.Execute(state);
+
+      Assert.AreEqual(0x1112, state.ProgramCounter);
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)
