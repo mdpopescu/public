@@ -32,9 +32,10 @@ namespace VM.Tests.Services
     [TestMethod]
     public void CallsTheDecoderToInterpretTheInstructions()
     {
-      state.Memory[0] = 0x00; // NOP
-      state.Memory[1] = 0xFF; // HALT
+      state.AddByte(0x00); // NOP
+      state.AddByte(0xFF); // HALT
 
+      state.ProgramCounter = 0;
       sut.Execute();
 
       decoder.Verify(it => it.Execute(state));
@@ -43,11 +44,12 @@ namespace VM.Tests.Services
     [TestMethod]
     public void OnlyDecodesInstructionsUntilHalt()
     {
-      state.Memory[0] = 0x00; // NOP
-      state.Memory[1] = 0x00; // NOP
-      state.Memory[2] = 0x00; // NOP
-      state.Memory[3] = 0xFF; // HALT
+      state.AddByte(0x00); // NOP
+      state.AddByte(0x00); // NOP
+      state.AddByte(0x00); // NOP
+      state.AddByte(0xFF); // HALT
 
+      state.ProgramCounter = 0;
       sut.Execute();
 
       decoder.Verify(it => it.Execute(state), Times.Exactly(3));
@@ -56,12 +58,12 @@ namespace VM.Tests.Services
     [TestMethod]
     public void StartsDecodingFromTheCurrentProgramCounter()
     {
-      state.Memory[0] = 0x00; // NOP
-      state.Memory[1] = 0x01; // NOP
-      state.Memory[2] = 0x02; // NOP
-      state.Memory[3] = 0xFF; // HALT
-      state.ProgramCounter = 2;
+      state.AddByte(0x00); // NOP
+      state.AddByte(0x00); // NOP
+      state.AddByte(0x00); // NOP
+      state.AddByte(0xFF); // HALT
 
+      state.ProgramCounter = 2;
       sut.Execute();
 
       decoder.Verify(it => it.Execute(state), Times.Exactly(1));
@@ -70,11 +72,12 @@ namespace VM.Tests.Services
     [TestMethod]
     public void UpdatesTheProgramCounterToTheAddressFollowingTheHaltStatement()
     {
-      state.Memory[0] = 0x00; // NOP
-      state.Memory[1] = 0x00; // NOP
-      state.Memory[2] = 0x00; // NOP
-      state.Memory[3] = 0xFF; // HALT
+      state.AddByte(0x00); // NOP
+      state.AddByte(0x00); // NOP
+      state.AddByte(0x00); // NOP
+      state.AddByte(0xFF); // HALT
 
+      state.ProgramCounter = 0;
       sut.Execute();
 
       Assert.AreEqual(4, state.ProgramCounter);

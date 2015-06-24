@@ -31,12 +31,7 @@ namespace VM.Tests.Services
       {
         state.AddByte((byte) (0x08 + r));
         state.Registers[r] = 1;
-        state.ProgramCounter = 0;
-
-        sut.Execute(state);
-
-        Assert.AreEqual(0, state.Registers[r]);
-      });
+      }, 0);
     }
 
     [TestMethod]
@@ -46,12 +41,7 @@ namespace VM.Tests.Services
       {
         state.AddByte((byte) (0x10 + r));
         state.Registers[r] = 1;
-        state.ProgramCounter = 0;
-
-        sut.Execute(state);
-
-        Assert.AreEqual(2, state.Registers[r]);
-      });
+      }, 2);
     }
 
     [TestMethod]
@@ -61,12 +51,7 @@ namespace VM.Tests.Services
       {
         state.AddByte((byte) (0x18 + r));
         state.Registers[r] = 3;
-        state.ProgramCounter = 0;
-
-        sut.Execute(state);
-
-        Assert.AreEqual(2, state.Registers[r]);
-      });
+      }, 2);
     }
 
     [TestMethod]
@@ -76,12 +61,7 @@ namespace VM.Tests.Services
       {
         state.AddByte((byte) (0x20 + r));
         state.Registers[r] = 0x5555;
-        state.ProgramCounter = 0;
-
-        sut.Execute(state);
-
-        Assert.AreEqual(0xAAAA, state.Registers[r]);
-      });
+      }, 0xAAAA);
     }
 
     [TestMethod]
@@ -92,23 +72,22 @@ namespace VM.Tests.Services
         state.AddByte((byte) (0x28 + r));
         state.AddByte(0xFF);
         state.AddByte(0x00);
-        state.ProgramCounter = 0;
-
-        sut.Execute(state);
-
-        Assert.AreEqual(255, state.Registers[r]);
-      });
+      }, 255);
     }
 
     //
 
-    private void ForRegisters(Action<byte> action)
+    private void ForRegisters(Action<byte> action, ushort expected)
     {
       for (byte r = 0; r < 8; r++)
       {
         state.ProgramCounter = 0;
-
         action(r);
+
+        state.ProgramCounter = 0;
+        sut.Execute(state);
+
+        Assert.AreEqual(expected, state.Registers[r]);
       }
     }
   }

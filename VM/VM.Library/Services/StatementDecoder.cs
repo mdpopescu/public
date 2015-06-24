@@ -17,10 +17,8 @@ namespace VM.Library.Services
     public void Execute(State state)
     {
       var code = state.GetByte();
-      if (!actions.ContainsKey(code))
-        return;
-
-      actions[code](state);
+      if (actions.ContainsKey(code))
+        actions[code](state);
     }
 
     //
