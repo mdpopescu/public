@@ -188,6 +188,46 @@ namespace VM.Tests.Services
       }, 0x01FE);
     }
 
+    [TestMethod]
+    public void RotatesTheRegisterToTheRight()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x70 + r));
+        state.Registers[r] = 4;
+      }, 2);
+    }
+
+    [TestMethod]
+    public void RotatesTheRegisterToTheRightWhenTheRightmostBitIsSet()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x70 + r));
+        state.Registers[r] = 0x00FF;
+      }, 0x807F);
+    }
+
+    [TestMethod]
+    public void RotatesTheRegisterToTheLeft()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x78 + r));
+        state.Registers[r] = 5;
+      }, 10);
+    }
+
+    [TestMethod]
+    public void RotatesTheRegisterToTheLeftWhenTheLeftmostBitIsSet()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x78 + r));
+        state.Registers[r] = 0xFF00;
+      }, 0xFE01);
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)
