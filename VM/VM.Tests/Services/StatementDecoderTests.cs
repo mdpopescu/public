@@ -228,6 +228,20 @@ namespace VM.Tests.Services
       }, 0xFE01);
     }
 
+    [TestMethod]
+    public void JumpsToTheGivenAddress()
+    {
+      state.ProgramCounter = 0;
+      state.AddByte(0x80);
+      state.AddByte(0x11);
+      state.AddByte(0x11);
+
+      state.ProgramCounter = 0;
+      sut.Execute(state);
+
+      Assert.AreEqual(0x1111, state.ProgramCounter);
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)

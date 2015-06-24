@@ -47,6 +47,8 @@ namespace VM.Library.Services
         actions[(byte) (0x70 + rr)] = state => state.Registers[rr] = (ushort) ((state.Registers[rr] >> 1) | (state.Registers[rr] << 15));
         actions[(byte) (0x78 + rr)] = state => state.Registers[rr] = (ushort) ((state.Registers[rr] << 1) | (state.Registers[rr] >> 15));
       }
+
+      actions[0x80] = state => state.ProgramCounter = state.GetWord();
     }
   }
 }
