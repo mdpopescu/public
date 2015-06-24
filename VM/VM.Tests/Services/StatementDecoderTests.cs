@@ -35,5 +35,18 @@ namespace VM.Tests.Services
         Assert.AreEqual(0, state.Registers[r]);
       }
     }
+
+    [TestMethod]
+    public void IncrementsTheRegisters()
+    {
+      for (var r = 0; r <= 7; r++)
+      {
+        state.Registers[r] = 1;
+
+        sut.Execute(state, (byte) (0x10 + r));
+
+        Assert.AreEqual(2, state.Registers[r]);
+      }
+    }
   }
 }
