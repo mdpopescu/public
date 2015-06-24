@@ -42,6 +42,8 @@ namespace VM.Library.Services
         actions[(byte) (0x48 + r)] = state => state.Registers[0] -= state.Registers[rr];
         actions[(byte) (0x50 + r)] = state => state.Registers[0] &= state.Registers[rr];
         actions[(byte) (0x58 + r)] = state => state.Registers[0] |= state.Registers[rr];
+        actions[(byte) (0x60 + r)] = state => state.Registers[rr] >>= 1;
+        actions[(byte) (0x68 + r)] = state => state.Registers[rr] <<= 1;
       }
     }
   }

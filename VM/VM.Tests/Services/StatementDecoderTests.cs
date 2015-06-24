@@ -148,6 +148,46 @@ namespace VM.Tests.Services
       }, r => Assert.AreEqual(r == 0 ? 2 : 7, state.Registers[0]));
     }
 
+    [TestMethod]
+    public void ShiftsTheRegisterToTheRight()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x60 + r));
+        state.Registers[r] = 5;
+      }, 2);
+    }
+
+    [TestMethod]
+    public void ShiftsTheRegisterToTheRightWhenTheLeftmostBitIsSet()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x60 + r));
+        state.Registers[r] = 0xFF00;
+      }, 0x7F80);
+    }
+
+    [TestMethod]
+    public void ShiftsTheRegisterToTheLeft()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x68 + r));
+        state.Registers[r] = 5;
+      }, 10);
+    }
+
+    [TestMethod]
+    public void ShiftsTheRegisterToTheLeftWhenTheRightmostBitIsSet()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x68 + r));
+        state.Registers[r] = 0xFF;
+      }, 0x01FE);
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)
