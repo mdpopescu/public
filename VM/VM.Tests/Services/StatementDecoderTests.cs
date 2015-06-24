@@ -115,6 +115,17 @@ namespace VM.Tests.Services
       }, r => Assert.AreEqual(10, state.Registers[0]));
     }
 
+    [TestMethod]
+    public void SubtractsTheRegisterFromTheAccumulator()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x48 + r));
+        state.Registers[0] = 5;
+        state.Registers[r] = 5;
+      }, r => Assert.AreEqual(0, state.Registers[0]));
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)
