@@ -24,9 +24,9 @@ namespace VM.Tests
         StackPointer = 0,
         ProgramCounter = 0,
       };
-      var decoder = new StatementDecoder();
       var io = new Mock<LineIO>();
-      var sut = new Machine(state, decoder, io.Object);
+      var decoder = new StatementDecoder(io.Object);
+      var sut = new Machine(state, decoder);
 
       sut.Execute();
 

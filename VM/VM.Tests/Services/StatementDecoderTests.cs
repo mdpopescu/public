@@ -1,5 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using VM.Library.Contracts;
 using VM.Library.Models;
 using VM.Library.Services;
 
@@ -8,13 +10,15 @@ namespace VM.Tests.Services
   [TestClass]
   public class StatementDecoderTests
   {
+    private Mock<LineIO> io;
     private StatementDecoder sut;
     private State state;
 
     [TestInitialize]
     public void SetUp()
     {
-      sut = new StatementDecoder();
+      io = new Mock<LineIO>();
+      sut = new StatementDecoder(io.Object);
       state = new State
       {
         Memory = new byte[65536],
@@ -333,6 +337,25 @@ namespace VM.Tests.Services
       sut.Execute(state);
 
       Assert.AreEqual(0x1112, state.ProgramCounter);
+    }
+
+    [TestMethod]
+    public void ReadsStringAndStoresItInMemory()
+    {
+      state.ProgramCounter = 0;
+      state.AddByte(0x86);
+      state.AddWord(0x1111);
+      io
+        .Setup(it => it.ReadLine())
+        .Returns("ABC");
+
+      state.ProgramCounter = 0;
+      sut.Execute(state);
+
+      Assert.AreEqual(0x41, state.Memory[0x1111]);
+      Assert.AreEqual(0x42, state.Memory[0x1112]);
+      Assert.AreEqual(0x43, state.Memory[0x1113]);
+      Assert.AreEqual(0x00, state.Memory[0x1114]);
     }
 
     //

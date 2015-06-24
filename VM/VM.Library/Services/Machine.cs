@@ -5,11 +5,10 @@ namespace VM.Library.Services
 {
   public class Machine
   {
-    public Machine(State state, Decoder decoder, LineIO io)
+    public Machine(State state, Decoder decoder)
     {
       this.state = state;
       this.decoder = decoder;
-      this.io = io;
     }
 
     public void Execute()
@@ -28,6 +27,5 @@ namespace VM.Library.Services
 
     private readonly State state;
     private readonly Decoder decoder;
-    private readonly LineIO io;
   }
 }

@@ -26,7 +26,7 @@ namespace VM.Tests.Services
       };
       decoder = new Mock<Decoder>();
       io = new Mock<LineIO>();
-      sut = new Machine(state, decoder.Object, io.Object);
+      sut = new Machine(state, decoder.Object);
     }
 
     [TestMethod]

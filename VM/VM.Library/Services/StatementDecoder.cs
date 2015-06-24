@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Text;
 using VM.Library.Contracts;
 using VM.Library.Models;
+using Decoder = VM.Library.Contracts.Decoder;
 
 namespace VM.Library.Services
 {
   public class StatementDecoder : Decoder
   {
-    public StatementDecoder()
+    public StatementDecoder(LineIO io)
     {
-      actions = new Action<State>[256];
+      this.io = io;
 
+      actions = new Action<State>[256];
       SetUpDecodingTable();
     }
 
@@ -22,6 +25,8 @@ namespace VM.Library.Services
     }
 
     //
+
+    private readonly LineIO io;
 
     private readonly Action<State>[] actions;
 
@@ -70,6 +75,21 @@ namespace VM.Library.Services
         state.ProgramCounter = addr;
       };
       actions[0x85] = state => state.ProgramCounter = state.Pop();
+      actions[0x86] = state =>
+      {
+        var addr = state.GetWord();
+
+        var line = io.ReadLine();
+        var bytes = Encoding.UTF8.GetBytes(line);
+
+        foreach (var b in bytes)
+        {
+          state.Memory[addr++] = b;
+        }
+
+        // add the final NUL character
+        state.Memory[addr] = 0;
+      };
     }
   }
 }

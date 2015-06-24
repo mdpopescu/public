@@ -22,6 +22,12 @@
       Memory[ProgramCounter++] = b;
     }
 
+    public void AddWord(ushort w)
+    {
+      Memory[ProgramCounter++] = (byte) (w & 0xFF);
+      Memory[ProgramCounter++] = (byte) (w >> 8);
+    }
+
     public ushort LoadWord(ushort addr)
     {
       return (ushort) (Memory[addr] + (Memory[addr + 1] << 8));
