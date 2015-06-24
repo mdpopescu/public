@@ -242,6 +242,66 @@ namespace VM.Tests.Services
       Assert.AreEqual(0x1111, state.ProgramCounter);
     }
 
+    [TestMethod]
+    public void JumpsWhenAccumulatorIsZero()
+    {
+      state.ProgramCounter = 0;
+      state.AddByte(0x81);
+      state.AddByte(0x11);
+      state.AddByte(0x11);
+      state.Registers[0] = 0;
+
+      state.ProgramCounter = 0;
+      sut.Execute(state);
+
+      Assert.AreEqual(0x1111, state.ProgramCounter);
+    }
+
+    [TestMethod]
+    public void DoesNotJumpWhenAccumulatorIsNotZero()
+    {
+      state.ProgramCounter = 0;
+      state.AddByte(0x81);
+      state.AddByte(0x11);
+      state.AddByte(0x11);
+      state.Registers[0] = 1;
+
+      state.ProgramCounter = 0;
+      sut.Execute(state);
+
+      Assert.AreEqual(3, state.ProgramCounter);
+    }
+
+    [TestMethod]
+    public void JumpsWhenAccumulatorIsNotZero()
+    {
+      state.ProgramCounter = 0;
+      state.AddByte(0x82);
+      state.AddByte(0x11);
+      state.AddByte(0x11);
+      state.Registers[0] = 1;
+
+      state.ProgramCounter = 0;
+      sut.Execute(state);
+
+      Assert.AreEqual(0x1111, state.ProgramCounter);
+    }
+
+    [TestMethod]
+    public void DoesNotJumpWhenAccumulatorIsZero()
+    {
+      state.ProgramCounter = 0;
+      state.AddByte(0x82);
+      state.AddByte(0x11);
+      state.AddByte(0x11);
+      state.Registers[0] = 0;
+
+      state.ProgramCounter = 0;
+      sut.Execute(state);
+
+      Assert.AreEqual(3, state.ProgramCounter);
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)

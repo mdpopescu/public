@@ -49,6 +49,18 @@ namespace VM.Library.Services
       }
 
       actions[0x80] = state => state.ProgramCounter = state.GetWord();
+      actions[0x81] = state =>
+      {
+        var addr = state.GetWord();
+        if (state.Registers[0] == 0)
+          state.ProgramCounter = addr;
+      };
+      actions[0x82] = state =>
+      {
+        var addr = state.GetWord();
+        if (state.Registers[0] != 0)
+          state.ProgramCounter = addr;
+      };
     }
   }
 }
