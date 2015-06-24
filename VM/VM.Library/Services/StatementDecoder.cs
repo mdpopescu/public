@@ -52,6 +52,9 @@ namespace VM.Library.Services
         actions[(byte) (0x68 + rr)] = state => state.Registers[rr] <<= 1;
         actions[(byte) (0x70 + rr)] = state => state.Registers[rr] = (ushort) ((state.Registers[rr] >> 1) | (state.Registers[rr] << 15));
         actions[(byte) (0x78 + rr)] = state => state.Registers[rr] = (ushort) ((state.Registers[rr] << 1) | (state.Registers[rr] >> 15));
+
+        actions[(byte) (0x88 + rr)] = state => state.Push(state.Registers[rr]);
+        actions[(byte) (0x90 + rr)] = state => state.Registers[rr] = state.Pop();
       }
 
       actions[0x80] = state => state.ProgramCounter = state.GetWord();
@@ -79,29 +82,39 @@ namespace VM.Library.Services
       actions[0x86] = state =>
       {
         var addr = state.GetWord();
-
         var line = io.ReadLine();
+
         var bytes = Encoding.UTF8.GetBytes(line);
-
-        foreach (var b in bytes)
-          state.Memory[addr++] = b;
-
-        // add the final NUL character
-        state.Memory[addr] = 0;
+        WriteBytes(state, addr, bytes);
       };
       actions[0x87] = state =>
       {
         var addr = state.GetWord();
+        var bytes = ReadBytes(state, addr);
 
-        var bytes = new List<byte>();
-
-        byte b;
-        while ((b = state.Memory[addr++]) != 0)
-          bytes.Add(b);
-
-        var line = Encoding.UTF8.GetString(bytes.ToArray());
+        var line = Encoding.UTF8.GetString(bytes);
         io.WriteLine(line);
       };
+    }
+
+    private static void WriteBytes(State state, ushort addr, IEnumerable<byte> bytes)
+    {
+      foreach (var b in bytes)
+        state.Memory[addr++] = b;
+
+      // add the final NUL character
+      state.Memory[addr] = 0;
+    }
+
+    private static byte[] ReadBytes(State state, ushort addr)
+    {
+      var bytes = new List<byte>();
+
+      byte b;
+      while ((b = state.Memory[addr++]) != 0)
+        bytes.Add(b);
+
+      return bytes.ToArray();
     }
   }
 }

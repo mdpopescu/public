@@ -364,6 +364,33 @@ namespace VM.Tests.Services
       io.Verify(it => it.WriteLine("ABC"));
     }
 
+    [TestMethod]
+    public void PushesRegisterToTheStack()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x88 + r));
+        state.Registers[r] = 0x1234;
+        state.StackPointer = 0;
+      }, r =>
+      {
+        Assert.AreEqual(0x12, state.Memory[0xFFFF]);
+        Assert.AreEqual(0x34, state.Memory[0xFFFE]);
+      });
+    }
+
+    [TestMethod]
+    public void PopsRegisterFromTheStack()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x90 + r));
+        state.Memory[0xFFFF] = 0x12;
+        state.Memory[0xFFFE] = 0x34;
+        state.StackPointer = 0xFFFE;
+      }, r => Assert.AreEqual(0x1234, state.Registers[r]));
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)
