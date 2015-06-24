@@ -57,9 +57,22 @@ namespace VM.Tests.Services
       {
         state.Registers[r] = 3;
 
-        sut.Execute(state, (byte)(0x18 + r));
+        sut.Execute(state, (byte) (0x18 + r));
 
         Assert.AreEqual(2, state.Registers[r]);
+      });
+    }
+
+    [TestMethod]
+    public void NegatesTheRegisters()
+    {
+      ForRegisters(r =>
+      {
+        state.Registers[r] = 0x5555;
+
+        sut.Execute(state, (byte) (0x20 + r));
+
+        Assert.AreEqual(0xAAAA, state.Registers[r]);
       });
     }
 
