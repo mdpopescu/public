@@ -7,9 +7,19 @@
     public ushort StackPointer { get; set; }
     public ushort ProgramCounter { get; set; }
 
-    public byte GetNextByte()
+    public byte GetByte()
     {
       return Memory[ProgramCounter++];
+    }
+
+    public ushort GetWord()
+    {
+      return (ushort) (GetByte() + (GetByte() << 8));
+    }
+
+    public void AddByte(byte b)
+    {
+      Memory[ProgramCounter++] = b;
     }
   }
 }

@@ -29,7 +29,7 @@ namespace VM.Tests.Services
     {
       ForRegisters(r =>
       {
-        state.Memory[0] = (byte) (0x08 + r);
+        state.AddByte((byte) (0x08 + r));
         state.Registers[r] = 1;
         state.ProgramCounter = 0;
 
@@ -44,7 +44,7 @@ namespace VM.Tests.Services
     {
       ForRegisters(r =>
       {
-        state.Memory[0] = (byte) (0x10 + r);
+        state.AddByte((byte) (0x10 + r));
         state.Registers[r] = 1;
         state.ProgramCounter = 0;
 
@@ -59,7 +59,7 @@ namespace VM.Tests.Services
     {
       ForRegisters(r =>
       {
-        state.Memory[0] = (byte) (0x18 + r);
+        state.AddByte((byte) (0x18 + r));
         state.Registers[r] = 3;
         state.ProgramCounter = 0;
 
@@ -74,7 +74,7 @@ namespace VM.Tests.Services
     {
       ForRegisters(r =>
       {
-        state.Memory[0] = (byte) (0x20 + r);
+        state.AddByte((byte) (0x20 + r));
         state.Registers[r] = 0x5555;
         state.ProgramCounter = 0;
 
@@ -89,9 +89,9 @@ namespace VM.Tests.Services
     {
       ForRegisters(r =>
       {
-        state.Memory[0] = (byte) (0x28 + r);
-        state.Memory[1] = 0xFF;
-        state.Memory[2] = 0x00;
+        state.AddByte((byte) (0x28 + r));
+        state.AddByte(0xFF);
+        state.AddByte(0x00);
         state.ProgramCounter = 0;
 
         sut.Execute(state);
@@ -102,10 +102,14 @@ namespace VM.Tests.Services
 
     //
 
-    private static void ForRegisters(Action<byte> action)
+    private void ForRegisters(Action<byte> action)
     {
       for (byte r = 0; r < 8; r++)
+      {
+        state.ProgramCounter = 0;
+
         action(r);
+      }
     }
   }
 }
