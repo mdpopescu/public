@@ -302,6 +302,26 @@ namespace VM.Tests.Services
       Assert.AreEqual(3, state.ProgramCounter);
     }
 
+    [TestMethod]
+    public void CallsSubroutine()
+    {
+      state.ProgramCounter = 0;
+      state.AddByte(0x84);
+      state.AddByte(0x11);
+      state.AddByte(0x11);
+
+      state.ProgramCounter = 0;
+      sut.Execute(state);
+
+      // verify that the stack contains the return address 0x0003
+      Assert.AreEqual(0x00, state.Memory[0xFFFF]);
+      Assert.AreEqual(0x03, state.Memory[0xFFFE]);
+      // verify that the stack pointer points to the top of the stack
+      Assert.AreEqual(0xFFFE, state.StackPointer);
+      // verify that the program counter has changed
+      Assert.AreEqual(0x1111, state.ProgramCounter);
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)

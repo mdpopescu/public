@@ -39,6 +39,9 @@ Instructions (variable size):
   JUMP addr           10000000 addr   Jumps to the given address (sets PC to addr)
   JZ addr             10000001 addr   Jumps to the given address if the accumulator is zero
   JNZ addr            10000010 addr   Jumps to the given address if the accumulator is not zero
+  
+                      10000011        Undefined; equivalent to NOP
+  
   CALL addr           10000100 addr   Pushes the current value of PC to the stack and then jumps to the given address (sets PC to addr)
   RET                 10000101        Pops the value from the stack and sets PC to that value
 

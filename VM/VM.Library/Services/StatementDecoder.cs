@@ -61,6 +61,17 @@ namespace VM.Library.Services
         if (state.Registers[0] != 0)
           state.ProgramCounter = addr;
       };
+      actions[0x84] = state =>
+      {
+        var addr = state.GetWord();
+
+        // save the return address (the current program counter) on the stack -- high byte first because the stack grows downwards
+        state.Memory[--state.StackPointer] = (byte) (state.ProgramCounter >> 8);
+        state.Memory[--state.StackPointer] = (byte) (state.ProgramCounter & 0xFF);
+
+        // jump to the subroutine
+        state.ProgramCounter = addr;
+      };
     }
   }
 }
