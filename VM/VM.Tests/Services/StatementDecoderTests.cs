@@ -348,6 +348,22 @@ namespace VM.Tests.Services
       Assert.AreEqual(0x00, state.Memory[0x1114]);
     }
 
+    [TestMethod]
+    public void WritesStringFromMemory()
+    {
+      state.ProgramCounter = 0;
+      state.AddByte(0x87);
+      state.AddWord(0x1111);
+      state.Memory[0x1111] = 0x41;
+      state.Memory[0x1112] = 0x42;
+      state.Memory[0x1113] = 0x43;
+
+      state.ProgramCounter = 0;
+      sut.Execute(state);
+
+      io.Verify(it => it.WriteLine("ABC"));
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)

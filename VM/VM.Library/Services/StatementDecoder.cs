@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using VM.Library.Contracts;
 using VM.Library.Models;
@@ -83,12 +84,23 @@ namespace VM.Library.Services
         var bytes = Encoding.UTF8.GetBytes(line);
 
         foreach (var b in bytes)
-        {
           state.Memory[addr++] = b;
-        }
 
         // add the final NUL character
         state.Memory[addr] = 0;
+      };
+      actions[0x87] = state =>
+      {
+        var addr = state.GetWord();
+
+        var bytes = new List<byte>();
+
+        byte b;
+        while ((b = state.Memory[addr++]) != 0)
+          bytes.Add(b);
+
+        var line = Encoding.UTF8.GetString(bytes.ToArray());
+        io.WriteLine(line);
       };
     }
   }
