@@ -6,5 +6,10 @@
     public ushort[] Registers { get; set; }
     public ushort StackPointer { get; set; }
     public ushort ProgramCounter { get; set; }
+
+    public byte GetNextByte()
+    {
+      return Memory[ProgramCounter++];
+    }
   }
 }
