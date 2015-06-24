@@ -28,6 +28,15 @@ namespace VM.Library.Services
       actions[0x15] = state => state.Registers[5]++;
       actions[0x16] = state => state.Registers[6]++;
       actions[0x17] = state => state.Registers[7]++;
+
+      actions[0x18] = state => state.Registers[0]--;
+      actions[0x19] = state => state.Registers[1]--;
+      actions[0x1A] = state => state.Registers[2]--;
+      actions[0x1B] = state => state.Registers[3]--;
+      actions[0x1C] = state => state.Registers[4]--;
+      actions[0x1D] = state => state.Registers[5]--;
+      actions[0x1E] = state => state.Registers[6]--;
+      actions[0x1F] = state => state.Registers[7]--;
     }
 
     public void Execute(State state, params byte[] bytes)

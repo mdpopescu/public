@@ -50,6 +50,19 @@ namespace VM.Tests.Services
       });
     }
 
+    [TestMethod]
+    public void DecrementsTheRegisters()
+    {
+      ForRegisters(r =>
+      {
+        state.Registers[r] = 3;
+
+        sut.Execute(state, (byte)(0x18 + r));
+
+        Assert.AreEqual(2, state.Registers[r]);
+      });
+    }
+
     //
 
     private static void ForRegisters(Action<byte> action)
