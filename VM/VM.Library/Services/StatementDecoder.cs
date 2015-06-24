@@ -31,21 +31,21 @@ namespace VM.Library.Services
       {
         var rr = r;
 
-        actions[(byte) (0x08 + r)] = state => state.Registers[rr] = 0;
-        actions[(byte) (0x10 + r)] = state => state.Registers[rr]++;
-        actions[(byte) (0x18 + r)] = state => state.Registers[rr]--;
-        actions[(byte) (0x20 + r)] = state => state.Registers[rr] = (ushort) ~state.Registers[rr];
-        actions[(byte) (0x28 + r)] = state => state.Registers[rr] = state.GetWord();
-        actions[(byte) (0x30 + r)] = state => state.Registers[rr] = state.LoadWord(state.GetWord());
-        actions[(byte) (0x38 + r)] = state => state.SaveWord(state.GetWord(), state.Registers[rr]);
-        actions[(byte) (0x40 + r)] = state => state.Registers[0] += state.Registers[rr];
-        actions[(byte) (0x48 + r)] = state => state.Registers[0] -= state.Registers[rr];
-        actions[(byte) (0x50 + r)] = state => state.Registers[0] &= state.Registers[rr];
-        actions[(byte) (0x58 + r)] = state => state.Registers[0] |= state.Registers[rr];
-        actions[(byte) (0x60 + r)] = state => state.Registers[rr] >>= 1;
-        actions[(byte) (0x68 + r)] = state => state.Registers[rr] <<= 1;
-        actions[(byte) (0x70 + r)] = state => state.Registers[rr] = (ushort) ((state.Registers[rr] >> 1) | (state.Registers[rr] << 15));
-        actions[(byte) (0x78 + r)] = state => state.Registers[rr] = (ushort) ((state.Registers[rr] << 1) | (state.Registers[rr] >> 15));
+        actions[(byte) (0x08 + rr)] = state => state.Registers[rr] = 0;
+        actions[(byte) (0x10 + rr)] = state => state.Registers[rr]++;
+        actions[(byte) (0x18 + rr)] = state => state.Registers[rr]--;
+        actions[(byte) (0x20 + rr)] = state => state.Registers[rr] = (ushort) ~state.Registers[rr];
+        actions[(byte) (0x28 + rr)] = state => state.Registers[rr] = state.GetWord();
+        actions[(byte) (0x30 + rr)] = state => state.Registers[rr] = state.LoadWord(state.GetWord());
+        actions[(byte) (0x38 + rr)] = state => state.SaveWord(state.GetWord(), state.Registers[rr]);
+        actions[(byte) (0x40 + rr)] = state => state.Registers[0] += state.Registers[rr];
+        actions[(byte) (0x48 + rr)] = state => state.Registers[0] -= state.Registers[rr];
+        actions[(byte) (0x50 + rr)] = state => state.Registers[0] &= state.Registers[rr];
+        actions[(byte) (0x58 + rr)] = state => state.Registers[0] |= state.Registers[rr];
+        actions[(byte) (0x60 + rr)] = state => state.Registers[rr] >>= 1;
+        actions[(byte) (0x68 + rr)] = state => state.Registers[rr] <<= 1;
+        actions[(byte) (0x70 + rr)] = state => state.Registers[rr] = (ushort) ((state.Registers[rr] >> 1) | (state.Registers[rr] << 15));
+        actions[(byte) (0x78 + rr)] = state => state.Registers[rr] = (ushort) ((state.Registers[rr] << 1) | (state.Registers[rr] >> 15));
       }
     }
   }
