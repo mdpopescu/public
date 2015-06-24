@@ -74,8 +74,7 @@ namespace VM.Tests.Services
       ForRegisters(r =>
       {
         state.AddByte((byte) (0x28 + r));
-        state.AddByte(0xFF);
-        state.AddByte(0x00);
+        state.AddWord(0x00FF);
       }, 255);
     }
 
@@ -85,10 +84,8 @@ namespace VM.Tests.Services
       ForRegisters(r =>
       {
         state.AddByte((byte) (0x30 + r));
-        state.AddByte(0xF0);
-        state.AddByte(0x00);
-        state.Memory[0x00F0] = 0x12;
-        state.Memory[0x00F1] = 0x34;
+        state.AddWord(0x00F0);
+        state.SaveWord(0x00F0, 0x3412);
       }, 0x3412);
     }
 
@@ -98,8 +95,7 @@ namespace VM.Tests.Services
       ForRegisters(r =>
       {
         state.AddByte((byte) (0x38 + r));
-        state.AddByte(0xF0);
-        state.AddByte(0x00);
+        state.AddWord(0x00F0);
         state.Registers[r] = (ushort) (0x1200 + r);
       }, r =>
       {
@@ -237,8 +233,7 @@ namespace VM.Tests.Services
     {
       state.ProgramCounter = 0;
       state.AddByte(0x80);
-      state.AddByte(0x11);
-      state.AddByte(0x11);
+      state.AddWord(0x1111);
 
       state.ProgramCounter = 0;
       sut.Execute(state);
@@ -251,8 +246,7 @@ namespace VM.Tests.Services
     {
       state.ProgramCounter = 0;
       state.AddByte(0x81);
-      state.AddByte(0x11);
-      state.AddByte(0x11);
+      state.AddWord(0x1111);
       state.Registers[0] = 0;
 
       state.ProgramCounter = 0;
@@ -266,8 +260,7 @@ namespace VM.Tests.Services
     {
       state.ProgramCounter = 0;
       state.AddByte(0x81);
-      state.AddByte(0x11);
-      state.AddByte(0x11);
+      state.AddWord(0x1111);
       state.Registers[0] = 1;
 
       state.ProgramCounter = 0;
@@ -281,8 +274,7 @@ namespace VM.Tests.Services
     {
       state.ProgramCounter = 0;
       state.AddByte(0x82);
-      state.AddByte(0x11);
-      state.AddByte(0x11);
+      state.AddWord(0x1111);
       state.Registers[0] = 1;
 
       state.ProgramCounter = 0;
@@ -296,8 +288,7 @@ namespace VM.Tests.Services
     {
       state.ProgramCounter = 0;
       state.AddByte(0x82);
-      state.AddByte(0x11);
-      state.AddByte(0x11);
+      state.AddWord(0x1111);
       state.Registers[0] = 0;
 
       state.ProgramCounter = 0;
@@ -311,8 +302,7 @@ namespace VM.Tests.Services
     {
       state.ProgramCounter = 0;
       state.AddByte(0x84);
-      state.AddByte(0x11);
-      state.AddByte(0x11);
+      state.AddWord(0x1111);
 
       state.ProgramCounter = 0;
       sut.Execute(state);
