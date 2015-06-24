@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VM.Library.Models;
 using VM.Library.Services;
 
@@ -26,27 +27,35 @@ namespace VM.Tests.Services
     [TestMethod]
     public void ClearsTheRegisters()
     {
-      for (var r = 0; r <= 7; r++)
+      ForRegisters(r =>
       {
         state.Registers[r] = 1;
 
         sut.Execute(state, (byte) (0x08 + r));
 
         Assert.AreEqual(0, state.Registers[r]);
-      }
+      });
     }
 
     [TestMethod]
     public void IncrementsTheRegisters()
     {
-      for (var r = 0; r <= 7; r++)
+      ForRegisters(r =>
       {
         state.Registers[r] = 1;
 
         sut.Execute(state, (byte) (0x10 + r));
 
         Assert.AreEqual(2, state.Registers[r]);
-      }
+      });
+    }
+
+    //
+
+    private static void ForRegisters(Action<byte> action)
+    {
+      for (byte r = 0; r < 8; r++)
+        action(r);
     }
   }
 }
