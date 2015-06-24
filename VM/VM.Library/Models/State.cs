@@ -32,5 +32,17 @@
       Memory[addr + 0] = (byte) (value & 0xFF);
       Memory[addr + 1] = (byte) (value >> 8);
     }
+
+    public void Push(ushort value)
+    {
+      // high byte first because the stack grows downwards
+      Memory[--StackPointer] = (byte) (value >> 8);
+      Memory[--StackPointer] = (byte) (value & 0xFF);
+    }
+
+    public ushort Pop()
+    {
+      return (ushort) (Memory[StackPointer++] + (Memory[StackPointer++] << 8));
+    }
   }
 }

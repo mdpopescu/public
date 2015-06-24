@@ -63,20 +63,13 @@ namespace VM.Library.Services
       };
       actions[0x84] = state =>
       {
+        // read the address *first*, otherwise the value saved on the stack will be incorrect
         var addr = state.GetWord();
 
-        // save the return address (the current program counter) on the stack -- high byte first because the stack grows downwards
-        state.Memory[--state.StackPointer] = (byte) (state.ProgramCounter >> 8);
-        state.Memory[--state.StackPointer] = (byte) (state.ProgramCounter & 0xFF);
-
-        // jump to the subroutine
+        state.Push(state.ProgramCounter);
         state.ProgramCounter = addr;
       };
-      actions[0x85] = state =>
-      {
-        var addr = (ushort) (state.Memory[state.StackPointer++] + (state.Memory[state.StackPointer++] << 8));
-        state.ProgramCounter = addr;
-      };
+      actions[0x85] = state => state.ProgramCounter = state.Pop();
     }
   }
 }

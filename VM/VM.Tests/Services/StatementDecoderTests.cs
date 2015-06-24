@@ -327,9 +327,7 @@ namespace VM.Tests.Services
     {
       state.ProgramCounter = 0;
       state.AddByte(0x85);
-      // save the return address on the stack -- high byte first because the stack grows downwards
-      state.Memory[--state.StackPointer] = 0x11;
-      state.Memory[--state.StackPointer] = 0x12;
+      state.Push(0x1112);
 
       state.ProgramCounter = 0;
       sut.Execute(state);
