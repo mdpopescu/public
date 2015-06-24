@@ -88,6 +88,22 @@ namespace VM.Tests.Services
       }, 0x3412);
     }
 
+    [TestMethod]
+    public void SavesTheRegisterToAnAddress()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x38 + r));
+        state.AddByte(0xF0);
+        state.AddByte(0x00);
+        state.Registers[r] = (ushort) (0x1200 + r);
+      }, r =>
+      {
+        Assert.AreEqual(r, state.Memory[0x00F0]);
+        Assert.AreEqual(0x12, state.Memory[0x00F1]);
+      });
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)
@@ -101,6 +117,20 @@ namespace VM.Tests.Services
         sut.Execute(state);
 
         Assert.AreEqual(expected, state.Registers[r]);
+      }
+    }
+
+    private void ForRegisters(Action<byte> action, Action<byte> check)
+    {
+      for (byte r = 0; r < 8; r++)
+      {
+        state.ProgramCounter = 0;
+        action(r);
+
+        state.ProgramCounter = 0;
+        sut.Execute(state);
+
+        check(r);
       }
     }
   }

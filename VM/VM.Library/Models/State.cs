@@ -22,10 +22,15 @@
       Memory[ProgramCounter++] = b;
     }
 
-    public ushort LoadWord()
+    public ushort LoadWord(ushort addr)
     {
-      var addr = GetWord();
       return (ushort) (Memory[addr] + (Memory[addr + 1] << 8));
+    }
+
+    public void SaveWord(ushort addr, ushort value)
+    {
+      Memory[addr + 0] = (byte) (value & 0xFF);
+      Memory[addr + 1] = (byte) (value >> 8);
     }
   }
 }
