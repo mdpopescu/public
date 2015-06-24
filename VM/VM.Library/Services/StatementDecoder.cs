@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using VM.Library.Contracts;
 using VM.Library.Models;
 
@@ -9,7 +8,7 @@ namespace VM.Library.Services
   {
     public StatementDecoder()
     {
-      actions = new Dictionary<byte, Action<State>>();
+      actions = new Action<State>[256];
 
       SetUpDecodingTable();
     }
@@ -17,13 +16,14 @@ namespace VM.Library.Services
     public void Execute(State state)
     {
       var code = state.GetByte();
-      if (actions.ContainsKey(code))
-        actions[code](state);
+      var action = actions[code];
+      if (action != null)
+        action(state);
     }
 
     //
 
-    private readonly Dictionary<byte, Action<State>> actions;
+    private readonly Action<State>[] actions;
 
     private void SetUpDecodingTable()
     {
