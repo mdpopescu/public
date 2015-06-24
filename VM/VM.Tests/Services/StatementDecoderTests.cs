@@ -75,6 +75,19 @@ namespace VM.Tests.Services
       }, 255);
     }
 
+    [TestMethod]
+    public void LoadsTheRegisterFromAnAddress()
+    {
+      ForRegisters(r =>
+      {
+        state.AddByte((byte) (0x30 + r));
+        state.AddByte(0xF0);
+        state.AddByte(0x00);
+        state.Memory[0x00F0] = 0x12;
+        state.Memory[0x00F1] = 0x34;
+      }, 0x3412);
+    }
+
     //
 
     private void ForRegisters(Action<byte> action, ushort expected)

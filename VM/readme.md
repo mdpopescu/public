@@ -26,7 +26,7 @@ Instructions (variable size):
   NEG reg             00100reg        Negates the value in the register (1-complement)
   SET reg, value      00101reg value  Sets the register to the given value
   LOAD reg, addr      00110reg addr   Loads the register with the 16-bit value stored in RAM at the given address
-  STOR reg, addr      00111reg addr   Saves the 16-bit value in the register at the address
+  SAVE reg, addr      00111reg addr   Saves the 16-bit value in the register at the address
   ADD reg             01000reg        Adds the register to the accumulator
   SUB reg             01001reg        Subtracts the register from the accumulator
   AND reg             01010reg        Sets acc = acc AND reg (bitwise operation)
