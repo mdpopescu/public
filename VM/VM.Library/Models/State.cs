@@ -21,5 +21,11 @@
     {
       Memory[ProgramCounter++] = b;
     }
+
+    public ushort LoadWord()
+    {
+      var addr = GetWord();
+      return (ushort) (Memory[addr] + (Memory[addr + 1] << 8));
+    }
   }
 }
