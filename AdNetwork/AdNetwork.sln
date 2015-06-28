@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdNetwork.Library", "AdNetwork.Library\AdNetwork.Library.csproj", "{154FA16F-9999-4F92-9C5D-A9C47BC0B057}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdNetwork.Tests", "AdNetwork.Tests\AdNetwork.Tests.csproj", "{5C3082B7-4DE6-4363-8844-4B2BD95D5A54}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{154FA16F-9999-4F92-9C5D-A9C47BC0B057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{154FA16F-9999-4F92-9C5D-A9C47BC0B057}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{154FA16F-9999-4F92-9C5D-A9C47BC0B057}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{154FA16F-9999-4F92-9C5D-A9C47BC0B057}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C3082B7-4DE6-4363-8844-4B2BD95D5A54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C3082B7-4DE6-4363-8844-4B2BD95D5A54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C3082B7-4DE6-4363-8844-4B2BD95D5A54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C3082B7-4DE6-4363-8844-4B2BD95D5A54}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
