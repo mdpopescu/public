@@ -1,7 +1,6 @@
 __author__ = 'marcel'
 
 import unittest
-import mock
 
 from Users import Users
 

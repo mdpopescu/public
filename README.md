@@ -49,6 +49,8 @@ Public repository - CC-by-SA 3.0
 
 * SocialNetwork: what the name says; written for a job interview.
 
+* Spiral: generate a spiral with numbers from 1 to n^2, starting in the middle and going outwards
+
 * Sudoku: a Sudoku solver based on Peter Norvig's article at http://norvig.com/sudoku.html
 
 * TaskSpikes: I need a long-running, cancelable task that might need to interact with the UI
