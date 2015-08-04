@@ -10,12 +10,12 @@ namespace Acta.Library.Services
   {
     public ActaDb(IActaStorage storage)
     {
-      //
+      this.storage = storage;
     }
 
     public void Write(Guid guid, string name, object value)
     {
-      //
+      storage.Append(new ActaTuple(guid, name, value));
     }
 
     public void Write(Guid guid, IEnumerable<ActaKeyValuePair> pairs)
@@ -32,5 +32,9 @@ namespace Acta.Library.Services
     {
       return null;
     }
+
+    //
+
+    private readonly IActaStorage storage;
   }
 }

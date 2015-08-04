@@ -42,6 +42,7 @@
     <Compile Include="Contracts\IActaLowLevelApi.cs" />
     <Compile Include="Contracts\IActaStorage.cs" />
     <Compile Include="Models\ActaKeyValuePair.cs" />
+    <Compile Include="Models\ActaTuple.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ActaDb.cs" />
     <Compile Include="Services\ActaMemoryStorage.cs" />
