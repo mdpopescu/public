@@ -19,7 +19,7 @@ namespace Acta.Library.Contracts
     void Write(Guid guid, string name, object value);
 
     /// <summary>
-    ///   Atomically appends a set of (guid, name, value) tuples to the log.
+    ///   Appends a list of (guid, name, value) tuples to the log.
     /// </summary>
     /// <param name="guid">The entity guid.</param>
     /// <param name="pairs">The property name/value pairs.</param>
@@ -27,7 +27,7 @@ namespace Acta.Library.Contracts
     ///   This method is used to either create a new entity (if the guid hasn't been used before)
     ///   or to add or update a set of properties to an existing entity.
     /// </remarks>
-    void Write(Guid guid, IEnumerable<ActaKeyValuePair> pairs);
+    void Write(Guid guid, params ActaKeyValuePair[] pairs);
 
     /// <summary>
     ///   Retrieves the Ids of entities that have a property with the given value.

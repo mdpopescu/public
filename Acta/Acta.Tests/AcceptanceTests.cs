@@ -24,12 +24,10 @@ namespace Acta.Tests
 
       // create a new entity, writing all properties at the same time
       var guid2 = Guid.NewGuid();
-      db.Write(guid2, new[]
-      {
+      db.Write(guid2,
         new ActaKeyValuePair("@type", "Person"),
         new ActaKeyValuePair("Name", "Iolanda Popescu"),
-        new ActaKeyValuePair("DOB", new DateTime(1974, 8, 31))
-      });
+        new ActaKeyValuePair("DOB", new DateTime(1974, 8, 31)));
 
       // change the names
       db.Write(guid1, "Name", "Marcel Doru Popescu");

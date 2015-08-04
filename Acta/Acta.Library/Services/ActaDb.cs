@@ -18,9 +18,10 @@ namespace Acta.Library.Services
       storage.Append(new ActaTuple(guid, name, value));
     }
 
-    public void Write(Guid guid, IEnumerable<ActaKeyValuePair> pairs)
+    public void Write(Guid guid, params ActaKeyValuePair[] pairs)
     {
-      //
+      foreach (var pair in pairs)
+        Write(guid, pair.Name, pair.Value);
     }
 
     public IEnumerable<Guid> GetIds(string name, object value)

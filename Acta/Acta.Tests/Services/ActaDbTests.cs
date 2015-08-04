@@ -33,5 +33,22 @@ namespace Acta.Tests.Services
         storage.Verify(it => it.Append(It.Is<ActaTuple>(t => t.Id == guid && t.Name == "test" && (string) t.Value == "value")));
       }
     }
+
+    [TestClass]
+    public class WriteMany : ActaDbTests
+    {
+      [TestMethod]
+      public void WritesMultipleTuplesToStorage()
+      {
+        var guid = Guid.NewGuid();
+
+        sut.Write(guid,
+          new ActaKeyValuePair("k1", "v1"),
+          new ActaKeyValuePair("k2", "v2"));
+
+        storage.Verify(it => it.Append(It.Is<ActaTuple>(t => t.Id == guid && t.Name == "k1" && (string) t.Value == "v1")));
+        storage.Verify(it => it.Append(It.Is<ActaTuple>(t => t.Id == guid && t.Name == "k2" && (string) t.Value == "v2")));
+      }
+    }
   }
 }
