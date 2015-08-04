@@ -29,7 +29,8 @@ namespace Acta.Library.Services
       return storage
         .Get()
         .Where(it => it.Matches(name, value))
-        .Select(it => it.Id);
+        .Select(it => it.Id)
+        .Distinct();
     }
 
     public object Read(Guid id, string name)

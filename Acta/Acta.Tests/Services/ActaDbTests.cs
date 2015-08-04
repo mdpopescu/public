@@ -109,6 +109,23 @@ namespace Acta.Tests.Services
 
         CollectionAssert.AreEquivalent(new[] {guid1, guid3}, result);
       }
+
+      [TestMethod]
+      public void DoesNotReturnDuplicateGuids()
+      {
+        var guid = Guid.NewGuid();
+        storage
+          .Setup(it => it.Get())
+          .Returns(new[]
+          {
+            new ActaTuple(guid, "test", "value", 0),
+            new ActaTuple(guid, "test", "value", 0),
+          });
+
+        var result = sut.GetIds("test", "value").ToList();
+
+        Assert.AreEqual(1, result.Count);
+      }
     }
 
     [TestClass]
