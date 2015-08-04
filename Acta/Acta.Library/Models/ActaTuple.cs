@@ -17,5 +17,22 @@ namespace Acta.Library.Models
       Name = name;
       Value = value;
     }
+
+    public bool Matches(string name, object value)
+    {
+      return NamesMatch(name) && ValuesMatch(value);
+    }
+
+    //
+
+    private bool NamesMatch(string name)
+    {
+      return string.Compare(Name, name, StringComparison.InvariantCultureIgnoreCase) == 0;
+    }
+
+    private bool ValuesMatch(object value)
+    {
+      return Value == value || (Value != null && value != null && Value.Equals(value));
+    }
   }
 }

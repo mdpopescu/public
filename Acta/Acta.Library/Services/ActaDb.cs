@@ -28,7 +28,7 @@ namespace Acta.Library.Services
     {
       return storage
         .Get()
-        .Where(it => Matches(it, name, value))
+        .Where(it => it.Matches(name, value))
         .Select(it => it.Id);
     }
 
@@ -40,20 +40,5 @@ namespace Acta.Library.Services
     //
 
     private readonly IActaStorage storage;
-
-    private static bool Matches(ActaTuple it, string name, object value)
-    {
-      return NamesMatch(it, name) && ValuesMatch(it, value);
-    }
-
-    private static bool NamesMatch(ActaTuple it, string name)
-    {
-      return string.Compare(it.Name, name, StringComparison.InvariantCultureIgnoreCase) == 0;
-    }
-
-    private static bool ValuesMatch(ActaTuple it, object value)
-    {
-      return it.Value == value || (it.Value != null && value != null && it.Value.Equals(value));
-    }
   }
 }
