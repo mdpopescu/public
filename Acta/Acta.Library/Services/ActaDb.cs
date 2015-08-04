@@ -32,9 +32,18 @@ namespace Acta.Library.Services
         .Select(it => it.Id);
     }
 
-    public object Read(Guid guid, string name)
+    public object Read(Guid id, string name)
     {
-      return null;
+      return storage
+        .Get()
+        .Where(it => it.Matches(id, name))
+        .Select(it => it.Value)
+        .FirstOrDefault();
+    }
+
+    public T Read<T>(Guid id, string name)
+    {
+      return default(T);
     }
 
     //

@@ -110,5 +110,33 @@ namespace Acta.Tests.Services
         CollectionAssert.AreEquivalent(new[] {guid1, guid3}, result);
       }
     }
+
+    [TestClass]
+    public class ReadObject : ActaDbTests
+    {
+      [TestMethod]
+      public void ReturnsMatchingValue()
+      {
+        var guid = Guid.NewGuid();
+        storage
+          .Setup(it => it.Get())
+          .Returns(new[]
+          {
+            new ActaTuple(guid, "test", "value"),
+          });
+
+        var result = sut.Read(guid, "test") as string;
+
+        Assert.AreEqual("value", result);
+      }
+
+      [TestMethod]
+      public void ReturnsNullIfPropertyNotFoundForTheGivenId()
+      {
+        var result = sut.Read(Guid.NewGuid(), "test");
+
+        Assert.IsNull(result);
+      }
+    }
   }
 }

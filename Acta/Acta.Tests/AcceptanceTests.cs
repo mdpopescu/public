@@ -40,9 +40,9 @@ namespace Acta.Tests
       CollectionAssert.AreEquivalent(new[] {guid1, guid2}, guids);
 
       // retrieve and verify the properties of the entities
-      Assert.AreEqual("Marcel Doru Popescu", db.Read(guid1, "Name"));
+      Assert.AreEqual("Marcel Doru Popescu", (string) db.Read(guid1, "Name"));
       Assert.AreEqual(new DateTime(1972, 4, 30), db.Read(guid1, "DOB"));
-      Assert.AreEqual("Dora Iolanda Popescu", db.Read(guid2, "Name"));
+      Assert.AreEqual("Dora Iolanda Popescu", db.Read<string>(guid2, "Name"));
       Assert.AreEqual(new DateTime(1974, 8, 31), db.Read(guid2, "DOB"));
     }
   }

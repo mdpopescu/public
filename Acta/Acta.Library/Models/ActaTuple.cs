@@ -23,6 +23,11 @@ namespace Acta.Library.Models
       return NamesMatch(name) && ValuesMatch(value);
     }
 
+    public bool Matches(Guid guid, string name)
+    {
+      return GuidsMatch(guid) && NamesMatch(name);
+    }
+
     //
 
     private bool NamesMatch(string name)
@@ -33,6 +38,11 @@ namespace Acta.Library.Models
     private bool ValuesMatch(object value)
     {
       return Value == value || (Value != null && value != null && Value.Equals(value));
+    }
+
+    private bool GuidsMatch(Guid guid)
+    {
+      return Id == guid;
     }
   }
 }

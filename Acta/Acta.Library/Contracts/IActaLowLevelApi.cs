@@ -40,9 +40,17 @@ namespace Acta.Library.Contracts
     /// <summary>
     ///   Returns a property value from a (guid, name, value) tuple, if one exists.
     /// </summary>
-    /// <param name="guid">The GUID.</param>
+    /// <param name="id">The tuple id.</param>
     /// <param name="name">The property name.</param>
     /// <returns>The property value or <c>null</c> if one cannot be found.</returns>
-    object Read(Guid guid, string name);
+    object Read(Guid id, string name);
+
+    /// <summary>
+    ///   Returns a property value from a (guid, name, value) tuple, if one exists.
+    /// </summary>
+    /// <param name="id">The tuple id.</param>
+    /// <param name="name">The property name.</param>
+    /// <returns>The property value or <c>default(T)</c> if one cannot be found.</returns>
+    T Read<T>(Guid id, string name);
   }
 }
