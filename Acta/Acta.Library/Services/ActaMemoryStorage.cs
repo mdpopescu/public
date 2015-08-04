@@ -7,14 +7,23 @@ namespace Acta.Library.Services
 {
   public class ActaMemoryStorage : IActaStorage
   {
+    public ActaMemoryStorage()
+    {
+      list = new List<ActaTuple>();
+    }
+
     public void Append(ActaTuple tuple)
     {
-      //
+      list.Add(tuple);
     }
 
     public IEnumerable<ActaTuple> Get()
     {
-      return Enumerable.Empty<ActaTuple>();
+      return list.AsEnumerable();
     }
+
+    //
+
+    private readonly List<ActaTuple> list;
   }
 }
