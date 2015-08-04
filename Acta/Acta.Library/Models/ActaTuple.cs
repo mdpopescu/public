@@ -7,8 +7,9 @@ namespace Acta.Library.Models
     public Guid Id { get; private set; }
     public string Name { get; private set; }
     public object Value { get; private set; }
+    public long Timestamp { get; private set; }
 
-    public ActaTuple(Guid id, string name, object value)
+    public ActaTuple(Guid id, string name, object value, long timestamp)
     {
       if (string.IsNullOrWhiteSpace(name))
         throw new ArgumentException("The name cannot be null or whitespace.");
@@ -16,6 +17,7 @@ namespace Acta.Library.Models
       Id = id;
       Name = name;
       Value = value;
+      Timestamp = timestamp;
     }
 
     public bool Matches(Guid guid, string name)

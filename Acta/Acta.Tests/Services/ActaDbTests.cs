@@ -63,7 +63,7 @@ namespace Acta.Tests.Services
           .Setup(it => it.Get())
           .Returns(new[]
           {
-            new ActaTuple(guid, "test", "value"),
+            new ActaTuple(guid, "test", "value", 0),
           });
 
         var result = sut.GetIds("test", "value").ToList();
@@ -81,8 +81,8 @@ namespace Acta.Tests.Services
           .Setup(it => it.Get())
           .Returns(new[]
           {
-            new ActaTuple(guid1, "test", "value"),
-            new ActaTuple(guid2, "test", "value"),
+            new ActaTuple(guid1, "test", "value", 0),
+            new ActaTuple(guid2, "test", "value", 0),
           });
 
         var result = sut.GetIds("test", "value").ToArray();
@@ -100,9 +100,9 @@ namespace Acta.Tests.Services
           .Setup(it => it.Get())
           .Returns(new[]
           {
-            new ActaTuple(guid1, "test", "value"),
-            new ActaTuple(guid2, "test", "wrong value"),
-            new ActaTuple(guid3, "test", "value"),
+            new ActaTuple(guid1, "test", "value", 0),
+            new ActaTuple(guid2, "test", "wrong value", 0),
+            new ActaTuple(guid3, "test", "value", 0),
           });
 
         var result = sut.GetIds("test", "value").ToArray();
@@ -122,7 +122,7 @@ namespace Acta.Tests.Services
           .Setup(it => it.Get())
           .Returns(new[]
           {
-            new ActaTuple(guid, "test", "value"),
+            new ActaTuple(guid, "test", "value", 0),
           });
 
         var result = sut.Read(guid, "test") as string;

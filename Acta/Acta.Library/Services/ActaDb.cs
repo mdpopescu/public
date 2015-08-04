@@ -15,7 +15,7 @@ namespace Acta.Library.Services
 
     public void Write(Guid guid, string name, object value)
     {
-      storage.Append(new ActaTuple(guid, name, value));
+      storage.Append(new ActaTuple(guid, name, value, Global.Time()));
     }
 
     public void Write(Guid guid, params ActaKeyValuePair[] pairs)

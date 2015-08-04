@@ -11,14 +11,14 @@ namespace Acta.Tests.Models
     [ExpectedException(typeof (ArgumentException))]
     public void ConstructorRejectsInvalidPropertyName()
     {
-      var temp = new ActaTuple(Guid.NewGuid(), "  ", "value");
+      var temp = new ActaTuple(Guid.NewGuid(), "  ", "value", 0);
     }
 
     [TestMethod]
     public void MatchesSucceedsOnGuidAndName()
     {
       var guid = Guid.NewGuid();
-      var sut = new ActaTuple(guid, "test", "value");
+      var sut = new ActaTuple(guid, "test", "value", 0);
 
       var result = sut.Matches(guid, "test");
 
@@ -29,7 +29,7 @@ namespace Acta.Tests.Models
     public void MatchesFailsOnGuidAndName()
     {
       var guid = Guid.NewGuid();
-      var sut = new ActaTuple(guid, "test1", "value");
+      var sut = new ActaTuple(guid, "test1", "value", 0);
 
       var result = sut.Matches(guid, "test2");
 
@@ -40,7 +40,7 @@ namespace Acta.Tests.Models
     public void Matches_NameIsCaseInsensitive()
     {
       var guid = Guid.NewGuid();
-      var sut = new ActaTuple(guid, "test", "value");
+      var sut = new ActaTuple(guid, "test", "value", 0);
 
       var result = sut.Matches(guid, "TEST");
 
@@ -50,7 +50,7 @@ namespace Acta.Tests.Models
     [TestMethod]
     public void MatchesSucceedsOnNameAndValue()
     {
-      var sut = new ActaTuple(Guid.NewGuid(), "test", "value");
+      var sut = new ActaTuple(Guid.NewGuid(), "test", "value", 0);
 
       var result = sut.Matches("test", "value");
 
@@ -60,7 +60,7 @@ namespace Acta.Tests.Models
     [TestMethod]
     public void MatchesFailsOnNameAndValue()
     {
-      var sut = new ActaTuple(Guid.NewGuid(), "test", "value1");
+      var sut = new ActaTuple(Guid.NewGuid(), "test", "value1", 0);
 
       var result = sut.Matches("test", "value2");
 
