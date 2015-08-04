@@ -10,6 +10,9 @@ namespace Acta.Library.Models
 
     public ActaTuple(Guid id, string name, object value)
     {
+      if (string.IsNullOrWhiteSpace(name))
+        throw new ArgumentException("The name cannot be null or whitespace.");
+
       Id = id;
       Name = name;
       Value = value;
