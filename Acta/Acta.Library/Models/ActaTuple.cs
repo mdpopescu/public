@@ -18,17 +18,22 @@ namespace Acta.Library.Models
       Value = value;
     }
 
-    public bool Matches(string name, object value)
-    {
-      return NamesMatch(name) && ValuesMatch(value);
-    }
-
     public bool Matches(Guid guid, string name)
     {
       return GuidsMatch(guid) && NamesMatch(name);
     }
 
+    public bool Matches(string name, object value)
+    {
+      return NamesMatch(name) && ValuesMatch(value);
+    }
+
     //
+
+    private bool GuidsMatch(Guid guid)
+    {
+      return Id == guid;
+    }
 
     private bool NamesMatch(string name)
     {
@@ -38,11 +43,6 @@ namespace Acta.Library.Models
     private bool ValuesMatch(object value)
     {
       return Value == value || (Value != null && value != null && Value.Equals(value));
-    }
-
-    private bool GuidsMatch(Guid guid)
-    {
-      return Id == guid;
     }
   }
 }
