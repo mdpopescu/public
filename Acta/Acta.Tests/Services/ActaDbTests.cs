@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Acta.Library.Contracts;
 using Acta.Library.Models;
 using Acta.Library.Services;
@@ -48,6 +49,65 @@ namespace Acta.Tests.Services
 
         storage.Verify(it => it.Append(It.Is<ActaTuple>(t => t.Id == guid && t.Name == "k1" && (string) t.Value == "v1")));
         storage.Verify(it => it.Append(It.Is<ActaTuple>(t => t.Id == guid && t.Name == "k2" && (string) t.Value == "v2")));
+      }
+    }
+
+    [TestClass]
+    public class GetIds : ActaDbTests
+    {
+      [TestMethod]
+      public void ReturnsTheGuidForTheMatchingEntity()
+      {
+        var guid = Guid.NewGuid();
+        storage
+          .Setup(it => it.Get())
+          .Returns(new[]
+          {
+            new ActaTuple(guid, "test", "value"),
+          });
+
+        var result = sut.GetIds("test", "value").ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual(guid, result[0]);
+      }
+
+      [TestMethod]
+      public void ReturnsGuidsForAllMatchingEntities()
+      {
+        var guid1 = Guid.NewGuid();
+        var guid2 = Guid.NewGuid();
+        storage
+          .Setup(it => it.Get())
+          .Returns(new[]
+          {
+            new ActaTuple(guid1, "test", "value"),
+            new ActaTuple(guid2, "test", "value"),
+          });
+
+        var result = sut.GetIds("test", "value").ToArray();
+
+        CollectionAssert.AreEquivalent(new[] {guid1, guid2}, result);
+      }
+
+      [TestMethod]
+      public void DoesNotReturnTheGuidsOfNonMatchingEntities()
+      {
+        var guid1 = Guid.NewGuid();
+        var guid2 = Guid.NewGuid();
+        var guid3 = Guid.NewGuid();
+        storage
+          .Setup(it => it.Get())
+          .Returns(new[]
+          {
+            new ActaTuple(guid1, "test", "value"),
+            new ActaTuple(guid2, "test", "wrong value"),
+            new ActaTuple(guid3, "test", "value"),
+          });
+
+        var result = sut.GetIds("test", "value").ToArray();
+
+        CollectionAssert.AreEquivalent(new[] {guid1, guid3}, result);
       }
     }
   }
