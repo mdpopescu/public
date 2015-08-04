@@ -45,7 +45,8 @@ namespace Acta.Library.Services
 
     public T Read<T>(Guid id, string name)
     {
-      return default(T);
+      var result = Read(id, name);
+      return result == null ? default(T) : (T) result;
     }
 
     //

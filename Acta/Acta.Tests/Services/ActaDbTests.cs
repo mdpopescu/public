@@ -129,7 +129,7 @@ namespace Acta.Tests.Services
     }
 
     [TestClass]
-    public class ReadObject : ActaDbTests
+    public class Read : ActaDbTests
     {
       [TestMethod]
       public void ReturnsMatchingValue()
@@ -170,6 +170,30 @@ namespace Acta.Tests.Services
         var result = sut.Read(guid, "test") as string;
 
         Assert.AreEqual("value2", result);
+      }
+
+      [TestMethod]
+      public void TheGenericVersionConvertsTheResult()
+      {
+        var guid = Guid.NewGuid();
+        storage
+          .Setup(it => it.Get())
+          .Returns(new[]
+          {
+            new ActaTuple(guid, "test", "value", 0),
+          });
+
+        var result = sut.Read<string>(guid, "test");
+
+        Assert.AreEqual("value", result);
+      }
+
+      [TestMethod]
+      public void TheGenericVersionReturnsTheDefaultValueIfTheResultDoesntExist()
+      {
+        var result = sut.Read<int>(Guid.NewGuid(), "test");
+
+        Assert.AreEqual(0, result);
       }
     }
   }
