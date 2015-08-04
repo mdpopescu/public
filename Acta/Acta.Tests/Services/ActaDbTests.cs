@@ -154,6 +154,23 @@ namespace Acta.Tests.Services
 
         Assert.IsNull(result);
       }
+
+      [TestMethod]
+      public void ReturnsTheMostRecentValue()
+      {
+        var guid = Guid.NewGuid();
+        storage
+          .Setup(it => it.Get())
+          .Returns(new[]
+          {
+            new ActaTuple(guid, "test", "value1", 0),
+            new ActaTuple(guid, "test", "value2", 1),
+          });
+
+        var result = sut.Read(guid, "test") as string;
+
+        Assert.AreEqual("value2", result);
+      }
     }
   }
 }

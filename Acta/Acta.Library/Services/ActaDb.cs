@@ -38,6 +38,7 @@ namespace Acta.Library.Services
       return storage
         .Get()
         .Where(it => it.Matches(id, name))
+        .OrderByDescending(it => it.Timestamp)
         .Select(it => it.Value)
         .FirstOrDefault();
     }
