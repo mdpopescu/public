@@ -53,6 +53,12 @@
     <Compile Include="AcceptanceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Acta.Library\Acta.Library.csproj">
+      <Project>{76e72a70-fda2-46e3-bb14-a467c57c0d63}</Project>
+      <Name>Acta.Library</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
