@@ -40,10 +40,10 @@ connectionStrings*.config
 csx/
 rcf/
 
-# These should be included #
-!NuGet.exe
-!packages/**/*.targets
-
 # Python
 .idea
 *.pyc
+
+# These should be included #
+!NuGet.exe
+!packages/**/*.targets
