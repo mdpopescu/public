@@ -30,16 +30,16 @@ namespace Acta.Library.Models
       return NamesMatch(name) && ValuesMatch(value);
     }
 
+    public bool NamesMatch(string name)
+    {
+      return string.Compare(Name, name, StringComparison.InvariantCultureIgnoreCase) == 0;
+    }
+
     //
 
     private bool GuidsMatch(Guid guid)
     {
       return Id == guid;
-    }
-
-    private bool NamesMatch(string name)
-    {
-      return string.Compare(Name, name, StringComparison.InvariantCultureIgnoreCase) == 0;
     }
 
     private bool ValuesMatch(object value)

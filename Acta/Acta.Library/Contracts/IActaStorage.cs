@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Acta.Library.Models;
 
 namespace Acta.Library.Contracts
@@ -7,5 +8,6 @@ namespace Acta.Library.Contracts
   {
     void Append(ActaTuple tuple);
     IEnumerable<ActaTuple> Get();
+    IEnumerable<ActaTuple> GetById(Guid id);
   }
 }

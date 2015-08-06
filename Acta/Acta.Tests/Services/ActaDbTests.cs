@@ -132,11 +132,21 @@ namespace Acta.Tests.Services
     public class Read : ActaDbTests
     {
       [TestMethod]
+      public void CallsStorageGetById()
+      {
+        var guid = Guid.NewGuid();
+
+        sut.Read(guid, "test");
+
+        storage.Verify(it => it.GetById(guid));
+      }
+
+      [TestMethod]
       public void ReturnsMatchingValue()
       {
         var guid = Guid.NewGuid();
         storage
-          .Setup(it => it.Get())
+          .Setup(it => it.GetById(guid))
           .Returns(new[]
           {
             new ActaTuple(guid, "test", "value", 0),
@@ -160,7 +170,7 @@ namespace Acta.Tests.Services
       {
         var guid = Guid.NewGuid();
         storage
-          .Setup(it => it.Get())
+          .Setup(it => it.GetById(guid))
           .Returns(new[]
           {
             new ActaTuple(guid, "test", "value1", 0),
@@ -177,7 +187,7 @@ namespace Acta.Tests.Services
       {
         var guid = Guid.NewGuid();
         storage
-          .Setup(it => it.Get())
+          .Setup(it => it.GetById(guid))
           .Returns(new[]
           {
             new ActaTuple(guid, "test", "value", 0),

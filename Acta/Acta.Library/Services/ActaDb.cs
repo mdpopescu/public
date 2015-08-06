@@ -36,8 +36,8 @@ namespace Acta.Library.Services
     public object Read(Guid id, string name)
     {
       return storage
-        .Get()
-        .Where(it => it.Matches(id, name))
+        .GetById(id)
+        .Where(it => it.NamesMatch(name))
         .OrderByDescending(it => it.Timestamp)
         .Select(it => it.Value)
         .FirstOrDefault();
