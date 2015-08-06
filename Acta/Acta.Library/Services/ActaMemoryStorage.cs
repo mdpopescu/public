@@ -6,7 +6,7 @@ using Acta.Library.Models;
 
 namespace Acta.Library.Services
 {
-  public class ActaMemoryStorage : IActaStorage
+  public class ActaMemoryStorage : ActaStorage
   {
     public ActaMemoryStorage()
     {

@@ -4,7 +4,7 @@ using Acta.Library.Models;
 
 namespace Acta.Library.Contracts
 {
-  public interface IActaLowLevelApi
+  public interface ActaLowLevelApi
   {
     /// <summary>
     ///   Appends a (guid, name, value) tuple to the log.

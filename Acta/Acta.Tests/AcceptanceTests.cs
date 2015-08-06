@@ -13,8 +13,8 @@ namespace Acta.Tests
     [TestMethod]
     public void UsingTheLowLevelInterface()
     {
-      IActaStorage storage = new ActaMemoryStorage();
-      IActaLowLevelApi db = new ActaDb(storage);
+      ActaStorage storage = new ActaMemoryStorage();
+      ActaLowLevelApi db = new ActaDb(storage);
 
       // create a new entity, writing each property separately
       var guid1 = Guid.NewGuid();

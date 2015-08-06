@@ -11,13 +11,13 @@ namespace Acta.Tests.Services
   [TestClass]
   public class ActaDbTests
   {
-    private Mock<IActaStorage> storage;
+    private Mock<ActaStorage> storage;
     private ActaDb sut;
 
     [TestInitialize]
     public void SetUp()
     {
-      storage = new Mock<IActaStorage>();
+      storage = new Mock<ActaStorage>();
       sut = new ActaDb(storage.Object);
     }
 

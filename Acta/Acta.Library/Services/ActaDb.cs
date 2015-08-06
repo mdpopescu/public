@@ -6,9 +6,9 @@ using Acta.Library.Models;
 
 namespace Acta.Library.Services
 {
-  public class ActaDb : IActaLowLevelApi
+  public class ActaDb : ActaLowLevelApi
   {
-    public ActaDb(IActaStorage storage)
+    public ActaDb(ActaStorage storage)
     {
       this.storage = storage;
     }
@@ -51,6 +51,6 @@ namespace Acta.Library.Services
 
     //
 
-    private readonly IActaStorage storage;
+    private readonly ActaStorage storage;
   }
 }

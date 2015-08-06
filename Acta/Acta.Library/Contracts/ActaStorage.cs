@@ -4,7 +4,7 @@ using Acta.Library.Models;
 
 namespace Acta.Library.Contracts
 {
-  public interface IActaStorage
+  public interface ActaStorage
   {
     void Append(ActaTuple tuple);
     IEnumerable<ActaTuple> Get();
