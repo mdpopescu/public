@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\KeyAttribute.cs" />
     <Compile Include="Contracts\ActaLowLevelApi.cs" />
+    <Compile Include="Contracts\ActaEntityApi.cs" />
     <Compile Include="Contracts\ActaStorage.cs" />
     <Compile Include="Models\ActaKeyValuePair.cs" />
     <Compile Include="Models\ActaTuple.cs" />

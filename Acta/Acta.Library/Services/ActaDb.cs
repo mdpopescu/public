@@ -6,7 +6,7 @@ using Acta.Library.Models;
 
 namespace Acta.Library.Services
 {
-  public class ActaDb : ActaLowLevelApi
+  public class ActaDb : ActaLowLevelApi, ActaEntityApi
   {
     public ActaDb(ActaStorage storage)
     {
@@ -47,6 +47,16 @@ namespace Acta.Library.Services
     {
       var result = Read(id, name);
       return result == null ? default(T) : (T) result;
+    }
+
+    public void AddOrUpdate(object entity)
+    {
+      //
+    }
+
+    public T Retrieve<T>(Guid id) where T : class, new()
+    {
+      return default(T);
     }
 
     //
