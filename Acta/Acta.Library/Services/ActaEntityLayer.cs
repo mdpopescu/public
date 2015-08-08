@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Acta.Library.Contracts;
+using Acta.Library.Models;
 
 namespace Acta.Library.Services
 {
@@ -13,7 +16,12 @@ namespace Acta.Library.Services
 
     public void AddOrUpdate(object entity)
     {
-      db.Write(Guid.NewGuid(), Global.TYPE_KEY, entity.GetType().FullName);
+      var list = new List<ActaKeyValuePair> {new ActaKeyValuePair(Global.TYPE_KEY, entity.GetType().FullName)};
+
+      var properties = entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+      list.AddRange(properties.Select(prop => Convert(prop, entity)));
+
+      db.Write(Guid.NewGuid(), list.ToArray());
     }
 
     public Dictionary<string, object> Retrieve(Guid id)
@@ -29,5 +37,10 @@ namespace Acta.Library.Services
     //
 
     private readonly ActaLowLevelApi db;
+
+    private static ActaKeyValuePair Convert(PropertyInfo prop, object entity)
+    {
+      return new ActaKeyValuePair(prop.Name, prop.GetValue(entity));
+    }
   }
 }

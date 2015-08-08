@@ -1,6 +1,7 @@
 ﻿using System;
 using Acta.Library;
 using Acta.Library.Contracts;
+using Acta.Library.Models;
 using Acta.Library.Services;
 using Acta.Tests.Helper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -25,11 +26,23 @@ namespace Acta.Tests.Services
     public class AddOrUpdate : ActaEntityLayerTests
     {
       [TestMethod]
-      public void AddsTheTypeTuple()
+      public void WritesTheTypeAndPublicProperties()
       {
-        sut.AddOrUpdate(new Person());
+        ActaKeyValuePair[] result = null;
+        db
+          .Setup(it => it.Write(It.IsAny<Guid>(), It.IsAny<ActaKeyValuePair[]>()))
+          .Callback<Guid, ActaKeyValuePair[]>((g, a) => result = a);
 
-        db.Verify(it => it.Write(It.IsAny<Guid>(), Global.TYPE_KEY, "Acta.Tests.Helper.Person"));
+        sut.AddOrUpdate(new Person {Name = "Marcel", DOB = new DateTime(1972, 4, 30)});
+
+        Assert.AreEqual(4, result.Length);
+        Assert.AreEqual(Global.TYPE_KEY, result[0].Name);
+        Assert.AreEqual("Acta.Tests.Helper.Person", result[0].Value);
+        Assert.AreEqual("Id", result[1].Name); // don't care about the value
+        Assert.AreEqual("Name", result[2].Name);
+        Assert.AreEqual("Marcel", result[2].Value);
+        Assert.AreEqual("DOB", result[3].Name);
+        Assert.AreEqual(new DateTime(1972, 4, 30), result[3].Value);
       }
     }
   }
