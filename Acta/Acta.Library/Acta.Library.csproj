@@ -49,7 +49,7 @@
     <Compile Include="Services\ActaDb.cs" />
     <Compile Include="Services\ActaEntityLayer.cs" />
     <Compile Include="Services\ActaMemoryStorage.cs" />
-    <Compile Include="Services\Global.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="Services\HighResolutionDateTime.cs" />
   </ItemGroup>
   <ItemGroup />

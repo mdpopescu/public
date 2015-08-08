@@ -13,7 +13,7 @@ namespace Acta.Library.Services
 
     public void AddOrUpdate(object entity)
     {
-      //
+      db.Write(Guid.NewGuid(), Global.TYPE_KEY, entity.GetType().FullName);
     }
 
     public Dictionary<string, object> Retrieve(Guid id)
@@ -28,6 +28,6 @@ namespace Acta.Library.Services
 
     //
 
-    private ActaLowLevelApi db;
+    private readonly ActaLowLevelApi db;
   }
 }
