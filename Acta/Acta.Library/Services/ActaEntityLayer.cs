@@ -21,7 +21,11 @@ namespace Acta.Library.Services
       var properties = entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
       list.AddRange(properties.Select(prop => Convert(prop, entity)));
 
-      db.Write(Guid.NewGuid(), list.ToArray());
+      var guid = Guid.NewGuid();
+      db.Write(guid, list.ToArray());
+
+      var id = properties.Where(it => it.Name == "Id").First();
+      id.SetValue(entity, guid);
     }
 
     public Dictionary<string, object> Retrieve(Guid id)

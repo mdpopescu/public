@@ -44,6 +44,16 @@ namespace Acta.Tests.Services
         Assert.AreEqual("DOB", result[3].Name);
         Assert.AreEqual(new DateTime(1972, 4, 30), result[3].Value);
       }
+
+      [TestMethod]
+      public void AssignsAGuidToTheIdProperty()
+      {
+        var person = new Person();
+
+        sut.AddOrUpdate(person);
+
+        Assert.AreNotEqual(Guid.Empty, person.Id);
+      }
     }
   }
 }
