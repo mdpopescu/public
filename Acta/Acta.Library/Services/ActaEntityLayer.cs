@@ -14,8 +14,11 @@ namespace Acta.Library.Services
       this.db = db;
     }
 
-    public void AddOrUpdate(object entity)
+    public Guid AddOrUpdate(object entity)
     {
+      if (entity == null)
+        return Guid.Empty;
+
       var list = new List<ActaKeyValuePair> {new ActaKeyValuePair(Global.TYPE_KEY, entity.GetType().FullName)};
 
       var properties = entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -24,8 +27,7 @@ namespace Acta.Library.Services
       var guid = Guid.NewGuid();
       db.Write(guid, list.ToArray());
 
-      var id = properties.Where(it => it.Name == "Id").First();
-      id.SetValue(entity, guid);
+      return guid;
     }
 
     public Dictionary<string, object> Retrieve(Guid id)

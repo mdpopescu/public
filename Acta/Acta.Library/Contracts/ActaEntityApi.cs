@@ -5,7 +5,7 @@ namespace Acta.Library.Contracts
 {
   public interface ActaEntityApi
   {
-    void AddOrUpdate(object entity);
+    Guid AddOrUpdate(object entity);
     Dictionary<string, object> Retrieve(Guid id);
     T Retrieve<T>(Guid id) where T : class, new();
   }

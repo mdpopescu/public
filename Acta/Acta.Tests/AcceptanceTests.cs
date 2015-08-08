@@ -57,22 +57,22 @@ namespace Acta.Tests
 
       // create a new entity
       var person = new Person {Name = "Marcel", DOB = new DateTime(1972, 4, 30)};
-      db.AddOrUpdate(person);
+      var guid = db.AddOrUpdate(person);
 
-      // verify that the Id has been set
-      Assert.AreNotEqual(Guid.Empty, person.Id);
+      // verify that the GUID is valid
+      Assert.AreNotEqual(Guid.Empty, guid);
 
       // update an entity
       person.Name = "Marcel Popescu";
       db.AddOrUpdate(person);
 
       // retrieve the entity
-      var person2 = db.Retrieve<Person>(person.Id);
+      var person2 = db.Retrieve<Person>(guid);
       Assert.AreEqual(person.Name, person2.Name);
       Assert.AreEqual(person.DOB, person2.DOB);
 
       // retrieve the entity as a dictionary
-      var dict = db.Retrieve(person.Id);
+      var dict = db.Retrieve(guid);
       Assert.AreEqual("Acta.Tests.Helper.Person", dict[Global.TYPE_KEY]);
       Assert.AreEqual("Marcel Popescu", dict["Name"]);
       Assert.AreEqual(new DateTime(1972, 4, 30), dict["DOB"]);
