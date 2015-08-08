@@ -54,6 +54,11 @@ namespace Acta.Library.Services
       //
     }
 
+    public Dictionary<string, object> Retrieve(Guid id)
+    {
+      return new Dictionary<string, object>();
+    }
+
     public T Retrieve<T>(Guid id) where T : class, new()
     {
       return default(T);

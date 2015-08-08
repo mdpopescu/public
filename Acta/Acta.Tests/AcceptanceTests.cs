@@ -54,20 +54,26 @@ namespace Acta.Tests
       ActaEntityApi db = new ActaDb(storage);
 
       // create a new entity
-      var person1 = new Person {Name = "Marcel", DOB = new DateTime(1972, 4, 30)};
-      db.AddOrUpdate(person1);
+      var person = new Person {Name = "Marcel", DOB = new DateTime(1972, 4, 30)};
+      db.AddOrUpdate(person);
 
       // verify that the Id has been set
-      Assert.AreNotEqual(Guid.Empty, person1.Id);
+      Assert.AreNotEqual(Guid.Empty, person.Id);
 
       // update an entity
-      person1.Name = "Marcel Popescu";
-      db.AddOrUpdate(person1);
+      person.Name = "Marcel Popescu";
+      db.AddOrUpdate(person);
 
       // retrieve the entity
-      var person2 = db.Retrieve<Person>(person1.Id);
-      Assert.AreEqual(person1.Name, person2.Name);
-      Assert.AreEqual(person1.DOB, person2.DOB);
+      var person2 = db.Retrieve<Person>(person.Id);
+      Assert.AreEqual(person.Name, person2.Name);
+      Assert.AreEqual(person.DOB, person2.DOB);
+
+      // retrieve the entity as a dictionary
+      var dict = db.Retrieve(person.Id);
+      Assert.AreEqual("Acta.Tests.Person", dict["@type"]);
+      Assert.AreEqual("Marcel Popescu", dict["Name"]);
+      Assert.AreEqual(new DateTime(1972, 4, 30), dict["DOB"]);
     }
 
     //
