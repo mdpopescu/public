@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using Acta.Library.Attributes;
 using Acta.Library.Contracts;
 using Acta.Library.Models;
 using Acta.Library.Services;
+using Acta.Tests.Helper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Acta.Tests
@@ -51,7 +51,8 @@ namespace Acta.Tests
     public void UsingTheEntityApi()
     {
       ActaStorage storage = new ActaMemoryStorage();
-      ActaEntityApi db = new ActaDb(storage);
+      ActaLowLevelApi lowLevel = new ActaDb(storage);
+      ActaEntityApi db = new ActaEntityLayer(lowLevel);
 
       // create a new entity
       var person = new Person {Name = "Marcel", DOB = new DateTime(1972, 4, 30)};
@@ -74,22 +75,6 @@ namespace Acta.Tests
       Assert.AreEqual("Acta.Tests.Person", dict["@type"]);
       Assert.AreEqual("Marcel Popescu", dict["Name"]);
       Assert.AreEqual(new DateTime(1972, 4, 30), dict["DOB"]);
-    }
-
-    //
-
-    private class Person
-    {
-      // convention: the key is
-      // - the first property marked with the [Key] attribute
-      // - the Id property
-      // - the {type}Id property
-
-      [Key]
-      public Guid Id { get; set; }
-
-      public string Name { get; set; }
-      public DateTime DOB { get; set; }
     }
   }
 }
