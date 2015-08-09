@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Acta.Library;
 using Acta.Library.Contracts;
 using Acta.Library.Models;
@@ -76,11 +77,28 @@ namespace Acta.Tests.Services
     public class Retrieve : ActaEntityLayerTests
     {
       [TestMethod]
-      public void ReturnsNullIfGuidNotFound()
+      public void ReturnsEmptyListIfGuidNotFound()
       {
-        var result = sut.Retrieve(Guid.NewGuid());
+        var result = sut.Retrieve(Guid.NewGuid()).ToList();
 
-        Assert.IsNull(result);
+        Assert.AreEqual(0, result.Count);
+      }
+
+      [TestMethod]
+      public void ReturnsAllPropertiesForTheGivenGuid()
+      {
+        var guid = Guid.NewGuid();
+        db
+          .Setup(it => it.Read(guid))
+          .Returns(new[] {new ActaKeyValuePair("a", 1), new ActaKeyValuePair("b", "2"),});
+
+        var result = sut.Retrieve(guid).ToList();
+
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual("a", result[0].Name);
+        Assert.AreEqual(1, result[0].Value);
+        Assert.AreEqual("b", result[1].Name);
+        Assert.AreEqual("2", result[1].Value);
       }
     }
   }

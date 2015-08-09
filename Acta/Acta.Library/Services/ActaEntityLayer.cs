@@ -32,7 +32,7 @@ namespace Acta.Library.Services
 
     public IEnumerable<ActaKeyValuePair> Retrieve(Guid id)
     {
-      return null;
+      return db.Read(id);
     }
 
     public T Retrieve<T>(Guid id) where T : class, new()
