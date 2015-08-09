@@ -52,5 +52,12 @@ namespace Acta.Library.Contracts
     /// <param name="name">The property name.</param>
     /// <returns>The property value or <c>default(T)</c> if one cannot be found.</returns>
     T Read<T>(Guid id, string name);
+
+    /// <summary>
+    ///   Returns all key/value pairs for the given id.
+    /// </summary>
+    /// <param name="id">The GUID.</param>
+    /// <returns>The list of all key/value pairs associated with that GUID.</returns>
+    IEnumerable<ActaKeyValuePair> Read(Guid id);
   }
 }

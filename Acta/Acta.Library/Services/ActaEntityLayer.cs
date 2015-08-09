@@ -30,9 +30,9 @@ namespace Acta.Library.Services
       return guid;
     }
 
-    public Dictionary<string, object> Retrieve(Guid id)
+    public IEnumerable<ActaKeyValuePair> Retrieve(Guid id)
     {
-      return new Dictionary<string, object>();
+      return null;
     }
 
     public T Retrieve<T>(Guid id) where T : class, new()

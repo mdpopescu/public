@@ -66,5 +66,13 @@ namespace Acta.Tests.Models
 
       Assert.IsFalse(result);
     }
+
+    [TestMethod]
+    public void TheConstructorSetsTheNameToUppercase()
+    {
+      var sut = new ActaTuple(Guid.NewGuid(), "test", "value1", 0);
+
+      Assert.AreEqual("TEST", sut.Name);
+    }
   }
 }

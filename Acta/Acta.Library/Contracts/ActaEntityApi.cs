@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Acta.Library.Models;
 
 namespace Acta.Library.Contracts
 {
   public interface ActaEntityApi
   {
     Guid AddOrUpdate(object entity);
-    Dictionary<string, object> Retrieve(Guid id);
+    IEnumerable<ActaKeyValuePair> Retrieve(Guid id);
     T Retrieve<T>(Guid id) where T : class, new();
   }
 }

@@ -15,7 +15,7 @@ namespace Acta.Library.Models
         throw new ArgumentException("The name cannot be null or whitespace.");
 
       Id = id;
-      Name = name;
+      Name = name.ToUpperInvariant();
       Value = value;
       Timestamp = timestamp;
     }

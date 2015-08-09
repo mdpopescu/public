@@ -31,7 +31,7 @@ namespace Acta.Tests.Services
 
         sut.Write(guid, "test", "value");
 
-        storage.Verify(it => it.Append(It.Is<ActaTuple>(t => t.Id == guid && t.Name == "test" && (string) t.Value == "value")));
+        storage.Verify(it => it.Append(It.Is<ActaTuple>(t => t.Id == guid && t.Name == "TEST" && (string) t.Value == "value")));
       }
     }
 
@@ -47,8 +47,8 @@ namespace Acta.Tests.Services
           new ActaKeyValuePair("k1", "v1"),
           new ActaKeyValuePair("k2", "v2"));
 
-        storage.Verify(it => it.Append(It.Is<ActaTuple>(t => t.Id == guid && t.Name == "k1" && (string) t.Value == "v1")));
-        storage.Verify(it => it.Append(It.Is<ActaTuple>(t => t.Id == guid && t.Name == "k2" && (string) t.Value == "v2")));
+        storage.Verify(it => it.Append(It.Is<ActaTuple>(t => t.Id == guid && t.Name == "K1" && (string) t.Value == "v1")));
+        storage.Verify(it => it.Append(It.Is<ActaTuple>(t => t.Id == guid && t.Name == "K2" && (string) t.Value == "v2")));
       }
     }
 
@@ -204,6 +204,71 @@ namespace Acta.Tests.Services
         var result = sut.Read<int>(Guid.NewGuid(), "test");
 
         Assert.AreEqual(0, result);
+      }
+
+      [TestMethod]
+      public void ReturnsAnEmptyListIfNoPropertyFoundForGivenId()
+      {
+        var result = sut.Read(Guid.NewGuid()).ToList();
+
+        Assert.AreEqual(0, result.Count);
+      }
+
+      [TestMethod]
+      public void ReturnsTheListOfKeyValuePairsForGivenId()
+      {
+        var guid = Guid.NewGuid();
+        storage
+          .Setup(it => it.GetById(guid))
+          .Returns(new[]
+          {
+            new ActaTuple(guid, "test1", "value1", 0),
+            new ActaTuple(guid, "test2", "value2", 0),
+          });
+
+        var result = sut.Read(guid).ToList();
+
+        Assert.AreEqual(2, result.Count);
+        Assert.AreEqual("TEST1", result[0].Name);
+        Assert.AreEqual("value1", result[0].Value);
+        Assert.AreEqual("TEST2", result[1].Name);
+        Assert.AreEqual("value2", result[1].Value);
+      }
+
+      [TestMethod]
+      public void ReturnsTheMostRecentValue_2()
+      {
+        var guid = Guid.NewGuid();
+        storage
+          .Setup(it => it.GetById(guid))
+          .Returns(new[]
+          {
+            new ActaTuple(guid, "test", "value1", 0),
+            new ActaTuple(guid, "test", "value2", 1),
+          });
+
+        var result = sut.Read(guid).ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("value2", result[0].Value);
+      }
+
+      [TestMethod]
+      public void TheNameCapitalizationIsIgnored()
+      {
+        var guid = Guid.NewGuid();
+        storage
+          .Setup(it => it.GetById(guid))
+          .Returns(new[]
+          {
+            new ActaTuple(guid, "test", "value1", 0),
+            new ActaTuple(guid, "TEST", "value2", 1),
+          });
+
+        var result = sut.Read(guid).ToList();
+
+        Assert.AreEqual(1, result.Count);
+        Assert.AreEqual("value2", result[0].Value);
       }
     }
   }

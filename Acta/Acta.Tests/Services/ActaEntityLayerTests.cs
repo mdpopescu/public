@@ -71,5 +71,17 @@ namespace Acta.Tests.Services
         Assert.AreEqual(Guid.Empty, result);
       }
     }
+
+    [TestClass]
+    public class Retrieve : ActaEntityLayerTests
+    {
+      [TestMethod]
+      public void ReturnsNullIfGuidNotFound()
+      {
+        var result = sut.Retrieve(Guid.NewGuid());
+
+        Assert.IsNull(result);
+      }
+    }
   }
 }

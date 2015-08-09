@@ -49,6 +49,15 @@ namespace Acta.Library.Services
       return result == null ? default(T) : (T) result;
     }
 
+    public IEnumerable<ActaKeyValuePair> Read(Guid id)
+    {
+      return storage
+        .GetById(id)
+        .GroupBy(tuple => tuple.Name)
+        .Select(g => g.OrderByDescending(it => it.Timestamp).First())
+        .Select(it => new ActaKeyValuePair(it.Name, it.Value));
+    }
+
     //
 
     private readonly ActaStorage storage;
