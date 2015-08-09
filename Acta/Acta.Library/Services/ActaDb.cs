@@ -51,11 +51,18 @@ namespace Acta.Library.Services
 
     public IEnumerable<ActaKeyValuePair> Read(Guid id)
     {
-      return storage
-        .GetById(id)
-        .GroupBy(tuple => tuple.Name)
-        .Select(g => g.OrderByDescending(it => it.Timestamp).First())
-        .Select(it => new ActaKeyValuePair(it.Name, it.Value));
+      var temp1 = storage.GetById(id).ToList();
+      var temp2 = temp1.GroupBy(it => it.Name).ToList();
+      var temp3 = temp2.Select(g => g.OrderByDescending(it => it.Timestamp).First()).ToList();
+      var temp4 = temp3.Select(it => new ActaKeyValuePair(it.Name, it.Value)).ToList();
+
+      return temp4;
+
+      //return storage
+      //  .GetById(id)
+      //  .GroupBy(tuple => tuple.Name)
+      //  .Select(g => g.OrderByDescending(it => it.Timestamp).First())
+      //  .Select(it => new ActaKeyValuePair(it.Name, it.Value));
     }
 
     //

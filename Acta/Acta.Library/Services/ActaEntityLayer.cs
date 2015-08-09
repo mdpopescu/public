@@ -24,7 +24,7 @@ namespace Acta.Library.Services
       var properties = entity.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
       list.AddRange(properties.Select(prop => Convert(prop, entity)));
 
-      var guid = Guid.NewGuid();
+      var guid = SetEntityId(entity, properties);
       db.Write(guid, list.ToArray());
 
       return guid;
@@ -47,6 +47,19 @@ namespace Acta.Library.Services
     private static ActaKeyValuePair Convert(PropertyInfo prop, object entity)
     {
       return new ActaKeyValuePair(prop.Name, prop.GetValue(entity));
+    }
+
+    private static Guid SetEntityId(object entity, IEnumerable<PropertyInfo> properties)
+    {
+      var id = properties.Where(it => it.Name == "Id").First();
+      var guid = (Guid) id.GetValue(entity);
+
+      if (guid == Guid.Empty)
+        guid = Guid.NewGuid();
+
+      id.SetValue(entity, guid);
+
+      return guid;
     }
   }
 }

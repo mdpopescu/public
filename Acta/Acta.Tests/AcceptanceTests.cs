@@ -70,10 +70,11 @@ namespace Acta.Tests
       var pairs = db.Retrieve(guid).ToList();
       Assert.AreEqual(Global.TYPE_KEY, pairs[0].Name);
       Assert.AreEqual("Acta.Tests.Helper.Person", pairs[0].Value);
-      Assert.AreEqual("NAME", pairs[1].Name);
-      Assert.AreEqual("Marcel Popescu", pairs[1].Value);
-      Assert.AreEqual("DOB", pairs[2].Name);
-      Assert.AreEqual(new DateTime(1972, 4, 30), pairs[2].Value);
+      Assert.AreEqual("ID", pairs[1].Name);
+      Assert.AreEqual("NAME", pairs[2].Name);
+      Assert.AreEqual("Marcel Popescu", pairs[2].Value);
+      Assert.AreEqual("DOB", pairs[3].Name);
+      Assert.AreEqual(new DateTime(1972, 4, 30), pairs[3].Value);
 
       // retrieve the entity as an object
       var person2 = db.Retrieve<Person>(guid);

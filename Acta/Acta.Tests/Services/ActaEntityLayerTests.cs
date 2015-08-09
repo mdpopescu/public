@@ -36,13 +36,14 @@ namespace Acta.Tests.Services
 
         sut.AddOrUpdate(new Person {Name = "Marcel", DOB = new DateTime(1972, 4, 30)});
 
-        Assert.AreEqual(3, result.Length);
+        Assert.AreEqual(4, result.Length);
         Assert.AreEqual(Global.TYPE_KEY, result[0].Name);
         Assert.AreEqual("Acta.Tests.Helper.Person", result[0].Value);
-        Assert.AreEqual("Name", result[1].Name);
-        Assert.AreEqual("Marcel", result[1].Value);
-        Assert.AreEqual("DOB", result[2].Name);
-        Assert.AreEqual(new DateTime(1972, 4, 30), result[2].Value);
+        Assert.AreEqual("Id", result[1].Name); // I don't care about the value
+        Assert.AreEqual("Name", result[2].Name);
+        Assert.AreEqual("Marcel", result[2].Value);
+        Assert.AreEqual("DOB", result[3].Name);
+        Assert.AreEqual(new DateTime(1972, 4, 30), result[3].Value);
       }
 
       [TestMethod]
@@ -70,6 +71,28 @@ namespace Acta.Tests.Services
         var result = sut.AddOrUpdate(null);
 
         Assert.AreEqual(Guid.Empty, result);
+      }
+
+      [TestMethod]
+      public void SetsTheEntityIdToTheGuid()
+      {
+        var person = new Person();
+
+        var result = sut.AddOrUpdate(person);
+
+        Assert.AreEqual(result, person.Id);
+      }
+
+      [TestMethod]
+      public void ReusesTheEntityIdIfSet()
+      {
+        var guid = Guid.NewGuid();
+        var person = new Person {Id = guid};
+
+        var result = sut.AddOrUpdate(person);
+
+        Assert.AreEqual(guid, result);
+        Assert.AreEqual(guid, person.Id);
       }
     }
 
