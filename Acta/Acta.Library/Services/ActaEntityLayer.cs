@@ -37,7 +37,18 @@ namespace Acta.Library.Services
 
     public T Retrieve<T>(Guid id) where T : class, new()
     {
-      return default(T);
+      var result = new T();
+      var properties = result.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+      var pairs = Retrieve(id).ToList();
+      foreach (var pair in pairs)
+      {
+        var prop = properties.Where(it => string.Compare(pair.Name, it.Name, StringComparison.InvariantCultureIgnoreCase) == 0).FirstOrDefault();
+        if (prop != null)
+          prop.SetValue(result, pair.Value);
+      }
+
+      return result;
     }
 
     //

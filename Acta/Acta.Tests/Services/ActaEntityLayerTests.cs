@@ -123,6 +123,20 @@ namespace Acta.Tests.Services
         Assert.AreEqual("b", result[1].Name);
         Assert.AreEqual("2", result[1].Value);
       }
+
+      [TestMethod]
+      public void PopulatesTheObjectProperties()
+      {
+        var guid = Guid.NewGuid();
+        db
+          .Setup(it => it.Read(guid))
+          .Returns(new[] {new ActaKeyValuePair("Name", "Marcel"), new ActaKeyValuePair("DOB", new DateTime(1972, 4, 30)),});
+
+        var result = sut.Retrieve<Person>(guid);
+
+        Assert.AreEqual("Marcel", result.Name);
+        Assert.AreEqual(new DateTime(1972, 4, 30), result.DOB);
+      }
     }
   }
 }
