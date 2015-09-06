@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncMaster.Tests", "SyncMas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncMaster", "SyncMaster\SyncMaster.csproj", "{389D2151-4D7E-40B6-9F1D-25DD756E5402}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncMaster.Server", "SyncMaster.Server\SyncMaster.Server.csproj", "{9C637698-A5AE-4D61-A361-A84524B47E8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{389D2151-4D7E-40B6-9F1D-25DD756E5402}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{389D2151-4D7E-40B6-9F1D-25DD756E5402}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{389D2151-4D7E-40B6-9F1D-25DD756E5402}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C637698-A5AE-4D61-A361-A84524B47E8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C637698-A5AE-4D61-A361-A84524B47E8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C637698-A5AE-4D61-A361-A84524B47E8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C637698-A5AE-4D61-A361-A84524B47E8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

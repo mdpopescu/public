@@ -21,10 +21,14 @@ namespace SyncMaster.Tests
       File.WriteAllText(Path.Combine(path1, "s1.txt"), "abc");
       File.WriteAllText(Path.Combine(path2, "d1.txt"), "abc");
 
+      // Launch the server
+      var serverPath = GetServerPath();
+      var server = Process.Start(serverPath, "--port=51000");
+
       // Launch the clients
-      var exePath = GetExePath();
-      var proc1 = Process.Start(exePath, "--port=51001 --peer=127.0.0.1:51002 --mode=sync --path=" + Quote(path1));
-      var proc2 = Process.Start(exePath, "--port=51002 --peer=127.0.0.1:51001 --mode=sync --path=" + Quote(path2));
+      var clientPath = GetClientPath();
+      var client1 = Process.Start(clientPath, "--id=C1 --port=51001 --server=\"http://localhost:51000/\" --mode=sync --path=" + Quote(path1));
+      var client2 = Process.Start(clientPath, "--id=C2 --port=51002 --server=\"http://localhost:51000/\" --mode=sync --path=" + Quote(path2));
 
       // Create a file in each folder *after* the application starts
       File.WriteAllText(Path.Combine(path1, "s2.txt"), "def");
@@ -41,8 +45,11 @@ namespace SyncMaster.Tests
       Assert.AreEqual("def", File.ReadAllText(Path.Combine(path2, "s2.txt")));
 
       // Terminate the clients
-      proc1.Kill();
-      proc2.Kill();
+      client1.Kill();
+      client2.Kill();
+
+      // Terminate the server
+      server.Kill();
     }
 
     //
@@ -55,7 +62,12 @@ namespace SyncMaster.Tests
       return folder;
     }
 
-    private string GetExePath()
+    private string GetServerPath()
+    {
+      return @"..\..\..\SyncMaster.Server\bin\Debug\SyncMaster.Server.exe";
+    }
+
+    private string GetClientPath()
     {
       return @"..\..\..\SyncMaster\bin\Debug\SyncMaster.exe";
     }
