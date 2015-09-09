@@ -22,8 +22,9 @@ namespace SyncMaster.Tests
       File.WriteAllText(Path.Combine(path2, "d1.txt"), "abc");
 
       // Launch the server
+      var iisPath = GetIISPath();
       var serverPath = GetServerPath();
-      var server = Process.Start(serverPath, "--port=51000");
+      var server = Process.Start(iisPath, string.Format("/path:{0} /port:51000", serverPath));
 
       // Launch the clients
       var clientPath = GetClientPath();
@@ -62,12 +63,18 @@ namespace SyncMaster.Tests
       return folder;
     }
 
-    private string GetServerPath()
+    private static string GetIISPath()
+    {
+      var programFolder = Environment.Is64BitOperatingSystem ? Environment.SpecialFolder.ProgramFilesX86 : Environment.SpecialFolder.ProgramFiles;
+      return Path.Combine(Environment.GetFolderPath(programFolder), "IIS Express", "iisexpress.exe");
+    }
+
+    private static string GetServerPath()
     {
       return @"..\..\..\SyncMaster.Server\bin\Debug\SyncMaster.Server.exe";
     }
 
-    private string GetClientPath()
+    private static string GetClientPath()
     {
       return @"..\..\..\SyncMaster\bin\Debug\SyncMaster.exe";
     }
