@@ -18,8 +18,10 @@ namespace Renfield.Licensing.Library.Services
       if (registration == null)
         return false;
 
-      var isGuid = IsValidGuid(registration);
-      return isGuid;
+      var isGuid = IsValidGuid(registration.Key);
+      var isName = !string.IsNullOrWhiteSpace(registration.Name);
+
+      return isGuid && isName;
     }
 
     //
@@ -27,10 +29,10 @@ namespace Renfield.Licensing.Library.Services
     private readonly LicenserOptions options;
     private readonly Storage storage;
 
-    private static bool IsValidGuid(LicenserRegistration registration)
+    private static bool IsValidGuid(string s)
     {
       Guid guid;
-      return Guid.TryParse(registration.LicenseKey + "", out guid);
+      return Guid.TryParse(s + "", out guid);
     }
   }
 }

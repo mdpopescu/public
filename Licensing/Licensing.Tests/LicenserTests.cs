@@ -43,9 +43,13 @@ namespace Renfield.Licensing.Tests
       {
         var options = new LicenserOptions();
         var storage = new Mock<Storage>();
+
+        var registration = ObjectMother.CreateRegistration();
+        registration.Key = "abc";
         storage
           .Setup(it => it.Load(It.IsAny<string>()))
-          .Returns(new LicenserRegistration {LicenseKey = "abc"});
+          .Returns(registration);
+
         var sut = new Licenser(options, storage.Object);
 
         var result = sut.IsValid();
@@ -56,18 +60,38 @@ namespace Renfield.Licensing.Tests
       [TestMethod]
       public void ReturnsTrueIfTheLicenseKeyIsAGuid()
       {
-        const string KEY = "{D98F6376-94F7-4D82-AA37-FC00F0166700}";
-
         var options = new LicenserOptions();
         var storage = new Mock<Storage>();
+
+        var registration = ObjectMother.CreateRegistration();
         storage
           .Setup(it => it.Load(It.IsAny<string>()))
-          .Returns(new LicenserRegistration {LicenseKey = KEY});
+          .Returns(registration);
+
         var sut = new Licenser(options, storage.Object);
 
         var result = sut.IsValid();
 
         Assert.IsTrue(result);
+      }
+
+      [TestMethod]
+      public void ReturnsFalseIfTheKeyIsvalidButNameIsEmptyOrNull()
+      {
+        var options = new LicenserOptions();
+        var storage = new Mock<Storage>();
+
+        var registration = ObjectMother.CreateRegistration();
+        registration.Name = "";
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        var sut = new Licenser(options, storage.Object);
+
+        var result = sut.IsValid();
+
+        Assert.IsFalse(result);
       }
     }
 
