@@ -31,17 +31,16 @@ namespace Renfield.Licensing.Library.Services
       if (string.IsNullOrWhiteSpace(options.CheckUrl))
         return true;
 
-      var processorId = sys.GetProcessorId();
       try
       {
-        var response = remote.Get(string.Format("{0}?Key={1}&ProcessorId={2}", options.CheckUrl, registration.Key, processorId));
+        var response = GetRemoteResponse(registration.Key);
+        var parts = response.Split(' ');
+        return parts[0] == registration.Key;
       }
       catch
       {
         return false;
       }
-
-      return false;
     }
 
     //
@@ -55,6 +54,12 @@ namespace Renfield.Licensing.Library.Services
     {
       Guid guid;
       return Guid.TryParse(s + "", out guid);
+    }
+
+    private string GetRemoteResponse(string key)
+    {
+      var processorId = sys.GetProcessorId();
+      return remote.Get(string.Format("{0}?Key={1}&ProcessorId={2}", options.CheckUrl, key, processorId));
     }
   }
 }

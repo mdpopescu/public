@@ -98,7 +98,7 @@ If the call fails or does not return a correct response, the key is considered i
 
 A correct response will have the form
 
-{key} expires on {date}
+{key} {date}
 
 With {date} formatted as yyyy-mm-dd. A permanent license will have a date of 9999-12-31.
 

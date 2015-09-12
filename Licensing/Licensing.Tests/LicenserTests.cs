@@ -155,6 +155,50 @@ namespace Renfield.Licensing.Tests
 
         Assert.IsFalse(result);
       }
+
+      [TestMethod]
+      public void ReturnsFalseIfTheRemoteCheckReturnsAnInvalidResponse()
+      {
+        const string URL = "abc";
+
+        options.CheckUrl = URL;
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+        remote
+          .Setup(it => it.Get(URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Returns("xyz");
+
+        var result = sut.IsLicensed();
+
+        Assert.IsFalse(result);
+      }
+
+      [TestMethod]
+      public void ReturnsTrueIfTheRemoteCheckReturnsAValidResponse()
+      {
+        const string URL = "abc";
+
+        options.CheckUrl = URL;
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+        remote
+          .Setup(it => it.Get(URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
+
+        var result = sut.IsLicensed();
+
+        Assert.IsTrue(result);
+      }
     }
 
     [TestClass]
