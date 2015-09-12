@@ -52,17 +52,20 @@ namespace Renfield.Licensing.Library.Services
 
     public bool IsTrial()
     {
+      if (IsLicensed())
+        return true;
+
       var registration = storage.Load(options.Password);
       if (registration == null)
         return false;
 
-      if (IsLicensed())
-        return true;
-
       if (registration.Limits == null)
         return false;
 
-      if (registration.CreatedOn.AddDays(registration.Limits.Days) < DateTime.Today)
+      if (registration.Limits.Days != -1 && registration.CreatedOn.AddDays(registration.Limits.Days) < DateTime.Today)
+        return false;
+
+      if (registration.Limits.Runs == 0)
         return false;
 
       return true;

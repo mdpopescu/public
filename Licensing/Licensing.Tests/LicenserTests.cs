@@ -333,6 +333,86 @@ namespace Renfield.Licensing.Tests
 
         Assert.IsFalse(result);
       }
+
+      [TestMethod]
+      public void ReturnsTrueIfTrialNotExpired()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.CreatedOn = DateTime.Today;
+        registration.Limits = new Limits {Days = 1, Runs = 1};
+        registration.Key = null;
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        var result = sut.IsTrial();
+
+        Assert.IsTrue(result);
+      }
+
+      [TestMethod]
+      public void ReturnsFalseIfRemainingRunsIsZero()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.CreatedOn = DateTime.Today;
+        registration.Limits = new Limits {Days = 1, Runs = 0};
+        registration.Key = null;
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        var result = sut.IsTrial();
+
+        Assert.IsFalse(result);
+      }
+
+      [TestMethod]
+      public void ReturnsTrueIfRemainingRunsIsGreaterThanZero()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.CreatedOn = DateTime.Today;
+        registration.Limits = new Limits {Days = 1, Runs = 1};
+        registration.Key = null;
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        var result = sut.IsTrial();
+
+        Assert.IsTrue(result);
+      }
+
+      [TestMethod]
+      public void IgnoresDaysIfMinusOne()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.CreatedOn = DateTime.Today;
+        registration.Limits = new Limits {Days = -1, Runs = 1};
+        registration.Key = null;
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        var result = sut.IsTrial();
+
+        Assert.IsTrue(result);
+      }
+
+      [TestMethod]
+      public void IgnoresRunsIfMinusOne()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.CreatedOn = DateTime.Today;
+        registration.Limits = new Limits {Days = 1, Runs = -1};
+        registration.Key = null;
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        var result = sut.IsTrial();
+
+        Assert.IsTrue(result);
+      }
     }
 
     [TestClass]
