@@ -27,11 +27,10 @@ DisplayName | The product name displayed on the registration page; defaults to t
 Contact     | Contact information (e.g., email address)
 BuyUrl      | The link to the web page where a license can be bought
 CheckUrl    | The link used to check the validity of the license (see below); if not specified, the license key is assumed valid if it exists and is a valid guid
-Limits      | Values to decide if the trial has expired or not; see below
 
-### Limits
+## Limits
 
-The limits object has the following properties; at least one of them must be present:
+The install can set up the following limits; at least one of them must be present:
 
 Name   | Description
 ------ | -----------
@@ -53,4 +52,4 @@ A correct response will have the form
 
 {key} expires on {date}
 
-With {date} formatted as yyyy-mm-dd. A permanent key will use a date of 9999-12-31.
+With {date} formatted as yyyy-mm-dd. A permanent license will have a date of 9999-12-31.

@@ -39,6 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\Storage.cs" />
+    <Compile Include="Models\LicenserOptions.cs" />
+    <Compile Include="Models\LicenserRegistration.cs" />
+    <Compile Include="Models\Limits.cs" />
     <Compile Include="Services\Licenser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
