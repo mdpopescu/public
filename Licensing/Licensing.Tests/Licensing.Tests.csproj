@@ -57,6 +57,7 @@
     <Compile Include="Services\LicenserTests.cs" />
     <Compile Include="ObjectMother.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\LicenseSerializerTests.cs" />
     <Compile Include="Services\SecureStorageTests.cs" />
     <Compile Include="Services\RijndaelEncryptorTests.cs" />
   </ItemGroup>

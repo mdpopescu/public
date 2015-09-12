@@ -10,8 +10,8 @@ namespace Renfield.Licensing.Library.Services
     public static Licenser Create(LicenserOptions options)
     {
       StringIO io = null;
-      Encryptor encryptor = null;
-      Serializer<LicenseRegistration> serializer = null;
+      Encryptor encryptor = new RijndaelEncryptor(options.Password);
+      Serializer<LicenseRegistration> serializer = new LicenseSerializer();
 
       return new Licenser(
         options,
