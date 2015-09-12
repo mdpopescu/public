@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncMaster.Tests", "SyncMaster.Tests\SyncMaster.Tests.csproj", "{4B8E9E75-29CC-4D97-8055-CBCA44657CF5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncMaster", "SyncMaster\SyncMaster.csproj", "{389D2151-4D7E-40B6-9F1D-25DD756E5402}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncMaster.Server", "SyncMaster.Server\SyncMaster.Server.csproj", "{9C637698-A5AE-4D61-A361-A84524B47E8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncMaster.Library", "SyncMaster.Library\SyncMaster.Library.csproj", "{B6998CA8-20F9-4E80-803B-FD98F75A8E3A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{9C637698-A5AE-4D61-A361-A84524B47E8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C637698-A5AE-4D61-A361-A84524B47E8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C637698-A5AE-4D61-A361-A84524B47E8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6998CA8-20F9-4E80-803B-FD98F75A8E3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6998CA8-20F9-4E80-803B-FD98F75A8E3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6998CA8-20F9-4E80-803B-FD98F75A8E3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6998CA8-20F9-4E80-803B-FD98F75A8E3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
