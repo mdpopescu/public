@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
 
@@ -35,12 +36,20 @@ namespace Renfield.Licensing.Library.Services
       {
         var response = GetRemoteResponse(registration.Key);
         var parts = response.Split(' ');
-        return parts[0] == registration.Key;
+        if (parts[0] != registration.Key)
+          return false;
+
+        var expiration = DateTime.ParseExact(parts[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        if (expiration >= DateTime.Today)
+          return true;
+
       }
       catch
       {
         return false;
       }
+
+      return false;
     }
 
     //
