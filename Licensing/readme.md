@@ -2,7 +2,7 @@
 
 ## Usage:
 
-    var options = new LicenserOptions { ... };
+    var options = new LicenseOptions { ... };
     var licenser = Licenser.Create(options);
 
 ### Initialize and check for validity
@@ -41,7 +41,7 @@ the application at the given URL and only save to the registry if everything wen
 
 ### Sample code:
 
-    var options = new LicenserOptions { ... };
+    var options = new LicenseOptions { ... };
     var licenser = Licenser.Create(options);
     var details = licenser.GetRegistration();
 
@@ -62,7 +62,7 @@ the application at the given URL and only save to the registry if everything wen
 
 The double check can be simplified by using the ShouldRun method:
 
-    var options = new LicenserOptions { ... };
+    var options = new LicenseOptions { ... };
     var licenser = Licenser.Create(options);
     var details = licenser.GetRegistration();
 
@@ -85,9 +85,6 @@ Name        | Description
 ----------- | -----------
 Password    | The encryption key; if not specified, the registry will be unencrypted
 CheckUrl    | The link used to check the validity of the license (see below); if not specified, the license key is assumed valid if it exists and is a valid guid
-DisplayName | The product name displayed on the registration page; defaults to the one from the main assembly
-Contact     | Contact information (e.g., email address)
-BuyUrl      | The link to the web page where a license can be bought
 
 ### Checking the license
 

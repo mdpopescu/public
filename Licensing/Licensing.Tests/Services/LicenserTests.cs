@@ -10,7 +10,7 @@ namespace Renfield.Licensing.Tests.Services
   [TestClass]
   public class LicenserTests
   {
-    private LicenserOptions options;
+    private LicenseOptions options;
     private Mock<Storage> storage;
     private Mock<Sys> sys;
     private Mock<Remote> remote;
@@ -20,7 +20,7 @@ namespace Renfield.Licensing.Tests.Services
     [TestInitialize]
     public void SetUp()
     {
-      options = new LicenserOptions();
+      options = new LicenseOptions();
       storage = new Mock<Storage>();
       sys = new Mock<Sys>();
       remote = new Mock<Remote>();

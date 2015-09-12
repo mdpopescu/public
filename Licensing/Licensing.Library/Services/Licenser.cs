@@ -7,7 +7,7 @@ namespace Renfield.Licensing.Library.Services
 {
   public class Licenser
   {
-    public static Licenser Create(LicenserOptions options)
+    public static Licenser Create(LicenseOptions options)
     {
       StringIO io = null;
       Encryptor encryptor = new RijndaelEncryptor(options.Password);
@@ -20,7 +20,7 @@ namespace Renfield.Licensing.Library.Services
         new WebRemote());
     }
 
-    public Licenser(LicenserOptions options, Storage storage, Sys sys, Remote remote)
+    public Licenser(LicenseOptions options, Storage storage, Sys sys, Remote remote)
     {
       this.options = options;
       this.storage = storage;
@@ -75,7 +75,7 @@ namespace Renfield.Licensing.Library.Services
 
     //
 
-    private readonly LicenserOptions options;
+    private readonly LicenseOptions options;
     private readonly Storage storage;
     private readonly Sys sys;
     private readonly Remote remote;
