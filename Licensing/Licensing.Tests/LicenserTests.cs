@@ -10,7 +10,7 @@ namespace Renfield.Licensing.Tests
   public class LicenserTests
   {
     [TestClass]
-    public class Check : LicenserTests
+    public class IsValid : LicenserTests
     {
       [TestMethod]
       public void LoadsRegistrationDetailsFromStorage()
@@ -21,14 +21,32 @@ namespace Renfield.Licensing.Tests
         var storage = new Mock<Storage>();
         var sut = new Licenser(options, storage.Object);
 
-        sut.Check();
+        sut.IsValid();
 
         storage.Verify(it => it.Load(PASSWORD));
+      }
+
+      [TestMethod]
+      public void ReturnsFalseIfTheLicenseKeyIsNull()
+      {
+        var options = new LicenserOptions();
+        var storage = new Mock<Storage>();
+        var sut = new Licenser(options, storage.Object);
+
+        var result = sut.IsValid();
+
+        Assert.IsFalse(result);
       }
     }
 
     [TestClass]
     public class ShowRegistration : LicenserTests
+    {
+      //
+    }
+
+    [TestClass]
+    public class CreateRegistration : LicenserTests
     {
       //
     }

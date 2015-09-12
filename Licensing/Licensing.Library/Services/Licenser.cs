@@ -11,7 +11,7 @@ namespace Renfield.Licensing.Library.Services
       this.storage = storage;
     }
 
-    public bool Check()
+    public bool IsValid()
     {
       storage.Load(options.Password);
       return false;

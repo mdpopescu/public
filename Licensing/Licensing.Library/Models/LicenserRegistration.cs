@@ -7,6 +7,10 @@ namespace Renfield.Licensing.Library.Models
   {
     public DateTime CreatedOn { get; set; }
     public Limits Limits { get; set; }
-    public string Key { get; set; }
+
+    public string LicenseKey { get; set; }
+    public string LicenseName { get; set; }
+    public string LicenseContact { get; set; }
+    public DateTime LicenseExpiration { get; set; }
   }
 }

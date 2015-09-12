@@ -7,7 +7,7 @@
 
 ### Initialize and check for validity
 
-    var isValid = licenser.Check();
+    var isValid = licenser.IsValid();
 
 This will return *true* if the application is licensed and *false* otherwise.
 
@@ -17,6 +17,13 @@ This will return *true* if the application is licensed and *false* otherwise.
 
 Shows a modal window indicating either that the application is registered and to whom, or that it's a trial. In that case, it will show the remaining days / runs
 and it will allow for the registration key to be entered.
+
+### Create registration information (eg from the installer)
+
+    var details = new LicenserRegistration { ... };
+    licenser.CreateRegistration(details);
+
+Creates the registry entry with the given registration details, optionally encrypted with a password.
 
 ## Options
 
