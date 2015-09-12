@@ -243,6 +243,28 @@ namespace Renfield.Licensing.Tests
 
         Assert.IsFalse(result);
       }
+
+      [TestMethod]
+      public void RemoteCheckAlsoSetsTheExpirationDateToTheNewValue()
+      {
+        const string URL = "abc";
+
+        options.CheckUrl = URL;
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+        remote
+          .Setup(it => it.Get(URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
+
+        sut.IsLicensed();
+
+        storage.Verify(it => it.Save(It.IsAny<string>(), It.Is<LicenserRegistration>(r => r.Expiration == new DateTime(9999, 12, 31))));
+      }
     }
 
     [TestClass]

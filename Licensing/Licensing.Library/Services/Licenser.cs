@@ -40,16 +40,14 @@ namespace Renfield.Licensing.Library.Services
           return false;
 
         var expiration = DateTime.ParseExact(parts[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
-        if (expiration >= DateTime.Today)
-          return true;
+        UpdateRegistration(registration, expiration);
 
+        return expiration >= DateTime.Today;
       }
       catch
       {
         return false;
       }
-
-      return false;
     }
 
     //
@@ -69,6 +67,12 @@ namespace Renfield.Licensing.Library.Services
     {
       var processorId = sys.GetProcessorId();
       return remote.Get(string.Format("{0}?Key={1}&ProcessorId={2}", options.CheckUrl, key, processorId));
+    }
+
+    private void UpdateRegistration(LicenserRegistration registration, DateTime expiration)
+    {
+      registration.Expiration = expiration;
+      storage.Save(options.Password, registration);
     }
   }
 }
