@@ -28,22 +28,7 @@ namespace Renfield.Licensing.Library.Services
       if (string.IsNullOrWhiteSpace(options.CheckUrl))
         return true;
 
-      try
-      {
-        var response = GetRemoteResponse(registration.Key);
-        var parts = response.Split(' ');
-        if (parts[0] != registration.Key)
-          return false;
-
-        var expiration = DateTime.ParseExact(parts[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
-        UpdateExpirationDate(registration, expiration);
-
-        return DateTime.Today <= expiration;
-      }
-      catch
-      {
-        return false;
-      }
+      return CheckRemoteResponse(registration);
     }
 
     public bool IsTrial()
@@ -76,6 +61,26 @@ namespace Renfield.Licensing.Library.Services
     private readonly Storage storage;
     private readonly Sys sys;
     private readonly Remote remote;
+
+    private bool CheckRemoteResponse(LicenserRegistration registration)
+    {
+      try
+      {
+        var response = GetRemoteResponse(registration.Key);
+        var parts = response.Split(' ');
+        if (parts[0] != registration.Key)
+          return false;
+
+        var expiration = DateTime.ParseExact(parts[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        UpdateExpirationDate(registration, expiration);
+
+        return DateTime.Today <= expiration;
+      }
+      catch
+      {
+        return false;
+      }
+    }
 
     private string GetRemoteResponse(string key)
     {
