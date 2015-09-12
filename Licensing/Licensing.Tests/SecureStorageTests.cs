@@ -70,21 +70,58 @@ namespace Renfield.Licensing.Tests
         encryptor
           .Setup(it => it.Decrypt("abc"))
           .Returns("def");
-        var expected = new LicenseRegistration();
+        var details = new LicenseRegistration();
         serializer
           .Setup(it => it.Deserialize("def"))
-          .Returns(expected);
+          .Returns(details);
 
         var result = sut.Load();
 
-        Assert.AreEqual(expected, result);
+        Assert.AreEqual(details, result);
       }
     }
 
     [TestClass]
     public class Save : SecureStorageTests
     {
-      //
+      [TestMethod]
+      public void SerializesTheObject()
+      {
+        var details = new LicenseRegistration();
+
+        sut.Save(details);
+
+        serializer.Verify(it => it.Serialize(details));
+      }
+
+      [TestMethod]
+      public void EncryptsTheString()
+      {
+        var details = new LicenseRegistration();
+        serializer
+          .Setup(it => it.Serialize(details))
+          .Returns("abc");
+
+        sut.Save(details);
+
+        encryptor.Verify(it => it.Encrypt("abc"));
+      }
+
+      [TestMethod]
+      public void WritesTheStringToTheOutput()
+      {
+        var details = new LicenseRegistration();
+        serializer
+          .Setup(it => it.Serialize(details))
+          .Returns("abc");
+        encryptor
+          .Setup(it => it.Encrypt("abc"))
+          .Returns("def");
+
+        sut.Save(details);
+
+        io.Verify(it => it.Write("def"));
+      }
     }
   }
 }

@@ -22,7 +22,10 @@ namespace Renfield.Licensing.Library.Services
 
     public void Save(LicenseRegistration registration)
     {
-      //
+      var decrypted = serializer.Serialize(registration);
+      var encrypted = encryptor.Encrypt(decrypted);
+
+      io.Write(encrypted);
     }
 
     //
