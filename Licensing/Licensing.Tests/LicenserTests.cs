@@ -28,10 +28,29 @@ namespace Renfield.Licensing.Tests
       }
 
       [TestMethod]
+      public void ReturnsFalseIfThereAreNoRegistrationDetails()
+      {
+        var options = new LicenserOptions();
+        var storage = new Mock<Storage>();
+        var sut = new Licenser(options, storage.Object);
+
+        var result = sut.IsLicensed();
+
+        Assert.IsFalse(result);
+      }
+
+      [TestMethod]
       public void ReturnsFalseIfTheLicenseKeyIsNull()
       {
         var options = new LicenserOptions();
         var storage = new Mock<Storage>();
+
+        var registration = ObjectMother.CreateRegistration();
+        registration.Key = null;
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
         var sut = new Licenser(options, storage.Object);
 
         var result = sut.IsLicensed();
@@ -132,6 +151,18 @@ namespace Renfield.Licensing.Tests
 
         Assert.IsFalse(result);
       }
+    }
+
+    [TestClass]
+    public class IsTrial : LicenserTests
+    {
+      //
+    }
+
+    [TestClass]
+    public class ShouldRun : LicenserTests
+    {
+      //
     }
 
     [TestClass]
