@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -39,7 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\Remote.cs" />
     <Compile Include="Contracts\Storage.cs" />
+    <Compile Include="Contracts\Sys.cs" />
     <Compile Include="Models\LicenserOptions.cs" />
     <Compile Include="Models\LicenserRegistration.cs" />
     <Compile Include="Models\Limits.cs" />

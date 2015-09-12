@@ -6,10 +6,12 @@ namespace Renfield.Licensing.Library.Services
 {
   public class Licenser
   {
-    public Licenser(LicenserOptions options, Storage storage)
+    public Licenser(LicenserOptions options, Storage storage, Sys sys, Remote remote)
     {
       this.options = options;
       this.storage = storage;
+      this.sys = sys;
+      this.remote = remote;
     }
 
     public bool IsLicensed()
@@ -22,13 +24,32 @@ namespace Renfield.Licensing.Library.Services
       var hasName = !string.IsNullOrWhiteSpace(registration.Name);
       var hasContact = !string.IsNullOrWhiteSpace(registration.Contact);
 
-      return isGuid && hasName && hasContact && DateTime.Today <= registration.Expiration;
+      if (!(isGuid && hasName && hasContact && DateTime.Today <= registration.Expiration))
+        return false;
+
+      // only check remotely if there is a CheckUrl
+      if (string.IsNullOrWhiteSpace(options.CheckUrl))
+        return true;
+
+      var processorId = sys.GetProcessorId();
+      try
+      {
+        var response = remote.Get(string.Format("{0}?Key={1}&ProcessorId={2}", options.CheckUrl, registration.Key, processorId));
+      }
+      catch
+      {
+        return false;
+      }
+
+      return false;
     }
 
     //
 
     private readonly LicenserOptions options;
     private readonly Storage storage;
+    private readonly Sys sys;
+    private readonly Remote remote;
 
     private static bool IsValidGuid(string s)
     {

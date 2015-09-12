@@ -10,6 +10,24 @@ namespace Renfield.Licensing.Tests
   [TestClass]
   public class LicenserTests
   {
+    private LicenserOptions options;
+    private Mock<Storage> storage;
+    private Mock<Sys> sys;
+    private Mock<Remote> remote;
+
+    private Licenser sut;
+
+    [TestInitialize]
+    public void SetUp()
+    {
+      options = new LicenserOptions();
+      storage = new Mock<Storage>();
+      sys = new Mock<Sys>();
+      remote = new Mock<Remote>();
+
+      sut = new Licenser(options, storage.Object, sys.Object, remote.Object);
+    }
+
     [TestClass]
     public class IsLicensed : LicenserTests
     {
@@ -18,9 +36,7 @@ namespace Renfield.Licensing.Tests
       {
         const string PASSWORD = "abc";
 
-        var options = new LicenserOptions {Password = PASSWORD};
-        var storage = new Mock<Storage>();
-        var sut = new Licenser(options, storage.Object);
+        options.Password = PASSWORD;
 
         sut.IsLicensed();
 
@@ -30,10 +46,6 @@ namespace Renfield.Licensing.Tests
       [TestMethod]
       public void ReturnsFalseIfThereAreNoRegistrationDetails()
       {
-        var options = new LicenserOptions();
-        var storage = new Mock<Storage>();
-        var sut = new Licenser(options, storage.Object);
-
         var result = sut.IsLicensed();
 
         Assert.IsFalse(result);
@@ -42,16 +54,11 @@ namespace Renfield.Licensing.Tests
       [TestMethod]
       public void ReturnsFalseIfTheLicenseKeyIsNull()
       {
-        var options = new LicenserOptions();
-        var storage = new Mock<Storage>();
-
         var registration = ObjectMother.CreateRegistration();
         registration.Key = null;
         storage
           .Setup(it => it.Load(It.IsAny<string>()))
           .Returns(registration);
-
-        var sut = new Licenser(options, storage.Object);
 
         var result = sut.IsLicensed();
 
@@ -61,16 +68,11 @@ namespace Renfield.Licensing.Tests
       [TestMethod]
       public void ReturnsFalseIfTheLicenseKeyIsNotAGuid()
       {
-        var options = new LicenserOptions();
-        var storage = new Mock<Storage>();
-
         var registration = ObjectMother.CreateRegistration();
         registration.Key = "abc";
         storage
           .Setup(it => it.Load(It.IsAny<string>()))
           .Returns(registration);
-
-        var sut = new Licenser(options, storage.Object);
 
         var result = sut.IsLicensed();
 
@@ -80,15 +82,10 @@ namespace Renfield.Licensing.Tests
       [TestMethod]
       public void ReturnsTrueIfTheLicenseKeyIsAGuid()
       {
-        var options = new LicenserOptions();
-        var storage = new Mock<Storage>();
-
         var registration = ObjectMother.CreateRegistration();
         storage
           .Setup(it => it.Load(It.IsAny<string>()))
           .Returns(registration);
-
-        var sut = new Licenser(options, storage.Object);
 
         var result = sut.IsLicensed();
 
@@ -98,16 +95,11 @@ namespace Renfield.Licensing.Tests
       [TestMethod]
       public void ReturnsFalseIfTheKeyIsvalidButNameIsEmptyOrNull()
       {
-        var options = new LicenserOptions();
-        var storage = new Mock<Storage>();
-
         var registration = ObjectMother.CreateRegistration();
         registration.Name = "";
         storage
           .Setup(it => it.Load(It.IsAny<string>()))
           .Returns(registration);
-
-        var sut = new Licenser(options, storage.Object);
 
         var result = sut.IsLicensed();
 
@@ -117,16 +109,11 @@ namespace Renfield.Licensing.Tests
       [TestMethod]
       public void ReturnsFalseIfTheKeyIsvalidButContactIsEmptyOrNull()
       {
-        var options = new LicenserOptions();
-        var storage = new Mock<Storage>();
-
         var registration = ObjectMother.CreateRegistration();
         registration.Contact = "";
         storage
           .Setup(it => it.Load(It.IsAny<string>()))
           .Returns(registration);
-
-        var sut = new Licenser(options, storage.Object);
 
         var result = sut.IsLicensed();
 
@@ -136,16 +123,33 @@ namespace Renfield.Licensing.Tests
       [TestMethod]
       public void ReturnsFalseIfTheKeyIsvalidButHasExpired()
       {
-        var options = new LicenserOptions();
-        var storage = new Mock<Storage>();
-
         var registration = ObjectMother.CreateRegistration();
         registration.Expiration = new DateTime(2000, 1, 1);
         storage
           .Setup(it => it.Load(It.IsAny<string>()))
           .Returns(registration);
 
-        var sut = new Licenser(options, storage.Object);
+        var result = sut.IsLicensed();
+
+        Assert.IsFalse(result);
+      }
+
+      [TestMethod]
+      public void ReturnsFalseIfTheRemoteCheckFails()
+      {
+        const string URL = "abc";
+
+        options.CheckUrl = URL;
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+        remote
+          .Setup(it => it.Get(URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Throws(new Exception());
 
         var result = sut.IsLicensed();
 
