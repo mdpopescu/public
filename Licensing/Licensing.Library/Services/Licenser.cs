@@ -50,6 +50,15 @@ namespace Renfield.Licensing.Library.Services
       }
     }
 
+    public bool IsTrial()
+    {
+      var registration = storage.Load(options.Password);
+      if (registration == null)
+        return false;
+
+      return true;
+    }
+
     //
 
     private readonly LicenserOptions options;

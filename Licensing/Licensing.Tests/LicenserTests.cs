@@ -270,7 +270,38 @@ namespace Renfield.Licensing.Tests
     [TestClass]
     public class IsTrial : LicenserTests
     {
-      //
+      [TestMethod]
+      public void LoadsRegistrationDetailsFromStorage()
+      {
+        const string PASSWORD = "abc";
+
+        options.Password = PASSWORD;
+
+        sut.IsTrial();
+
+        storage.Verify(it => it.Load(PASSWORD));
+      }
+
+      [TestMethod]
+      public void ReturnsTrueIfLicensed()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        var result = sut.IsTrial();
+
+        Assert.IsTrue(result);
+      }
+
+      [TestMethod]
+      public void ReturnsFalseIfThereAreNoRegistrationDetails()
+      {
+        var result = sut.IsTrial();
+
+        Assert.IsFalse(result);
+      }
     }
 
     [TestClass]
