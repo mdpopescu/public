@@ -302,6 +302,37 @@ namespace Renfield.Licensing.Tests
 
         Assert.IsFalse(result);
       }
+
+      [TestMethod]
+      public void ReturnsFalseIfTheLimitsObjectIsNotSet()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.Limits = null;
+        registration.Key = null;
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        var result = sut.IsTrial();
+
+        Assert.IsFalse(result);
+      }
+
+      [TestMethod]
+      public void ReturnsFalseIfTheNumberOfDaysHasPassed()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.CreatedOn = new DateTime(2000, 1, 1);
+        registration.Limits = new Limits {Days = 1};
+        registration.Key = null;
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        var result = sut.IsTrial();
+
+        Assert.IsFalse(result);
+      }
     }
 
     [TestClass]

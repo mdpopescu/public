@@ -56,6 +56,15 @@ namespace Renfield.Licensing.Library.Services
       if (registration == null)
         return false;
 
+      if (IsLicensed())
+        return true;
+
+      if (registration.Limits == null)
+        return false;
+
+      if (registration.CreatedOn.AddDays(registration.Limits.Days) < DateTime.Today)
+        return false;
+
       return true;
     }
 
