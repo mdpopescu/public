@@ -9,9 +9,13 @@ namespace Renfield.Licensing.Library.Services
   {
     public static Licenser Create(LicenserOptions options)
     {
+      StringIO io = null;
+      Encryptor encryptor = null;
+      Serializer<LicenseRegistration> serializer = null;
+
       return new Licenser(
         options,
-        new SecureStorage(null, null, null),
+        new SecureStorage(io, encryptor, serializer),
         new WinSys(),
         new WebRemote());
     }

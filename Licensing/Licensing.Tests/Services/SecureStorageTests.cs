@@ -4,7 +4,7 @@ using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
 using Renfield.Licensing.Library.Services;
 
-namespace Renfield.Licensing.Tests
+namespace Renfield.Licensing.Tests.Services
 {
   [TestClass]
   public class SecureStorageTests
