@@ -21,11 +21,7 @@ namespace Renfield.Licensing.Library.Services
       if (registration == null)
         return false;
 
-      var isGuid = IsValidGuid(registration.Key);
-      var hasName = !string.IsNullOrWhiteSpace(registration.Name);
-      var hasContact = !string.IsNullOrWhiteSpace(registration.Contact);
-
-      if (!(isGuid && hasName && hasContact && DateTime.Today <= registration.Expiration))
+      if (!registration.IsValidLicense())
         return false;
 
       // only check remotely if there is a CheckUrl
@@ -40,9 +36,9 @@ namespace Renfield.Licensing.Library.Services
           return false;
 
         var expiration = DateTime.ParseExact(parts[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
-        UpdateRegistration(registration, expiration);
+        UpdateExpirationDate(registration, expiration);
 
-        return expiration >= DateTime.Today;
+        return DateTime.Today <= expiration;
       }
       catch
       {
@@ -68,6 +64,9 @@ namespace Renfield.Licensing.Library.Services
       if (registration.Limits.Runs == 0)
         return false;
 
+      if (registration.Limits.Runs > 0)
+        UpdateRemainingRuns(registration);
+
       return true;
     }
 
@@ -78,12 +77,6 @@ namespace Renfield.Licensing.Library.Services
     private readonly Sys sys;
     private readonly Remote remote;
 
-    private static bool IsValidGuid(string s)
-    {
-      Guid guid;
-      return Guid.TryParse(s + "", out guid);
-    }
-
     private string GetRemoteResponse(string key)
     {
       var processorId = sys.GetProcessorId();
@@ -92,9 +85,15 @@ namespace Renfield.Licensing.Library.Services
       return remote.Get(address);
     }
 
-    private void UpdateRegistration(LicenserRegistration registration, DateTime expiration)
+    private void UpdateExpirationDate(LicenserRegistration registration, DateTime expiration)
     {
       registration.Expiration = expiration;
+      storage.Save(options.Password, registration);
+    }
+
+    private void UpdateRemainingRuns(LicenserRegistration registration)
+    {
+      registration.Limits.Runs--;
       storage.Save(options.Password, registration);
     }
   }

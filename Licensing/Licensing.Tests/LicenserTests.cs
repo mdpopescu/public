@@ -413,6 +413,54 @@ namespace Renfield.Licensing.Tests
 
         Assert.IsTrue(result);
       }
+
+      [TestMethod]
+      public void UpdatesRemainingRuns()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.CreatedOn = DateTime.Today;
+        registration.Limits = new Limits {Days = 1, Runs = 1};
+        registration.Key = null;
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        sut.IsTrial();
+
+        storage.Verify(it => it.Save(It.IsAny<string>(), It.Is<LicenserRegistration>(r => r.Limits.Runs == 0)));
+      }
+
+      [TestMethod]
+      public void DoesNotUpdateRemainingRunsWhenZero()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.CreatedOn = DateTime.Today;
+        registration.Limits = new Limits {Days = 1, Runs = 0};
+        registration.Key = null;
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        sut.IsTrial();
+
+        storage.Verify(it => it.Save(It.IsAny<string>(), It.IsAny<LicenserRegistration>()), Times.Never);
+      }
+
+      [TestMethod]
+      public void DoesNotUpdateRemainingRunsWhenMinusOne()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.CreatedOn = DateTime.Today;
+        registration.Limits = new Limits {Days = 1, Runs = -1};
+        registration.Key = null;
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        sut.IsTrial();
+
+        storage.Verify(it => it.Save(It.IsAny<string>(), It.IsAny<LicenserRegistration>()), Times.Never);
+      }
     }
 
     [TestClass]
