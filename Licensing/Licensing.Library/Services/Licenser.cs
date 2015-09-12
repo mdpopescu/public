@@ -9,7 +9,11 @@ namespace Renfield.Licensing.Library.Services
   {
     public static Licenser Create(LicenserOptions options)
     {
-      return new Licenser(options, new SecureStorage(), new WinSys(), new WebRemote());
+      return new Licenser(
+        options,
+        new SecureStorage(null, null, null),
+        new WinSys(),
+        new WebRemote());
     }
 
     public Licenser(LicenserOptions options, Storage storage, Sys sys, Remote remote)
