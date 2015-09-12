@@ -66,7 +66,9 @@ namespace Renfield.Licensing.Library.Services
     private string GetRemoteResponse(string key)
     {
       var processorId = sys.GetProcessorId();
-      return remote.Get(string.Format("{0}?Key={1}&ProcessorId={2}", options.CheckUrl, key, processorId));
+      var address = string.Format("{0}?Key={1}&ProcessorId={2}", options.CheckUrl, key, processorId);
+
+      return remote.Get(address);
     }
 
     private void UpdateRegistration(LicenserRegistration registration, DateTime expiration)

@@ -48,6 +48,8 @@
     <Compile Include="Models\Limits.cs" />
     <Compile Include="Services\Licenser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\WebRemote.cs" />
+    <Compile Include="Services\WinSys.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

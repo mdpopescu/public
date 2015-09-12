@@ -69,7 +69,7 @@ The double check can be simplified by using the ShouldRun method:
         licenser.ShowRegistration();
     }
 
-    // the customer might have just bought a license and entered the key, check again
+    // should I run the application?
     if (!licenser.ShouldRun())
     {
         MessageBox.Show("The trial has expired.");

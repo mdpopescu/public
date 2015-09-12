@@ -2,6 +2,6 @@
 {
   public interface Remote
   {
-    string Get(string url);
+    string Get(string address);
   }
 }
