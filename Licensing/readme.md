@@ -23,12 +23,13 @@ This will return *true* if the trial is still available and *false* if the limit
 
 This will return *true* if the application should run (either the license is valid, or the trial hasn't reached its limits) and *false* otherwise.
 
-### Display registration information
+### Showing registration information
 
-    licenser.ShowRegistration();
+    var details = licenser.GetRegistration();
 
-Shows a modal window indicating either that the application is registered and to whom, or that it's a trial. In that case, it will show the remaining days / runs
-and it will allow for the registration key to be entered.
+Returns the registration details saved in the registry; the application might then choose to display those details, eg a message showing how many days
+are remaining. It is recommended that a text box be provided for the user to enter a license key; if that happens, the application can use the
+CreateRegistration method (below).
 
 ### Create registration information (eg from the installer)
 
@@ -42,11 +43,12 @@ the application at the given URL and only save to the registry if everything wen
 
     var options = new LicenserOptions { ... };
     var licenser = Licenser.Create(options);
+    var details = licenser.GetRegistration();
 
     // initial check
     if (!licenser.IsLicensed())
     {
-        licenser.ShowRegistration();
+        // show registration / trial screen
     }
 
     // the customer might have just bought a license and entered the key, check again
@@ -62,11 +64,12 @@ The double check can be simplified by using the ShouldRun method:
 
     var options = new LicenserOptions { ... };
     var licenser = Licenser.Create(options);
+    var details = licenser.GetRegistration();
 
     // initial check
     if (!licenser.IsLicensed())
     {
-        licenser.ShowRegistration();
+        // show registration / trial screen
     }
 
     // should I run the application?

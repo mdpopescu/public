@@ -464,7 +464,7 @@ namespace Renfield.Licensing.Tests
     }
 
     [TestClass]
-    public class ShowRegistration : LicenserTests
+    public class GetRegistration : LicenserTests
     {
       //
     }
