@@ -148,7 +148,7 @@ namespace Renfield.Licensing.Tests
           .Setup(it => it.GetProcessorId())
           .Returns("1");
         remote
-          .Setup(it => it.Get(URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Setup(it => it.Get("https://" + URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Throws(new Exception());
 
         var result = sut.IsLicensed();
@@ -170,7 +170,7 @@ namespace Renfield.Licensing.Tests
           .Setup(it => it.GetProcessorId())
           .Returns("1");
         remote
-          .Setup(it => it.Get(URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Setup(it => it.Get("https://" + URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("");
 
         var result = sut.IsLicensed();
@@ -192,7 +192,7 @@ namespace Renfield.Licensing.Tests
           .Setup(it => it.GetProcessorId())
           .Returns("1");
         remote
-          .Setup(it => it.Get(URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Setup(it => it.Get("https://" + URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("xyz");
 
         var result = sut.IsLicensed();
@@ -214,7 +214,7 @@ namespace Renfield.Licensing.Tests
           .Setup(it => it.GetProcessorId())
           .Returns("1");
         remote
-          .Setup(it => it.Get(URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Setup(it => it.Get("https://" + URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
 
         var result = sut.IsLicensed();
@@ -236,7 +236,7 @@ namespace Renfield.Licensing.Tests
           .Setup(it => it.GetProcessorId())
           .Returns("1");
         remote
-          .Setup(it => it.Get(URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Setup(it => it.Get("https://" + URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 2000-01-01");
 
         var result = sut.IsLicensed();
@@ -258,12 +258,12 @@ namespace Renfield.Licensing.Tests
           .Setup(it => it.GetProcessorId())
           .Returns("1");
         remote
-          .Setup(it => it.Get(URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Setup(it => it.Get("https://" + URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
 
         sut.IsLicensed();
 
-        storage.Verify(it => it.Save(It.IsAny<string>(), It.Is<LicenserRegistration>(r => r.Expiration == new DateTime(9999, 12, 31))));
+        storage.Verify(it => it.Save(It.IsAny<string>(), It.Is<LicenseRegistration>(r => r.Expiration == new DateTime(9999, 12, 31))));
       }
     }
 
@@ -427,7 +427,7 @@ namespace Renfield.Licensing.Tests
 
         sut.IsTrial();
 
-        storage.Verify(it => it.Save(It.IsAny<string>(), It.Is<LicenserRegistration>(r => r.Limits.Runs == 0)));
+        storage.Verify(it => it.Save(It.IsAny<string>(), It.Is<LicenseRegistration>(r => r.Limits.Runs == 0)));
       }
 
       [TestMethod]
@@ -443,7 +443,7 @@ namespace Renfield.Licensing.Tests
 
         sut.IsTrial();
 
-        storage.Verify(it => it.Save(It.IsAny<string>(), It.IsAny<LicenserRegistration>()), Times.Never);
+        storage.Verify(it => it.Save(It.IsAny<string>(), It.IsAny<LicenseRegistration>()), Times.Never);
       }
 
       [TestMethod]
@@ -459,14 +459,8 @@ namespace Renfield.Licensing.Tests
 
         sut.IsTrial();
 
-        storage.Verify(it => it.Save(It.IsAny<string>(), It.IsAny<LicenserRegistration>()), Times.Never);
+        storage.Verify(it => it.Save(It.IsAny<string>(), It.IsAny<LicenseRegistration>()), Times.Never);
       }
-    }
-
-    [TestClass]
-    public class ShouldRun : LicenserTests
-    {
-      //
     }
 
     [TestClass]

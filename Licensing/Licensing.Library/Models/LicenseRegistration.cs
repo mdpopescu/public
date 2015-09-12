@@ -3,7 +3,7 @@
 namespace Renfield.Licensing.Library.Models
 {
   [Serializable]
-  public class LicenserRegistration
+  public class LicenseRegistration
   {
     public DateTime CreatedOn { get; set; }
     public Limits Limits { get; set; }

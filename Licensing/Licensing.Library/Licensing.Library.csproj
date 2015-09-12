@@ -44,7 +44,7 @@
     <Compile Include="Contracts\Storage.cs" />
     <Compile Include="Contracts\Sys.cs" />
     <Compile Include="Models\LicenserOptions.cs" />
-    <Compile Include="Models\LicenserRegistration.cs" />
+    <Compile Include="Models\LicenseRegistration.cs" />
     <Compile Include="Models\Limits.cs" />
     <Compile Include="Services\Licenser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

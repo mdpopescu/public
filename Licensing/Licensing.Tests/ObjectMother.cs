@@ -5,9 +5,9 @@ namespace Renfield.Licensing.Tests
 {
   public static class ObjectMother
   {
-    public static LicenserRegistration CreateRegistration()
+    public static LicenseRegistration CreateRegistration()
     {
-      return new LicenserRegistration
+      return new LicenseRegistration
       {
         CreatedOn = new DateTime(2000, 1, 1),
         Limits = new Limits

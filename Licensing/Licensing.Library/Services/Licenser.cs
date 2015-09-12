@@ -55,6 +55,11 @@ namespace Renfield.Licensing.Library.Services
       return true;
     }
 
+    public bool ShouldRun()
+    {
+      return IsLicensed() || IsTrial();
+    }
+
     //
 
     private readonly LicenserOptions options;
@@ -62,7 +67,7 @@ namespace Renfield.Licensing.Library.Services
     private readonly Sys sys;
     private readonly Remote remote;
 
-    private bool CheckRemoteResponse(LicenserRegistration registration)
+    private bool CheckRemoteResponse(LicenseRegistration registration)
     {
       try
       {
@@ -85,18 +90,18 @@ namespace Renfield.Licensing.Library.Services
     private string GetRemoteResponse(string key)
     {
       var processorId = sys.GetProcessorId();
-      var address = string.Format("{0}?Key={1}&ProcessorId={2}", options.CheckUrl, key, processorId);
+      var address = string.Format("https://{0}?Key={1}&ProcessorId={2}", options.CheckUrl, key, processorId);
 
       return remote.Get(address);
     }
 
-    private void UpdateExpirationDate(LicenserRegistration registration, DateTime expiration)
+    private void UpdateExpirationDate(LicenseRegistration registration, DateTime expiration)
     {
       registration.Expiration = expiration;
       storage.Save(options.Password, registration);
     }
 
-    private void UpdateRemainingRuns(LicenserRegistration registration)
+    private void UpdateRemainingRuns(LicenseRegistration registration)
     {
       registration.Limits.Runs--;
       storage.Save(options.Password, registration);

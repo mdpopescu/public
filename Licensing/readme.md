@@ -32,10 +32,11 @@ and it will allow for the registration key to be entered.
 
 ### Create registration information (eg from the installer)
 
-    var details = new LicenserRegistration { ... };
+    var details = new LicenseRegistration { ... };
     licenser.CreateRegistration(details);
 
-Creates the registry entry with the given registration details, optionally encrypted with a password.
+Creates the registry entry with the given registration details, optionally encrypted with a password. If CheckUrl is not empty, it will first try to register
+the application at the given URL and only save to the registry if everything went ok.
 
 ### Sample code:
 
@@ -53,7 +54,6 @@ Creates the registry entry with the given registration details, optionally encry
     {
         if (!licenser.IsTrial())
         {
-            MessageBox.Show("The trial has expired.");
             Application.Terminate();
         }
     }
@@ -72,7 +72,6 @@ The double check can be simplified by using the ShouldRun method:
     // should I run the application?
     if (!licenser.ShouldRun())
     {
-        MessageBox.Show("The trial has expired.");
         Application.Terminate();
     }
 
@@ -87,7 +86,7 @@ DisplayName | The product name displayed on the registration page; defaults to t
 Contact     | Contact information (e.g., email address)
 BuyUrl      | The link to the web page where a license can be bought
 
-### CheckUrl - checking the license
+### Checking the license
 
 If CheckUrl is present, the licenser will first check that there is a key and that it 1) is a valid GUID and 2) has not expired. If that check fails,
 the licenser treats the key as non-existent. If both conditions are met, the initialization makes a GET call to
@@ -103,6 +102,14 @@ A correct response will have the form
 With {date} formatted as yyyy-mm-dd. A permanent license will have a date of 9999-12-31.
 
 The licenser will overwrite the expiration date in the registry with the given date.
+
+### Registering
+
+If CheckUrl is present, the CreateRegistration method will (after making sure that the registration information is internally valid) send a POST request to
+
+https://{CheckUrl}
+
+with Content-Type set to application/x-www-form-urlencoded and the LicenseRegistration details.
 
 
 ## Limits
