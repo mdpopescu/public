@@ -1,4 +1,5 @@
-﻿using Renfield.Licensing.Library.Contracts;
+﻿using System;
+using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
 
 namespace Renfield.Licensing.Library.Services
@@ -13,13 +14,23 @@ namespace Renfield.Licensing.Library.Services
 
     public bool IsValid()
     {
-      storage.Load(options.Password);
-      return false;
+      var registration = storage.Load(options.Password);
+      if (registration == null)
+        return false;
+
+      var isGuid = IsValidGuid(registration);
+      return isGuid;
     }
 
     //
 
     private readonly LicenserOptions options;
     private readonly Storage storage;
+
+    private static bool IsValidGuid(LicenserRegistration registration)
+    {
+      Guid guid;
+      return Guid.TryParse(registration.LicenseKey + "", out guid);
+    }
   }
 }
