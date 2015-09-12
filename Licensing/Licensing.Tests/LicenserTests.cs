@@ -15,13 +15,15 @@ namespace Renfield.Licensing.Tests
       [TestMethod]
       public void LoadsRegistrationDetailsFromStorage()
       {
-        var options = new LicenserOptions();
+        const string PASSWORD = "abc";
+
+        var options = new LicenserOptions {Password = PASSWORD};
         var storage = new Mock<Storage>();
         var sut = new Licenser(options, storage.Object);
 
         sut.Check();
 
-        storage.Verify(it => it.Load());
+        storage.Verify(it => it.Load(PASSWORD));
       }
     }
 

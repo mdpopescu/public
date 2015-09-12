@@ -4,6 +4,6 @@ namespace Renfield.Licensing.Library.Contracts
 {
   public interface Storage
   {
-    LicenserRegistration Load();
+    LicenserRegistration Load(string password);
   }
 }

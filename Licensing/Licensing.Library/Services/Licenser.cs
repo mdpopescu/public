@@ -13,7 +13,7 @@ namespace Renfield.Licensing.Library.Services
 
     public bool Check()
     {
-      storage.Load();
+      storage.Load(options.Password);
       return false;
     }
 
