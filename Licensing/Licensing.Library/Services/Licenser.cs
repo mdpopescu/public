@@ -12,7 +12,7 @@ namespace Renfield.Licensing.Library.Services
       this.storage = storage;
     }
 
-    public bool IsValid()
+    public bool IsLicensed()
     {
       var registration = storage.Load(options.Password);
       if (registration == null)
@@ -22,7 +22,7 @@ namespace Renfield.Licensing.Library.Services
       var hasName = !string.IsNullOrWhiteSpace(registration.Name);
       var hasContact = !string.IsNullOrWhiteSpace(registration.Contact);
 
-      return isGuid && hasName && hasContact;
+      return isGuid && hasName && hasContact && DateTime.Today <= registration.Expiration;
     }
 
     //

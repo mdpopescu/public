@@ -7,7 +7,7 @@
 
 ### Initialize and check for validity
 
-    var isValid = licenser.IsValid();
+    var isValid = licenser.IsLicensed();
 
 This will return *true* if the application is licensed and *false* otherwise.
 

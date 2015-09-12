@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
@@ -10,7 +11,7 @@ namespace Renfield.Licensing.Tests
   public class LicenserTests
   {
     [TestClass]
-    public class IsValid : LicenserTests
+    public class IsLicensed : LicenserTests
     {
       [TestMethod]
       public void LoadsRegistrationDetailsFromStorage()
@@ -21,7 +22,7 @@ namespace Renfield.Licensing.Tests
         var storage = new Mock<Storage>();
         var sut = new Licenser(options, storage.Object);
 
-        sut.IsValid();
+        sut.IsLicensed();
 
         storage.Verify(it => it.Load(PASSWORD));
       }
@@ -33,7 +34,7 @@ namespace Renfield.Licensing.Tests
         var storage = new Mock<Storage>();
         var sut = new Licenser(options, storage.Object);
 
-        var result = sut.IsValid();
+        var result = sut.IsLicensed();
 
         Assert.IsFalse(result);
       }
@@ -52,7 +53,7 @@ namespace Renfield.Licensing.Tests
 
         var sut = new Licenser(options, storage.Object);
 
-        var result = sut.IsValid();
+        var result = sut.IsLicensed();
 
         Assert.IsFalse(result);
       }
@@ -70,7 +71,7 @@ namespace Renfield.Licensing.Tests
 
         var sut = new Licenser(options, storage.Object);
 
-        var result = sut.IsValid();
+        var result = sut.IsLicensed();
 
         Assert.IsTrue(result);
       }
@@ -89,7 +90,7 @@ namespace Renfield.Licensing.Tests
 
         var sut = new Licenser(options, storage.Object);
 
-        var result = sut.IsValid();
+        var result = sut.IsLicensed();
 
         Assert.IsFalse(result);
       }
@@ -108,7 +109,26 @@ namespace Renfield.Licensing.Tests
 
         var sut = new Licenser(options, storage.Object);
 
-        var result = sut.IsValid();
+        var result = sut.IsLicensed();
+
+        Assert.IsFalse(result);
+      }
+
+      [TestMethod]
+      public void ReturnsFalseIfTheKeyIsvalidButHasExpired()
+      {
+        var options = new LicenserOptions();
+        var storage = new Mock<Storage>();
+
+        var registration = ObjectMother.CreateRegistration();
+        registration.Expiration = new DateTime(2000, 1, 1);
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        var sut = new Licenser(options, storage.Object);
+
+        var result = sut.IsLicensed();
 
         Assert.IsFalse(result);
       }
