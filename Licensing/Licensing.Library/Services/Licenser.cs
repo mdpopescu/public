@@ -7,6 +7,11 @@ namespace Renfield.Licensing.Library.Services
 {
   public class Licenser
   {
+    public static Licenser Create(LicenserOptions options)
+    {
+      return new Licenser(options, new SecureStorage(), new WinSys(), new WebRemote());
+    }
+
     public Licenser(LicenserOptions options, Storage storage, Sys sys, Remote remote)
     {
       this.options = options;
@@ -17,7 +22,7 @@ namespace Renfield.Licensing.Library.Services
 
     public bool IsLicensed()
     {
-      var registration = storage.Load(options.Password);
+      var registration = storage.Load();
       if (registration == null)
         return false;
 
@@ -36,7 +41,7 @@ namespace Renfield.Licensing.Library.Services
       if (IsLicensed())
         return true;
 
-      var registration = storage.Load(options.Password);
+      var registration = storage.Load();
       if (registration == null)
         return false;
 
@@ -98,13 +103,13 @@ namespace Renfield.Licensing.Library.Services
     private void UpdateExpirationDate(LicenseRegistration registration, DateTime expiration)
     {
       registration.Expiration = expiration;
-      storage.Save(options.Password, registration);
+      storage.Save(registration);
     }
 
     private void UpdateRemainingRuns(LicenseRegistration registration)
     {
       registration.Limits.Runs--;
-      storage.Save(options.Password, registration);
+      storage.Save(registration);
     }
   }
 }

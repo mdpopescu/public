@@ -57,6 +57,7 @@
     <Compile Include="LicenserTests.cs" />
     <Compile Include="ObjectMother.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecureStorageTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Licensing.Library\Licensing.Library.csproj">

@@ -34,13 +34,9 @@ namespace Renfield.Licensing.Tests
       [TestMethod]
       public void LoadsRegistrationDetailsFromStorage()
       {
-        const string PASSWORD = "abc";
-
-        options.Password = PASSWORD;
-
         sut.IsLicensed();
 
-        storage.Verify(it => it.Load(PASSWORD));
+        storage.Verify(it => it.Load());
       }
 
       [TestMethod]
@@ -57,7 +53,7 @@ namespace Renfield.Licensing.Tests
         var registration = ObjectMother.CreateRegistration();
         registration.Key = null;
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsLicensed();
@@ -71,7 +67,7 @@ namespace Renfield.Licensing.Tests
         var registration = ObjectMother.CreateRegistration();
         registration.Key = "abc";
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsLicensed();
@@ -84,7 +80,7 @@ namespace Renfield.Licensing.Tests
       {
         var registration = ObjectMother.CreateRegistration();
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsLicensed();
@@ -98,7 +94,7 @@ namespace Renfield.Licensing.Tests
         var registration = ObjectMother.CreateRegistration();
         registration.Name = "";
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsLicensed();
@@ -112,7 +108,7 @@ namespace Renfield.Licensing.Tests
         var registration = ObjectMother.CreateRegistration();
         registration.Contact = "";
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsLicensed();
@@ -126,7 +122,7 @@ namespace Renfield.Licensing.Tests
         var registration = ObjectMother.CreateRegistration();
         registration.Expiration = new DateTime(2000, 1, 1);
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsLicensed();
@@ -142,7 +138,7 @@ namespace Renfield.Licensing.Tests
         options.CheckUrl = URL;
         var registration = ObjectMother.CreateRegistration();
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
         sys
           .Setup(it => it.GetProcessorId())
@@ -164,7 +160,7 @@ namespace Renfield.Licensing.Tests
         options.CheckUrl = URL;
         var registration = ObjectMother.CreateRegistration();
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
         sys
           .Setup(it => it.GetProcessorId())
@@ -186,7 +182,7 @@ namespace Renfield.Licensing.Tests
         options.CheckUrl = URL;
         var registration = ObjectMother.CreateRegistration();
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
         sys
           .Setup(it => it.GetProcessorId())
@@ -208,7 +204,7 @@ namespace Renfield.Licensing.Tests
         options.CheckUrl = URL;
         var registration = ObjectMother.CreateRegistration();
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
         sys
           .Setup(it => it.GetProcessorId())
@@ -230,7 +226,7 @@ namespace Renfield.Licensing.Tests
         options.CheckUrl = URL;
         var registration = ObjectMother.CreateRegistration();
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
         sys
           .Setup(it => it.GetProcessorId())
@@ -252,7 +248,7 @@ namespace Renfield.Licensing.Tests
         options.CheckUrl = URL;
         var registration = ObjectMother.CreateRegistration();
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
         sys
           .Setup(it => it.GetProcessorId())
@@ -263,7 +259,7 @@ namespace Renfield.Licensing.Tests
 
         sut.IsLicensed();
 
-        storage.Verify(it => it.Save(It.IsAny<string>(), It.Is<LicenseRegistration>(r => r.Expiration == new DateTime(9999, 12, 31))));
+        storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r => r.Expiration == new DateTime(9999, 12, 31))));
       }
     }
 
@@ -273,13 +269,9 @@ namespace Renfield.Licensing.Tests
       [TestMethod]
       public void LoadsRegistrationDetailsFromStorage()
       {
-        const string PASSWORD = "abc";
-
-        options.Password = PASSWORD;
-
         sut.IsTrial();
 
-        storage.Verify(it => it.Load(PASSWORD));
+        storage.Verify(it => it.Load());
       }
 
       [TestMethod]
@@ -287,8 +279,9 @@ namespace Renfield.Licensing.Tests
       {
         var registration = ObjectMother.CreateRegistration();
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
-          .Returns(registration);
+          .Setup(it => it.Load())
+          .
+          Returns(registration);
 
         var result = sut.IsTrial();
 
@@ -310,7 +303,7 @@ namespace Renfield.Licensing.Tests
         registration.Limits = null;
         registration.Key = null;
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsTrial();
@@ -326,7 +319,7 @@ namespace Renfield.Licensing.Tests
         registration.Limits = new Limits {Days = 1};
         registration.Key = null;
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsTrial();
@@ -342,7 +335,7 @@ namespace Renfield.Licensing.Tests
         registration.Limits = new Limits {Days = 1, Runs = 1};
         registration.Key = null;
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsTrial();
@@ -358,7 +351,7 @@ namespace Renfield.Licensing.Tests
         registration.Limits = new Limits {Days = 1, Runs = 0};
         registration.Key = null;
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsTrial();
@@ -374,7 +367,7 @@ namespace Renfield.Licensing.Tests
         registration.Limits = new Limits {Days = 1, Runs = 1};
         registration.Key = null;
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsTrial();
@@ -390,7 +383,7 @@ namespace Renfield.Licensing.Tests
         registration.Limits = new Limits {Days = -1, Runs = 1};
         registration.Key = null;
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsTrial();
@@ -406,7 +399,7 @@ namespace Renfield.Licensing.Tests
         registration.Limits = new Limits {Days = 1, Runs = -1};
         registration.Key = null;
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         var result = sut.IsTrial();
@@ -422,12 +415,12 @@ namespace Renfield.Licensing.Tests
         registration.Limits = new Limits {Days = 1, Runs = 1};
         registration.Key = null;
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         sut.IsTrial();
 
-        storage.Verify(it => it.Save(It.IsAny<string>(), It.Is<LicenseRegistration>(r => r.Limits.Runs == 0)));
+        storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r => r.Limits.Runs == 0)));
       }
 
       [TestMethod]
@@ -438,12 +431,12 @@ namespace Renfield.Licensing.Tests
         registration.Limits = new Limits {Days = 1, Runs = 0};
         registration.Key = null;
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         sut.IsTrial();
 
-        storage.Verify(it => it.Save(It.IsAny<string>(), It.IsAny<LicenseRegistration>()), Times.Never);
+        storage.Verify(it => it.Save(It.IsAny<LicenseRegistration>()), Times.Never);
       }
 
       [TestMethod]
@@ -454,12 +447,12 @@ namespace Renfield.Licensing.Tests
         registration.Limits = new Limits {Days = 1, Runs = -1};
         registration.Key = null;
         storage
-          .Setup(it => it.Load(It.IsAny<string>()))
+          .Setup(it => it.Load())
           .Returns(registration);
 
         sut.IsTrial();
 
-        storage.Verify(it => it.Save(It.IsAny<string>(), It.IsAny<LicenseRegistration>()), Times.Never);
+        storage.Verify(it => it.Save(It.IsAny<LicenseRegistration>()), Times.Never);
       }
     }
 

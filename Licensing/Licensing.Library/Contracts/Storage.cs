@@ -4,7 +4,7 @@ namespace Renfield.Licensing.Library.Contracts
 {
   public interface Storage
   {
-    LicenseRegistration Load(string password);
-    void Save(string password, LicenseRegistration registration);
+    LicenseRegistration Load();
+    void Save(LicenseRegistration registration);
   }
 }
