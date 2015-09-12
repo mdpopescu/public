@@ -19,9 +19,10 @@ namespace Renfield.Licensing.Library.Services
         return false;
 
       var isGuid = IsValidGuid(registration.Key);
-      var isName = !string.IsNullOrWhiteSpace(registration.Name);
+      var hasName = !string.IsNullOrWhiteSpace(registration.Name);
+      var hasContact = !string.IsNullOrWhiteSpace(registration.Contact);
 
-      return isGuid && isName;
+      return isGuid && hasName && hasContact;
     }
 
     //

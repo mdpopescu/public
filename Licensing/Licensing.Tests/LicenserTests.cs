@@ -93,6 +93,25 @@ namespace Renfield.Licensing.Tests
 
         Assert.IsFalse(result);
       }
+
+      [TestMethod]
+      public void ReturnsFalseIfTheKeyIsvalidButContactIsEmptyOrNull()
+      {
+        var options = new LicenserOptions();
+        var storage = new Mock<Storage>();
+
+        var registration = ObjectMother.CreateRegistration();
+        registration.Contact = "";
+        storage
+          .Setup(it => it.Load(It.IsAny<string>()))
+          .Returns(registration);
+
+        var sut = new Licenser(options, storage.Object);
+
+        var result = sut.IsValid();
+
+        Assert.IsFalse(result);
+      }
     }
 
     [TestClass]
