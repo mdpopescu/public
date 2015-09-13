@@ -29,12 +29,12 @@ This will return *true* if the application should run (either the license is val
 
 Returns the registration details saved in the registry; the application might then choose to display those details, eg a message showing how many days
 are remaining. It is recommended that a text box be provided for the user to enter a license key; if that happens, the application can use the
-CreateRegistration method (below).
+SaveRegistration method (below).
 
 ### Create registration information (eg from the installer)
 
     var details = new LicenseRegistration { ... };
-    licenser.CreateRegistration(details);
+    licenser.SaveRegistration(details);
 
 Creates the registry entry with the given registration details, optionally encrypted with a password. If CheckUrl is not empty, it will first try to register
 the application at the given URL and only save to the registry if everything went ok.
@@ -106,7 +106,7 @@ The licenser will overwrite the expiration date in the registry with the given d
 
 ### Registering
 
-If CheckUrl is present, the CreateRegistration method will (after making sure that the registration information is internally valid) send a POST request to
+If CheckUrl is present, the SaveRegistration method will (after making sure that the registration information is internally valid) send a POST request to
 
 https://{CheckUrl}
 

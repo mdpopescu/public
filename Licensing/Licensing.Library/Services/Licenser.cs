@@ -10,7 +10,8 @@ namespace Renfield.Licensing.Library.Services
     public static Licenser Create(LicenseOptions options)
     {
       var reader = new AssemblyReader();
-      var key = Registry.LocalMachine.OpenSubKey(reader.GetPath());
+      var subkey = reader.GetPath();
+      var key = Registry.LocalMachine.OpenSubKey(subkey) ?? Registry.LocalMachine.CreateSubKey(subkey);
       StringIO io = new RegistryIO(key);
 
       Encryptor encryptor = string.IsNullOrWhiteSpace(options.Password) || string.IsNullOrWhiteSpace(options.Salt)
@@ -50,7 +51,10 @@ namespace Renfield.Licensing.Library.Services
         return false;
 
       if (Remote != null)
-        return CheckRemoteResponse(registration);
+      {
+        var response = GetRemoteResponse(registration.Key);
+        return CheckRemoteResponse(response, registration);
+      }
 
       return true;
     }
@@ -89,12 +93,21 @@ namespace Renfield.Licensing.Library.Services
       return storage.Load();
     }
 
-    public void CreateRegistration(LicenseRegistration registration)
+    public void SaveRegistration(LicenseRegistration registration)
     {
       var fields = registration.GetLicenseFields();
       var data = WebTools.FormUrlEncoded(fields);
 
-      Remote.Post(data);
+      var ok = true;
+
+      if (Remote != null)
+      {
+        var response = Remote.Post(data);
+        ok = CheckRemoteResponse(response, registration);
+      }
+
+      if (ok)
+        storage.Save(registration);
     }
 
     //
@@ -102,31 +115,30 @@ namespace Renfield.Licensing.Library.Services
     private readonly Storage storage;
     private readonly Sys sys;
 
-    private bool CheckRemoteResponse(LicenseRegistration registration)
-    {
-      try
-      {
-        var response = GetRemoteResponse(registration.Key);
-        var parsed = ResponseParser.Parse(response);
-        if (parsed.Key != registration.Key)
-          return false;
-
-        UpdateExpirationDate(registration, parsed.Expiration);
-
-        return DateTime.Today <= parsed.Expiration;
-      }
-      catch
-      {
-        return false;
-      }
-    }
-
     private string GetRemoteResponse(string key)
     {
       var processorId = sys.GetProcessorId();
-      var address = string.Format("Key={0}&ProcessorId={1}", key, processorId);
+      var query = string.Format("Key={0}&ProcessorId={1}", key, processorId);
 
-      return Remote.Get(address);
+      try
+      {
+        return Remote.Get(query);
+      }
+      catch
+      {
+        return null;
+      }
+    }
+
+    private bool CheckRemoteResponse(string response, LicenseRegistration registration)
+    {
+      var parsed = ResponseParser.Parse(response);
+      if (parsed.Key != registration.Key)
+        return false;
+
+      UpdateExpirationDate(registration, parsed.Expiration);
+
+      return DateTime.Today <= parsed.Expiration;
     }
 
     private void UpdateExpirationDate(LicenseRegistration registration, DateTime expiration)

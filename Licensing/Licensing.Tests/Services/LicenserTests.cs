@@ -467,7 +467,7 @@ namespace Renfield.Licensing.Tests.Services
     }
 
     [TestClass]
-    public class CreateRegistration : LicenserTests
+    public class SaveRegistration : LicenserTests
     {
       [TestMethod]
       public void SendsTheDetailsToTheServer()
@@ -480,10 +480,67 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.GetProcessorId())
           .Returns("1");
 
-        sut.CreateRegistration(registration);
+        sut.SaveRegistration(registration);
 
         var data = WebTools.FormUrlEncoded(registration.GetLicenseFields());
         remote.Verify(it => it.Post(data));
+      }
+
+      [TestMethod]
+      public void DoesNotSendTheDetailsToTheServerIfNoRemote()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+        sut.Remote = null;
+
+        sut.SaveRegistration(registration);
+
+        remote.Verify(it => it.Post(It.IsAny<string>()), Times.Never);
+      }
+
+      [TestMethod]
+      public void SavesTheRegistrationIfTheServerReturnedAValidResponse()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+        var data = WebTools.FormUrlEncoded(registration.GetLicenseFields());
+        remote
+          .Setup(it => it.Post(data))
+          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
+
+        sut.SaveRegistration(registration);
+
+        storage.Verify(it => it.Save(registration));
+      }
+
+      [TestMethod]
+      public void AValidRemoteResponseAlsoSetsTheExpirationDateToTheNewValue()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+        var data = WebTools.FormUrlEncoded(registration.GetLicenseFields());
+        remote
+          .Setup(it => it.Post(data))
+          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
+
+        sut.SaveRegistration(registration);
+
+        storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r => r.Expiration == new DateTime(9999, 12, 31))));
       }
     }
   }

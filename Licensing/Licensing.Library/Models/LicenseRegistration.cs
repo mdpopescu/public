@@ -6,6 +6,11 @@ namespace Renfield.Licensing.Library.Models
   [Serializable]
   public class LicenseRegistration
   {
+    public LicenseRegistration()
+    {
+      Limits = new Limits();
+    }
+
     public DateTime CreatedOn { get; set; }
     public Limits Limits { get; set; }
 

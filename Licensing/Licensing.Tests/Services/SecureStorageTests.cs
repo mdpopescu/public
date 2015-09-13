@@ -35,6 +35,18 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
+      public void ReturnsEmptyObjectIfInputIsEmpty()
+      {
+        io
+          .Setup(it => it.Read())
+          .Returns("  ");
+
+        var result = sut.Load();
+
+        Assert.IsNotNull(result);
+      }
+
+      [TestMethod]
       public void DecryptsTheString()
       {
         io

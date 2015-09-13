@@ -20,7 +20,11 @@ namespace Renfield.Licensing.Library.Services
 
     public string Post(string data)
     {
-      return "";
+      using (var web = new WebClient())
+      {
+        web.Headers["Content-Type"] = "application/x-www-form-urlencoded";
+        return web.UploadString(url, data);
+      }
     }
 
     //

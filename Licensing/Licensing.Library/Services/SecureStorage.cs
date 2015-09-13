@@ -16,6 +16,9 @@ namespace Renfield.Licensing.Library.Services
     public LicenseRegistration Load()
     {
       var encrypted = io.Read();
+      if (string.IsNullOrWhiteSpace(encrypted))
+        return new LicenseRegistration();
+
       var decrypted = Encryptor == null ? encrypted : Encryptor.Decrypt(encrypted);
 
       return serializer.Deserialize(decrypted);
