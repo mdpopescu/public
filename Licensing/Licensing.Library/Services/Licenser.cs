@@ -14,7 +14,7 @@ namespace Renfield.Licensing.Library.Services
       var key = Registry.LocalMachine.OpenSubKey(reader.GetPath());
       StringIO io = new RegistryIO(key);
 
-      Encryptor encryptor = new RijndaelEncryptor(options.Password);
+      Encryptor encryptor = new RijndaelEncryptor(options.Password, options.Salt);
       Serializer<LicenseRegistration> serializer = new LicenseSerializer();
       Storage storage = new SecureStorage(io, encryptor, serializer);
 

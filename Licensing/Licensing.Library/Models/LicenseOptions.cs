@@ -3,6 +3,7 @@
   public class LicenseOptions
   {
     public string Password { get; set; }
+    public string Salt { get; set; }
     public string CheckUrl { get; set; }
   }
 }

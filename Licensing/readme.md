@@ -84,6 +84,7 @@ The double check can be simplified by using the ShouldRun method:
 Name        | Description
 ----------- | -----------
 Password    | The encryption key; if not specified, the registry will be unencrypted
+Salt        | The encryption salt; if the key is specified, the salt should too. The salt should be at least 8 characters long
 CheckUrl    | The link used to check the validity of the license (see below); if not specified, the license key is assumed valid if it exists and is a valid guid
 
 ### Checking the license
