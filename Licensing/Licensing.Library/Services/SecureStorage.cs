@@ -5,17 +5,18 @@ namespace Renfield.Licensing.Library.Services
 {
   public class SecureStorage : Storage
   {
-    public SecureStorage(StringIO io, Encryptor encryptor, Serializer<LicenseRegistration> serializer)
+    public SecureStorage(StringIO io, Serializer<LicenseRegistration> serializer)
     {
-      this.encryptor = encryptor;
       this.io = io;
       this.serializer = serializer;
     }
 
+    public Encryptor Encryptor { get; set; }
+
     public LicenseRegistration Load()
     {
       var encrypted = io.Read();
-      var decrypted = encryptor.Decrypt(encrypted);
+      var decrypted = Encryptor == null ? encrypted : Encryptor.Decrypt(encrypted);
 
       return serializer.Deserialize(decrypted);
     }
@@ -23,14 +24,13 @@ namespace Renfield.Licensing.Library.Services
     public void Save(LicenseRegistration registration)
     {
       var decrypted = serializer.Serialize(registration);
-      var encrypted = encryptor.Encrypt(decrypted);
+      var encrypted = Encryptor == null ? decrypted : Encryptor.Encrypt(decrypted);
 
       io.Write(encrypted);
     }
 
     //
 
-    private readonly Encryptor encryptor;
     private readonly StringIO io;
     private readonly Serializer<LicenseRegistration> serializer;
   }

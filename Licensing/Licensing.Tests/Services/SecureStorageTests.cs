@@ -18,9 +18,9 @@ namespace Renfield.Licensing.Tests.Services
     public void SetUp()
     {
       io = new Mock<StringIO>();
-      encryptor = new Mock<Encryptor>();
       serializer = new Mock<Serializer<LicenseRegistration>>();
-      sut = new SecureStorage(io.Object, encryptor.Object, serializer.Object);
+      encryptor = new Mock<Encryptor>();
+      sut = new SecureStorage(io.Object, serializer.Object) {Encryptor = encryptor.Object};
     }
 
     [TestClass]
@@ -44,6 +44,19 @@ namespace Renfield.Licensing.Tests.Services
         sut.Load();
 
         encryptor.Verify(it => it.Decrypt("abc"));
+      }
+
+      [TestMethod]
+      public void DoesNotDecryptIfEncryptorIsNull()
+      {
+        io
+          .Setup(it => it.Read())
+          .Returns("abc");
+        sut.Encryptor = null;
+
+        sut.Load();
+
+        encryptor.Verify(it => it.Decrypt(It.IsAny<string>()), Times.Never);
       }
 
       [TestMethod]
@@ -105,6 +118,20 @@ namespace Renfield.Licensing.Tests.Services
         sut.Save(details);
 
         encryptor.Verify(it => it.Encrypt("abc"));
+      }
+
+      [TestMethod]
+      public void DoesNotEncryptIfEncryptorIsNull()
+      {
+        var details = new LicenseRegistration();
+        serializer
+          .Setup(it => it.Serialize(details))
+          .Returns("abc");
+        sut.Encryptor = null;
+
+        sut.Save(details);
+
+        encryptor.Verify(it => it.Encrypt(It.IsAny<string>()), Times.Never);
       }
 
       [TestMethod]
