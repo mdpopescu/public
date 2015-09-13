@@ -49,8 +49,10 @@
     <Compile Include="Models\LicenseOptions.cs" />
     <Compile Include="Models\LicenseRegistration.cs" />
     <Compile Include="Models\Limits.cs" />
+    <Compile Include="Services\AssemblyReader.cs" />
     <Compile Include="Services\Licenser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\RegistryIO.cs" />
     <Compile Include="Services\RijndaelEncryptor.cs" />
     <Compile Include="Services\SecureStorage.cs" />
     <Compile Include="Services\WebRemote.cs" />

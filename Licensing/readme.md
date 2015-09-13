@@ -1,4 +1,4 @@
-# Licensing library for a C# GUI application
+# Licensing library
 
 ## Usage:
 

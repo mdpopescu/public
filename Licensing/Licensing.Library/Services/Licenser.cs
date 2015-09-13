@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Microsoft.Win32;
 using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
 
@@ -9,7 +10,10 @@ namespace Renfield.Licensing.Library.Services
   {
     public static Licenser Create(LicenseOptions options)
     {
-      StringIO io = null;
+      var reader = new AssemblyReader();
+      var key = Registry.LocalMachine.OpenSubKey(reader.GetPath());
+      StringIO io = new RegistryIO(key);
+
       Encryptor encryptor = new RijndaelEncryptor(options.Password);
       Serializer<LicenseRegistration> serializer = new LicenseSerializer();
 
