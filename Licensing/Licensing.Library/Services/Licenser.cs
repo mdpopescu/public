@@ -81,6 +81,19 @@ namespace Renfield.Licensing.Library.Services
       return IsLicensed() || IsTrial();
     }
 
+    public LicenseRegistration GetRegistration()
+    {
+      return storage.Load();
+    }
+
+    public void CreateRegistration(LicenseRegistration registration)
+    {
+      var fields = registration.GetLicenseFields();
+      var data = WebTools.FormUrlEncoded(fields);
+
+      Remote.Post(data);
+    }
+
     //
 
     private readonly Storage storage;

@@ -5,6 +5,8 @@ namespace Renfield.Licensing.Tests
 {
   public static class ObjectMother
   {
+    public const string KEY = "{D98F6376-94F7-4D82-AA37-FC00F0166700}";
+
     public static LicenseRegistration CreateRegistration()
     {
       return new LicenseRegistration
@@ -15,9 +17,10 @@ namespace Renfield.Licensing.Tests
           Days = -1,
           Runs = -1,
         },
-        Key = "{D98F6376-94F7-4D82-AA37-FC00F0166700}",
+        Key = KEY,
         Name = "Marcel",
         Contact = "mdpopescu@gmail.com",
+        ProcessorId = "1",
         Expiration = new DateTime(9999, 12, 31),
       };
     }

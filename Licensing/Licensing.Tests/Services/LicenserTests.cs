@@ -116,6 +116,20 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
+      public void ReturnsFalseIfTheKeyIsvalidButProcessorIdIsEmptyOrNull()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.ProcessorId = "";
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+
+        var result = sut.IsLicensed();
+
+        Assert.IsFalse(result);
+      }
+
+      [TestMethod]
       public void ReturnsFalseIfTheKeyIsvalidButHasExpired()
       {
         var registration = ObjectMother.CreateRegistration();
@@ -127,6 +141,22 @@ namespace Renfield.Licensing.Tests.Services
         var result = sut.IsLicensed();
 
         Assert.IsFalse(result);
+      }
+
+      [TestMethod]
+      public void ChecksWithTheRemoteServer()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+
+        sut.IsLicensed();
+
+        remote.Verify(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"));
       }
 
       [TestMethod]
@@ -225,7 +255,7 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void RemoteCheckAlsoSetsTheExpirationDateToTheNewValue()
+      public void AValidRemoteResponseAlsoSetsTheExpirationDateToTheNewValue()
       {
         var registration = ObjectMother.CreateRegistration();
         storage
@@ -261,8 +291,7 @@ namespace Renfield.Licensing.Tests.Services
         var registration = ObjectMother.CreateRegistration();
         storage
           .Setup(it => it.Load())
-          .
-          Returns(registration);
+          .Returns(registration);
 
         var result = sut.IsTrial();
 
@@ -393,7 +422,7 @@ namespace Renfield.Licensing.Tests.Services
       {
         var registration = ObjectMother.CreateRegistration();
         registration.CreatedOn = DateTime.Today;
-        registration.Limits = new Limits {Days = 1, Runs = 1};
+        registration.Limits = new Limits {Days = 1, Runs = 2};
         registration.Key = null;
         storage
           .Setup(it => it.Load())
@@ -401,7 +430,7 @@ namespace Renfield.Licensing.Tests.Services
 
         sut.IsTrial();
 
-        storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r => r.Limits.Runs == 0)));
+        storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r => r.Limits.Runs == 1)));
       }
 
       [TestMethod]
@@ -438,15 +467,24 @@ namespace Renfield.Licensing.Tests.Services
     }
 
     [TestClass]
-    public class GetRegistration : LicenserTests
-    {
-      //
-    }
-
-    [TestClass]
     public class CreateRegistration : LicenserTests
     {
-      //
+      [TestMethod]
+      public void SendsTheDetailsToTheServer()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+
+        sut.CreateRegistration(registration);
+
+        var data = WebTools.FormUrlEncoded(registration.GetLicenseFields());
+        remote.Verify(it => it.Post(data));
+      }
     }
   }
 }

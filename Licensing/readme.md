@@ -110,7 +110,8 @@ If CheckUrl is present, the CreateRegistration method will (after making sure th
 
 https://{CheckUrl}
 
-with Content-Type set to application/x-www-form-urlencoded and the LicenseRegistration details.
+with Content-Type set to application/x-www-form-urlencoded and the LicenseRegistration details. If the server returns a correctly formatted response
+(see above), the registration details are written to the registry.
 
 
 ## Limits

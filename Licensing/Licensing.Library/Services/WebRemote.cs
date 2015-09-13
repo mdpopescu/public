@@ -18,6 +18,11 @@ namespace Renfield.Licensing.Library.Services
       }
     }
 
+    public string Post(string data)
+    {
+      return "";
+    }
+
     //
 
     private readonly string url;
