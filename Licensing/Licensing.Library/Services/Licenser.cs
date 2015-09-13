@@ -11,7 +11,8 @@ namespace Renfield.Licensing.Library.Services
     {
       var reader = new AssemblyReader();
       var subkey = reader.GetPath();
-      var key = Registry.LocalMachine.OpenSubKey(subkey) ?? Registry.LocalMachine.CreateSubKey(subkey);
+      var key = Registry.LocalMachine.OpenSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree)
+                ?? Registry.LocalMachine.CreateSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree);
       StringIO io = new RegistryIO(key);
 
       Encryptor encryptor = string.IsNullOrWhiteSpace(options.Password) || string.IsNullOrWhiteSpace(options.Salt)
