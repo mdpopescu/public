@@ -5,12 +5,21 @@ namespace Renfield.Licensing.Library.Services
 {
   public class WebRemote : Remote
   {
-    public string Get(string address)
+    public WebRemote(string url)
+    {
+      this.url = url;
+    }
+
+    public string Get(string query)
     {
       using (var web = new WebClient())
       {
-        return web.DownloadString(address);
+        return web.DownloadString(url + "?" + query);
       }
     }
+
+    //
+
+    private readonly string url;
   }
 }

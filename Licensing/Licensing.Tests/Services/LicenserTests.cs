@@ -10,7 +10,6 @@ namespace Renfield.Licensing.Tests.Services
   [TestClass]
   public class LicenserTests
   {
-    private LicenseOptions options;
     private Mock<Storage> storage;
     private Mock<Sys> sys;
     private Mock<Remote> remote;
@@ -20,12 +19,11 @@ namespace Renfield.Licensing.Tests.Services
     [TestInitialize]
     public void SetUp()
     {
-      options = new LicenseOptions();
       storage = new Mock<Storage>();
       sys = new Mock<Sys>();
       remote = new Mock<Remote>();
 
-      sut = new Licenser(options, storage.Object, sys.Object, remote.Object);
+      sut = new Licenser(storage.Object, sys.Object) {Remote = remote.Object};
     }
 
     [TestClass]
@@ -76,12 +74,13 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void ReturnsTrueIfTheLicenseKeyIsAGuid()
+      public void ReturnsTrueIfTheLicenseKeyIsAGuidAndNoRemoteCheck()
       {
         var registration = ObjectMother.CreateRegistration();
         storage
           .Setup(it => it.Load())
           .Returns(registration);
+        sut.Remote = null;
 
         var result = sut.IsLicensed();
 
@@ -133,9 +132,6 @@ namespace Renfield.Licensing.Tests.Services
       [TestMethod]
       public void ReturnsFalseIfTheRemoteCheckFails()
       {
-        const string URL = "abc";
-
-        options.CheckUrl = URL;
         var registration = ObjectMother.CreateRegistration();
         storage
           .Setup(it => it.Load())
@@ -144,7 +140,7 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.GetProcessorId())
           .Returns("1");
         remote
-          .Setup(it => it.Get("https://" + URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Throws(new Exception());
 
         var result = sut.IsLicensed();
@@ -155,9 +151,6 @@ namespace Renfield.Licensing.Tests.Services
       [TestMethod]
       public void ReturnsFalseIfTheRemoteCheckReturnsAnEmptyString()
       {
-        const string URL = "abc";
-
-        options.CheckUrl = URL;
         var registration = ObjectMother.CreateRegistration();
         storage
           .Setup(it => it.Load())
@@ -166,7 +159,7 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.GetProcessorId())
           .Returns("1");
         remote
-          .Setup(it => it.Get("https://" + URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("");
 
         var result = sut.IsLicensed();
@@ -177,9 +170,6 @@ namespace Renfield.Licensing.Tests.Services
       [TestMethod]
       public void ReturnsFalseIfTheRemoteCheckReturnsAnInvalidResponse()
       {
-        const string URL = "abc";
-
-        options.CheckUrl = URL;
         var registration = ObjectMother.CreateRegistration();
         storage
           .Setup(it => it.Load())
@@ -188,7 +178,7 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.GetProcessorId())
           .Returns("1");
         remote
-          .Setup(it => it.Get("https://" + URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("xyz");
 
         var result = sut.IsLicensed();
@@ -199,9 +189,6 @@ namespace Renfield.Licensing.Tests.Services
       [TestMethod]
       public void ReturnsTrueIfTheRemoteCheckReturnsAValidResponse()
       {
-        const string URL = "abc";
-
-        options.CheckUrl = URL;
         var registration = ObjectMother.CreateRegistration();
         storage
           .Setup(it => it.Load())
@@ -210,7 +197,7 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.GetProcessorId())
           .Returns("1");
         remote
-          .Setup(it => it.Get("https://" + URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
 
         var result = sut.IsLicensed();
@@ -221,9 +208,6 @@ namespace Renfield.Licensing.Tests.Services
       [TestMethod]
       public void ReturnsFalseIfTheRemoteCheckReturnsAnExpirationDateInThePast()
       {
-        const string URL = "abc";
-
-        options.CheckUrl = URL;
         var registration = ObjectMother.CreateRegistration();
         storage
           .Setup(it => it.Load())
@@ -232,7 +216,7 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.GetProcessorId())
           .Returns("1");
         remote
-          .Setup(it => it.Get("https://" + URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 2000-01-01");
 
         var result = sut.IsLicensed();
@@ -243,9 +227,6 @@ namespace Renfield.Licensing.Tests.Services
       [TestMethod]
       public void RemoteCheckAlsoSetsTheExpirationDateToTheNewValue()
       {
-        const string URL = "abc";
-
-        options.CheckUrl = URL;
         var registration = ObjectMother.CreateRegistration();
         storage
           .Setup(it => it.Load())
@@ -254,7 +235,7 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.GetProcessorId())
           .Returns("1");
         remote
-          .Setup(it => it.Get("https://" + URL + "?Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
 
         sut.IsLicensed();

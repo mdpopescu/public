@@ -16,21 +16,24 @@ namespace Renfield.Licensing.Library.Services
 
       Encryptor encryptor = new RijndaelEncryptor(options.Password);
       Serializer<LicenseRegistration> serializer = new LicenseSerializer();
+      Storage storage = new SecureStorage(io, encryptor, serializer);
 
-      return new Licenser(
-        options,
-        new SecureStorage(io, encryptor, serializer),
-        new WinSys(),
-        new WebRemote());
+      Sys sys = new WinSys();
+
+      Remote remote = string.IsNullOrWhiteSpace(options.CheckUrl)
+        ? null
+        : new WebRemote("https://" + options.CheckUrl);
+
+      return new Licenser(storage, sys) {Remote = remote};
     }
 
-    public Licenser(LicenseOptions options, Storage storage, Sys sys, Remote remote)
+    public Licenser(Storage storage, Sys sys)
     {
-      this.options = options;
       this.storage = storage;
       this.sys = sys;
-      this.remote = remote;
     }
+
+    public Remote Remote { get; set; }
 
     public bool IsLicensed()
     {
@@ -41,11 +44,10 @@ namespace Renfield.Licensing.Library.Services
       if (!registration.IsValidLicense())
         return false;
 
-      // only check remotely if there is a CheckUrl
-      if (string.IsNullOrWhiteSpace(options.CheckUrl))
-        return true;
+      if (Remote != null)
+        return CheckRemoteResponse(registration);
 
-      return CheckRemoteResponse(registration);
+      return true;
     }
 
     public bool IsTrial()
@@ -79,10 +81,8 @@ namespace Renfield.Licensing.Library.Services
 
     //
 
-    private readonly LicenseOptions options;
     private readonly Storage storage;
     private readonly Sys sys;
-    private readonly Remote remote;
 
     private bool CheckRemoteResponse(LicenseRegistration registration)
     {
@@ -107,9 +107,9 @@ namespace Renfield.Licensing.Library.Services
     private string GetRemoteResponse(string key)
     {
       var processorId = sys.GetProcessorId();
-      var address = string.Format("https://{0}?Key={1}&ProcessorId={2}", options.CheckUrl, key, processorId);
+      var address = string.Format("Key={0}&ProcessorId={1}", key, processorId);
 
-      return remote.Get(address);
+      return Remote.Get(address);
     }
 
     private void UpdateExpirationDate(LicenseRegistration registration, DateTime expiration)

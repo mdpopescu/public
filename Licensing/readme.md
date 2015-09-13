@@ -118,7 +118,7 @@ The install can set up the following limits; at least one of them must be presen
 
 Name   | Description
 ------ | -----------
-Days   | The total number of days (defaults to unlimited)
-Runs   | The total number of runs (defaults to unlimited)
+Days   | The total number of days (-1 means unlimited)
+Runs   | The total number of runs (-1 means unlimited)
 
 If any of these conditions is met the trial expires - the validity check returns false.

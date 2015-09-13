@@ -2,6 +2,6 @@
 {
   public interface Remote
   {
-    string Get(string address);
+    string Get(string query);
   }
 }

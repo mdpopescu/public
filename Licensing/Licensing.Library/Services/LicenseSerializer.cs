@@ -9,11 +9,14 @@ namespace Renfield.Licensing.Library.Services
 {
   public class LicenseSerializer : Serializer<LicenseRegistration>
   {
+    public LicenseSerializer()
+    {
+      serializer = new XmlSerializer(typeof (LicenseRegistration));
+    }
+
     public string Serialize(LicenseRegistration obj)
     {
-      var serializer = new XmlSerializer(typeof (LicenseRegistration));
       var settings = new XmlWriterSettings {Encoding = new UnicodeEncoding(false, false), Indent = false, OmitXmlDeclaration = false};
-
       using (var textWriter = new StringWriter())
       {
         using (var xmlWriter = XmlWriter.Create(textWriter, settings))
@@ -27,7 +30,6 @@ namespace Renfield.Licensing.Library.Services
 
     public LicenseRegistration Deserialize(string s)
     {
-      var serializer = new XmlSerializer(typeof (LicenseRegistration));
       var settings = new XmlReaderSettings();
 
       using (var textReader = new StringReader(s))
@@ -38,5 +40,9 @@ namespace Renfield.Licensing.Library.Services
         }
       }
     }
+
+    //
+
+    private readonly XmlSerializer serializer;
   }
 }
