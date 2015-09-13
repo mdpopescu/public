@@ -23,7 +23,7 @@ namespace Renfield.Licensing.Tests.Services
       sys = new Mock<Sys>();
       remote = new Mock<Remote>();
 
-      sut = new Licenser(storage.Object, sys.Object) {Remote = remote.Object};
+      sut = new Licenser(storage.Object, sys.Object) {Remote = remote.Object, ResponseParser = new ResponseParserImpl()};
     }
 
     [TestClass]

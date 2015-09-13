@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using Microsoft.Win32;
 using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
@@ -25,8 +24,11 @@ namespace Renfield.Licensing.Library.Services
       Remote remote = string.IsNullOrWhiteSpace(options.CheckUrl)
         ? null
         : new WebRemote("https://" + options.CheckUrl);
+      ResponseParser parser = remote == null
+        ? null
+        : new ResponseParserImpl();
 
-      return new Licenser(storage, sys) {Remote = remote};
+      return new Licenser(storage, sys) {Remote = remote, ResponseParser = parser};
     }
 
     public Licenser(Storage storage, Sys sys)
@@ -36,6 +38,7 @@ namespace Renfield.Licensing.Library.Services
     }
 
     public Remote Remote { get; set; }
+    public ResponseParser ResponseParser { get; set; }
 
     public bool IsLicensed()
     {
@@ -104,14 +107,13 @@ namespace Renfield.Licensing.Library.Services
       try
       {
         var response = GetRemoteResponse(registration.Key);
-        var parts = response.Split(' ');
-        if (parts[0] != registration.Key)
+        var parsed = ResponseParser.Parse(response);
+        if (parsed.Key != registration.Key)
           return false;
 
-        var expiration = DateTime.ParseExact(parts[1], "yyyy-MM-dd", CultureInfo.InvariantCulture);
-        UpdateExpirationDate(registration, expiration);
+        UpdateExpirationDate(registration, parsed.Expiration);
 
-        return DateTime.Today <= expiration;
+        return DateTime.Today <= parsed.Expiration;
       }
       catch
       {
