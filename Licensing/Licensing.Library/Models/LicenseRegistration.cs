@@ -20,15 +20,6 @@ namespace Renfield.Licensing.Library.Models
     public string ProcessorId { get; set; }
     public DateTime Expiration { get; set; }
 
-    public bool IsValidLicense()
-    {
-      return IsValidGuid(Key) &&
-             !string.IsNullOrWhiteSpace(Name) &&
-             !string.IsNullOrWhiteSpace(Contact) &&
-             !string.IsNullOrWhiteSpace(ProcessorId) &&
-             DateTime.Today <= Expiration;
-    }
-
     public IEnumerable<KeyValuePair<string, string>> GetLicenseFields()
     {
       yield return new KeyValuePair<string, string>("Key", Key);
@@ -36,14 +27,6 @@ namespace Renfield.Licensing.Library.Models
       yield return new KeyValuePair<string, string>("Contact", Contact);
       yield return new KeyValuePair<string, string>("ProcessorId", ProcessorId);
       yield return new KeyValuePair<string, string>("Expiration", Expiration.ToString("yyyy-MM-dd"));
-    }
-
-    //
-
-    private static bool IsValidGuid(string s)
-    {
-      Guid guid;
-      return Guid.TryParse(s + "", out guid);
     }
   }
 }

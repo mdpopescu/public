@@ -1,0 +1,2 @@
+x add a LicenseValidator class and move LicenseRegistration.IsValidLicense to it.
+

@@ -12,6 +12,7 @@ namespace Renfield.Licensing.Tests.Services
   {
     private Mock<Storage> storage;
     private Mock<Sys> sys;
+    private Mock<Validator> validator;
     private Mock<Remote> remote;
 
     private Licenser sut;
@@ -22,8 +23,9 @@ namespace Renfield.Licensing.Tests.Services
       storage = new Mock<Storage>();
       sys = new Mock<Sys>();
       remote = new Mock<Remote>();
+      validator = new Mock<Validator>();
 
-      sut = new Licenser(storage.Object, sys.Object) {Remote = remote.Object, ResponseParser = new ResponseParserImpl()};
+      sut = new Licenser(storage.Object, sys.Object, validator.Object) {Remote = remote.Object, ResponseParser = new ResponseParserImpl()};
     }
 
     [TestClass]
@@ -46,13 +48,15 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void ReturnsFalseIfTheLicenseKeyIsNull()
+      public void ReturnsFalseIfTheLicenseIsInvalid()
       {
         var registration = ObjectMother.CreateRegistration();
-        registration.Key = null;
         storage
           .Setup(it => it.Load())
           .Returns(registration);
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(false);
 
         var result = sut.IsLicensed();
 
@@ -60,87 +64,20 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void ReturnsFalseIfTheLicenseKeyIsNotAGuid()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        registration.Key = "abc";
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-
-        var result = sut.IsLicensed();
-
-        Assert.IsFalse(result);
-      }
-
-      [TestMethod]
-      public void ReturnsTrueIfTheLicenseKeyIsAGuidAndNoRemoteCheck()
+      public void ReturnsTrueIfTheLicenseIsValidAndNoRemoteCheck()
       {
         var registration = ObjectMother.CreateRegistration();
         storage
           .Setup(it => it.Load())
           .Returns(registration);
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
         sut.Remote = null;
 
         var result = sut.IsLicensed();
 
         Assert.IsTrue(result);
-      }
-
-      [TestMethod]
-      public void ReturnsFalseIfTheKeyIsvalidButNameIsEmptyOrNull()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        registration.Name = "";
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-
-        var result = sut.IsLicensed();
-
-        Assert.IsFalse(result);
-      }
-
-      [TestMethod]
-      public void ReturnsFalseIfTheKeyIsvalidButContactIsEmptyOrNull()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        registration.Contact = "";
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-
-        var result = sut.IsLicensed();
-
-        Assert.IsFalse(result);
-      }
-
-      [TestMethod]
-      public void ReturnsFalseIfTheKeyIsvalidButProcessorIdIsEmptyOrNull()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        registration.ProcessorId = "";
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-
-        var result = sut.IsLicensed();
-
-        Assert.IsFalse(result);
-      }
-
-      [TestMethod]
-      public void ReturnsFalseIfTheKeyIsvalidButHasExpired()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        registration.Expiration = new DateTime(2000, 1, 1);
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-
-        var result = sut.IsLicensed();
-
-        Assert.IsFalse(result);
       }
 
       [TestMethod]
@@ -153,6 +90,9 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
 
         sut.IsLicensed();
 
@@ -169,6 +109,9 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
         remote
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Throws(new Exception());
@@ -188,6 +131,9 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
         remote
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("");
@@ -207,6 +153,9 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
         remote
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("xyz");
@@ -226,6 +175,9 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
         remote
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
@@ -245,6 +197,9 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
         remote
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 2000-01-01");
@@ -264,6 +219,9 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
         remote
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");

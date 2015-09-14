@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
+using Renfield.Licensing.Library.Services.Validators;
 
 namespace Renfield.Licensing.Library.Services
 {
@@ -11,8 +12,8 @@ namespace Renfield.Licensing.Library.Services
     {
       var reader = new AssemblyReader();
       var subkey = reader.GetPath();
-      var key = Registry.LocalMachine.OpenSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree)
-                ?? Registry.LocalMachine.CreateSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree);
+      var key = Registry.CurrentUser.OpenSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree)
+                ?? Registry.CurrentUser.CreateSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree);
       StringIO io = new RegistryIO(key);
 
       Encryptor encryptor = string.IsNullOrWhiteSpace(options.Password) || string.IsNullOrWhiteSpace(options.Salt)
@@ -30,13 +31,21 @@ namespace Renfield.Licensing.Library.Services
         ? null
         : new ResponseParserImpl();
 
-      return new Licenser(storage, sys) {Remote = remote, ResponseParser = parser};
+      Validator chain = new KeyValidator(
+        new NameValidator(
+          new ContactValidator(
+            new ProcessorIdValidator(
+              new ExpirationValidator(
+                null)))));
+
+      return new Licenser(storage, sys, chain) {Remote = remote, ResponseParser = parser};
     }
 
-    public Licenser(Storage storage, Sys sys)
+    public Licenser(Storage storage, Sys sys, Validator validator)
     {
       this.storage = storage;
       this.sys = sys;
+      this.validator = validator;
     }
 
     public Remote Remote { get; set; }
@@ -48,7 +57,7 @@ namespace Renfield.Licensing.Library.Services
       if (registration == null)
         return false;
 
-      if (!registration.IsValidLicense())
+      if (!validator.Isvalid(registration))
         return false;
 
       if (Remote != null)
@@ -115,6 +124,7 @@ namespace Renfield.Licensing.Library.Services
 
     private readonly Storage storage;
     private readonly Sys sys;
+    private readonly Validator validator;
 
     private string GetRemoteResponse(string key)
     {
