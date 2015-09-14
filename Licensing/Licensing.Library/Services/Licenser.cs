@@ -105,6 +105,8 @@ namespace Renfield.Licensing.Library.Services
 
     public void SaveRegistration(LicenseRegistration registration)
     {
+      registration.ProcessorId = sys.GetProcessorId();
+
       var fields = registration.GetLicenseFields();
       var data = WebTools.FormUrlEncoded(fields);
 

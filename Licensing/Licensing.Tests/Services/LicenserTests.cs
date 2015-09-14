@@ -428,6 +428,38 @@ namespace Renfield.Licensing.Tests.Services
     public class SaveRegistration : LicenserTests
     {
       [TestMethod]
+      public void GetsTheProcessorId()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+
+        sut.SaveRegistration(registration);
+
+        sys.Verify(it => it.GetProcessorId());
+      }
+
+      [TestMethod]
+      public void SetsTheProcessorIdInTheRegistrationDetails()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("2");
+
+        sut.SaveRegistration(registration);
+
+        Assert.AreEqual("2", registration.ProcessorId);
+      }
+
+      [TestMethod]
       public void SendsTheDetailsToTheServer()
       {
         var registration = ObjectMother.CreateRegistration();
