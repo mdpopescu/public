@@ -1,4 +1,5 @@
-﻿using Renfield.Licensing.Library.Contracts;
+﻿using System;
+using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
 
 namespace Renfield.Licensing.Library.Services.Validators
@@ -7,23 +8,25 @@ namespace Renfield.Licensing.Library.Services.Validators
   {
     public bool Isvalid(LicenseRegistration registration)
     {
-      var valid = InternalIsValid(registration);
+      var valid = InternalIsValid(func(registration));
       return next == null
         ? valid
-        : next.Isvalid(registration);
+        : valid && next.Isvalid(registration);
     }
 
     //
 
-    protected abstract bool InternalIsValid(LicenseRegistration registration);
+    protected abstract bool InternalIsValid(object obj);
 
-    protected BaseValidator(Validator next)
+    protected BaseValidator(Func<LicenseRegistration, object> func, Validator next)
     {
+      this.func = func;
       this.next = next;
     }
 
     //
 
+    private readonly Func<LicenseRegistration, object> func;
     private readonly Validator next;
   }
 }

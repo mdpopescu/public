@@ -31,11 +31,11 @@ namespace Renfield.Licensing.Library.Services
         ? null
         : new ResponseParserImpl();
 
-      Validator chain = new KeyValidator(
-        new NameValidator(
-          new ContactValidator(
-            new ProcessorIdValidator(
-              new ExpirationValidator(
+      Validator chain = new GuidValidator(it => it.Key,
+        new NonEmptyValidator(it => it.Name,
+          new NonEmptyValidator(it => it.Contact,
+            new NonEmptyValidator(it => it.ProcessorId,
+              new ExpirationValidator(it => it.Expiration,
                 null)))));
 
       return new Licenser(storage, sys, chain) {Remote = remote, ResponseParser = parser};

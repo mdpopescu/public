@@ -4,16 +4,16 @@ using Renfield.Licensing.Library.Models;
 
 namespace Renfield.Licensing.Library.Services.Validators
 {
-  public class ExpirationValidator : BaseValidator
+  public class NonEmptyValidator : BaseValidator
   {
-    public ExpirationValidator(Func<LicenseRegistration, object> func, Validator next)
+    public NonEmptyValidator(Func<LicenseRegistration, object> func, Validator next)
       : base(func, next)
     {
     }
 
     protected override bool InternalIsValid(object obj)
     {
-      return obj is DateTime && DateTime.Today <= (DateTime) obj;
+      return !string.IsNullOrWhiteSpace(obj as string);
     }
   }
 }
