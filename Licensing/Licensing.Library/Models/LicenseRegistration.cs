@@ -8,6 +8,7 @@ namespace Renfield.Licensing.Library.Models
   {
     public LicenseRegistration()
     {
+      CreatedOn = DateTime.Today;
       Limits = new Limits();
     }
 
