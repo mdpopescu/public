@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.Licensing.Library.Contracts;
@@ -469,11 +470,13 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
+        sys
+          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
+          .Returns("abc");
 
         sut.SaveRegistration(registration);
 
-        var data = WebTools.FormUrlEncoded(registration.GetLicenseFields());
-        remote.Verify(it => it.Post(data));
+        remote.Verify(it => it.Post("abc"));
       }
 
       [TestMethod]
@@ -494,6 +497,23 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
+      public void DoesNotTryToEncodeTheFieldsIfNoRemote()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+        sut.Remote = null;
+
+        sut.SaveRegistration(registration);
+
+        sys.Verify(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()), Times.Never);
+      }
+
+      [TestMethod]
       public void SavesTheRegistrationIfTheServerReturnedAValidResponse()
       {
         var registration = ObjectMother.CreateRegistration();
@@ -503,9 +523,11 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
-        var data = WebTools.FormUrlEncoded(registration.GetLicenseFields());
+        sys
+          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
+          .Returns("abc");
         remote
-          .Setup(it => it.Post(data))
+          .Setup(it => it.Post("abc"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
 
         sut.SaveRegistration(registration);
@@ -523,9 +545,11 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
-        var data = WebTools.FormUrlEncoded(registration.GetLicenseFields());
+        sys
+          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
+          .Returns("abc");
         remote
-          .Setup(it => it.Post(data))
+          .Setup(it => it.Post("abc"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
 
         sut.SaveRegistration(registration);

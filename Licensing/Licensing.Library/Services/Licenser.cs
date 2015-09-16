@@ -114,12 +114,12 @@ namespace Renfield.Licensing.Library.Services
       registration.ProcessorId = sys.GetProcessorId();
 
       var fields = registration.GetLicenseFields();
-      var data = WebTools.FormUrlEncoded(fields);
 
       var ok = true;
 
       if (Remote != null)
       {
+        var data = sys.Encode(fields);
         var response = Remote.Post(data);
         ok = CheckRemoteResponse(response, registration);
       }
