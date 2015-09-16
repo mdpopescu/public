@@ -10,12 +10,13 @@ namespace Renfield.Licensing.Library.Services
       assembly = Assembly.GetEntryAssembly();
     }
 
-    public string GetPath()
-    {
-      var company = GetAttribute<AssemblyCompanyAttribute>(it => it.Company);
-      var product = GetAttribute<AssemblyProductAttribute>(it => it.Product);
+    public string Company { get; private set; }
+    public string Product { get; private set; }
 
-      return string.Format(@"Software\{0}\{1}", company, product);
+    public void ReadValues()
+    {
+      Company = GetAttribute<AssemblyCompanyAttribute>(it => it.Company);
+      Product = GetAttribute<AssemblyProductAttribute>(it => it.Product);
     }
 
     //

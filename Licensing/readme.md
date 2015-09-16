@@ -86,6 +86,8 @@ Name        | Description
 Password    | The encryption key; if not specified, the registry will be unencrypted
 Salt        | The encryption salt; if the key is specified, the salt should too. The salt should be at least 8 characters long
 CheckUrl    | The link used to check the validity of the license (see below); if not specified, the license key is assumed valid if it exists and is a valid guid
+Company     | The company name used for the registry key; defaults to the value in the entry assembly (the main application)
+Product     | The product name used for the registry key; defaults to the value in the entry assembly (the main application)
 
 ### Checking the license
 

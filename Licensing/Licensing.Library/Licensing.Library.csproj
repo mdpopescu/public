@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\Encryptor.cs" />
+    <Compile Include="Contracts\PathBuilder.cs" />
     <Compile Include="Contracts\Remote.cs" />
     <Compile Include="Contracts\ResponseParser.cs" />
     <Compile Include="Contracts\Serializer.cs" />
@@ -48,6 +49,7 @@
     <Compile Include="Contracts\StringIO.cs" />
     <Compile Include="Contracts\Sys.cs" />
     <Compile Include="Contracts\Validator.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\LicenseOptions.cs" />
     <Compile Include="Models\LicenseRegistration.cs" />
     <Compile Include="Models\Limits.cs" />
@@ -55,6 +57,7 @@
     <Compile Include="Services\AssemblyReader.cs" />
     <Compile Include="Services\Licenser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\PathBuilderImpl.cs" />
     <Compile Include="Services\Validators\NonEmptyValidator.cs" />
     <Compile Include="Services\Validators\BaseValidator.cs" />
     <Compile Include="Services\Validators\ExpirationValidator.cs" />
