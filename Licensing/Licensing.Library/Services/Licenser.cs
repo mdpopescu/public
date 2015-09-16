@@ -14,8 +14,8 @@ namespace Renfield.Licensing.Library.Services
       var reader = new AssemblyReader();
       reader.ReadValues();
 
-      var company = reader.Company.NullIfEmpty() ?? options.Company ?? "[Company Name]";
-      var product = reader.Product.NullIfEmpty() ?? options.Product ?? "[Company Name]";
+      var company = options.Company ?? reader.Company.NullIfEmpty() ?? "[Company Name]";
+      var product = options.Product ?? reader.Product.NullIfEmpty() ?? "[Company Name]";
       PathBuilder pathBuilder = new PathBuilderImpl();
       var subkey = pathBuilder.GetPath(company, product);
       var key = Registry.CurrentUser.OpenSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree)
