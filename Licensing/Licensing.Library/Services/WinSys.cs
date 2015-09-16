@@ -19,7 +19,7 @@ namespace Renfield.Licensing.Library.Services
 
     public string Encode(IEnumerable<KeyValuePair<string, string>> pairs)
     {
-      var fields = pairs.Select(pair => pair.Key + "=" + Uri.EscapeDataString(pair.Value));
+      var fields = pairs.Select(pair => pair.Key + "=" + Uri.EscapeDataString(pair.Value + ""));
       return string.Join("&", fields);
     }
   }
