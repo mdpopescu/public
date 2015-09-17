@@ -2,7 +2,7 @@
 
 namespace Renfield.Licensing.Library.Services
 {
-  public class PathBuilderImpl : PathBuilder
+  public class RegistryPathBuilder : PathBuilder
   {
     public string GetPath(string company, string product)
     {

@@ -16,7 +16,7 @@ namespace Renfield.Licensing.Library.Services
       DetailsReader reader = new CompositeDetailsReader(r1, r2);
       var details = reader.Read();
 
-      PathBuilder pathBuilder = new PathBuilderImpl();
+      PathBuilder pathBuilder = new RegistryPathBuilder();
       var subkey = pathBuilder.GetPath(details.Company, details.Product);
       var key = Registry.CurrentUser.OpenSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree)
                 ?? Registry.CurrentUser.CreateSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree);
@@ -57,63 +57,42 @@ namespace Renfield.Licensing.Library.Services
     public Remote Remote { get; set; }
     public ResponseParser ResponseParser { get; set; }
 
-    public bool IsLicensed()
+    public bool IsLicensed { get; private set; }
+    public bool IsTrial { get; private set; }
+
+    public bool ShouldRun
     {
-      var registration = storage.Load();
+      get { return IsLicensed || IsTrial; }
+    }
+
+    public void Initialize()
+    {
+      registration = storage.Load();
       if (registration == null)
-        return false;
-
-      if (!validator.Isvalid(registration))
-        return false;
-
-      if (Remote != null)
       {
-        var response = GetRemoteResponse(registration.Key);
-        return CheckRemoteResponse(response, registration);
+        registration = new LicenseRegistration {ProcessorId = sys.GetProcessorId()};
+        storage.Save(registration);
       }
 
-      return true;
-    }
+      SetIsLicensed();
+      SetIsTrial();
 
-    public bool IsTrial()
-    {
-      if (IsLicensed())
-        return true;
-
-      var registration = storage.Load();
-      if (registration == null)
-        return false;
-
-      if (registration.Limits == null)
-        return false;
-
-      if (registration.Limits.Days != -1 && registration.CreatedOn.AddDays(registration.Limits.Days) < DateTime.Today)
-        return false;
-
-      if (registration.Limits.Runs == 0)
-        return false;
-
-      if (registration.Limits.Runs > 0)
-        UpdateRemainingRuns(registration);
-
-      return true;
-    }
-
-    public bool ShouldRun()
-    {
-      return IsLicensed() || IsTrial();
+      UpdateRemainingRuns();
     }
 
     public LicenseRegistration GetRegistration()
     {
-      return storage.Load();
+      return registration;
     }
 
-    public void SaveRegistration(LicenseRegistration registration)
+    public void SaveRegistration(LicenseRegistration details)
     {
-      registration.ProcessorId = sys.GetProcessorId();
+      // overwrite the currently saved registration information
+      registration = details;
 
-      var fields = registration.GetLicenseFields();
+      details.ProcessorId = sys.GetProcessorId();
+
+      var fields = details.GetLicenseFields();
 
       var ok = true;
 
@@ -121,11 +100,11 @@ namespace Renfield.Licensing.Library.Services
       {
         var data = sys.Encode(fields);
         var response = Remote.Post(data);
-        ok = CheckRemoteResponse(response, registration);
+        ok = CheckRemoteResponse(response);
       }
 
       if (ok)
-        storage.Save(registration);
+        storage.Save(details);
     }
 
     //
@@ -134,33 +113,69 @@ namespace Renfield.Licensing.Library.Services
     private readonly Sys sys;
     private readonly Validator validator;
 
-    private string GetRemoteResponse(string key)
+    private LicenseRegistration registration;
+
+    private void SetIsLicensed()
+    {
+      if (registration == null)
+        IsLicensed = false;
+      else if (!validator.Isvalid(registration))
+        IsLicensed = false;
+      else if (Remote == null)
+        IsLicensed = true;
+      else
+      {
+        var response = GetRemoteResponse();
+        IsLicensed = CheckRemoteResponse(response);
+      }
+    }
+
+    private void SetIsTrial()
+    {
+      if (IsLicensed)
+        IsTrial = true;
+      else if (registration == null)
+        IsTrial = false;
+      else if (registration.Limits == null)
+        IsTrial = false;
+      else if (registration.Limits.Days != -1 && registration.CreatedOn.AddDays(registration.Limits.Days) < DateTime.Today)
+        IsTrial = false;
+      else if (registration.Limits.Runs == 0)
+        IsTrial = false;
+      else
+        IsTrial = true;
+    }
+
+    private string GetRemoteResponse()
     {
       var processorId = sys.GetProcessorId();
-      var query = string.Format("Key={0}&ProcessorId={1}", key, processorId);
+      var query = string.Format("Key={0}&ProcessorId={1}", registration.Key, processorId);
 
       return Remote.Get(query);
     }
 
-    private bool CheckRemoteResponse(string response, LicenseRegistration registration)
+    private bool CheckRemoteResponse(string response)
     {
       var parsed = ResponseParser.Parse(response);
       if (parsed.Key != registration.Key)
         return false;
 
-      UpdateExpirationDate(registration, parsed.Expiration);
+      UpdateExpirationDate(parsed.Expiration);
 
       return DateTime.Today <= parsed.Expiration;
     }
 
-    private void UpdateExpirationDate(LicenseRegistration registration, DateTime expiration)
+    private void UpdateExpirationDate(DateTime expiration)
     {
       registration.Expiration = expiration;
       storage.Save(registration);
     }
 
-    private void UpdateRemainingRuns(LicenseRegistration registration)
+    private void UpdateRemainingRuns()
     {
+      if (registration.Limits.Runs <= 0)
+        return;
+
       registration.Limits.Runs--;
       storage.Save(registration);
     }

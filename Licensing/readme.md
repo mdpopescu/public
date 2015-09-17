@@ -5,21 +5,28 @@
     var options = new LicenseOptions { ... };
     var licenser = Licenser.Create(options);
 
-### Initialize and check for validity
+### Initialize
 
-    var isValid = licenser.IsLicensed();
+    licenser.Initialize();
+
+Loads the registration information or creates (and saves) a new one.
+Checks the status of the registration and sets the IsLicensed and IsTrial properties.
+
+### Check for validity
+
+    var isValid = licenser.IsLicensed;
 
 This will return *true* if the application is licensed and *false* otherwise.
 
 ### Check if the trial is still available
 
-    var isTrial = licenser.IsTrial();
+    var isTrial = licenser.IsTrial;
 
 This will return *true* if the trial is still available and *false* if the limits have been reached (the application should be closed in that case).
 
 ### Check whether the application should run
 
-    var shouldRun = licenser.ShouldRun();
+    var shouldRun = licenser.ShouldRun;
 
 This will return *true* if the application should run (either the license is valid, or the trial hasn't reached its limits) and *false* otherwise.
 
@@ -27,7 +34,7 @@ This will return *true* if the application should run (either the license is val
 
     var details = licenser.GetRegistration();
 
-Returns the registration details saved in the registry; the application might then choose to display those details, eg a message showing how many days
+Returns the registration details loaded in Initialize; the application might then choose to display those details, eg a message showing how many days
 are remaining. It is recommended that a text box be provided for the user to enter a license key; if that happens, the application can use the
 SaveRegistration method (below).
 
@@ -36,44 +43,43 @@ SaveRegistration method (below).
     var details = new LicenseRegistration { ... };
     licenser.SaveRegistration(details);
 
-Creates the registry entry with the given registration details, optionally encrypted with a password. If CheckUrl is not empty, it will first try to register
-the application at the given URL and only save to the registry if everything went ok.
+Creates the license file with the given registration details, optionally encrypted with a password. If CheckUrl is not empty, it will first try to register
+the application at the given URL and only save to the file if everything went ok.
 
 ### Sample code:
 
     var options = new LicenseOptions { ... };
     var licenser = Licenser.Create(options);
-    var details = licenser.GetRegistration();
+    licenser.Initialize();
 
     // initial check
-    if (!licenser.IsLicensed())
+    if (!licenser.IsLicensed)
     {
+        var details = licenser.GetRegistration();
         // show registration / trial screen
     }
 
     // the customer might have just bought a license and entered the key, check again
-    if (!licenser.IsLicensed())
+    if (!licenser.IsLicensed && !licenser.IsTrial)
     {
-        if (!licenser.IsTrial())
-        {
-            Application.Terminate();
-        }
+        Application.Terminate();
     }
 
-The double check can be simplified by using the ShouldRun method:
+The double check can be simplified by using the ShouldRun property:
 
     var options = new LicenseOptions { ... };
     var licenser = Licenser.Create(options);
-    var details = licenser.GetRegistration();
+    licenser.Initialize();
 
     // initial check
-    if (!licenser.IsLicensed())
+    if (!licenser.IsLicensed)
     {
+        var details = licenser.GetRegistration();
         // show registration / trial screen
     }
 
     // should I run the application?
-    if (!licenser.ShouldRun())
+    if (!licenser.ShouldRun)
     {
         Application.Terminate();
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Renfield.Licensing.Library;
 using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
 using Renfield.Licensing.Library.Services;
@@ -30,26 +31,49 @@ namespace Renfield.Licensing.Tests.Services
     }
 
     [TestClass]
-    public class IsLicensed : LicenserTests
+    public class Initialize : LicenserTests
     {
       [TestMethod]
       public void LoadsRegistrationDetailsFromStorage()
       {
-        sut.IsLicensed();
+        sut.Initialize();
 
         storage.Verify(it => it.Load());
       }
 
       [TestMethod]
-      public void ReturnsFalseIfThereAreNoRegistrationDetails()
+      public void SavesANewRegistrationIfNoneExists()
       {
-        var result = sut.IsLicensed();
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+        sut.Remote = null;
 
-        Assert.IsFalse(result);
+        sut.Initialize();
+
+        storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r =>
+          r.CreatedOn == DateTime.Today
+          && r.Limits.Days == Constants.DEFAULT_DAYS
+          && r.Limits.Runs == Constants.DEFAULT_RUNS - 1
+          && r.Key == null
+          && r.Name == null
+          && r.Contact == null
+          && r.ProcessorId == "1"
+          && r.Expiration == DateTime.Today.AddDays(Constants.DEFAULT_DAYS))));
+      }
+
+      // IsLicensed
+
+      [TestMethod]
+      public void SetsIsLicensedToFalseIfThereAreNoRegistrationDetails()
+      {
+        sut.Initialize();
+
+        Assert.IsFalse(sut.IsLicensed);
       }
 
       [TestMethod]
-      public void ReturnsFalseIfTheLicenseIsInvalid()
+      public void SetsIsLicensedToFalseIfTheLicenseIsInvalid()
       {
         var registration = ObjectMother.CreateRegistration();
         storage
@@ -59,13 +83,13 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Isvalid(registration))
           .Returns(false);
 
-        var result = sut.IsLicensed();
+        sut.Initialize();
 
-        Assert.IsFalse(result);
+        Assert.IsFalse(sut.IsLicensed);
       }
 
       [TestMethod]
-      public void ReturnsTrueIfTheLicenseIsValidAndNoRemoteCheck()
+      public void SetsIsLicensedToTrueIfTheLicenseIsValidAndNoRemoteCheck()
       {
         var registration = ObjectMother.CreateRegistration();
         storage
@@ -76,9 +100,9 @@ namespace Renfield.Licensing.Tests.Services
           .Returns(true);
         sut.Remote = null;
 
-        var result = sut.IsLicensed();
+        sut.Initialize();
 
-        Assert.IsTrue(result);
+        Assert.IsTrue(sut.IsLicensed);
       }
 
       [TestMethod]
@@ -95,13 +119,13 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
 
-        sut.IsLicensed();
+        sut.Initialize();
 
         remote.Verify(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"));
       }
 
       [TestMethod]
-      public void ReturnsFalseIfTheRemoteCheckFails()
+      public void SetsIsLicensedToFalseIfTheRemoteCheckFails()
       {
         var registration = ObjectMother.CreateRegistration();
         storage
@@ -117,35 +141,13 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns((string) null);
 
-        var result = sut.IsLicensed();
+        sut.Initialize();
 
-        Assert.IsFalse(result);
+        Assert.IsFalse(sut.IsLicensed);
       }
 
       [TestMethod]
-      public void ReturnsFalseIfTheRemoteCheckReturnsAnEmptyString()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(true);
-        remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
-          .Returns("");
-
-        var result = sut.IsLicensed();
-
-        Assert.IsFalse(result);
-      }
-
-      [TestMethod]
-      public void ReturnsFalseIfTheRemoteCheckReturnsAnInvalidResponse()
+      public void SetsIsLicensedToFalseIfTheRemoteCheckReturnsAnInvalidResponse()
       {
         var registration = ObjectMother.CreateRegistration();
         storage
@@ -161,13 +163,13 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("xyz");
 
-        var result = sut.IsLicensed();
+        sut.Initialize();
 
-        Assert.IsFalse(result);
+        Assert.IsFalse(sut.IsLicensed);
       }
 
       [TestMethod]
-      public void ReturnsTrueIfTheRemoteCheckReturnsAValidResponse()
+      public void SetsIsLicensedToTrueIfTheRemoteCheckReturnsAValidResponse()
       {
         var registration = ObjectMother.CreateRegistration();
         storage
@@ -183,13 +185,13 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
 
-        var result = sut.IsLicensed();
+        sut.Initialize();
 
-        Assert.IsTrue(result);
+        Assert.IsTrue(sut.IsLicensed);
       }
 
       [TestMethod]
-      public void ReturnsFalseIfTheRemoteCheckReturnsAnExpirationDateInThePast()
+      public void SetsIsLicensedToFalseIfTheRemoteCheckReturnsAnExpirationDateInThePast()
       {
         var registration = ObjectMother.CreateRegistration();
         storage
@@ -205,13 +207,13 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 2000-01-01");
 
-        var result = sut.IsLicensed();
+        sut.Initialize();
 
-        Assert.IsFalse(result);
+        Assert.IsFalse(sut.IsLicensed);
       }
 
       [TestMethod]
-      public void AValidRemoteResponseAlsoSetsTheExpirationDateToTheNewValue()
+      public void SetsTheExpirationDateToTheNewValueIfTheKeyIsCorrect()
       {
         var registration = ObjectMother.CreateRegistration();
         storage
@@ -227,61 +229,27 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
           .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
 
-        sut.IsLicensed();
+        sut.Initialize();
 
         storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r => r.Expiration == new DateTime(9999, 12, 31))));
       }
-    }
 
-    [TestClass]
-    public class IsTrial : LicenserTests
-    {
+      // IsTrial
+
       [TestMethod]
-      public void LoadsRegistrationDetailsFromStorage()
+      public void SetsIsTrialToTrueIfRegistrationIsValid()
       {
-        sut.IsTrial();
+        validator
+          .Setup(it => it.Isvalid(It.IsAny<LicenseRegistration>()))
+          .Returns(true);
 
-        storage.Verify(it => it.Load());
+        sut.Initialize();
+
+        Assert.IsTrue(sut.IsTrial);
       }
 
       [TestMethod]
-      public void ReturnsTrueIfLicensed()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-
-        var result = sut.IsTrial();
-
-        Assert.IsTrue(result);
-      }
-
-      [TestMethod]
-      public void ReturnsFalseIfThereAreNoRegistrationDetails()
-      {
-        var result = sut.IsTrial();
-
-        Assert.IsFalse(result);
-      }
-
-      [TestMethod]
-      public void ReturnsFalseIfTheLimitsObjectIsNotSet()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        registration.Limits = null;
-        registration.Key = null;
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-
-        var result = sut.IsTrial();
-
-        Assert.IsFalse(result);
-      }
-
-      [TestMethod]
-      public void ReturnsFalseIfTheNumberOfDaysHasPassed()
+      public void SetsIsTrialToFalseIfTheNumberOfDaysHasPassed()
       {
         var registration = ObjectMother.CreateRegistration();
         registration.CreatedOn = new DateTime(2000, 1, 1);
@@ -291,13 +259,13 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Load())
           .Returns(registration);
 
-        var result = sut.IsTrial();
+        sut.Initialize();
 
-        Assert.IsFalse(result);
+        Assert.IsFalse(sut.IsTrial);
       }
 
       [TestMethod]
-      public void ReturnsTrueIfTrialNotExpired()
+      public void SetsIsTrialToTrueIfTrialNotExpired()
       {
         var registration = ObjectMother.CreateRegistration();
         registration.CreatedOn = DateTime.Today;
@@ -307,13 +275,13 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Load())
           .Returns(registration);
 
-        var result = sut.IsTrial();
+        sut.Initialize();
 
-        Assert.IsTrue(result);
+        Assert.IsTrue(sut.IsTrial);
       }
 
       [TestMethod]
-      public void ReturnsFalseIfRemainingRunsIsZero()
+      public void SetsIsTrialToFalseIfRemainingRunsIsZero()
       {
         var registration = ObjectMother.CreateRegistration();
         registration.CreatedOn = DateTime.Today;
@@ -323,13 +291,13 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Load())
           .Returns(registration);
 
-        var result = sut.IsTrial();
+        sut.Initialize();
 
-        Assert.IsFalse(result);
+        Assert.IsFalse(sut.IsTrial);
       }
 
       [TestMethod]
-      public void ReturnsTrueIfRemainingRunsIsGreaterThanZero()
+      public void SetsIsTrialToTrueIfRemainingRunsIsGreaterThanZero()
       {
         var registration = ObjectMother.CreateRegistration();
         registration.CreatedOn = DateTime.Today;
@@ -339,9 +307,9 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Load())
           .Returns(registration);
 
-        var result = sut.IsTrial();
+        sut.Initialize();
 
-        Assert.IsTrue(result);
+        Assert.IsTrue(sut.IsTrial);
       }
 
       [TestMethod]
@@ -355,9 +323,9 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Load())
           .Returns(registration);
 
-        var result = sut.IsTrial();
+        sut.Initialize();
 
-        Assert.IsTrue(result);
+        Assert.IsTrue(sut.IsTrial);
       }
 
       [TestMethod]
@@ -371,9 +339,9 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Load())
           .Returns(registration);
 
-        var result = sut.IsTrial();
+        sut.Initialize();
 
-        Assert.IsTrue(result);
+        Assert.IsTrue(sut.IsTrial);
       }
 
       [TestMethod]
@@ -387,7 +355,7 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Load())
           .Returns(registration);
 
-        sut.IsTrial();
+        sut.Initialize();
 
         storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r => r.Limits.Runs == 1)));
       }
@@ -403,7 +371,7 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Load())
           .Returns(registration);
 
-        sut.IsTrial();
+        sut.Initialize();
 
         storage.Verify(it => it.Save(It.IsAny<LicenseRegistration>()), Times.Never);
       }
@@ -419,7 +387,7 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Load())
           .Returns(registration);
 
-        sut.IsTrial();
+        sut.Initialize();
 
         storage.Verify(it => it.Save(It.IsAny<LicenseRegistration>()), Times.Never);
       }

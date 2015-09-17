@@ -19,6 +19,8 @@ namespace Renfield.Licensing.Sample
         CheckUrl = null,
       };
       licenser = Licenser.Create(options);
+
+      licenser.Initialize();
     }
 
     //
@@ -29,9 +31,9 @@ namespace Renfield.Licensing.Sample
 
     private void ShowLicense()
     {
-      cbIsLicensed.Checked = licenser.IsLicensed();
-      cbIsTrial.Checked = licenser.IsTrial();
-      cbShouldRun.Checked = licenser.ShouldRun();
+      cbIsLicensed.Checked = licenser.IsLicensed;
+      cbIsTrial.Checked = licenser.IsTrial;
+      cbShouldRun.Checked = licenser.ShouldRun;
 
       var registration = licenser.GetRegistration();
       txtCreatedOn.Text = registration.CreatedOn.ToString(DATE_FORMAT);
@@ -71,6 +73,7 @@ namespace Renfield.Licensing.Sample
 
     private void btnLoad_Click(object sender, EventArgs e)
     {
+      // BUG: doesn't actually reload
       ShowLicense();
     }
 

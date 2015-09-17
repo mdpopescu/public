@@ -9,7 +9,9 @@ namespace Renfield.Licensing.Library.Models
     public LicenseRegistration()
     {
       CreatedOn = DateTime.Today;
-      Limits = new Limits();
+      Limits = new Limits {Days = Constants.DEFAULT_DAYS, Runs = Constants.DEFAULT_RUNS};
+
+      Expiration = DateTime.Today.AddDays(Constants.DEFAULT_DAYS);
     }
 
     public DateTime CreatedOn { get; set; }
