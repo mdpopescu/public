@@ -55,6 +55,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Models\LimitsTests.cs" />
+    <Compile Include="Services\CompositeDetailsReaderTests.cs" />
     <Compile Include="Services\LicenserTests.cs" />
     <Compile Include="ObjectMother.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

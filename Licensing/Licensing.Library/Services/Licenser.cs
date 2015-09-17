@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Reflection;
 using Microsoft.Win32;
 using Renfield.Licensing.Library.Contracts;
-using Renfield.Licensing.Library.Extensions;
 using Renfield.Licensing.Library.Models;
 using Renfield.Licensing.Library.Services.Validators;
 
@@ -11,13 +11,13 @@ namespace Renfield.Licensing.Library.Services
   {
     public static Licenser Create(LicenseOptions options)
     {
-      var reader = new AssemblyReader();
-      reader.ReadValues();
+      DetailsReader r1 = new OptionsDetailsReader(options);
+      DetailsReader r2 = new AssemblyDetailsReader(Assembly.GetEntryAssembly());
+      DetailsReader reader = new CompositeDetailsReader(r1, r2);
+      var details = reader.Read();
 
-      var company = options.Company ?? reader.Company.NullIfEmpty() ?? "[Company Name]";
-      var product = options.Product ?? reader.Product.NullIfEmpty() ?? "[Company Name]";
       PathBuilder pathBuilder = new PathBuilderImpl();
-      var subkey = pathBuilder.GetPath(company, product);
+      var subkey = pathBuilder.GetPath(details.Company, details.Product);
       var key = Registry.CurrentUser.OpenSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree)
                 ?? Registry.CurrentUser.CreateSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree);
       StringIO io = new RegistryIO(key);
