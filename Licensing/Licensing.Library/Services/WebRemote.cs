@@ -14,7 +14,14 @@ namespace Renfield.Licensing.Library.Services
     {
       using (var web = new WebClient())
       {
-        return web.DownloadString(url + "?" + query);
+        try
+        {
+          return web.DownloadString(url + "?" + query);
+        }
+        catch
+        {
+          return null;
+        }
       }
     }
 

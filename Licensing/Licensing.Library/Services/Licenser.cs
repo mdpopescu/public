@@ -139,14 +139,7 @@ namespace Renfield.Licensing.Library.Services
       var processorId = sys.GetProcessorId();
       var query = string.Format("Key={0}&ProcessorId={1}", key, processorId);
 
-      try
-      {
-        return Remote.Get(query);
-      }
-      catch
-      {
-        return null;
-      }
+      return Remote.Get(query);
     }
 
     private bool CheckRemoteResponse(string response, LicenseRegistration registration)

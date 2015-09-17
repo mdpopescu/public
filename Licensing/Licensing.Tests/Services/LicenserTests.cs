@@ -115,7 +115,7 @@ namespace Renfield.Licensing.Tests.Services
           .Returns(true);
         remote
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
-          .Throws(new Exception());
+          .Returns((string) null);
 
         var result = sut.IsLicensed();
 
