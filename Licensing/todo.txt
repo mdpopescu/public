@@ -1,6 +1,6 @@
 x add a LicenseValidator class and move LicenseRegistration.IsValidLicense to it.
-- move the UpdateRemainingRuns call outside the IsTrial method
-- make constructor and Initialize protected
+x move the UpdateRemainingRuns call outside the IsTrial method
+x make constructor and Initialize protected
 - add a LicenserFactory (might conflict with the above)
 x add a NullEncryptor (instead of passing null / property injection)
 - add a NullRemote (instead of passing null / property injection)

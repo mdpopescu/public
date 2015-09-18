@@ -19,8 +19,6 @@ namespace Renfield.Licensing.Sample
         CheckUrl = null,
       };
       licenser = Licenser.Create(options);
-
-      licenser.Initialize();
     }
 
     //

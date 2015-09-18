@@ -44,14 +44,10 @@ namespace Renfield.Licensing.Library.Services
               new ExpirationValidator(it => it.Expiration,
                 null)))));
 
-      return new Licenser(storage, sys, chain) {Remote = remote, ResponseParser = parser};
-    }
+      var licenser = new Licenser(storage, sys, chain) {Remote = remote, ResponseParser = parser};
+      licenser.Initialize();
 
-    public Licenser(Storage storage, Sys sys, Validator validator)
-    {
-      this.storage = storage;
-      this.sys = sys;
-      this.validator = validator;
+      return licenser;
     }
 
     public Remote Remote { get; set; }
@@ -63,19 +59,6 @@ namespace Renfield.Licensing.Library.Services
     public bool ShouldRun
     {
       get { return IsLicensed || IsTrial; }
-    }
-
-    public void Initialize()
-    {
-      registration = storage.Load();
-      if (registration == null)
-      {
-        registration = new LicenseRegistration {ProcessorId = sys.GetProcessorId()};
-        storage.Save(registration);
-      }
-
-      CheckLicenseStatus();
-      UpdateRemainingRuns();
     }
 
     public LicenseRegistration GetRegistration()
@@ -105,6 +88,28 @@ namespace Renfield.Licensing.Library.Services
       // this checks remote again, with a GET this time
       CheckLicenseStatus();
       storage.Save(registration);
+    }
+
+    //
+
+    protected Licenser(Storage storage, Sys sys, Validator validator)
+    {
+      this.storage = storage;
+      this.sys = sys;
+      this.validator = validator;
+    }
+
+    protected void Initialize()
+    {
+      registration = storage.Load();
+      if (registration == null)
+      {
+        registration = new LicenseRegistration { ProcessorId = sys.GetProcessorId() };
+        storage.Save(registration);
+      }
+
+      CheckLicenseStatus();
+      UpdateRemainingRuns();
     }
 
     //

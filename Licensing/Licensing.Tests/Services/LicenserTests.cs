@@ -17,7 +17,7 @@ namespace Renfield.Licensing.Tests.Services
     private Mock<Validator> validator;
     private Mock<Remote> remote;
 
-    private Licenser sut;
+    private TestLicenser sut;
 
     [TestInitialize]
     public void SetUp()
@@ -27,7 +27,7 @@ namespace Renfield.Licensing.Tests.Services
       remote = new Mock<Remote>();
       validator = new Mock<Validator>();
 
-      sut = new Licenser(storage.Object, sys.Object, validator.Object) {Remote = remote.Object, ResponseParser = new ResponseParserImpl()};
+      sut = new TestLicenser(storage.Object, sys.Object, validator.Object) {Remote = remote.Object, ResponseParser = new ResponseParserImpl()};
     }
 
     [TestClass]
@@ -674,6 +674,22 @@ namespace Renfield.Licensing.Tests.Services
         sut.SaveRegistration(registration);
 
         Assert.IsFalse(sut.IsLicensed);
+      }
+    }
+
+    //
+
+    private class TestLicenser : Licenser
+    {
+      public TestLicenser(Storage storage, Sys sys, Validator validator)
+        : base(storage, sys, validator)
+      {
+      }
+
+      // ReSharper disable once MemberHidesStaticFromOuterClass
+      public new void Initialize()
+      {
+        base.Initialize();
       }
     }
   }

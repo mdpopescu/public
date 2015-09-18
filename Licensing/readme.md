@@ -5,10 +5,6 @@
     var options = new LicenseOptions { ... };
     var licenser = Licenser.Create(options);
 
-### Initialize
-
-    licenser.Initialize();
-
 Loads the registration information or creates (and saves) a new one.
 Checks the status of the registration and sets the IsLicensed and IsTrial properties.
 
@@ -34,7 +30,7 @@ This will return *true* if the application should run (either the license is val
 
     var details = licenser.GetRegistration();
 
-Returns the registration details loaded in Initialize; the application might then choose to display those details, eg a message showing how many days
+Returns the previously loaded registration details; the application might then choose to display those details, eg a message showing how many days
 are remaining. It is recommended that a text box be provided for the user to enter a license key; if that happens, the application can use the
 SaveRegistration method (below).
 
@@ -50,7 +46,6 @@ the application at the given URL and only save to the file if everything went ok
 
     var options = new LicenseOptions { ... };
     var licenser = Licenser.Create(options);
-    licenser.Initialize();
 
     // initial check
     if (!licenser.IsLicensed)
@@ -69,7 +64,6 @@ The double check can be simplified by using the ShouldRun property:
 
     var options = new LicenseOptions { ... };
     var licenser = Licenser.Create(options);
-    licenser.Initialize();
 
     // initial check
     if (!licenser.IsLicensed)
