@@ -400,9 +400,6 @@ namespace Renfield.Licensing.Tests.Services
       public void GetsTheProcessorId()
       {
         var registration = ObjectMother.CreateRegistration();
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
 
         sut.SaveRegistration(registration);
 

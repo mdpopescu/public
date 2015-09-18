@@ -45,6 +45,7 @@
     <Compile Include="Contracts\Encryptor.cs" />
     <Compile Include="Contracts\PathBuilder.cs" />
     <Compile Include="Contracts\Remote.cs" />
+    <Compile Include="Contracts\RemoteChecker.cs" />
     <Compile Include="Contracts\ResponseParser.cs" />
     <Compile Include="Contracts\Serializer.cs" />
     <Compile Include="Contracts\Storage.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Services\NullEncryptor.cs" />
     <Compile Include="Services\OptionsDetailsReader.cs" />
     <Compile Include="Services\RegistryPathBuilder.cs" />
+    <Compile Include="Services\RemoteCheckerClient.cs" />
     <Compile Include="Services\Validators\NonEmptyValidator.cs" />
     <Compile Include="Services\Validators\BaseValidator.cs" />
     <Compile Include="Services\Validators\ExpirationValidator.cs" />
