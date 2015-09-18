@@ -61,6 +61,7 @@
     <Compile Include="Services\CompositeDetailsReader.cs" />
     <Compile Include="Services\Licenser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\NullEncryptor.cs" />
     <Compile Include="Services\OptionsDetailsReader.cs" />
     <Compile Include="Services\RegistryPathBuilder.cs" />
     <Compile Include="Services\Validators\NonEmptyValidator.cs" />

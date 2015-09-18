@@ -19,16 +19,14 @@ namespace Renfield.Licensing.Library.Services
       if (string.IsNullOrWhiteSpace(encrypted))
         return new LicenseRegistration();
 
-      var decrypted = Encryptor == null ? encrypted : Encryptor.Decrypt(encrypted);
-
+      var decrypted = Encryptor.Decrypt(encrypted);
       return serializer.Deserialize(decrypted);
     }
 
     public void Save(LicenseRegistration registration)
     {
       var decrypted = serializer.Serialize(registration);
-      var encrypted = Encryptor == null ? decrypted : Encryptor.Encrypt(decrypted);
-
+      var encrypted = Encryptor.Encrypt(decrypted);
       io.Write(encrypted);
     }
 

@@ -22,8 +22,8 @@ namespace Renfield.Licensing.Library.Services
                 ?? Registry.CurrentUser.CreateSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree);
       StringIO io = new RegistryIO(key);
 
-      Encryptor encryptor = string.IsNullOrWhiteSpace(options.Password) || string.IsNullOrWhiteSpace(options.Salt)
-        ? null
+      var encryptor = string.IsNullOrWhiteSpace(options.Password) || string.IsNullOrWhiteSpace(options.Salt)
+        ? (Encryptor) new NullEncryptor()
         : new RijndaelEncryptor(options.Password, options.Salt);
       Serializer<LicenseRegistration> serializer = new LicenseSerializer();
       Storage storage = new SecureStorage(io, serializer) {Encryptor = encryptor};

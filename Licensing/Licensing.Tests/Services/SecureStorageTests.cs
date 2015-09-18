@@ -59,19 +59,6 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void DoesNotDecryptIfEncryptorIsNull()
-      {
-        io
-          .Setup(it => it.Read())
-          .Returns("abc");
-        sut.Encryptor = null;
-
-        sut.Load();
-
-        encryptor.Verify(it => it.Decrypt(It.IsAny<string>()), Times.Never);
-      }
-
-      [TestMethod]
       public void DeserializesTheString()
       {
         io
@@ -130,20 +117,6 @@ namespace Renfield.Licensing.Tests.Services
         sut.Save(details);
 
         encryptor.Verify(it => it.Encrypt("abc"));
-      }
-
-      [TestMethod]
-      public void DoesNotEncryptIfEncryptorIsNull()
-      {
-        var details = new LicenseRegistration();
-        serializer
-          .Setup(it => it.Serialize(details))
-          .Returns("abc");
-        sut.Encryptor = null;
-
-        sut.Save(details);
-
-        encryptor.Verify(it => it.Encrypt(It.IsAny<string>()), Times.Never);
       }
 
       [TestMethod]
