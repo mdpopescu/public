@@ -26,7 +26,7 @@ namespace Renfield.Licensing.Library.Services
         ? (Encryptor) new NullEncryptor()
         : new RijndaelEncryptor(options.Password, options.Salt);
       Serializer<LicenseRegistration> serializer = new LicenseSerializer();
-      Storage storage = new SecureStorage(io, serializer) {Encryptor = encryptor};
+      Storage storage = new SecureStorage(io, encryptor, serializer);
 
       Sys sys = new WinSys();
 

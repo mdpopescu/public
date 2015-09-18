@@ -20,7 +20,7 @@ namespace Renfield.Licensing.Tests.Services
       io = new Mock<StringIO>();
       serializer = new Mock<Serializer<LicenseRegistration>>();
       encryptor = new Mock<Encryptor>();
-      sut = new SecureStorage(io.Object, serializer.Object) {Encryptor = encryptor.Object};
+      sut = new SecureStorage(io.Object, encryptor.Object, serializer.Object);
     }
 
     [TestClass]
