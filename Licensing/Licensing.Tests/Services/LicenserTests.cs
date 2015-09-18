@@ -400,9 +400,6 @@ namespace Renfield.Licensing.Tests.Services
       public void GetsTheProcessorId()
       {
         var registration = ObjectMother.CreateRegistration();
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
@@ -416,9 +413,6 @@ namespace Renfield.Licensing.Tests.Services
       public void SetsTheProcessorIdInTheRegistrationDetails()
       {
         var registration = ObjectMother.CreateRegistration();
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("2");
@@ -432,12 +426,9 @@ namespace Renfield.Licensing.Tests.Services
       public void SendsTheDetailsToTheServer()
       {
         var registration = ObjectMother.CreateRegistration();
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
         sys
           .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
           .Returns("abc");
@@ -451,12 +442,6 @@ namespace Renfield.Licensing.Tests.Services
       public void DoesNotSendTheDetailsToTheServerIfNoRemote()
       {
         var registration = ObjectMother.CreateRegistration();
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
         sut.Remote = null;
 
         sut.SaveRegistration(registration);
@@ -468,12 +453,6 @@ namespace Renfield.Licensing.Tests.Services
       public void DoesNotTryToEncodeTheFieldsIfNoRemote()
       {
         var registration = ObjectMother.CreateRegistration();
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
         sut.Remote = null;
 
         sut.SaveRegistration(registration);
@@ -485,12 +464,6 @@ namespace Renfield.Licensing.Tests.Services
       public void SavesTheRegistrationIfTheServerReturnedAValidResponse()
       {
         var registration = ObjectMother.CreateRegistration();
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
         sys
           .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
           .Returns("abc");
@@ -507,12 +480,6 @@ namespace Renfield.Licensing.Tests.Services
       public void AValidRemoteResponseAlsoSetsTheExpirationDateToTheNewValue()
       {
         var registration = ObjectMother.CreateRegistration();
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
         sys
           .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
           .Returns("abc");
@@ -523,6 +490,190 @@ namespace Renfield.Licensing.Tests.Services
         sut.SaveRegistration(registration);
 
         storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r => r.Expiration == new DateTime(9999, 12, 31))));
+      }
+
+      [TestMethod]
+      public void SetsIsLicensedToFalseIfInvalid()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(false);
+
+        sut.SaveRegistration(registration);
+
+        Assert.IsFalse(sut.IsLicensed);
+      }
+
+      [TestMethod]
+      public void SetsIsTrialToTrueIfLicenseInvalidButTrialOk()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(false);
+
+        sut.SaveRegistration(registration);
+
+        Assert.IsTrue(sut.IsTrial);
+      }
+
+      [TestMethod]
+      public void SetsIsTrialToFalseIfBothLicenseAndTrialInvalid()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.Limits.Days = 0;
+        registration.Limits.Runs = 0;
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(false);
+
+        sut.SaveRegistration(registration);
+
+        Assert.IsFalse(sut.IsTrial);
+      }
+
+      [TestMethod]
+      public void DoesNotSendLicenseToServerIfInvalid()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(false);
+
+        sut.SaveRegistration(registration);
+
+        remote.Verify(it => it.Post(It.IsAny<string>()), Times.Never);
+      }
+
+      [TestMethod]
+      public void SavesLicenseToStorageIfInvalid()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(false);
+
+        sut.SaveRegistration(registration);
+
+        storage.Verify(it => it.Save(registration));
+      }
+
+      [TestMethod]
+      public void SetsIsLicensedToTrueIfValidAndNoRemote()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
+        sut.Remote = null;
+
+        sut.SaveRegistration(registration);
+
+        Assert.IsTrue(sut.IsLicensed);
+      }
+
+      [TestMethod]
+      public void SetsIsTrialToTrueIfValidAndNoRemote()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
+        sut.Remote = null;
+
+        sut.SaveRegistration(registration);
+
+        Assert.IsTrue(sut.IsTrial);
+      }
+
+      [TestMethod]
+      public void SavesLicenseToStorageIfValidAndNoRemote()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
+        sut.Remote = null;
+
+        sut.SaveRegistration(registration);
+
+        storage.Verify(it => it.Save(registration));
+      }
+
+      [TestMethod]
+      public void SetsIsLicensedToTrueIfRemoteReturnsOk()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+        sys
+          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
+          .Returns("abc");
+        remote
+          .Setup(it => it.Post("abc"))
+          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
+        remote
+          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
+
+        sut.SaveRegistration(registration);
+
+        Assert.IsTrue(sut.IsLicensed);
+      }
+
+      [TestMethod]
+      public void SetsIsLicensedToFalseIfRemoteReturnsInvalidFromPost()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+        sys
+          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
+          .Returns("abc");
+        remote
+          .Setup(it => it.Post("abc"))
+          .Returns("");
+        remote
+          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
+
+        sut.SaveRegistration(registration);
+
+        Assert.IsFalse(sut.IsLicensed);
+      }
+
+      [TestMethod]
+      public void SetsIsLicensedToFalseIfRemoteReturnsInvalidFromGet()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+        sys
+          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
+          .Returns("abc");
+        remote
+          .Setup(it => it.Post("abc"))
+          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
+        remote
+          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
+          .Returns("");
+
+        sut.SaveRegistration(registration);
+
+        Assert.IsFalse(sut.IsLicensed);
       }
     }
   }

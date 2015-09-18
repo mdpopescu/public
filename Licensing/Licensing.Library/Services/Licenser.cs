@@ -74,9 +74,7 @@ namespace Renfield.Licensing.Library.Services
         storage.Save(registration);
       }
 
-      SetIsLicensed();
-      SetIsTrial();
-
+      CheckLicenseStatus();
       UpdateRemainingRuns();
     }
 
@@ -89,22 +87,24 @@ namespace Renfield.Licensing.Library.Services
     {
       // overwrite the currently saved registration information
       registration = details;
-
-      details.ProcessorId = sys.GetProcessorId();
-
-      var fields = details.GetLicenseFields();
+      registration.ProcessorId = sys.GetProcessorId();
 
       var ok = true;
 
-      if (Remote != null)
+      if (Remote != null && validator.Isvalid(registration))
       {
+        var fields = registration.GetLicenseFields();
         var data = sys.Encode(fields);
         var response = Remote.Post(data);
         ok = CheckRemoteResponse(response);
       }
 
-      if (ok)
-        storage.Save(details);
+      if (!ok)
+        return;
+
+      // this checks remote again, with a GET this time
+      CheckLicenseStatus();
+      storage.Save(registration);
     }
 
     //
@@ -114,6 +114,12 @@ namespace Renfield.Licensing.Library.Services
     private readonly Validator validator;
 
     private LicenseRegistration registration;
+
+    private void CheckLicenseStatus()
+    {
+      SetIsLicensed();
+      SetIsTrial();
+    }
 
     private void SetIsLicensed()
     {
