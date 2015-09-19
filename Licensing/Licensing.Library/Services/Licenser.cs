@@ -119,7 +119,7 @@ namespace Renfield.Licensing.Library.Services
         IsTrial = false;
       else if (registration.Limits == null)
         IsTrial = false;
-      else if (registration.Limits.Days != -1 && registration.CreatedOn.AddDays(registration.Limits.Days) < DateTime.Today)
+      else if (registration.Limits.Days >= 0 && registration.CreatedOn.AddDays(registration.Limits.Days) < DateTime.Today)
         IsTrial = false;
       else if (registration.Limits.Runs == 0)
         IsTrial = false;

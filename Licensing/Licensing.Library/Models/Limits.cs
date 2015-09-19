@@ -14,7 +14,7 @@ namespace Renfield.Licensing.Library.Models
         return int.MaxValue;
 
       var elapsed = (int) Math.Round(DateTime.Today.Subtract(createdOn).TotalDays);
-      var remaining = Days - elapsed;
+      var remaining = Days - elapsed + 1; // expires at the end of the day, not the beginning
 
       return remaining <= 0 ? 0 : remaining;
     }

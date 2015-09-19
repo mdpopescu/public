@@ -31,13 +31,23 @@ namespace Renfield.Licensing.Tests.Models
       }
 
       [TestMethod]
-      public void ReturnsNumberOfRemainingDays()
+      public void ReturnsNumberOfRemainingDaysPlusOne()
       {
         var sut = new Limits {Days = 5};
 
-        var result = sut.GetRemainingDays(DateTime.Today.AddDays(-2));
+        var result = sut.GetRemainingDays(DateTime.Today);
 
-        Assert.AreEqual(3, result); // includes today
+        Assert.AreEqual(6, result); // includes today
+      }
+
+      [TestMethod]
+      public void ReturnsOneWhenExpiringToday()
+      {
+        var sut = new Limits {Days = 1};
+
+        var result = sut.GetRemainingDays(DateTime.Today.AddDays(-1));
+
+        Assert.AreEqual(1, result);
       }
     }
   }

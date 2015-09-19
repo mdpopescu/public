@@ -8,6 +8,9 @@ namespace Renfield.Licensing.Library.Services.Validators
   {
     public bool Isvalid(LicenseRegistration registration)
     {
+      if (registration == null)
+        return false;
+
       var valid = InternalIsValid(func(registration));
       return next == null
         ? valid
