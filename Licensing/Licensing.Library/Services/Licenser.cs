@@ -40,8 +40,8 @@ namespace Renfield.Licensing.Library.Services
 
     public LicenseRegistration LoadRegistration()
     {
-      registration = LoadOrCreate();
-      CheckStatus();
+      var registration = LoadOrCreate();
+      CheckStatus(registration);
 
       return registration;
     }
@@ -49,12 +49,10 @@ namespace Renfield.Licensing.Library.Services
     public void SaveRegistration(LicenseRegistration details)
     {
       // overwrite the currently saved registration information
-      registration = details;
-      storage.Save(registration);
+      storage.Save(details);
+      checker.Submit(details);
 
-      checker.Submit(registration);
-
-      CheckStatus();
+      CheckStatus(details);
     }
 
     //
@@ -67,10 +65,10 @@ namespace Renfield.Licensing.Library.Services
 
     protected void Initialize()
     {
-      registration = LoadOrCreate();
-      CheckStatus();
+      var registration = LoadOrCreate();
+      CheckStatus(registration);
 
-      UpdateRemainingRuns();
+      UpdateRemainingRuns(registration);
     }
 
     //
@@ -78,37 +76,35 @@ namespace Renfield.Licensing.Library.Services
     private readonly Storage storage;
     private readonly LicenseChecker checker;
 
-    private LicenseRegistration registration;
-
     private LicenseRegistration LoadOrCreate()
     {
-      registration = storage.Load();
-      if (registration == null)
+      var details = storage.Load();
+      if (details == null)
       {
-        registration = new LicenseRegistration();
-        storage.Save(registration);
+        details = new LicenseRegistration();
+        storage.Save(details);
       }
 
-      return registration;
+      return details;
     }
 
-    private void CheckStatus()
+    private void CheckStatus(LicenseRegistration details)
     {
-      var oldExpiration = registration.Expiration;
+      var oldExpiration = details.Expiration;
 
-      checker.Check(registration);
+      checker.Check(details);
 
-      if (registration.Expiration != oldExpiration)
-        storage.Save(registration);
+      if (details.Expiration != oldExpiration)
+        storage.Save(details);
     }
 
-    private void UpdateRemainingRuns()
+    private void UpdateRemainingRuns(LicenseRegistration details)
     {
-      if (registration.Limits.Runs <= 0)
+      if (details.Limits.Runs <= 0)
         return;
 
-      registration.Limits.Runs--;
-      storage.Save(registration);
+      details.Limits.Runs--;
+      storage.Save(details);
     }
   }
 }
