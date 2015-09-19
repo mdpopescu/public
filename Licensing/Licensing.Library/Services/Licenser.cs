@@ -30,12 +30,19 @@ namespace Renfield.Licensing.Library.Services
 
       Sys sys = new WinSys();
 
-      Remote remote = string.IsNullOrWhiteSpace(options.CheckUrl)
-        ? null
-        : new WebRemote("https://" + options.CheckUrl);
-      ResponseParser parser = remote == null
-        ? null
-        : new ResponseParserImpl();
+      RemoteChecker checker;
+      if (string.IsNullOrWhiteSpace(options.CheckUrl))
+      {
+        checker = new NullRemoteChecker();
+      }
+      else
+      {
+        Remote remote = new WebRemote("https://" + options.CheckUrl);
+        ResponseParser parser = new ResponseParserImpl();
+        checker = string.IsNullOrWhiteSpace(options.CheckUrl)
+          ? (RemoteChecker) new NullRemoteChecker()
+          : new RemoteCheckerClient(sys, remote, parser);
+      }
 
       Validator chain = new GuidValidator(it => it.Key,
         new NonEmptyValidator(it => it.Name,
@@ -44,14 +51,11 @@ namespace Renfield.Licensing.Library.Services
               new ExpirationValidator(it => it.Expiration,
                 null)))));
 
-      var licenser = new Licenser(storage, sys, chain) {Remote = remote, ResponseParser = parser};
+      var licenser = new Licenser(storage, sys, checker, chain);
       licenser.Initialize();
 
       return licenser;
     }
-
-    public Remote Remote { get; set; }
-    public ResponseParser ResponseParser { get; set; }
 
     public bool IsLicensed { get; private set; }
     public bool IsTrial { get; private set; }
@@ -72,17 +76,11 @@ namespace Renfield.Licensing.Library.Services
       registration = details;
       registration.ProcessorId = sys.GetProcessorId();
 
-      var ok = true;
+      if (!validator.Isvalid(registration))
+        return;
 
-      if (Remote != null && validator.Isvalid(registration))
-      {
-        var fields = registration.GetLicenseFields();
-        var data = sys.Encode(fields);
-        var response = Remote.Post(data);
-        ok = CheckRemoteResponse(response);
-      }
-
-      if (!ok)
+      var expiration = checker.Submit(registration);
+      if (!CheckRemoteResponse(expiration))
         return;
 
       // this checks remote again, with a GET this time
@@ -92,10 +90,11 @@ namespace Renfield.Licensing.Library.Services
 
     //
 
-    protected Licenser(Storage storage, Sys sys, Validator validator)
+    protected Licenser(Storage storage, Sys sys, RemoteChecker checker, Validator validator)
     {
       this.storage = storage;
       this.sys = sys;
+      this.checker = checker;
       this.validator = validator;
     }
 
@@ -104,7 +103,7 @@ namespace Renfield.Licensing.Library.Services
       registration = storage.Load();
       if (registration == null)
       {
-        registration = new LicenseRegistration { ProcessorId = sys.GetProcessorId() };
+        registration = new LicenseRegistration {ProcessorId = sys.GetProcessorId()};
         storage.Save(registration);
       }
 
@@ -116,6 +115,7 @@ namespace Renfield.Licensing.Library.Services
 
     private readonly Storage storage;
     private readonly Sys sys;
+    private readonly RemoteChecker checker;
     private readonly Validator validator;
 
     private LicenseRegistration registration;
@@ -132,12 +132,10 @@ namespace Renfield.Licensing.Library.Services
         IsLicensed = false;
       else if (!validator.Isvalid(registration))
         IsLicensed = false;
-      else if (Remote == null)
-        IsLicensed = true;
       else
       {
-        var response = GetRemoteResponse();
-        IsLicensed = CheckRemoteResponse(response);
+        var expiration = checker.Check(registration);
+        IsLicensed = CheckRemoteResponse(expiration);
       }
     }
 
@@ -157,23 +155,13 @@ namespace Renfield.Licensing.Library.Services
         IsTrial = true;
     }
 
-    private string GetRemoteResponse()
+    private bool CheckRemoteResponse(DateTime? expiration)
     {
-      var processorId = sys.GetProcessorId();
-      var query = string.Format("Key={0}&ProcessorId={1}", registration.Key, processorId);
-
-      return Remote.Get(query);
-    }
-
-    private bool CheckRemoteResponse(string response)
-    {
-      var parsed = ResponseParser.Parse(response);
-      if (parsed.Key != registration.Key)
+      if (expiration == null)
         return false;
 
-      UpdateExpirationDate(parsed.Expiration);
-
-      return DateTime.Today <= parsed.Expiration;
+      UpdateExpirationDate(expiration.Value);
+      return DateTime.Today <= expiration.Value;
     }
 
     private void UpdateExpirationDate(DateTime expiration)

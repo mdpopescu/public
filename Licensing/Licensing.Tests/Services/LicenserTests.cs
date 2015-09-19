@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.Licensing.Library;
@@ -14,8 +13,8 @@ namespace Renfield.Licensing.Tests.Services
   {
     private Mock<Storage> storage;
     private Mock<Sys> sys;
+    private Mock<RemoteChecker> checker;
     private Mock<Validator> validator;
-    private Mock<Remote> remote;
 
     private TestLicenser sut;
 
@@ -24,10 +23,10 @@ namespace Renfield.Licensing.Tests.Services
     {
       storage = new Mock<Storage>();
       sys = new Mock<Sys>();
-      remote = new Mock<Remote>();
+      checker = new Mock<RemoteChecker>();
       validator = new Mock<Validator>();
 
-      sut = new TestLicenser(storage.Object, sys.Object, validator.Object) {Remote = remote.Object, ResponseParser = new ResponseParserImpl()};
+      sut = new TestLicenser(storage.Object, sys.Object, checker.Object, validator.Object);
     }
 
     [TestClass]
@@ -47,7 +46,6 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
-        sut.Remote = null;
 
         sut.Initialize();
 
@@ -89,7 +87,7 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void SetsIsLicensedToTrueIfTheLicenseIsValidAndNoRemoteCheck()
+      public void ChecksWithTheRemoteServerIfLicenseIsInternallyValid()
       {
         var registration = ObjectMother.CreateRegistration();
         storage
@@ -98,30 +96,29 @@ namespace Renfield.Licensing.Tests.Services
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
-        sut.Remote = null;
+
+        sut.Initialize();
+
+        checker.Verify(it => it.Check(registration));
+      }
+
+      [TestMethod]
+      public void SetsIsLicensedToTrueIfTheLicenseIsValid()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new DateTime(9999, 12, 31));
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
 
         sut.Initialize();
 
         Assert.IsTrue(sut.IsLicensed);
-      }
-
-      [TestMethod]
-      public void ChecksWithTheRemoteServer()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(true);
-
-        sut.Initialize();
-
-        remote.Verify(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"));
       }
 
       [TestMethod]
@@ -134,34 +131,12 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns((DateTime?) null);
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
-        remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
-          .Returns((string) null);
-
-        sut.Initialize();
-
-        Assert.IsFalse(sut.IsLicensed);
-      }
-
-      [TestMethod]
-      public void SetsIsLicensedToFalseIfTheRemoteCheckReturnsAnInvalidResponse()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        storage
-          .Setup(it => it.Load())
-          .Returns(registration);
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(true);
-        remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
-          .Returns("xyz");
 
         sut.Initialize();
 
@@ -178,12 +153,12 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new DateTime(9999, 12, 31));
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
-        remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
-          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
 
         sut.Initialize();
 
@@ -200,12 +175,12 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new DateTime(2000, 1, 2));
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
-        remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
-          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 2000-01-01");
 
         sut.Initialize();
 
@@ -222,12 +197,12 @@ namespace Renfield.Licensing.Tests.Services
         sys
           .Setup(it => it.GetProcessorId())
           .Returns("1");
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new DateTime(9999, 12, 31));
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
-        remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
-          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
 
         sut.Initialize();
 
@@ -426,47 +401,22 @@ namespace Renfield.Licensing.Tests.Services
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
-        sys
-          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
-          .Returns("abc");
 
         sut.SaveRegistration(registration);
 
-        remote.Verify(it => it.Post("abc"));
-      }
-
-      [TestMethod]
-      public void DoesNotSendTheDetailsToTheServerIfNoRemote()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        sut.Remote = null;
-
-        sut.SaveRegistration(registration);
-
-        remote.Verify(it => it.Post(It.IsAny<string>()), Times.Never);
-      }
-
-      [TestMethod]
-      public void DoesNotTryToEncodeTheFieldsIfNoRemote()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        sut.Remote = null;
-
-        sut.SaveRegistration(registration);
-
-        sys.Verify(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()), Times.Never);
+        checker.Verify(it => it.Submit(registration));
       }
 
       [TestMethod]
       public void SavesTheRegistrationIfTheServerReturnedAValidResponse()
       {
         var registration = ObjectMother.CreateRegistration();
-        sys
-          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
-          .Returns("abc");
-        remote
-          .Setup(it => it.Post("abc"))
-          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
+        checker
+          .Setup(it => it.Submit(registration))
+          .Returns(new DateTime(9999, 12, 31));
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
 
         sut.SaveRegistration(registration);
 
@@ -477,12 +427,12 @@ namespace Renfield.Licensing.Tests.Services
       public void AValidRemoteResponseAlsoSetsTheExpirationDateToTheNewValue()
       {
         var registration = ObjectMother.CreateRegistration();
-        sys
-          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
-          .Returns("abc");
-        remote
-          .Setup(it => it.Post("abc"))
-          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
+        checker
+          .Setup(it => it.Submit(registration))
+          .Returns(new DateTime(9999, 12, 31));
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
 
         sut.SaveRegistration(registration);
 
@@ -503,24 +453,9 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void SetsIsTrialToTrueIfLicenseInvalidButTrialOk()
+      public void SetsIsTrialToFalseIfInvalid()
       {
         var registration = ObjectMother.CreateRegistration();
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(false);
-
-        sut.SaveRegistration(registration);
-
-        Assert.IsTrue(sut.IsTrial);
-      }
-
-      [TestMethod]
-      public void SetsIsTrialToFalseIfBothLicenseAndTrialInvalid()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        registration.Limits.Days = 0;
-        registration.Limits.Runs = 0;
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(false);
@@ -540,11 +475,11 @@ namespace Renfield.Licensing.Tests.Services
 
         sut.SaveRegistration(registration);
 
-        remote.Verify(it => it.Post(It.IsAny<string>()), Times.Never);
+        checker.Verify(it => it.Submit(registration), Times.Never);
       }
 
       [TestMethod]
-      public void SavesLicenseToStorageIfInvalid()
+      public void DoesNotSaveLicenseToStorageIfInvalid()
       {
         var registration = ObjectMother.CreateRegistration();
         validator
@@ -553,49 +488,7 @@ namespace Renfield.Licensing.Tests.Services
 
         sut.SaveRegistration(registration);
 
-        storage.Verify(it => it.Save(registration));
-      }
-
-      [TestMethod]
-      public void SetsIsLicensedToTrueIfValidAndNoRemote()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(true);
-        sut.Remote = null;
-
-        sut.SaveRegistration(registration);
-
-        Assert.IsTrue(sut.IsLicensed);
-      }
-
-      [TestMethod]
-      public void SetsIsTrialToTrueIfValidAndNoRemote()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(true);
-        sut.Remote = null;
-
-        sut.SaveRegistration(registration);
-
-        Assert.IsTrue(sut.IsTrial);
-      }
-
-      [TestMethod]
-      public void SavesLicenseToStorageIfValidAndNoRemote()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(true);
-        sut.Remote = null;
-
-        sut.SaveRegistration(registration);
-
-        storage.Verify(it => it.Save(registration));
+        storage.Verify(it => it.Save(registration), Times.Never);
       }
 
       [TestMethod]
@@ -605,18 +498,12 @@ namespace Renfield.Licensing.Tests.Services
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
-        sys
-          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
-          .Returns("abc");
-        remote
-          .Setup(it => it.Post("abc"))
-          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
-        remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
-          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
+        checker
+          .Setup(it => it.Submit(registration))
+          .Returns(new DateTime(9999, 12, 31));
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new DateTime(9999, 12, 31));
 
         sut.SaveRegistration(registration);
 
@@ -624,24 +511,15 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void SetsIsLicensedToFalseIfRemoteReturnsInvalidFromPost()
+      public void SetsIsLicensedToFalseIfRemoteReturnsInvalidFromSubmit()
       {
         var registration = ObjectMother.CreateRegistration();
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
-        sys
-          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
-          .Returns("abc");
-        remote
-          .Setup(it => it.Post("abc"))
-          .Returns("");
-        remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
-          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
+        checker
+          .Setup(it => it.Submit(registration))
+          .Returns((DateTime?) null);
 
         sut.SaveRegistration(registration);
 
@@ -649,24 +527,18 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void SetsIsLicensedToFalseIfRemoteReturnsInvalidFromGet()
+      public void SetsIsLicensedToFalseIfRemoteReturnsInvalidFromCheck()
       {
         var registration = ObjectMother.CreateRegistration();
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
-        sys
-          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
-          .Returns("abc");
-        remote
-          .Setup(it => it.Post("abc"))
-          .Returns("{D98F6376-94F7-4D82-AA37-FC00F0166700} 9999-12-31");
-        remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"))
-          .Returns("");
+        checker
+          .Setup(it => it.Submit(registration))
+          .Returns(new DateTime(9999, 12, 31));
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns((DateTime?) null);
 
         sut.SaveRegistration(registration);
 
@@ -678,8 +550,8 @@ namespace Renfield.Licensing.Tests.Services
 
     private class TestLicenser : Licenser
     {
-      public TestLicenser(Storage storage, Sys sys, Validator validator)
-        : base(storage, sys, validator)
+      public TestLicenser(Storage storage, Sys sys, RemoteChecker checker, Validator validator)
+        : base(storage, sys, checker, validator)
       {
       }
 
