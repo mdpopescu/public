@@ -86,6 +86,7 @@ Name        | Description
 Password    | The encryption key; if not specified, the registry will be unencrypted
 Salt        | The encryption salt; if the key is specified, the salt should too. The salt should be at least 8 characters long
 CheckUrl    | The link used to check the validity of the license (see below); if not specified, the license key is assumed valid if it exists and is a valid guid
+SubmitUrl   | The link used to submit a new registration; if not specified it will default to the value of CheckUrl
 Company     | The company name used for the registry key; defaults to the value in the entry assembly (the main application)
 Product     | The product name used for the registry key; defaults to the value in the entry assembly (the main application)
 
@@ -94,7 +95,7 @@ Product     | The product name used for the registry key; defaults to the value 
 If CheckUrl is present, the licenser will first check that there is a key and that it 1) is a valid GUID and 2) has not expired. If that check fails,
 the licenser treats the key as non-existent. If both conditions are met, the initialization makes a GET call to
 
-https://{CheckUrl}?Key={key}&ProcessorId={id} 
+https://{CheckUrl}?Key={key}&ProcessorId={id}
 
 If the call fails or does not return a correct response, the key is considered invalid (the application is not registered).
 
@@ -108,13 +109,14 @@ The licenser will overwrite the expiration date in the registry with the given d
 
 ### Registering
 
-If CheckUrl is present, the SaveRegistration method will (after making sure that the registration information is internally valid) send a POST request to
+If SubmitUrl is present, the SaveRegistration method will (after making sure that the registration information is internally valid) send a POST request to
 
-https://{CheckUrl}
+https://{SubmitUrl}
 
-with Content-Type set to application/x-www-form-urlencoded and the LicenseRegistration details. If the server returns a correctly formatted response
-(see above), the registration details are written to the registry.
+with Content-Type set to application/x-www-form-urlencoded and the LicenseRegistration details. The response from the server is not important
+(as long as it doesn't throw an exception) because the library will immediately make a GET request to check the license.
 
+Note: if SubmitUrl is not present but CheckUrl is, the library will use CheckUrl for the POST.
 
 ## Limits
 

@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using Microsoft.Win32;
 using Renfield.Licensing.Library.Contracts;
+using Renfield.Licensing.Library.Extensions;
 using Renfield.Licensing.Library.Models;
 using Renfield.Licensing.Library.Services.Validators;
 
@@ -54,10 +55,12 @@ namespace Renfield.Licensing.Library.Services
 
     private static RemoteChecker GetRemoteChecker(LicenseOptions options, Sys sys)
     {
-      if (String.IsNullOrWhiteSpace(options.CheckUrl))
+      var checkUrl = options.CheckUrl;
+      if (String.IsNullOrWhiteSpace(checkUrl))
         return new NullRemoteChecker();
 
-      var remote = new WebRemote("https://" + options.CheckUrl);
+      var submitUrl = options.SubmitUrl.NullIfEmpty() ?? checkUrl;
+      var remote = new WebRemote("https://" + checkUrl, "https://" + submitUrl);
       var parser = new ResponseParserImpl();
 
       return new RemoteCheckerClient(sys, remote, parser);

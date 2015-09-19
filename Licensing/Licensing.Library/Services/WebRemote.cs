@@ -5,9 +5,10 @@ namespace Renfield.Licensing.Library.Services
 {
   public class WebRemote : Remote
   {
-    public WebRemote(string url)
+    public WebRemote(string checkUrl, string submitUrl)
     {
-      this.url = url;
+      this.checkUrl = checkUrl;
+      this.submitUrl = submitUrl;
     }
 
     public string Get(string query)
@@ -16,7 +17,7 @@ namespace Renfield.Licensing.Library.Services
       {
         try
         {
-          return web.DownloadString(url + "?" + query);
+          return web.DownloadString(checkUrl + "?" + query);
         }
         catch
         {
@@ -30,12 +31,13 @@ namespace Renfield.Licensing.Library.Services
       using (var web = new WebClient())
       {
         web.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-        return web.UploadString(url, data);
+        return web.UploadString(submitUrl, data);
       }
     }
 
     //
 
-    private readonly string url;
+    private readonly string checkUrl;
+    private readonly string submitUrl;
   }
 }
