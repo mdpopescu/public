@@ -4,12 +4,12 @@ using Renfield.Licensing.Library.Models;
 
 namespace Renfield.Licensing.Library.Services
 {
-  public class LicenseCheckerImpl : LicenseChecker
+  public class LocalChecker : LicenseChecker
   {
     public bool IsLicensed { get; private set; }
     public bool IsTrial { get; private set; }
 
-    public LicenseCheckerImpl(RemoteChecker remote, Validator validator)
+    public LocalChecker(RemoteChecker remote, Validator validator)
     {
       this.remote = remote;
       this.validator = validator;
@@ -19,6 +19,12 @@ namespace Renfield.Licensing.Library.Services
     {
       SetIsLicensed(registration);
       SetIsTrial(registration);
+    }
+
+    public void Submit(LicenseRegistration registration)
+    {
+      if (validator.Isvalid(registration))
+        remote.Submit(registration);
     }
 
     //

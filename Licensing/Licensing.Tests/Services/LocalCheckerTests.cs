@@ -8,7 +8,7 @@ using Renfield.Licensing.Library.Services;
 namespace Renfield.Licensing.Tests.Services
 {
   [TestClass]
-  public class LicenseCheckerImplTests
+  public class LocalCheckerTests
   {
     private Mock<RemoteChecker> remote;
     private Mock<Validator> validator;
@@ -21,11 +21,11 @@ namespace Renfield.Licensing.Tests.Services
       remote = new Mock<RemoteChecker>();
       validator = new Mock<Validator>();
 
-      sut = new LicenseCheckerImpl(remote.Object, validator.Object);
+      sut = new LocalChecker(remote.Object, validator.Object);
     }
 
     [TestClass]
-    public class Check : LicenseCheckerImplTests
+    public class Check : LocalCheckerTests
     {
       // IsLicensed
 
@@ -96,24 +96,24 @@ namespace Renfield.Licensing.Tests.Services
       public void UpdatesExpirationDateToReturnedValue()
       {
         var registration = ObjectMother.CreateRegistration();
-        registration.Expiration = new DateTime(2000, 1, 2);
+        registration.Expiration = ObjectMother.OldDate;
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
         remote
           .Setup(it => it.Check(registration))
-          .Returns(new DateTime(2001, 2, 3));
+          .Returns(ObjectMother.NewDate);
 
         sut.Check(registration);
 
-        Assert.AreEqual(new DateTime(2001, 2, 3), registration.Expiration);
+        Assert.AreEqual(ObjectMother.NewDate, registration.Expiration);
       }
 
       [TestMethod]
       public void DoesNotUpdateExpirationDateIfServerResponseIsInvalid()
       {
         var registration = ObjectMother.CreateRegistration();
-        registration.Expiration = new DateTime(2000, 1, 2);
+        registration.Expiration = ObjectMother.OldDate;
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
@@ -123,7 +123,7 @@ namespace Renfield.Licensing.Tests.Services
 
         sut.Check(registration);
 
-        Assert.AreEqual(new DateTime(2000, 1, 2), registration.Expiration);
+        Assert.AreEqual(ObjectMother.OldDate, registration.Expiration);
       }
 
       [TestMethod]
@@ -135,7 +135,7 @@ namespace Renfield.Licensing.Tests.Services
           .Returns(true);
         remote
           .Setup(it => it.Check(registration))
-          .Returns(new DateTime(2001, 2, 3));
+          .Returns(ObjectMother.NewDate);
 
         sut.Check(registration);
 

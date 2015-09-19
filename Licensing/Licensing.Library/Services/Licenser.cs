@@ -1,5 +1,4 @@
-﻿using System;
-using Renfield.Licensing.Library.Contracts;
+﻿using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
 
 namespace Renfield.Licensing.Library.Services
@@ -13,14 +12,11 @@ namespace Renfield.Licensing.Library.Services
     /// <returns>A new Licenser</returns>
     public static Licenser Create(LicenseOptions options)
     {
-      var details = Bootstrapper.LoadRegistration(options);
+      var storage = Bootstrapper.GetStorage(options);
+      var sys = Bootstrapper.GetSys();
+      var checker = Bootstrapper.GetLicenseChecker(options, sys);
 
-      var storage = Bootstrapper.GetStorage(options, details);
-      var sys = new WinSys();
-      var checker = Bootstrapper.GetChecker(options, sys);
-      var chain = Bootstrapper.GetValidator();
-
-      var licenser = new Licenser(storage, sys, checker, chain);
+      var licenser = new Licenser(storage, sys, checker);
       licenser.Initialize();
 
       return licenser;
@@ -28,8 +24,15 @@ namespace Renfield.Licensing.Library.Services
 
     //
 
-    public bool IsLicensed { get; private set; }
-    public bool IsTrial { get; private set; }
+    public bool IsLicensed
+    {
+      get { return checker.IsLicensed; }
+    }
+
+    public bool IsTrial
+    {
+      get { return checker.IsTrial; }
+    }
 
     public bool ShouldRun
     {
@@ -38,7 +41,10 @@ namespace Renfield.Licensing.Library.Services
 
     public LicenseRegistration LoadRegistration()
     {
-      return InternalLoad();
+      registration = LoadOrCreate();
+      CheckStatus();
+
+      return registration;
     }
 
     public void SaveRegistration(LicenseRegistration details)
@@ -47,25 +53,25 @@ namespace Renfield.Licensing.Library.Services
       registration = details;
       storage.Save(registration);
 
-      if (validator.Isvalid(registration))
-        checker.Submit(registration);
+      checker.Submit(registration);
 
-      CheckLicenseStatus();
+      CheckStatus();
     }
 
     //
 
-    protected Licenser(Storage storage, Sys sys, RemoteChecker checker, Validator validator)
+    protected Licenser(Storage storage, Sys sys, LicenseChecker checker)
     {
       this.storage = storage;
       this.sys = sys;
       this.checker = checker;
-      this.validator = validator;
     }
 
     protected void Initialize()
     {
-      registration = InternalLoad();
+      registration = LoadOrCreate();
+      CheckStatus();
+      
       UpdateRemainingRuns();
     }
 
@@ -73,73 +79,30 @@ namespace Renfield.Licensing.Library.Services
 
     private readonly Storage storage;
     private readonly Sys sys;
-    private readonly RemoteChecker checker;
-    private readonly Validator validator;
+    private readonly LicenseChecker checker;
 
     private LicenseRegistration registration;
 
-    private LicenseRegistration InternalLoad()
+    private LicenseRegistration LoadOrCreate()
     {
       registration = storage.Load();
       if (registration == null)
       {
-        registration = new LicenseRegistration { ProcessorId = sys.GetProcessorId() };
+        registration = new LicenseRegistration {ProcessorId = sys.GetProcessorId()};
         storage.Save(registration);
       }
-
-      CheckLicenseStatus();
 
       return registration;
     }
 
-    private void CheckLicenseStatus()
+    private void CheckStatus()
     {
-      SetIsLicensed();
-      SetIsTrial();
-    }
+      var oldExpiration = registration.Expiration;
 
-    private void SetIsLicensed()
-    {
-      if (registration == null)
-        IsLicensed = false;
-      else if (!validator.Isvalid(registration))
-        IsLicensed = false;
-      else
-      {
-        var expiration = checker.Check(registration);
-        IsLicensed = CheckRemoteResponse(expiration);
-      }
-    }
+      checker.Check(registration);
 
-    private void SetIsTrial()
-    {
-      if (IsLicensed)
-        IsTrial = true;
-      else if (registration == null)
-        IsTrial = false;
-      else if (registration.Limits == null)
-        IsTrial = false;
-      else if (registration.Limits.Days >= 0 && registration.CreatedOn.AddDays(registration.Limits.Days) < DateTime.Today)
-        IsTrial = false;
-      else if (registration.Limits.Runs == 0)
-        IsTrial = false;
-      else
-        IsTrial = true;
-    }
-
-    private bool CheckRemoteResponse(DateTime? expiration)
-    {
-      if (expiration == null)
-        return false;
-
-      UpdateExpirationDate(expiration.Value);
-      return DateTime.Today <= expiration.Value;
-    }
-
-    private void UpdateExpirationDate(DateTime expiration)
-    {
-      registration.Expiration = expiration;
-      storage.Save(registration);
+      if (registration.Expiration != oldExpiration)
+        storage.Save(registration);
     }
 
     private void UpdateRemainingRuns()

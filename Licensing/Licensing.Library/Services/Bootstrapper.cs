@@ -9,17 +9,10 @@ namespace Renfield.Licensing.Library.Services
 {
   public static class Bootstrapper
   {
-    public static Details LoadRegistration(LicenseOptions options)
+    public static Storage GetStorage(LicenseOptions options)
     {
-      var r1 = new OptionsDetailsReader(options);
-      var r2 = new AssemblyDetailsReader(Assembly.GetEntryAssembly());
-      var reader = new CompositeDetailsReader(r1, r2);
+      var details = LoadCompanyAndProduct(options);
 
-      return reader.Read();
-    }
-
-    public static Storage GetStorage(LicenseOptions options, Details details)
-    {
       var pathBuilder = new RegistryPathBuilder();
       var subkey = pathBuilder.GetPath(details.Company, details.Product);
       var key = Registry.CurrentUser.OpenSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree)
@@ -32,7 +25,38 @@ namespace Renfield.Licensing.Library.Services
       return new SecureStorage(io, encryptor, serializer);
     }
 
-    public static RemoteChecker GetChecker(LicenseOptions options, Sys sys)
+    public static Sys GetSys()
+    {
+      return new WinSys();
+    }
+
+    public static LicenseChecker GetLicenseChecker(LicenseOptions options, Sys sys)
+    {
+      var remote = GetRemoteChecker(options, sys);
+      var validator = GetValidator();
+
+      return new LocalChecker(remote, validator);
+    }
+
+    //
+
+    private static Details LoadCompanyAndProduct(LicenseOptions options)
+    {
+      var r1 = new OptionsDetailsReader(options);
+      var r2 = new AssemblyDetailsReader(Assembly.GetEntryAssembly());
+      var reader = new CompositeDetailsReader(r1, r2);
+
+      return reader.Read();
+    }
+
+    private static Encryptor GetEncryptor(LicenseOptions options)
+    {
+      return String.IsNullOrWhiteSpace(options.Password) || String.IsNullOrWhiteSpace(options.Salt)
+        ? (Encryptor) new NullEncryptor()
+        : new RijndaelEncryptor(options.Password, options.Salt);
+    }
+
+    private static RemoteChecker GetRemoteChecker(LicenseOptions options, Sys sys)
     {
       if (String.IsNullOrWhiteSpace(options.CheckUrl))
         return new NullRemoteChecker();
@@ -43,7 +67,7 @@ namespace Renfield.Licensing.Library.Services
       return new RemoteCheckerClient(sys, remote, parser);
     }
 
-    public static Validator GetValidator()
+    private static Validator GetValidator()
     {
       return new GuidValidator(it => it.Key,
         new NonEmptyValidator(it => it.Name,
@@ -51,15 +75,6 @@ namespace Renfield.Licensing.Library.Services
             new NonEmptyValidator(it => it.ProcessorId,
               new ExpirationValidator(it => it.Expiration,
                 null)))));
-    }
-
-    //
-
-    private static Encryptor GetEncryptor(LicenseOptions options)
-    {
-      return String.IsNullOrWhiteSpace(options.Password) || String.IsNullOrWhiteSpace(options.Salt)
-        ? (Encryptor) new NullEncryptor()
-        : new RijndaelEncryptor(options.Password, options.Salt);
     }
   }
 }

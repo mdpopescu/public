@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -115,11 +114,11 @@ namespace Renfield.Licensing.Tests.Services
           .Returns("abc");
         parser
           .Setup(it => it.Parse("abc"))
-          .Returns(new RemoteResponse {Key = "{D98F6376-94F7-4D82-AA37-FC00F0166700}", Expiration = new DateTime(2000, 1, 2)});
+          .Returns(new RemoteResponse {Key = "{D98F6376-94F7-4D82-AA37-FC00F0166700}", Expiration = ObjectMother.OldDate});
 
         var result = sut.Check(registration);
 
-        Assert.AreEqual(new DateTime(2000, 1, 2), result);
+        Assert.AreEqual(ObjectMother.OldDate, result);
       }
     }
 
