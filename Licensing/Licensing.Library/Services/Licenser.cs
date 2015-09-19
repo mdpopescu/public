@@ -1,61 +1,32 @@
 ﻿using System;
-using System.Reflection;
-using Microsoft.Win32;
 using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
-using Renfield.Licensing.Library.Services.Validators;
 
 namespace Renfield.Licensing.Library.Services
 {
   public class Licenser
   {
+    /// <summary>
+    ///   Factory method
+    /// </summary>
+    /// <param name="options">The license options</param>
+    /// <returns>A new Licenser</returns>
     public static Licenser Create(LicenseOptions options)
     {
-      DetailsReader r1 = new OptionsDetailsReader(options);
-      DetailsReader r2 = new AssemblyDetailsReader(Assembly.GetEntryAssembly());
-      DetailsReader reader = new CompositeDetailsReader(r1, r2);
-      var details = reader.Read();
+      var details = Bootstrapper.LoadRegistration(options);
 
-      PathBuilder pathBuilder = new RegistryPathBuilder();
-      var subkey = pathBuilder.GetPath(details.Company, details.Product);
-      var key = Registry.CurrentUser.OpenSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree)
-                ?? Registry.CurrentUser.CreateSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree);
-      StringIO io = new RegistryIO(key);
-
-      var encryptor = string.IsNullOrWhiteSpace(options.Password) || string.IsNullOrWhiteSpace(options.Salt)
-        ? (Encryptor) new NullEncryptor()
-        : new RijndaelEncryptor(options.Password, options.Salt);
-      Serializer<LicenseRegistration> serializer = new LicenseSerializer();
-      Storage storage = new SecureStorage(io, encryptor, serializer);
-
-      Sys sys = new WinSys();
-
-      RemoteChecker checker;
-      if (string.IsNullOrWhiteSpace(options.CheckUrl))
-      {
-        checker = new NullRemoteChecker();
-      }
-      else
-      {
-        Remote remote = new WebRemote("https://" + options.CheckUrl);
-        ResponseParser parser = new ResponseParserImpl();
-        checker = string.IsNullOrWhiteSpace(options.CheckUrl)
-          ? (RemoteChecker) new NullRemoteChecker()
-          : new RemoteCheckerClient(sys, remote, parser);
-      }
-
-      Validator chain = new GuidValidator(it => it.Key,
-        new NonEmptyValidator(it => it.Name,
-          new NonEmptyValidator(it => it.Contact,
-            new NonEmptyValidator(it => it.ProcessorId,
-              new ExpirationValidator(it => it.Expiration,
-                null)))));
+      var storage = Bootstrapper.GetStorage(options, details);
+      var sys = new WinSys();
+      var checker = Bootstrapper.GetChecker(options, sys);
+      var chain = Bootstrapper.GetValidator();
 
       var licenser = new Licenser(storage, sys, checker, chain);
       licenser.Initialize();
 
       return licenser;
     }
+
+    //
 
     public bool IsLicensed { get; private set; }
     public bool IsTrial { get; private set; }
