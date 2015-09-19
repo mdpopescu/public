@@ -39,11 +39,7 @@ namespace Renfield.Licensing.Library.Services
       if (!validator.Isvalid(registration))
         return;
 
-      var expiration = remote.Check(registration);
-      if (!expiration.HasValue)
-        return;
-
-      registration.Expiration = expiration.Value;
+      remote.Check(registration);
       IsLicensed = DateTime.Today <= registration.Expiration;
     }
 

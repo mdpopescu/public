@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Renfield.Licensing.Library.Services;
 
 namespace Renfield.Licensing.Tests.Services
@@ -16,13 +15,13 @@ namespace Renfield.Licensing.Tests.Services
       var serialized = sut.Serialize(details);
       var result = sut.Deserialize(serialized);
 
-      Assert.AreEqual(new DateTime(2000, 1, 1), result.CreatedOn);
+      Assert.AreEqual(ObjectMother.OldDate, result.CreatedOn);
       Assert.AreEqual(-1, result.Limits.Days);
       Assert.AreEqual(-1, result.Limits.Runs);
-      Assert.AreEqual("{D98F6376-94F7-4D82-AA37-FC00F0166700}", result.Key);
-      Assert.AreEqual("Marcel", result.Name);
-      Assert.AreEqual("mdpopescu@gmail.com", result.Contact);
-      Assert.AreEqual(new DateTime(9999, 12, 31), result.Expiration);
+      Assert.AreEqual(ObjectMother.KEY, result.Key);
+      Assert.AreEqual(ObjectMother.NAME, result.Name);
+      Assert.AreEqual(ObjectMother.CONTACT, result.Contact);
+      Assert.AreEqual(ObjectMother.FutureDate, result.Expiration);
     }
   }
 }

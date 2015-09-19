@@ -77,56 +77,6 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void SetsIsLicensedToFalseIfServerResponseIsInvalid()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(true);
-        remote
-          .Setup(it => it.Check(registration))
-          .Returns((DateTime?) null);
-
-        sut.Check(registration);
-
-        Assert.IsFalse(sut.IsLicensed);
-      }
-
-      [TestMethod]
-      public void UpdatesExpirationDateToReturnedValue()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        registration.Expiration = ObjectMother.OldDate;
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(true);
-        remote
-          .Setup(it => it.Check(registration))
-          .Returns(ObjectMother.NewDate);
-
-        sut.Check(registration);
-
-        Assert.AreEqual(ObjectMother.NewDate, registration.Expiration);
-      }
-
-      [TestMethod]
-      public void DoesNotUpdateExpirationDateIfServerResponseIsInvalid()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        registration.Expiration = ObjectMother.OldDate;
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(true);
-        remote
-          .Setup(it => it.Check(registration))
-          .Returns((DateTime?) null);
-
-        sut.Check(registration);
-
-        Assert.AreEqual(ObjectMother.OldDate, registration.Expiration);
-      }
-
-      [TestMethod]
       public void SetsIsLicensedToFalseIfExpired()
       {
         var registration = ObjectMother.CreateRegistration();
@@ -135,7 +85,7 @@ namespace Renfield.Licensing.Tests.Services
           .Returns(true);
         remote
           .Setup(it => it.Check(registration))
-          .Returns(ObjectMother.NewDate);
+          .Callback<LicenseRegistration>(r => r.Expiration = ObjectMother.OldDate);
 
         sut.Check(registration);
 
@@ -149,9 +99,6 @@ namespace Renfield.Licensing.Tests.Services
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
-        remote
-          .Setup(it => it.Check(registration))
-          .Returns(new DateTime(9999, 12, 31));
 
         sut.Check(registration);
 
@@ -167,9 +114,6 @@ namespace Renfield.Licensing.Tests.Services
         validator
           .Setup(it => it.Isvalid(registration))
           .Returns(true);
-        remote
-          .Setup(it => it.Check(registration))
-          .Returns(new DateTime(9999, 12, 31));
 
         sut.Check(registration);
 

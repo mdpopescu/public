@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -90,9 +91,27 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void ReturnsNullIfTheKeyDoesNotMatch()
+      public void UpdatesExpirationDateToReturnedValue()
       {
         var registration = ObjectMother.CreateRegistration();
+        registration.Expiration = ObjectMother.OldDate;
+        remote
+          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId="))
+          .Returns("abc");
+        parser
+          .Setup(it => it.Parse("abc"))
+          .Returns(new RemoteResponse {Key = "{D98F6376-94F7-4D82-AA37-FC00F0166700}", Expiration = ObjectMother.NewDate});
+
+        sut.Check(registration);
+
+        Assert.AreEqual(ObjectMother.NewDate, registration.Expiration);
+      }
+
+      [TestMethod]
+      public void UpdatesExpirationDateToMinimumValueIfResponseIsInvalid()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.Expiration = ObjectMother.OldDate;
         remote
           .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId="))
           .Returns("abc");
@@ -100,25 +119,9 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Parse("abc"))
           .Returns(new RemoteResponse {Key = "def"});
 
-        var result = sut.Check(registration);
+        sut.Check(registration);
 
-        Assert.IsNull(result);
-      }
-
-      [TestMethod]
-      public void ReturnsTheExpirationDateIfTheKeyMatches()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId="))
-          .Returns("abc");
-        parser
-          .Setup(it => it.Parse("abc"))
-          .Returns(new RemoteResponse {Key = "{D98F6376-94F7-4D82-AA37-FC00F0166700}", Expiration = ObjectMother.OldDate});
-
-        var result = sut.Check(registration);
-
-        Assert.AreEqual(ObjectMother.OldDate, result);
+        Assert.AreEqual(DateTime.MinValue, registration.Expiration);
       }
     }
 

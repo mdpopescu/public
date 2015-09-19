@@ -13,7 +13,7 @@ namespace Renfield.Licensing.Library.Services
       this.parser = parser;
     }
 
-    public DateTime? Check(LicenseRegistration registration)
+    public void Check(LicenseRegistration registration)
     {
       var processorId = sys.GetProcessorId();
       registration.ProcessorId = processorId;
@@ -21,7 +21,8 @@ namespace Renfield.Licensing.Library.Services
       var query = BuildQuery(registration, processorId);
       var response = remote.Get(query);
 
-      return GetExpirationDate(registration, response);
+      var expiration = GetExpirationDate(registration, response);
+      registration.Expiration = expiration.GetValueOrDefault();
     }
 
     public void Submit(LicenseRegistration registration)
