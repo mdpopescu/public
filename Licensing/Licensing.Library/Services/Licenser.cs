@@ -40,10 +40,10 @@ namespace Renfield.Licensing.Library.Services
 
     public LicenseRegistration LoadRegistration()
     {
-      var registration = LoadOrCreate();
-      CheckStatus(registration);
+      var details = LoadOrCreate();
+      CheckStatus(details);
 
-      return registration;
+      return details;
     }
 
     public void SaveRegistration(LicenseRegistration details)
@@ -65,10 +65,10 @@ namespace Renfield.Licensing.Library.Services
 
     protected void Initialize()
     {
-      var registration = LoadOrCreate();
-      CheckStatus(registration);
+      var details = LoadOrCreate();
+      CheckStatus(details);
 
-      UpdateRemainingRuns(registration);
+      UpdateRemainingRuns(details);
     }
 
     //
