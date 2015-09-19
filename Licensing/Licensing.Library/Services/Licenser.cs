@@ -36,8 +36,17 @@ namespace Renfield.Licensing.Library.Services
       get { return IsLicensed || IsTrial; }
     }
 
-    public LicenseRegistration GetRegistration()
+    public LicenseRegistration LoadRegistration()
     {
+      registration = storage.Load();
+      if (registration == null)
+      {
+        registration = new LicenseRegistration { ProcessorId = sys.GetProcessorId() };
+        storage.Save(registration);
+      }
+
+      CheckLicenseStatus();
+
       return registration;
     }
 
@@ -45,18 +54,12 @@ namespace Renfield.Licensing.Library.Services
     {
       // overwrite the currently saved registration information
       registration = details;
-      registration.ProcessorId = sys.GetProcessorId();
-
-      if (!validator.Isvalid(registration))
-        return;
-
-      var expiration = checker.Submit(registration);
-      if (!CheckRemoteResponse(expiration))
-        return;
-
-      // this checks remote again, with a GET this time
-      CheckLicenseStatus();
       storage.Save(registration);
+
+      if (validator.Isvalid(registration))
+        checker.Submit(registration);
+
+      CheckLicenseStatus();
     }
 
     //
@@ -71,14 +74,7 @@ namespace Renfield.Licensing.Library.Services
 
     protected void Initialize()
     {
-      registration = storage.Load();
-      if (registration == null)
-      {
-        registration = new LicenseRegistration {ProcessorId = sys.GetProcessorId()};
-        storage.Save(registration);
-      }
-
-      CheckLicenseStatus();
+      registration = LoadRegistration();
       UpdateRemainingRuns();
     }
 

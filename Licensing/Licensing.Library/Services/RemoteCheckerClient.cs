@@ -18,20 +18,19 @@ namespace Renfield.Licensing.Library.Services
       var processorId = sys.GetProcessorId();
       registration.ProcessorId = processorId;
 
-      var response = remote.Get(BuildQuery(registration, processorId));
+      var query = BuildQuery(registration, processorId);
+      var response = remote.Get(query);
+
       return GetExpirationDate(registration, response);
     }
 
-    public DateTime? Submit(LicenseRegistration registration)
+    public void Submit(LicenseRegistration registration)
     {
       var processorId = sys.GetProcessorId();
       registration.ProcessorId = processorId;
 
-      var fields = registration.GetLicenseFields();
-      var data = sys.Encode(fields);
-
-      var response = remote.Post(data);
-      return GetExpirationDate(registration, response);
+      var data = BuildData(registration);
+      remote.Post(data);
     }
 
     //
@@ -40,9 +39,15 @@ namespace Renfield.Licensing.Library.Services
     private readonly Remote remote;
     private readonly ResponseParser parser;
 
-    private string BuildQuery(LicenseRegistration registration, string processorId)
+    private static string BuildQuery(LicenseRegistration registration, string processorId)
     {
       return string.Format("Key={0}&ProcessorId={1}", registration.Key, processorId);
+    }
+
+    private string BuildData(LicenseRegistration registration)
+    {
+      var fields = registration.GetLicenseFields();
+      return sys.Encode(fields);
     }
 
     private DateTime? GetExpirationDate(LicenseRegistration registration, string response)

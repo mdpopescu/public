@@ -153,9 +153,6 @@ namespace Renfield.Licensing.Tests.Services
       public void EncodesTheRegistrationDetails()
       {
         var registration = ObjectMother.CreateRegistration();
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
 
         sut.Submit(registration);
 
@@ -175,51 +172,6 @@ namespace Renfield.Licensing.Tests.Services
         sut.Submit(registration);
 
         remote.Verify(it => it.Post("abc"));
-      }
-
-      [TestMethod]
-      public void ParsesTheResponse()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        remote
-          .Setup(it => it.Post(It.IsAny<string>()))
-          .Returns("abc");
-
-        sut.Submit(registration);
-
-        parser.Verify(it => it.Parse("abc"));
-      }
-
-      [TestMethod]
-      public void ReturnsNullIfTheKeyDoesNotMatch()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        remote
-          .Setup(it => it.Post(It.IsAny<string>()))
-          .Returns("abc");
-        parser
-          .Setup(it => it.Parse("abc"))
-          .Returns(new RemoteResponse {Key = "def"});
-
-        var result = sut.Submit(registration);
-
-        Assert.IsNull(result);
-      }
-
-      [TestMethod]
-      public void ReturnsTheExpirationDateIfTheKeyMatches()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        remote
-          .Setup(it => it.Post(It.IsAny<string>()))
-          .Returns("abc");
-        parser
-          .Setup(it => it.Parse("abc"))
-          .Returns(new RemoteResponse {Key = "{D98F6376-94F7-4D82-AA37-FC00F0166700}", Expiration = new DateTime(2000, 1, 2)});
-
-        var result = sut.Submit(registration);
-
-        Assert.AreEqual(new DateTime(2000, 1, 2), result);
       }
     }
   }

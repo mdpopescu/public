@@ -5,9 +5,9 @@ using Renfield.Licensing.Library.Models;
 namespace Renfield.Licensing.Library.Services
 {
   /// <summary>
-  /// Implements the Null Object pattern for the RemoteChecker interface.
-  /// In particular, this class always returns an expiration date far into the future,
-  /// thus faking a web service that considers all keys to be valid.
+  ///   Implements the Null Object pattern for the RemoteChecker interface.
+  ///   In particular, this class always returns an expiration date far into the future,
+  ///   thus faking a web service that considers all keys to be valid.
   /// </summary>
   public class NullRemoteChecker : RemoteChecker
   {
@@ -16,9 +16,9 @@ namespace Renfield.Licensing.Library.Services
       return new DateTime(9999, 12, 31);
     }
 
-    public DateTime? Submit(LicenseRegistration registration)
+    public void Submit(LicenseRegistration registration)
     {
-      return new DateTime(9999, 12, 31);
+      // do nothing
     }
   }
 }

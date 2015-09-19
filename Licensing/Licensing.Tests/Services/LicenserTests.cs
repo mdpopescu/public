@@ -369,33 +369,81 @@ namespace Renfield.Licensing.Tests.Services
     }
 
     [TestClass]
+    public class LoadRegistration : LicenserTests
+    {
+      [TestMethod]
+      public void LoadsRegistrationDetailsFromStorage()
+      {
+        sut.LoadRegistration();
+
+        storage.Verify(it => it.Load());
+      }
+
+      [TestMethod]
+      public void SavesANewRegistrationIfNoneExists()
+      {
+        sys
+          .Setup(it => it.GetProcessorId())
+          .Returns("1");
+
+        sut.LoadRegistration();
+
+        storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r =>
+          r.CreatedOn == DateTime.Today
+          && r.Limits.Days == Constants.DEFAULT_DAYS
+          && r.Limits.Runs == Constants.DEFAULT_RUNS
+          && r.Key == null
+          && r.Name == null
+          && r.Contact == null
+          && r.ProcessorId == "1"
+          && r.Expiration == DateTime.Today.AddDays(Constants.DEFAULT_DAYS))));
+      }
+
+      [TestMethod]
+      public void ReturnsTheRegistrationDetails()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+
+        var result = sut.LoadRegistration();
+
+        Assert.AreEqual(registration, result);
+      }
+
+      [TestMethod]
+      public void ChecksTheRegistrationDetailsIfValid()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
+
+        sut.LoadRegistration();
+
+        checker.Verify(it => it.Check(registration));
+      }
+    }
+
+    [TestClass]
     public class SaveRegistration : LicenserTests
     {
       [TestMethod]
-      public void GetsTheProcessorId()
+      public void SavesTheRegistration()
       {
         var registration = ObjectMother.CreateRegistration();
 
         sut.SaveRegistration(registration);
 
-        sys.Verify(it => it.GetProcessorId());
+        storage.Verify(it => it.Save(registration));
       }
 
       [TestMethod]
-      public void SetsTheProcessorIdInTheRegistrationDetails()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("2");
-
-        sut.SaveRegistration(registration);
-
-        Assert.AreEqual("2", registration.ProcessorId);
-      }
-
-      [TestMethod]
-      public void SendsTheDetailsToTheServer()
+      public void SendsTheDetailsToTheServerIfInternallyValid()
       {
         var registration = ObjectMother.CreateRegistration();
         validator
@@ -408,19 +456,16 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void SavesTheRegistrationIfTheServerReturnedAValidResponse()
+      public void DoesNotSendTheDetailsToTheServerIfInvalid()
       {
         var registration = ObjectMother.CreateRegistration();
-        checker
-          .Setup(it => it.Submit(registration))
-          .Returns(new DateTime(9999, 12, 31));
         validator
           .Setup(it => it.Isvalid(registration))
-          .Returns(true);
+          .Returns(false);
 
         sut.SaveRegistration(registration);
 
-        storage.Verify(it => it.Save(registration));
+        checker.Verify(it => it.Submit(It.IsAny<LicenseRegistration>()), Times.Never);
       }
 
       [TestMethod]
@@ -428,7 +473,7 @@ namespace Renfield.Licensing.Tests.Services
       {
         var registration = ObjectMother.CreateRegistration();
         checker
-          .Setup(it => it.Submit(registration))
+          .Setup(it => it.Check(registration))
           .Returns(new DateTime(9999, 12, 31));
         validator
           .Setup(it => it.Isvalid(registration))
@@ -453,19 +498,6 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void SetsIsTrialToFalseIfInvalid()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(false);
-
-        sut.SaveRegistration(registration);
-
-        Assert.IsFalse(sut.IsTrial);
-      }
-
-      [TestMethod]
       public void DoesNotSendLicenseToServerIfInvalid()
       {
         var registration = ObjectMother.CreateRegistration();
@@ -476,73 +508,6 @@ namespace Renfield.Licensing.Tests.Services
         sut.SaveRegistration(registration);
 
         checker.Verify(it => it.Submit(registration), Times.Never);
-      }
-
-      [TestMethod]
-      public void DoesNotSaveLicenseToStorageIfInvalid()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(false);
-
-        sut.SaveRegistration(registration);
-
-        storage.Verify(it => it.Save(registration), Times.Never);
-      }
-
-      [TestMethod]
-      public void SetsIsLicensedToTrueIfRemoteReturnsOk()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(true);
-        checker
-          .Setup(it => it.Submit(registration))
-          .Returns(new DateTime(9999, 12, 31));
-        checker
-          .Setup(it => it.Check(registration))
-          .Returns(new DateTime(9999, 12, 31));
-
-        sut.SaveRegistration(registration);
-
-        Assert.IsTrue(sut.IsLicensed);
-      }
-
-      [TestMethod]
-      public void SetsIsLicensedToFalseIfRemoteReturnsInvalidFromSubmit()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(true);
-        checker
-          .Setup(it => it.Submit(registration))
-          .Returns((DateTime?) null);
-
-        sut.SaveRegistration(registration);
-
-        Assert.IsFalse(sut.IsLicensed);
-      }
-
-      [TestMethod]
-      public void SetsIsLicensedToFalseIfRemoteReturnsInvalidFromCheck()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        validator
-          .Setup(it => it.Isvalid(registration))
-          .Returns(true);
-        checker
-          .Setup(it => it.Submit(registration))
-          .Returns(new DateTime(9999, 12, 31));
-        checker
-          .Setup(it => it.Check(registration))
-          .Returns((DateTime?) null);
-
-        sut.SaveRegistration(registration);
-
-        Assert.IsFalse(sut.IsLicensed);
       }
     }
 

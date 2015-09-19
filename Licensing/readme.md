@@ -28,9 +28,9 @@ This will return *true* if the application should run (either the license is val
 
 ### Showing registration information
 
-    var details = licenser.GetRegistration();
+    var details = licenser.LoadRegistration();
 
-Returns the previously loaded registration details; the application might then choose to display those details, eg a message showing how many days
+Re-loads and re-checks the registration details; the application might then choose to display those details, eg a message showing how many days
 are remaining. It is recommended that a text box be provided for the user to enter a license key; if that happens, the application can use the
 SaveRegistration method (below).
 
@@ -50,7 +50,7 @@ the application at the given URL and only save to the file if everything went ok
     // initial check
     if (!licenser.IsLicensed)
     {
-        var details = licenser.GetRegistration();
+        var details = licenser.LoadRegistration();
         // show registration / trial screen
     }
 
@@ -68,7 +68,7 @@ The double check can be simplified by using the ShouldRun property:
     // initial check
     if (!licenser.IsLicensed)
     {
-        var details = licenser.GetRegistration();
+        var details = licenser.LoadRegistration();
         // show registration / trial screen
     }
 

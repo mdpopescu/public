@@ -29,11 +29,12 @@ namespace Renfield.Licensing.Sample
 
     private void ShowLicense()
     {
+      var registration = licenser.LoadRegistration();
+      
       cbIsLicensed.Checked = licenser.IsLicensed;
       cbIsTrial.Checked = licenser.IsTrial;
       cbShouldRun.Checked = licenser.ShouldRun;
 
-      var registration = licenser.GetRegistration();
       txtCreatedOn.Text = registration.CreatedOn.ToString(DATE_FORMAT);
       txtLimitsDays.Text = registration.Limits.Days.ToString();
       txtLimitsRuns.Text = registration.Limits.Runs.ToString();
@@ -47,7 +48,7 @@ namespace Renfield.Licensing.Sample
 
     private void SaveLicense()
     {
-      var registration = licenser.GetRegistration();
+      var registration = licenser.LoadRegistration();
 
       registration.CreatedOn = DateTime.ParseExact(txtCreatedOn.Text, DATE_FORMAT, CultureInfo.InvariantCulture);
       registration.Limits.Days = string.IsNullOrWhiteSpace(txtLimitsDays.Text) ? -1 : int.Parse(txtLimitsDays.Text);
@@ -60,6 +61,9 @@ namespace Renfield.Licensing.Sample
       registration.Expiration = DateTime.ParseExact(txtExpiration.Text, DATE_FORMAT, CultureInfo.InvariantCulture);
 
       licenser.SaveRegistration(registration);
+
+      // refresh the details
+      ShowLicense();
     }
 
     //
@@ -71,7 +75,6 @@ namespace Renfield.Licensing.Sample
 
     private void btnLoad_Click(object sender, EventArgs e)
     {
-      // BUG: doesn't actually reload
       ShowLicense();
     }
 
