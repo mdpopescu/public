@@ -38,16 +38,7 @@ namespace Renfield.Licensing.Library.Services
 
     public LicenseRegistration LoadRegistration()
     {
-      registration = storage.Load();
-      if (registration == null)
-      {
-        registration = new LicenseRegistration { ProcessorId = sys.GetProcessorId() };
-        storage.Save(registration);
-      }
-
-      CheckLicenseStatus();
-
-      return registration;
+      return InternalLoad();
     }
 
     public void SaveRegistration(LicenseRegistration details)
@@ -74,7 +65,7 @@ namespace Renfield.Licensing.Library.Services
 
     protected void Initialize()
     {
-      registration = LoadRegistration();
+      registration = InternalLoad();
       UpdateRemainingRuns();
     }
 
@@ -86,6 +77,20 @@ namespace Renfield.Licensing.Library.Services
     private readonly Validator validator;
 
     private LicenseRegistration registration;
+
+    private LicenseRegistration InternalLoad()
+    {
+      registration = storage.Load();
+      if (registration == null)
+      {
+        registration = new LicenseRegistration { ProcessorId = sys.GetProcessorId() };
+        storage.Save(registration);
+      }
+
+      CheckLicenseStatus();
+
+      return registration;
+    }
 
     private void CheckLicenseStatus()
     {
