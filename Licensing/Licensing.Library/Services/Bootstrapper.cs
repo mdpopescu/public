@@ -25,13 +25,9 @@ namespace Renfield.Licensing.Library.Services
       return new SecureStorage(io, encryptor, serializer);
     }
 
-    public static Sys GetSys()
+    public static LicenseChecker GetLicenseChecker(LicenseOptions options)
     {
-      return new WinSys();
-    }
-
-    public static LicenseChecker GetLicenseChecker(LicenseOptions options, Sys sys)
-    {
+      var sys = new WinSys();
       var remote = GetRemoteChecker(options, sys);
       var validator = GetValidator();
 
@@ -72,9 +68,8 @@ namespace Renfield.Licensing.Library.Services
       return new GuidValidator(it => it.Key,
         new NonEmptyValidator(it => it.Name,
           new NonEmptyValidator(it => it.Contact,
-            new NonEmptyValidator(it => it.ProcessorId,
-              new ExpirationValidator(it => it.Expiration,
-                null)))));
+            new ExpirationValidator(it => it.Expiration,
+              null))));
     }
   }
 }

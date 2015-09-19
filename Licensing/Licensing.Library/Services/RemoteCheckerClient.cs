@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
 
@@ -15,10 +17,7 @@ namespace Renfield.Licensing.Library.Services
 
     public void Check(LicenseRegistration registration)
     {
-      var processorId = sys.GetProcessorId();
-      registration.ProcessorId = processorId;
-
-      var query = BuildQuery(registration, processorId);
+      var query = BuildQuery(registration, sys.GetProcessorId());
       var response = remote.Get(query);
 
       var expiration = GetExpirationDate(registration, response);
@@ -27,10 +26,7 @@ namespace Renfield.Licensing.Library.Services
 
     public void Submit(LicenseRegistration registration)
     {
-      var processorId = sys.GetProcessorId();
-      registration.ProcessorId = processorId;
-
-      var data = BuildData(registration);
+      var data = BuildData(registration, sys.GetProcessorId());
       remote.Post(data);
     }
 
@@ -45,9 +41,11 @@ namespace Renfield.Licensing.Library.Services
       return string.Format("Key={0}&ProcessorId={1}", registration.Key, processorId);
     }
 
-    private string BuildData(LicenseRegistration registration)
+    private string BuildData(LicenseRegistration registration, string processorId)
     {
-      var fields = registration.GetLicenseFields();
+      var fields = registration.GetLicenseFields().ToList();
+      fields.Add(new KeyValuePair<string, string>("ProcessorId", processorId));
+
       return sys.Encode(fields);
     }
 

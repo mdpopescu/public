@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
+using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
 using Renfield.Licensing.Library.Services;
 
@@ -19,6 +20,8 @@ namespace Renfield.Licensing.Sample
         CheckUrl = null,
       };
       licenser = Licenser.Create(options);
+
+      sys = new WinSys();
     }
 
     //
@@ -26,11 +29,12 @@ namespace Renfield.Licensing.Sample
     private const string DATE_FORMAT = "yyyy-MM-dd";
 
     private readonly Licenser licenser;
+    private readonly Sys sys;
 
     private void ShowLicense()
     {
       var registration = licenser.LoadRegistration();
-      
+
       cbIsLicensed.Checked = licenser.IsLicensed;
       cbIsTrial.Checked = licenser.IsTrial;
       cbShouldRun.Checked = licenser.ShouldRun;
@@ -42,7 +46,7 @@ namespace Renfield.Licensing.Sample
       txtKey.Text = registration.Key;
       txtName.Text = registration.Name;
       txtContact.Text = registration.Contact;
-      txtProcessorId.Text = registration.ProcessorId;
+      txtProcessorId.Text = sys.GetProcessorId();
       txtExpiration.Text = registration.Expiration.ToString(DATE_FORMAT);
     }
 
@@ -57,7 +61,6 @@ namespace Renfield.Licensing.Sample
       registration.Key = txtKey.Text;
       registration.Name = txtName.Text;
       registration.Contact = txtContact.Text;
-      registration.ProcessorId = txtProcessorId.Text;
       registration.Expiration = DateTime.ParseExact(txtExpiration.Text, DATE_FORMAT, CultureInfo.InvariantCulture);
 
       licenser.SaveRegistration(registration);

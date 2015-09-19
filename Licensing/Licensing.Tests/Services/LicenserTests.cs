@@ -12,7 +12,6 @@ namespace Renfield.Licensing.Tests.Services
   public class LicenserTests
   {
     private Mock<Storage> storage;
-    private Mock<Sys> sys;
     private Mock<LicenseChecker> checker;
 
     private TestLicenser sut;
@@ -21,10 +20,9 @@ namespace Renfield.Licensing.Tests.Services
     public void SetUp()
     {
       storage = new Mock<Storage>();
-      sys = new Mock<Sys>();
       checker = new Mock<LicenseChecker>();
 
-      sut = new TestLicenser(storage.Object, sys.Object, checker.Object);
+      sut = new TestLicenser(storage.Object, checker.Object);
     }
 
     [TestClass]
@@ -41,10 +39,6 @@ namespace Renfield.Licensing.Tests.Services
       [TestMethod]
       public void SavesANewRegistrationIfNoneExists()
       {
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
-
         sut.LoadRegistration();
 
         storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r =>
@@ -54,7 +48,6 @@ namespace Renfield.Licensing.Tests.Services
           r.Key == null &&
           r.Name == null &&
           r.Contact == null &&
-          r.ProcessorId == "1" &&
           r.Expiration == DateTime.Today.AddDays(Constants.DEFAULT_DAYS))));
       }
 
@@ -150,10 +143,6 @@ namespace Renfield.Licensing.Tests.Services
       [TestMethod]
       public void SavesANewRegistrationIfNoneExists()
       {
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
-
         sut.Initialize();
 
         storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r =>
@@ -163,7 +152,6 @@ namespace Renfield.Licensing.Tests.Services
           && r.Key == null
           && r.Name == null
           && r.Contact == null
-          && r.ProcessorId == "1"
           && r.Expiration == DateTime.Today.AddDays(Constants.DEFAULT_DAYS))));
       }
 
@@ -199,8 +187,8 @@ namespace Renfield.Licensing.Tests.Services
 
     private class TestLicenser : Licenser
     {
-      public TestLicenser(Storage storage, Sys sys, LicenseChecker checker)
-        : base(storage, sys, checker)
+      public TestLicenser(Storage storage, LicenseChecker checker)
+        : base(storage, checker)
       {
       }
 

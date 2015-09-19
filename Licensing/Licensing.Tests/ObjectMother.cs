@@ -37,7 +37,6 @@ namespace Renfield.Licensing.Tests
         Key = KEY,
         Name = NAME,
         Contact = CONTACT,
-        ProcessorId = "1",
         Expiration = FutureDate,
       };
     }

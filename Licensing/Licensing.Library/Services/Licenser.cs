@@ -13,10 +13,9 @@ namespace Renfield.Licensing.Library.Services
     public static Licenser Create(LicenseOptions options)
     {
       var storage = Bootstrapper.GetStorage(options);
-      var sys = Bootstrapper.GetSys();
-      var checker = Bootstrapper.GetLicenseChecker(options, sys);
+      var checker = Bootstrapper.GetLicenseChecker(options);
 
-      var licenser = new Licenser(storage, sys, checker);
+      var licenser = new Licenser(storage, checker);
       licenser.Initialize();
 
       return licenser;
@@ -60,10 +59,9 @@ namespace Renfield.Licensing.Library.Services
 
     //
 
-    protected Licenser(Storage storage, Sys sys, LicenseChecker checker)
+    protected Licenser(Storage storage, LicenseChecker checker)
     {
       this.storage = storage;
-      this.sys = sys;
       this.checker = checker;
     }
 
@@ -71,14 +69,13 @@ namespace Renfield.Licensing.Library.Services
     {
       registration = LoadOrCreate();
       CheckStatus();
-      
+
       UpdateRemainingRuns();
     }
 
     //
 
     private readonly Storage storage;
-    private readonly Sys sys;
     private readonly LicenseChecker checker;
 
     private LicenseRegistration registration;
@@ -88,7 +85,7 @@ namespace Renfield.Licensing.Library.Services
       registration = storage.Load();
       if (registration == null)
       {
-        registration = new LicenseRegistration {ProcessorId = sys.GetProcessorId()};
+        registration = new LicenseRegistration();
         storage.Save(registration);
       }
 

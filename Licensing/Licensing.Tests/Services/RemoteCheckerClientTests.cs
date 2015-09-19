@@ -42,19 +42,6 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void OverwritesTheProcessorIdInTheRegistration()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("5");
-
-        sut.Check(registration);
-
-        Assert.AreEqual("5", registration.ProcessorId);
-      }
-
-      [TestMethod]
       public void SendsKeyToTheServer()
       {
         var registration = ObjectMother.CreateRegistration();
@@ -136,19 +123,6 @@ namespace Renfield.Licensing.Tests.Services
         sut.Submit(registration);
 
         sys.Verify(it => it.GetProcessorId());
-      }
-
-      [TestMethod]
-      public void OverwritesTheProcessorIdInTheRegistration()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("5");
-
-        sut.Submit(registration);
-
-        Assert.AreEqual("5", registration.ProcessorId);
       }
 
       [TestMethod]
