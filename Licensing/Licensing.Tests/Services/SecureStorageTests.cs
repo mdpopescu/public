@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
@@ -35,15 +36,13 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void ReturnsEmptyObjectIfInputIsEmpty()
+      public void ReturnsNullIfInputIsEmpty()
       {
         io
           .Setup(it => it.Read())
           .Returns("  ");
 
-        var result = sut.Load();
-
-        Assert.IsNotNull(result);
+        sut.Load();
       }
 
       [TestMethod]
@@ -56,6 +55,21 @@ namespace Renfield.Licensing.Tests.Services
         sut.Load();
 
         encryptor.Verify(it => it.Decrypt("abc"));
+      }
+
+      [TestMethod]
+      public void ReturnsNullIfTheDecryptorThrows()
+      {
+        io
+          .Setup(it => it.Read())
+          .Returns("abc");
+        encryptor
+          .Setup(it => it.Decrypt("abc"))
+          .Throws(new Exception());
+
+        var result = sut.Load();
+
+        Assert.IsNull(result);
       }
 
       [TestMethod]
@@ -90,6 +104,24 @@ namespace Renfield.Licensing.Tests.Services
         var result = sut.Load();
 
         Assert.AreEqual(details, result);
+      }
+
+      [TestMethod]
+      public void ReturnsNullIfTheSerializerThrows()
+      {
+        io
+          .Setup(it => it.Read())
+          .Returns("abc");
+        encryptor
+          .Setup(it => it.Decrypt("abc"))
+          .Returns("def");
+        serializer
+          .Setup(it => it.Deserialize("def"))
+          .Throws(new Exception());
+
+        var result = sut.Load();
+
+        Assert.IsNull(result);
       }
     }
 

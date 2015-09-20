@@ -40,8 +40,9 @@ namespace Renfield.Licensing.Library.Services
 
     public LicenseRegistration LoadRegistration()
     {
-      var details = LoadOrCreate();
-      CheckStatus(details);
+      var details = storage.Load();
+      if (details != null)
+        CheckStatus(details);
 
       return details;
     }
@@ -65,9 +66,11 @@ namespace Renfield.Licensing.Library.Services
 
     protected void Initialize()
     {
-      var details = LoadOrCreate();
-      CheckStatus(details);
+      var details = storage.Load();
+      if (details == null)
+        return;
 
+      CheckStatus(details);
       UpdateRemainingRuns(details);
     }
 
@@ -75,18 +78,6 @@ namespace Renfield.Licensing.Library.Services
 
     private readonly Storage storage;
     private readonly LicenseChecker checker;
-
-    private LicenseRegistration LoadOrCreate()
-    {
-      var details = storage.Load();
-      if (details == null)
-      {
-        details = new LicenseRegistration();
-        storage.Save(details);
-      }
-
-      return details;
-    }
 
     private void CheckStatus(LicenseRegistration details)
     {

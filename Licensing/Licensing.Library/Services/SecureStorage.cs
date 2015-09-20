@@ -14,12 +14,16 @@ namespace Renfield.Licensing.Library.Services
 
     public LicenseRegistration Load()
     {
-      var encrypted = io.Read();
-      if (string.IsNullOrWhiteSpace(encrypted))
-        return new LicenseRegistration();
-
-      var decrypted = encryptor.Decrypt(encrypted);
-      return serializer.Deserialize(decrypted);
+      try
+      {
+        var encrypted = io.Read();
+        var decrypted = encryptor.Decrypt(encrypted);
+        return serializer.Deserialize(decrypted);
+      }
+      catch
+      {
+        return null;
+      }
     }
 
     public void Save(LicenseRegistration registration)

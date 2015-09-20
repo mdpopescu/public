@@ -30,7 +30,7 @@ This will return *true* if the application should run (either the license is val
 
     var details = licenser.LoadRegistration();
 
-Re-loads and re-checks the registration details; the application might then choose to display those details, eg a message showing how many days
+Reloads and re-checks the registration details; the application might then choose to display those details, eg a message showing how many days
 are remaining. It is recommended that a text box be provided for the user to enter a license key; if that happens, the application can use the
 SaveRegistration method (below).
 
@@ -39,7 +39,7 @@ SaveRegistration method (below).
     var details = new LicenseRegistration { ... };
     licenser.SaveRegistration(details);
 
-Creates the license file with the given registration details, optionally encrypted with a password. If CheckUrl is not empty, it will first try to register
+Saves the given registration details, optionally encrypted with a password. If CheckUrl is not empty, it will first try to register
 the application at the given URL and only save to the file if everything went ok.
 
 ### Sample code:
@@ -83,7 +83,7 @@ The double check can be simplified by using the ShouldRun property:
 
 Name        | Description
 ----------- | -----------
-Password    | The encryption key; if not specified, the registry will be unencrypted
+Password    | The encryption key; if not specified, the details will be unencrypted
 Salt        | The encryption salt; if the key is specified, the salt should too. The salt should be at least 8 characters long
 CheckUrl    | The link used to check the validity of the license (see below); if not specified, the license key is assumed valid if it exists and is a valid guid
 SubmitUrl   | The link used to submit a new registration; if not specified it will default to the value of CheckUrl

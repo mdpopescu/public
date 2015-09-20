@@ -37,18 +37,20 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void SavesANewRegistrationIfNoneExists()
+      public void SetsIsLicensedAndIsTrialToFalseIfNoneExists()
       {
         sut.LoadRegistration();
 
-        storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r =>
-          r.CreatedOn == DateTime.Today &&
-          r.Limits.Days == Constants.DEFAULT_DAYS &&
-          r.Limits.Runs == Constants.DEFAULT_RUNS &&
-          r.Key == null &&
-          r.Name == null &&
-          r.Contact == null &&
-          r.Expiration == DateTime.Today.AddDays(Constants.DEFAULT_DAYS))));
+        Assert.IsFalse(sut.IsLicensed);
+        Assert.IsFalse(sut.IsTrial);
+      }
+
+      [TestMethod]
+      public void ReturnsNullIfNoRegistrationDetailsExist()
+      {
+        var result = sut.LoadRegistration();
+
+        Assert.IsNull(result);
       }
 
       [TestMethod]
@@ -138,21 +140,6 @@ namespace Renfield.Licensing.Tests.Services
         sut.Initialize();
 
         storage.Verify(it => it.Load());
-      }
-
-      [TestMethod]
-      public void SavesANewRegistrationIfNoneExists()
-      {
-        sut.Initialize();
-
-        storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r =>
-          r.CreatedOn == DateTime.Today
-          && r.Limits.Days == Constants.DEFAULT_DAYS
-          && r.Limits.Runs == Constants.DEFAULT_RUNS - 1
-          && r.Key == null
-          && r.Name == null
-          && r.Contact == null
-          && r.Expiration == DateTime.Today.AddDays(Constants.DEFAULT_DAYS))));
       }
 
       [TestMethod]

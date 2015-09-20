@@ -39,6 +39,9 @@ namespace Renfield.Licensing.Sample
       cbIsTrial.Checked = licenser.IsTrial;
       cbShouldRun.Checked = licenser.ShouldRun;
 
+      if (registration == null)
+        return;
+
       txtCreatedOn.Text = registration.CreatedOn.ToString(DATE_FORMAT);
       txtLimitsDays.Text = registration.Limits.Days.ToString();
       txtLimitsRuns.Text = registration.Limits.Runs.ToString();
@@ -52,16 +55,19 @@ namespace Renfield.Licensing.Sample
 
     private void SaveLicense()
     {
-      var registration = licenser.LoadRegistration();
-
-      registration.CreatedOn = DateTime.ParseExact(txtCreatedOn.Text, DATE_FORMAT, CultureInfo.InvariantCulture);
-      registration.Limits.Days = string.IsNullOrWhiteSpace(txtLimitsDays.Text) ? -1 : int.Parse(txtLimitsDays.Text);
-      registration.Limits.Runs = string.IsNullOrWhiteSpace(txtLimitsRuns.Text) ? -1 : int.Parse(txtLimitsRuns.Text);
-
-      registration.Key = txtKey.Text;
-      registration.Name = txtName.Text;
-      registration.Contact = txtContact.Text;
-      registration.Expiration = DateTime.ParseExact(txtExpiration.Text, DATE_FORMAT, CultureInfo.InvariantCulture);
+      var registration = new LicenseRegistration
+      {
+        CreatedOn = DateTime.ParseExact(txtCreatedOn.Text, DATE_FORMAT, CultureInfo.InvariantCulture),
+        Limits =
+        {
+          Days = string.IsNullOrWhiteSpace(txtLimitsDays.Text) ? -1 : int.Parse(txtLimitsDays.Text),
+          Runs = string.IsNullOrWhiteSpace(txtLimitsRuns.Text) ? -1 : int.Parse(txtLimitsRuns.Text)
+        },
+        Key = txtKey.Text,
+        Name = txtName.Text,
+        Contact = txtContact.Text,
+        Expiration = DateTime.ParseExact(txtExpiration.Text, DATE_FORMAT, CultureInfo.InvariantCulture),
+      };
 
       licenser.SaveRegistration(registration);
 
