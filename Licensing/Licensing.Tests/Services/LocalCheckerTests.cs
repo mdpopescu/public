@@ -197,6 +197,22 @@ namespace Renfield.Licensing.Tests.Services
 
         Assert.IsTrue(sut.IsTrial);
       }
+
+      [TestMethod]
+      public void SetsIsTrialToFalseIfPastDeadline()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        validator
+          .Setup(it => it.Isvalid(registration))
+          .Returns(true);
+        remote
+          .Setup(it => it.Check(registration))
+          .Callback<LicenseRegistration>(r => r.Expiration = ObjectMother.OldDate);
+
+        sut.Check(registration);
+
+        Assert.IsFalse(sut.IsTrial);
+      }
     }
   }
 }

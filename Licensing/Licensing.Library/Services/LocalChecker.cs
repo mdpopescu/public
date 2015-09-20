@@ -55,6 +55,8 @@ namespace Renfield.Licensing.Library.Services
         IsTrial = false;
       else if (registration.Limits.Runs == 0)
         IsTrial = false;
+      else if (registration.Expiration < DateTime.Today)
+        IsTrial = false;
       else
         IsTrial = true;
     }
