@@ -1,7 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Renfield.Licensing.Library;
 using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
 using Renfield.Licensing.Library.Services;
@@ -167,6 +165,37 @@ namespace Renfield.Licensing.Tests.Services
         sut.Initialize();
 
         storage.Verify(it => it.Save(It.Is<LicenseRegistration>(r => r.Limits.Runs == 4)));
+      }
+
+      [TestMethod]
+      public void DoesNotUpdateTheRemainingRunsIfNotGreaterThanZero()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.Limits.Runs = 0;
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+
+        sut.Initialize();
+
+        storage.Verify(it => it.Save(It.IsAny<LicenseRegistration>()), Times.Never);
+      }
+
+      [TestMethod]
+      public void DoesNotUpdateTheRemainingRunsIfLicensed()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.Limits.Runs = 5;
+        storage
+          .Setup(it => it.Load())
+          .Returns(registration);
+        checker
+          .Setup(it => it.IsLicensed)
+          .Returns(true);
+
+        sut.Initialize();
+
+        storage.Verify(it => it.Save(It.IsAny<LicenseRegistration>()), Times.Never);
       }
     }
 

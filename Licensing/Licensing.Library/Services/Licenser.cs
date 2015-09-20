@@ -91,7 +91,7 @@ namespace Renfield.Licensing.Library.Services
 
     private void UpdateRemainingRuns(LicenseRegistration details)
     {
-      if (details.Limits.Runs <= 0)
+      if (IsLicensed || details.Limits.Runs <= 0)
         return;
 
       details.Limits.Runs--;
