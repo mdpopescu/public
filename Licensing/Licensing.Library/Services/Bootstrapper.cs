@@ -68,7 +68,7 @@ namespace Renfield.Licensing.Library.Services
 
     private static Validator GetValidator()
     {
-      return new GuidValidator(it => it.Key,
+      return new HMACValidator(it => it,
         new NonEmptyValidator(it => it.Name,
           new NonEmptyValidator(it => it.Contact,
             new ExpirationValidator(it => it.Expiration,

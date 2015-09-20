@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
+using Renfield.Licensing.Library;
 using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
 using Renfield.Licensing.Library.Services;
@@ -26,7 +27,7 @@ namespace Renfield.Licensing.Sample
 
     //
 
-    private const string DATE_FORMAT = "yyyy-MM-dd";
+    private const string DATE_FORMAT = Constants.DATE_FORMAT;
 
     private readonly Licenser licenser;
     private readonly Sys sys;

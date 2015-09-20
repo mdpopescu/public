@@ -11,6 +11,8 @@ namespace Renfield.Licensing.Library.Services.Validators
     {
     }
 
+    //
+
     protected override bool InternalIsValid(object obj)
     {
       return !string.IsNullOrWhiteSpace(obj as string);

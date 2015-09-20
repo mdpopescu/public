@@ -11,6 +11,8 @@ namespace Renfield.Licensing.Library.Services.Validators
     {
     }
 
+    //
+
     protected override bool InternalIsValid(object obj)
     {
       return obj is DateTime && DateTime.Today <= (DateTime) obj;

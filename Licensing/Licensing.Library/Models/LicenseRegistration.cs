@@ -27,7 +27,7 @@ namespace Renfield.Licensing.Library.Models
       yield return new KeyValuePair<string, string>("Key", Key);
       yield return new KeyValuePair<string, string>("Name", Name);
       yield return new KeyValuePair<string, string>("Contact", Contact);
-      yield return new KeyValuePair<string, string>("Expiration", Expiration.ToString("yyyy-MM-dd"));
+      yield return new KeyValuePair<string, string>("Expiration", Expiration.ToString(Constants.DATE_FORMAT));
     }
   }
 }

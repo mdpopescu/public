@@ -70,10 +70,10 @@
     <Compile Include="Services\OptionsDetailsReader.cs" />
     <Compile Include="Services\RegistryPathBuilder.cs" />
     <Compile Include="Services\RemoteCheckerClient.cs" />
+    <Compile Include="Services\Validators\HMACValidator.cs" />
     <Compile Include="Services\Validators\NonEmptyValidator.cs" />
     <Compile Include="Services\Validators\BaseValidator.cs" />
     <Compile Include="Services\Validators\ExpirationValidator.cs" />
-    <Compile Include="Services\Validators\GuidValidator.cs" />
     <Compile Include="Services\RegistryIO.cs" />
     <Compile Include="Services\ResponseParserImpl.cs" />
     <Compile Include="Services\RijndaelEncryptor.cs" />

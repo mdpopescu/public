@@ -16,7 +16,7 @@ namespace Renfield.Licensing.Library.Services
         return new RemoteResponse
         {
           Key = parts[0],
-          Expiration = DateTime.ParseExact(parts[1], "yyyy-MM-dd", CultureInfo.InvariantCulture),
+          Expiration = DateTime.ParseExact(parts[1], Constants.DATE_FORMAT, CultureInfo.InvariantCulture),
         };
       }
       catch
