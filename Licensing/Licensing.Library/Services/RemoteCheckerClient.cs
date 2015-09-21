@@ -34,14 +34,6 @@ namespace Renfield.Licensing.Library.Services
     private readonly RequestBuilder builder;
     private readonly ResponseParser parser;
 
-    //private string BuildData(LicenseRegistration registration, string processorId)
-    //{
-    //  var fields = registration.GetLicenseFields().ToList();
-    //  fields.Add(new KeyValuePair<string, string>("ProcessorId", processorId));
-
-    //  return sys.Encode(fields);
-    //}
-
     private DateTime? GetExpirationDate(LicenseRegistration registration, string response)
     {
       var parsed = parser.Parse(response);

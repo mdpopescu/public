@@ -30,7 +30,7 @@ namespace Renfield.Licensing.Library.Services
     {
       var sys = new WinSys();
       var remote = GetRemoteChecker(options, sys);
-      var validator = GetValidator();
+      var validator = GetValidator(options);
 
       return new LocalChecker(remote, validator);
     }
@@ -67,9 +67,10 @@ namespace Renfield.Licensing.Library.Services
       return new RemoteCheckerClient(remote, builder, parser);
     }
 
-    private static Validator GetValidator()
+    private static Validator GetValidator(LicenseOptions options)
     {
-      return new HMACValidator(it => it,
+      //return new HMACValidator(options.Password, it => it,
+      return new GuidValidator(it => it.Key,
         new NonEmptyValidator(it => it.Name,
           new NonEmptyValidator(it => it.Contact,
             new ExpirationValidator(it => it.Expiration,

@@ -8,9 +8,10 @@ namespace Renfield.Licensing.Library.Services.Validators
 {
   public class HMACValidator : BaseValidator
   {
-    public HMACValidator(Func<LicenseRegistration, object> func, Validator next)
+    public HMACValidator(string password, Func<LicenseRegistration, object> func, Validator next)
       : base(func, next)
     {
+      this.password = password;
     }
 
     //
@@ -29,7 +30,7 @@ namespace Renfield.Licensing.Library.Services.Validators
 
     //
 
-    private const string HMAC_SECRET = "{59EFABFB-6920-4438-88AA-692B69C734B7}";
+    private readonly string password;
 
     private static string GetData(LicenseRegistration details)
     {
@@ -42,9 +43,9 @@ namespace Renfield.Licensing.Library.Services.Validators
       return sb.ToString();
     }
 
-    private static string GetSignature(string s)
+    private string GetSignature(string s)
     {
-      var keyBytes = Encoding.UTF8.GetBytes(HMAC_SECRET);
+      var keyBytes = Encoding.UTF8.GetBytes(password);
       var dataBytes = Encoding.UTF8.GetBytes(s);
 
       var hmac = new HMACSHA256(keyBytes);
