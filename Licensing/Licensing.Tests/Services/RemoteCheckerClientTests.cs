@@ -81,7 +81,7 @@ namespace Renfield.Licensing.Tests.Services
           .Returns("abc");
         parser
           .Setup(it => it.Parse("abc"))
-          .Returns(new RemoteResponse {Key = "{D98F6376-94F7-4D82-AA37-FC00F0166700}", Expiration = ObjectMother.NewDate});
+          .Returns(new RemoteResponse {Key = ObjectMother.KEY, Expiration = ObjectMother.NewDate});
 
         sut.Check(registration);
 
@@ -106,6 +106,66 @@ namespace Renfield.Licensing.Tests.Services
         sut.Check(registration);
 
         Assert.AreEqual(ObjectMother.OldDate, registration.Expiration);
+      }
+
+      [TestMethod]
+      public void UpdatesCreatedDateToTodayWhenResponseIsValid()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.CreatedOn = ObjectMother.OldDate;
+        builder
+          .Setup(it => it.BuildQuery(registration))
+          .Returns("query");
+        remote
+          .Setup(it => it.Get("query"))
+          .Returns("abc");
+        parser
+          .Setup(it => it.Parse("abc"))
+          .Returns(new RemoteResponse {Key = ObjectMother.KEY, Expiration = ObjectMother.NewDate});
+
+        sut.Check(registration);
+
+        Assert.AreEqual(DateTime.Today, registration.CreatedOn);
+      }
+
+      [TestMethod]
+      public void UpdatesNumberOfDaysTo30WhenResponseIsValid()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.Limits.Days = 1;
+        builder
+          .Setup(it => it.BuildQuery(registration))
+          .Returns("query");
+        remote
+          .Setup(it => it.Get("query"))
+          .Returns("abc");
+        parser
+          .Setup(it => it.Parse("abc"))
+          .Returns(new RemoteResponse { Key = ObjectMother.KEY, Expiration = ObjectMother.NewDate });
+
+        sut.Check(registration);
+
+        Assert.AreEqual(30, registration.Limits.Days);
+      }
+
+      [TestMethod]
+      public void UpdatesNumberOfRunsToMinusOneWhenResponseIsValid()
+      {
+        var registration = ObjectMother.CreateRegistration();
+        registration.Limits.Runs = 1;
+        builder
+          .Setup(it => it.BuildQuery(registration))
+          .Returns("query");
+        remote
+          .Setup(it => it.Get("query"))
+          .Returns("abc");
+        parser
+          .Setup(it => it.Parse("abc"))
+          .Returns(new RemoteResponse { Key = ObjectMother.KEY, Expiration = ObjectMother.NewDate });
+
+        sut.Check(registration);
+
+        Assert.AreEqual(-1, registration.Limits.Runs);
       }
     }
 

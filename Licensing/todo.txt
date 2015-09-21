@@ -5,5 +5,6 @@ x add a /strike/LicenserFactory/strike/ Bootstrapper (might conflict with the ab
 x add a NullEncryptor (instead of passing null / property injection)
 x add a NullRemoteChecker
 x add a parameter in the HMACValidator constructor with the options password
-- every time the license is confirmed, set Limit.Runs to -1 and Limit.Days so that remaining days >= 7
+x every time the license is confirmed, set CreatedOn to today, Limit.Runs to -1 and Limit.Days to 30
+  - alternative: use the HMAC-verified license and just not care about verification anymore
 - add acceptance tests for the common scenarios

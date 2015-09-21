@@ -20,7 +20,12 @@ namespace Renfield.Licensing.Library.Services
 
       var expiration = GetExpirationDate(registration, response);
       if (expiration.HasValue)
+      {
+        registration.CreatedOn = DateTime.Today;
+        registration.Limits.Days = 30;
+        registration.Limits.Runs = -1;
         registration.Expiration = expiration.Value;
+      }
 
       return new LicenseStatus
       {
