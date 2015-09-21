@@ -89,7 +89,7 @@ namespace Renfield.Licensing.Tests.Services
       }
 
       [TestMethod]
-      public void UpdatesExpirationDateToMinimumValueIfResponseIsInvalid()
+      public void DoesNotUpdateExpirationDateToMinimumValueIfResponseIsInvalid()
       {
         var registration = ObjectMother.CreateRegistration();
         registration.Expiration = ObjectMother.OldDate;
@@ -105,7 +105,7 @@ namespace Renfield.Licensing.Tests.Services
 
         sut.Check(registration);
 
-        Assert.AreEqual(DateTime.MinValue, registration.Expiration);
+        Assert.AreEqual(ObjectMother.OldDate, registration.Expiration);
       }
     }
 

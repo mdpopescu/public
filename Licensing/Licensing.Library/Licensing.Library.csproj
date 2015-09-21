@@ -46,7 +46,6 @@
     <Compile Include="Contracts\LicenseChecker.cs" />
     <Compile Include="Contracts\PathBuilder.cs" />
     <Compile Include="Contracts\Remote.cs" />
-    <Compile Include="Contracts\RemoteChecker.cs" />
     <Compile Include="Contracts\RequestBuilder.cs" />
     <Compile Include="Contracts\ResponseParser.cs" />
     <Compile Include="Contracts\Serializer.cs" />
@@ -58,6 +57,7 @@
     <Compile Include="Models\Details.cs" />
     <Compile Include="Models\LicenseOptions.cs" />
     <Compile Include="Models\LicenseRegistration.cs" />
+    <Compile Include="Models\LicenseStatus.cs" />
     <Compile Include="Models\Limits.cs" />
     <Compile Include="Models\RemoteResponse.cs" />
     <Compile Include="Services\AssemblyDetailsReader.cs" />

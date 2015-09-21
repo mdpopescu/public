@@ -53,14 +53,14 @@ namespace Renfield.Licensing.Library.Services
         : new RijndaelEncryptor(options.Password, options.Salt);
     }
 
-    private static RemoteChecker GetRemoteChecker(LicenseOptions options, Sys sys)
+    private static LicenseChecker GetRemoteChecker(LicenseOptions options, Sys sys)
     {
       var checkUrl = options.CheckUrl;
       if (String.IsNullOrWhiteSpace(checkUrl))
         return new NullRemoteChecker();
 
       var submitUrl = options.SubmitUrl.NullIfEmpty() ?? checkUrl;
-      var remote = new WebRemote(checkUrl, submitUrl);
+      var remote = new WebRemote(submitUrl);
       var builder = new WebRequestBuilder(sys, checkUrl);
       var parser = new ResponseParserImpl();
 

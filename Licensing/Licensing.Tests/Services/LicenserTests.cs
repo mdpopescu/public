@@ -58,6 +58,9 @@ namespace Renfield.Licensing.Tests.Services
         storage
           .Setup(it => it.Load())
           .Returns(registration);
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new LicenseStatus());
 
         sut.LoadRegistration();
 
@@ -74,6 +77,7 @@ namespace Renfield.Licensing.Tests.Services
           .Returns(registration);
         checker
           .Setup(it => it.Check(registration))
+          .Returns(new LicenseStatus())
           .Callback<LicenseRegistration>(r => r.Expiration = ObjectMother.NewDate);
 
         sut.LoadRegistration();
@@ -88,6 +92,9 @@ namespace Renfield.Licensing.Tests.Services
         storage
           .Setup(it => it.Load())
           .Returns(registration);
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new LicenseStatus());
 
         var result = sut.LoadRegistration();
 
@@ -102,6 +109,9 @@ namespace Renfield.Licensing.Tests.Services
       public void SavesTheRegistration()
       {
         var registration = ObjectMother.CreateRegistration();
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new LicenseStatus());
 
         sut.SaveRegistration(registration);
 
@@ -112,6 +122,9 @@ namespace Renfield.Licensing.Tests.Services
       public void SubmitsTheDetailsToTheChecker()
       {
         var registration = ObjectMother.CreateRegistration();
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new LicenseStatus());
 
         sut.SaveRegistration(registration);
 
@@ -122,6 +135,9 @@ namespace Renfield.Licensing.Tests.Services
       public void ChecksTheLicense()
       {
         var registration = ObjectMother.CreateRegistration();
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new LicenseStatus());
 
         sut.SaveRegistration(registration);
 
@@ -147,6 +163,9 @@ namespace Renfield.Licensing.Tests.Services
         storage
           .Setup(it => it.Load())
           .Returns(registration);
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new LicenseStatus());
 
         sut.Initialize();
 
@@ -161,6 +180,9 @@ namespace Renfield.Licensing.Tests.Services
         storage
           .Setup(it => it.Load())
           .Returns(registration);
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new LicenseStatus());
 
         sut.Initialize();
 
@@ -175,6 +197,9 @@ namespace Renfield.Licensing.Tests.Services
         storage
           .Setup(it => it.Load())
           .Returns(registration);
+        checker
+          .Setup(it => it.Check(registration))
+          .Returns(new LicenseStatus());
 
         sut.Initialize();
 
@@ -190,8 +215,8 @@ namespace Renfield.Licensing.Tests.Services
           .Setup(it => it.Load())
           .Returns(registration);
         checker
-          .Setup(it => it.IsLicensed)
-          .Returns(true);
+          .Setup(it => it.Check(registration))
+          .Returns(new LicenseStatus {IsLicensed = true});
 
         sut.Initialize();
 

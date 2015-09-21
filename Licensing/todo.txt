@@ -4,5 +4,6 @@ x make constructor and Initialize protected
 x add a /strike/LicenserFactory/strike/ Bootstrapper (might conflict with the above)
 x add a NullEncryptor (instead of passing null / property injection)
 x add a NullRemoteChecker
-- add a parameter in the HMACValidator constructor with the options password
+x add a parameter in the HMACValidator constructor with the options password
+- every time the license is confirmed, set Limit.Runs to -1 and Limit.Days so that remaining days >= 7
 - add acceptance tests for the common scenarios

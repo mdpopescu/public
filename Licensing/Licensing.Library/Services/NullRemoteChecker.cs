@@ -6,11 +6,11 @@ namespace Renfield.Licensing.Library.Services
   /// <summary>
   ///   Implements the Null Object pattern for the RemoteChecker interface.
   /// </summary>
-  public class NullRemoteChecker : RemoteChecker
+  public class NullRemoteChecker : LicenseChecker
   {
-    public void Check(LicenseRegistration registration)
+    public LicenseStatus Check(LicenseRegistration registration)
     {
-      // do nothing
+      return new LicenseStatus {IsLicensed = true, IsTrial = true};
     }
 
     public void Submit(LicenseRegistration registration)

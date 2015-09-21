@@ -23,15 +23,8 @@ namespace Renfield.Licensing.Library.Services
 
     //
 
-    public bool IsLicensed
-    {
-      get { return checker.IsLicensed; }
-    }
-
-    public bool IsTrial
-    {
-      get { return checker.IsTrial; }
-    }
+    public bool IsLicensed { get; private set; }
+    public bool IsTrial { get; private set; }
 
     public bool ShouldRun
     {
@@ -83,10 +76,17 @@ namespace Renfield.Licensing.Library.Services
     {
       var oldExpiration = details.Expiration;
 
-      checker.Check(details);
+      SetStatus(details);
 
       if (details.Expiration != oldExpiration)
         storage.Save(details);
+    }
+
+    private void SetStatus(LicenseRegistration details)
+    {
+      var status = checker.Check(details);
+      IsLicensed = status.IsLicensed;
+      IsTrial = status.IsTrial;
     }
 
     private void UpdateRemainingRuns(LicenseRegistration details)

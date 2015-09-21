@@ -6,19 +6,19 @@ namespace Renfield.Licensing.Library.Services
 {
   public class LocalChecker : LicenseChecker
   {
-    public bool IsLicensed { get; private set; }
-    public bool IsTrial { get; private set; }
-
-    public LocalChecker(RemoteChecker remote, Validator validator)
+    public LocalChecker(LicenseChecker remote, Validator validator)
     {
       this.remote = remote;
       this.validator = validator;
     }
 
-    public void Check(LicenseRegistration registration)
+    public LicenseStatus Check(LicenseRegistration registration)
     {
-      SetIsLicensed(registration);
-      SetIsTrial(registration);
+      var status = new LicenseStatus();
+      status.IsLicensed = GetIsLicensed(registration);
+      status.IsTrial = status.IsLicensed || GetIsTrial(registration);
+
+      return status;
     }
 
     public void Submit(LicenseRegistration registration)
@@ -29,36 +29,31 @@ namespace Renfield.Licensing.Library.Services
 
     //
 
-    private readonly RemoteChecker remote;
+    private readonly LicenseChecker remote;
     private readonly Validator validator;
 
-    private void SetIsLicensed(LicenseRegistration registration)
+    private bool GetIsLicensed(LicenseRegistration registration)
     {
-      IsLicensed = false;
-
       if (!validator.Isvalid(registration))
-        return;
+        return false;
 
-      remote.Check(registration);
-      IsLicensed = DateTime.Today <= registration.Expiration;
+      var status = remote.Check(registration);
+      return status.IsLicensed;
     }
 
-    private void SetIsTrial(LicenseRegistration registration)
+    private bool GetIsTrial(LicenseRegistration registration)
     {
-      if (IsLicensed)
-        IsTrial = true;
-      else if (registration == null)
-        IsTrial = false;
-      else if (registration.Limits == null)
-        IsTrial = false;
-      else if (registration.Limits.GetRemainingDays(registration.CreatedOn) <= 0)
-        IsTrial = false;
-      else if (registration.Limits.Runs == 0)
-        IsTrial = false;
-      else if (registration.Expiration < DateTime.Today)
-        IsTrial = false;
-      else
-        IsTrial = true;
+      if (registration == null)
+        return false;
+      if (registration.Limits == null)
+        return false;
+      if (registration.Limits.GetRemainingDays(registration.CreatedOn) <= 0)
+        return false;
+      if (registration.Limits.Runs == 0)
+        return false;
+      if (registration.Expiration < DateTime.Today)
+        return false;
+      return true;
     }
   }
 }

@@ -5,9 +5,8 @@ namespace Renfield.Licensing.Library.Services
 {
   public class WebRemote : Remote
   {
-    public WebRemote(string checkUrl, string submitUrl)
+    public WebRemote(string submitUrl)
     {
-      this.checkUrl = checkUrl;
       this.submitUrl = submitUrl;
     }
 
@@ -17,7 +16,7 @@ namespace Renfield.Licensing.Library.Services
       {
         try
         {
-          return web.DownloadString(checkUrl + query);
+          return web.DownloadString(query);
         }
         catch
         {
@@ -37,7 +36,6 @@ namespace Renfield.Licensing.Library.Services
 
     //
 
-    private readonly string checkUrl;
     private readonly string submitUrl;
   }
 }

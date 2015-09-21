@@ -4,7 +4,7 @@ using Renfield.Licensing.Library.Models;
 
 namespace Renfield.Licensing.Library.Services
 {
-  public class RemoteCheckerClient : RemoteChecker
+  public class RemoteCheckerClient : LicenseChecker
   {
     public RemoteCheckerClient(Remote remote, RequestBuilder builder, ResponseParser parser)
     {
@@ -13,13 +13,20 @@ namespace Renfield.Licensing.Library.Services
       this.parser = parser;
     }
 
-    public void Check(LicenseRegistration registration)
+    public LicenseStatus Check(LicenseRegistration registration)
     {
       var query = builder.BuildQuery(registration);
       var response = remote.Get(query);
 
       var expiration = GetExpirationDate(registration, response);
-      registration.Expiration = expiration.GetValueOrDefault();
+      if (expiration.HasValue)
+        registration.Expiration = expiration.Value;
+
+      return new LicenseStatus
+      {
+        IsLicensed = expiration.HasValue && DateTime.Today <= registration.Expiration,
+        IsTrial = true,
+      };
     }
 
     public void Submit(LicenseRegistration registration)
