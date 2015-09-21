@@ -17,7 +17,7 @@ namespace Renfield.Licensing.Library.Services
       {
         try
         {
-          return web.DownloadString(checkUrl + "?" + query);
+          return web.DownloadString(checkUrl + query);
         }
         catch
         {

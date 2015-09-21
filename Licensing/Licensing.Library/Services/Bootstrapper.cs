@@ -60,10 +60,11 @@ namespace Renfield.Licensing.Library.Services
         return new NullRemoteChecker();
 
       var submitUrl = options.SubmitUrl.NullIfEmpty() ?? checkUrl;
-      var remote = new WebRemote("https://" + checkUrl, "https://" + submitUrl);
+      var remote = new WebRemote(checkUrl, submitUrl);
+      var builder = new WebRequestBuilder(sys, checkUrl);
       var parser = new ResponseParserImpl();
 
-      return new RemoteCheckerClient(sys, remote, parser);
+      return new RemoteCheckerClient(remote, builder, parser);
     }
 
     private static Validator GetValidator()

@@ -4,4 +4,5 @@ x make constructor and Initialize protected
 x add a /strike/LicenserFactory/strike/ Bootstrapper (might conflict with the above)
 x add a NullEncryptor (instead of passing null / property injection)
 x add a NullRemoteChecker
-- 
+- add a parameter in the HMACValidator constructor with the options password
+- add acceptance tests for the common scenarios

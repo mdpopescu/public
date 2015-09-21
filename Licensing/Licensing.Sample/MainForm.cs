@@ -19,6 +19,7 @@ namespace Renfield.Licensing.Sample
         Password = "password",
         Salt = "saltsaltsalt",
         CheckUrl = null,
+        SubmitUrl = null,
       };
       licenser = Licenser.Create(options);
 

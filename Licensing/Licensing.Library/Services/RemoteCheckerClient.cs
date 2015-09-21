@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Renfield.Licensing.Library.Contracts;
 using Renfield.Licensing.Library.Models;
 
@@ -8,16 +6,16 @@ namespace Renfield.Licensing.Library.Services
 {
   public class RemoteCheckerClient : RemoteChecker
   {
-    public RemoteCheckerClient(Sys sys, Remote remote, ResponseParser parser)
+    public RemoteCheckerClient(Remote remote, RequestBuilder builder, ResponseParser parser)
     {
-      this.sys = sys;
       this.remote = remote;
+      this.builder = builder;
       this.parser = parser;
     }
 
     public void Check(LicenseRegistration registration)
     {
-      var query = BuildQuery(registration, sys.GetProcessorId());
+      var query = builder.BuildQuery(registration);
       var response = remote.Get(query);
 
       var expiration = GetExpirationDate(registration, response);
@@ -26,28 +24,23 @@ namespace Renfield.Licensing.Library.Services
 
     public void Submit(LicenseRegistration registration)
     {
-      var data = BuildData(registration, sys.GetProcessorId());
+      var data = builder.BuildData(registration);
       remote.Post(data);
     }
 
     //
 
-    private readonly Sys sys;
     private readonly Remote remote;
+    private readonly RequestBuilder builder;
     private readonly ResponseParser parser;
 
-    private static string BuildQuery(LicenseRegistration registration, string processorId)
-    {
-      return string.Format("Key={0}&ProcessorId={1}", registration.Key, processorId);
-    }
+    //private string BuildData(LicenseRegistration registration, string processorId)
+    //{
+    //  var fields = registration.GetLicenseFields().ToList();
+    //  fields.Add(new KeyValuePair<string, string>("ProcessorId", processorId));
 
-    private string BuildData(LicenseRegistration registration, string processorId)
-    {
-      var fields = registration.GetLicenseFields().ToList();
-      fields.Add(new KeyValuePair<string, string>("ProcessorId", processorId));
-
-      return sys.Encode(fields);
-    }
+    //  return sys.Encode(fields);
+    //}
 
     private DateTime? GetExpirationDate(LicenseRegistration registration, string response)
     {

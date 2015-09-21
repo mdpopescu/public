@@ -65,6 +65,7 @@
     <Compile Include="Services\ResponseParserImplTests.cs" />
     <Compile Include="Services\SecureStorageTests.cs" />
     <Compile Include="Services\RijndaelEncryptorTests.cs" />
+    <Compile Include="Services\WebRequestBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Licensing.Library\Licensing.Library.csproj">

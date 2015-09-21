@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Renfield.Licensing.Library.Contracts;
@@ -12,8 +10,8 @@ namespace Renfield.Licensing.Tests.Services
   [TestClass]
   public class RemoteCheckerClientTests
   {
-    private Mock<Sys> sys;
     private Mock<Remote> remote;
+    private Mock<RequestBuilder> builder;
     private Mock<ResponseParser> parser;
 
     private RemoteCheckerClient sut;
@@ -21,55 +19,48 @@ namespace Renfield.Licensing.Tests.Services
     [TestInitialize]
     public void SetUp()
     {
-      sys = new Mock<Sys>();
       remote = new Mock<Remote>();
+      builder = new Mock<RequestBuilder>();
       parser = new Mock<ResponseParser>();
 
-      sut = new RemoteCheckerClient(sys.Object, remote.Object, parser.Object);
+      sut = new RemoteCheckerClient(remote.Object, builder.Object, parser.Object);
     }
 
     [TestClass]
     public class Check : RemoteCheckerClientTests
     {
       [TestMethod]
-      public void RequestsTheProcessorId()
+      public void RequestsTheQuery()
       {
         var registration = ObjectMother.CreateRegistration();
 
         sut.Check(registration);
 
-        sys.Verify(it => it.GetProcessorId());
+        builder.Verify(it => it.BuildQuery(registration));
       }
 
       [TestMethod]
-      public void SendsKeyToTheServer()
+      public void SendsQueryToTheServer()
       {
         var registration = ObjectMother.CreateRegistration();
+        builder
+          .Setup(it => it.BuildQuery(registration))
+          .Returns("query");
 
         sut.Check(registration);
 
-        remote.Verify(it => it.Get(It.Is<string>(s => s.StartsWith("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}"))));
-      }
-
-      [TestMethod]
-      public void SendsProcessorIdToTheServer()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        sys
-          .Setup(it => it.GetProcessorId())
-          .Returns("1");
-
-        sut.Check(registration);
-
-        remote.Verify(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId=1"));
+        remote.Verify(it => it.Get("query"));
       }
 
       [TestMethod]
       public void ParsesTheResponse()
       {
         var registration = ObjectMother.CreateRegistration();
+        builder
+          .Setup(it => it.BuildQuery(registration))
+          .Returns("query");
         remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId="))
+          .Setup(it => it.Get("query"))
           .Returns("abc");
 
         sut.Check(registration);
@@ -82,8 +73,11 @@ namespace Renfield.Licensing.Tests.Services
       {
         var registration = ObjectMother.CreateRegistration();
         registration.Expiration = ObjectMother.OldDate;
+        builder
+          .Setup(it => it.BuildQuery(registration))
+          .Returns("query");
         remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId="))
+          .Setup(it => it.Get("query"))
           .Returns("abc");
         parser
           .Setup(it => it.Parse("abc"))
@@ -99,8 +93,11 @@ namespace Renfield.Licensing.Tests.Services
       {
         var registration = ObjectMother.CreateRegistration();
         registration.Expiration = ObjectMother.OldDate;
+        builder
+          .Setup(it => it.BuildQuery(registration))
+          .Returns("query");
         remote
-          .Setup(it => it.Get("Key={D98F6376-94F7-4D82-AA37-FC00F0166700}&ProcessorId="))
+          .Setup(it => it.Get("query"))
           .Returns("abc");
         parser
           .Setup(it => it.Parse("abc"))
@@ -116,38 +113,26 @@ namespace Renfield.Licensing.Tests.Services
     public class Submit : RemoteCheckerClientTests
     {
       [TestMethod]
-      public void RequestsTheProcessorId()
+      public void RequestsTheData()
       {
         var registration = ObjectMother.CreateRegistration();
 
         sut.Submit(registration);
 
-        sys.Verify(it => it.GetProcessorId());
+        builder.Verify(it => it.BuildData(registration));
       }
 
       [TestMethod]
-      public void EncodesTheRegistrationDetails()
+      public void SendsTheDataToTheServer()
       {
         var registration = ObjectMother.CreateRegistration();
+        builder
+          .Setup(it => it.BuildData(registration))
+          .Returns("data");
 
         sut.Submit(registration);
 
-        sys.Verify(it => it.Encode(
-          It.Is<IEnumerable<KeyValuePair<string, string>>>(
-            e => e.Any(pair => pair.Value == "{D98F6376-94F7-4D82-AA37-FC00F0166700}"))));
-      }
-
-      [TestMethod]
-      public void SendsTheRegistrationDetailsToTheServer()
-      {
-        var registration = ObjectMother.CreateRegistration();
-        sys
-          .Setup(it => it.Encode(It.IsAny<IEnumerable<KeyValuePair<string, string>>>()))
-          .Returns("abc");
-
-        sut.Submit(registration);
-
-        remote.Verify(it => it.Post("abc"));
+        remote.Verify(it => it.Post("data"));
       }
     }
   }
