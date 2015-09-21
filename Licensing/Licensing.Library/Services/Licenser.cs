@@ -49,6 +49,11 @@ namespace Renfield.Licensing.Library.Services
       CheckStatus(details);
     }
 
+    public void DeleteRegistration()
+    {
+      storage.Delete();
+    }
+
     //
 
     protected Licenser(Storage storage, LicenseChecker checker)

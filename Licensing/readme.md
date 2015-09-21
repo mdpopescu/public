@@ -42,6 +42,10 @@ SaveRegistration method (below).
 Saves the given registration details, optionally encrypted with a password. If CheckUrl is not empty, it will first try to register
 the application at the given URL and only save to the file if everything went ok.
 
+### Delete the registration information (e.g., on uninstall)
+
+    licenser.DeleteRegistration();
+
 ### Sample code:
 
     var options = new LicenseOptions { ... };

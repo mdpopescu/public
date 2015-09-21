@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AcceptanceTests.cs" />
     <Compile Include="Models\LimitsTests.cs" />
     <Compile Include="Services\CompositeDetailsReaderTests.cs" />
     <Compile Include="Services\LocalCheckerTests.cs" />

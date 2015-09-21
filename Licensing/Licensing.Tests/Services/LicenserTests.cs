@@ -146,6 +146,18 @@ namespace Renfield.Licensing.Tests.Services
     }
 
     [TestClass]
+    public class DeleteRegistration : LicenserTests
+    {
+      [TestMethod]
+      public void DeletesTheRegistration()
+      {
+        sut.DeleteRegistration();
+
+        storage.Verify(it => it.Delete());
+      }
+    }
+
+    [TestClass]
     public class Initialize : LicenserTests
     {
       [TestMethod]

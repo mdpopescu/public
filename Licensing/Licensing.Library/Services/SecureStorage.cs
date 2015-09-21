@@ -33,6 +33,11 @@ namespace Renfield.Licensing.Library.Services
       io.Write(encrypted);
     }
 
+    public void Delete()
+    {
+      io.Write("");
+    }
+
     //
 
     private readonly StringIO io;

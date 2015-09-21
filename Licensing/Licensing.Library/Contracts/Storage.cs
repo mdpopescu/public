@@ -6,5 +6,6 @@ namespace Renfield.Licensing.Library.Contracts
   {
     LicenseRegistration Load();
     void Save(LicenseRegistration registration);
+    void Delete();
   }
 }

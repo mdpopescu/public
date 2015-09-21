@@ -167,5 +167,17 @@ namespace Renfield.Licensing.Tests.Services
         io.Verify(it => it.Write("def"));
       }
     }
+
+    [TestClass]
+    public class Delete : SecureStorageTests
+    {
+      [TestMethod]
+      public void WritesAnEmptyValueToTheOutput()
+      {
+        sut.Delete();
+
+        io.Verify(it => it.Write(""));
+      }
+    }
   }
 }
