@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using Microsoft.Win32;
 using Renfield.Licensing.Library.Contracts;
@@ -40,10 +42,17 @@ namespace Renfield.Licensing.Library.Services
     private static Details LoadCompanyAndProduct(LicenseOptions options)
     {
       var r1 = new OptionsDetailsReader(options);
-      var r2 = new AssemblyDetailsReader(Assembly.GetEntryAssembly());
+      var r2 = new AssemblyDetailsReader(GetRootAssembly());
       var reader = new CompositeDetailsReader(r1, r2);
 
       return reader.Read();
+    }
+
+    private static Assembly GetRootAssembly()
+    {
+      // ReSharper disable once AssignNullToNotNullAttribute
+      return Assembly.GetEntryAssembly()
+             ?? new StackTrace().GetFrames().Last().GetMethod().Module.Assembly;
     }
 
     private static Encryptor GetEncryptor(LicenseOptions options)
