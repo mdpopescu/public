@@ -71,7 +71,7 @@ namespace Renfield.Licensing.Library.Services
       var submitUrl = options.SubmitUrl.NullIfEmpty() ?? checkUrl;
       var remote = new WebRemote(submitUrl);
       var builder = new WebRequestBuilder(sys, checkUrl);
-      var parser = new ResponseParserImpl();
+      var parser = new WebResponseParser();
 
       return new RemoteCheckerClient(remote, builder, parser);
     }

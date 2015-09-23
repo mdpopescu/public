@@ -5,14 +5,14 @@ using Renfield.Licensing.Library.Services;
 namespace Renfield.Licensing.Tests.Services
 {
   [TestClass]
-  public class ResponseParserImplTests
+  public class WebResponseParserTests
   {
-    private ResponseParserImpl sut;
+    private WebResponseParser sut;
 
     [TestInitialize]
     public void SetUp()
     {
-      sut = new ResponseParserImpl();
+      sut = new WebResponseParser();
     }
 
     [TestMethod]
@@ -39,6 +39,15 @@ namespace Renfield.Licensing.Tests.Services
       Assert.IsNotNull(result);
       Assert.IsTrue(string.IsNullOrEmpty(result.Key));
       Assert.AreEqual(DateTime.MinValue, result.Expiration);
+    }
+
+    [TestMethod]
+    public void IgnoresSurroundingQuotes()
+    {
+      var result = sut.Parse("\"192ff11b-91d0-487d-b297-22d8f5c0ec30 2016-09-19\"");
+
+      Assert.AreEqual("192ff11b-91d0-487d-b297-22d8f5c0ec30", result.Key);
+      Assert.AreEqual(new DateTime(2016, 9, 19), result.Expiration);
     }
   }
 }

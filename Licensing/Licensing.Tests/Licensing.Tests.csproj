@@ -63,7 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\LicenseSerializerTests.cs" />
     <Compile Include="Services\RemoteCheckerClientTests.cs" />
-    <Compile Include="Services\ResponseParserImplTests.cs" />
+    <Compile Include="Services\WebResponseParserTests.cs" />
     <Compile Include="Services\SecureStorageTests.cs" />
     <Compile Include="Services\RijndaelEncryptorTests.cs" />
     <Compile Include="Services\WebRequestBuilderTests.cs" />

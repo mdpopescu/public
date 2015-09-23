@@ -77,7 +77,7 @@
     <Compile Include="Services\Validators\BaseValidator.cs" />
     <Compile Include="Services\Validators\ExpirationValidator.cs" />
     <Compile Include="Services\RegistryIO.cs" />
-    <Compile Include="Services\ResponseParserImpl.cs" />
+    <Compile Include="Services\WebResponseParser.cs" />
     <Compile Include="Services\RijndaelEncryptor.cs" />
     <Compile Include="Services\SecureStorage.cs" />
     <Compile Include="Services\WebRemote.cs" />
