@@ -12,24 +12,25 @@ namespace Renfield.Licensing.Library.Services.Validators
         return false;
 
       var valid = InternalIsValid(func(registration));
-      return next == null
+      return Next == null
         ? valid
-        : valid && next.Isvalid(registration);
+        : valid && Next.Isvalid(registration);
     }
 
     //
 
+    protected Validator Next { get; set; }
+
     protected abstract bool InternalIsValid(object obj);
 
-    protected BaseValidator(Func<LicenseRegistration, object> func, Validator next)
+    protected BaseValidator(Func<LicenseRegistration, object> func, Validator next = null)
     {
       this.func = func;
-      this.next = next;
+      Next = next;
     }
 
     //
 
     private readonly Func<LicenseRegistration, object> func;
-    private readonly Validator next;
   }
 }
