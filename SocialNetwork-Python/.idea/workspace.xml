@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7788f23e-e228-44d4-9279-0e3d14a4b107" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../ReportGenerator-Python/tests/AcceptanceTests.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../ReportGenerator-Python/tests/ReportGeneratorTests.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../ReportGenerator-Python/tests/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Licensing/readme.md" afterPath="$PROJECT_DIR$/../Licensing/readme.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ReportGenerator-Python/tests/AcceptanceTests.py" afterPath="$PROJECT_DIR$/../ReportGenerator-Python/tests/AcceptanceTests.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ReportGenerator-Python/tests/ReportGeneratorTests.py" afterPath="$PROJECT_DIR$/../ReportGenerator-Python/tests/ReportGeneratorTests.py" />
     </list>
     <ignored path="untitled.iws" />
     <ignored path=".idea/workspace.xml" />
