@@ -34,6 +34,8 @@ Reloads and re-checks the registration details; the application might then choos
 are remaining. It is recommended that a text box be provided for the user to enter a license key; if that happens, the application can use the
 SaveRegistration method (below).
 
+Note: if the application has been copied from a different computer (for example), the registration details will be null. Treat as an expired trial.
+
 ### Create registration information (eg from the installer)
 
     var details = new LicenseRegistration { ... };
@@ -55,6 +57,9 @@ the application at the given URL and only save to the file if everything went ok
     if (!licenser.IsLicensed)
     {
         var details = licenser.LoadRegistration();
+        if (details == null)
+          Application.Terminate();
+        
         // show registration / trial screen
     }
 
@@ -73,6 +78,9 @@ The double check can be simplified by using the ShouldRun property:
     if (!licenser.IsLicensed)
     {
         var details = licenser.LoadRegistration();
+        if (details == null)
+          Application.Terminate();
+        
         // show registration / trial screen
     }
 
