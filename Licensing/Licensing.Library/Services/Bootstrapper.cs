@@ -17,7 +17,7 @@ namespace Renfield.Licensing.Library.Services
       var details = LoadCompanyAndProduct(options);
 
       var pathBuilder = new RegistryPathBuilder();
-      var subkey = pathBuilder.GetPath(details.Company, details.Product);
+      var subkey = pathBuilder.GetPath(details);
       var key = Registry.CurrentUser.OpenSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree)
                 ?? Registry.CurrentUser.CreateSubKey(subkey, RegistryKeyPermissionCheck.ReadWriteSubTree);
       var io = new RegistryIO(key);

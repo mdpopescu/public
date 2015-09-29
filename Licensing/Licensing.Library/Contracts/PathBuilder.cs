@@ -1,7 +1,9 @@
-﻿namespace Renfield.Licensing.Library.Contracts
+﻿using Renfield.Licensing.Library.Models;
+
+namespace Renfield.Licensing.Library.Contracts
 {
   public interface PathBuilder
   {
-    string GetPath(string company, string product);
+    string GetPath(Details details);
   }
 }
