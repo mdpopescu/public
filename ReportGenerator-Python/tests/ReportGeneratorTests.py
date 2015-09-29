@@ -45,7 +45,6 @@ class ReportGeneratorTests(unittest.TestCase):
         table = MagicMock()
         table.Columns = ["a", "b", "c"]
         table.Rows = []
-
         self.dataReader.Read.return_value = table
 
         self.sut.Run("sample")
@@ -65,4 +64,14 @@ class ReportGeneratorTests(unittest.TestCase):
         self.sut.Run("sample")
 
         self.notifier.Send.assert_called_with("report_sender@baml.com", ["report_target@baml.com"], "Reports for 2000-01-02", "abc")
-        
+
+    def test_RunDoesNotSendNotificationIfNoRows(self):
+        table = MagicMock()
+        table.Columns = ["a", "b", "c"]
+        table.Rows = []
+        self.dataReader.Read.return_value = table
+        self.formatter.Format.return_value = "abc"
+
+        self.sut.Run("sample")
+
+        self.assertEquals(0, self.notifier.Send.call_count)

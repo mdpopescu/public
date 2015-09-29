@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7788f23e-e228-44d4-9279-0e3d14a4b107" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ReportGenerator-Python/tests/AcceptanceTests.py" afterPath="$PROJECT_DIR$/../ReportGenerator-Python/tests/AcceptanceTests.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../ReportGenerator-Python/tests/ReportGeneratorTests.py" afterPath="$PROJECT_DIR$/../ReportGenerator-Python/tests/ReportGeneratorTests.py" />
     </list>
     <ignored path="untitled.iws" />
@@ -371,7 +370,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24270834" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
