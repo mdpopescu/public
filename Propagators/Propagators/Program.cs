@@ -21,7 +21,7 @@ namespace Propagators
 
       BuildNetwork(x, g, h);
 
-      var result = await Compute(x, g, h, 2.0);
+      var result = await ComputeAsync(x, g, h, 2.0);
       return result;
     }
 
@@ -42,7 +42,7 @@ namespace Propagators
       divider2.Connect(betterGuess, temp2, two);
     }
 
-    private static async Task<object> Compute(Cell x, Cell g, Cell h, double value)
+    private static async Task<object> ComputeAsync(Cell x, Cell g, Cell h, double value)
     {
       const double EPS = 1e-8;
 
@@ -54,7 +54,10 @@ namespace Propagators
       {
         oldGuess = newGuess;
         await g.SetValueAsync(oldGuess);
+        await Task.Delay(1); // I'm getting an incorrect result without this
         newGuess = (double) h.Value;
+
+        Console.WriteLine(oldGuess + " " + newGuess);
       } while (Math.Abs(newGuess - oldGuess) > EPS);
 
       return newGuess;
