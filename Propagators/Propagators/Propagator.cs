@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,7 +12,8 @@ namespace Propagators
       this.func = func;
     }
 
-    public void Connect(Cell[] inputs, Cell output)
+    [SuppressMessage("ReSharper", "ParameterHidesMember")]
+    public void Connect(Cell output, params Cell[] inputs)
     {
       this.inputs = inputs ?? new Cell[0];
       this.output = output;
