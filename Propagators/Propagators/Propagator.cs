@@ -7,7 +7,7 @@ namespace Propagators
 {
   public class Propagator
   {
-    public Propagator(Func<object[], object> func)
+    public Propagator(Func<object[], Task<object>> func)
     {
       this.func = func;
     }
@@ -27,7 +27,7 @@ namespace Propagators
 
     //
 
-    private readonly Func<object[], object> func;
+    private readonly Func<object[], Task<object>> func;
 
     private Cell[] inputs;
     private Cell output;
@@ -36,7 +36,7 @@ namespace Propagators
     {
       var inputValues = inputs.Select(it => it.Value).ToArray();
       if (inputValues.All(it => it != null))
-        await output.SetValueAsync(func(inputValues));
+        output.SetValue(await func(inputValues));
     }
   }
 }

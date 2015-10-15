@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace Propagators
 {
@@ -9,12 +8,12 @@ namespace Propagators
 
     public object Value { get; private set; }
 
-    public async Task SetValueAsync(object value)
+    public void SetValue(object value)
     {
+      if (Value == value)
+        return;
+
       Value = value;
-
-      await Task.Yield();
-
       ValueChanged?.Invoke(this, null);
     }
 
