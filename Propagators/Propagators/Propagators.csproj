@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cell.cs" />
+    <Compile Include="SqrtMachine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Propagator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
