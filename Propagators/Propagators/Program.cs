@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace Propagators
 {
@@ -25,10 +24,10 @@ namespace Propagators
       var temp2 = new Cell();
       var two = new Cell();
 
-      var divider1 = new Propagator(arr => Task.FromResult((object) ((double) arr[0] / (double) arr[1])));
-      var adder = new Propagator(arr => Task.FromResult((object) ((double) arr[0] + (double) arr[1])));
-      var constant = new Propagator(arr => Task.FromResult((object) (2.0)));
-      var divider2 = new Propagator(arr => Task.FromResult((object) ((double) arr[0] / (double) arr[1])));
+      var divider1 = new Propagator(arr => (double) arr[0] / (double) arr[1]);
+      var adder = new Propagator(arr => (double) arr[0] + (double) arr[1]);
+      var constant = new Propagator(arr => 2.0);
+      var divider2 = new Propagator(arr => (double) arr[0] / (double) arr[1]);
 
       divider1.Connect(temp1, input, guess);
       adder.Connect(temp2, temp1, guess);

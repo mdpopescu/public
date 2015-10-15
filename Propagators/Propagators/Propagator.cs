@@ -12,6 +12,11 @@ namespace Propagators
       this.func = func;
     }
 
+    public Propagator(Func<object[], object> func)
+    {
+      this.func = arr => Task.FromResult(func(arr));
+    }
+
     [SuppressMessage("ReSharper", "ParameterHidesMember")]
     public void Connect(Cell output, params Cell[] inputs)
     {
