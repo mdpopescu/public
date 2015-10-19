@@ -1,0 +1,12 @@
+- Create trial
+  - Use "Request Access" as the button text
+- Create entry (blog / twitter / facebook)
+  - Allow images
+- Optional: assign labels
+  - If a label didn't already exist, it is automatically created
+    - New labels start with the default schedule
+	  - The initial default schedule is "Weekly, Monday, 12 AM, repeat four times at six hour intervals"
+- Each label has a schedule that is independent of others
+- Allow overriding of label schedule per post
+- Once the "repeat" part of the schedule is finished, move the entry to the end of the queue in each label
+- Allow manual reordering of entries in each label

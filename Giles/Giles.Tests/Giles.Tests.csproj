@@ -51,7 +51,18 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AcceptanceTests.cs" />
+    <Compile Include="Helper\Api.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Giles.Api\Giles.Api.csproj">
+      <Project>{7889557f-1f48-46ee-ad46-3853ead7612e}</Project>
+      <Name>Giles.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Giles.Library\Giles.Library.csproj">
+      <Project>{673931f3-8f87-4e4f-86a0-5b1b5fa2dce4}</Project>
+      <Name>Giles.Library</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
