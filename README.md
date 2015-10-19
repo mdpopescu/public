@@ -25,6 +25,8 @@ Public repository - CC-by-SA 3.0
 
 * FSM: quick implementation of a generic finite state machine; see article at http://mdpopescu.blogspot.com/2013/08/a-generic-implementation-of-finite.html
 
+* Giles: social assistant for managing posts to blogs / Twitter / Facebook
+
 * Hot Folder Windows Service: Windows service to monitor a specific folder and (for now) log the create / delete / change / rename events
 
 * httpd: Simple web server (only static files)
