@@ -1,4 +1,5 @@
 ﻿using Giles.Library.Models;
+using Giles.Tests.Helper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Giles.Tests
@@ -23,7 +24,7 @@ namespace Giles.Tests
 
     private Helper.Api CreateApi()
     {
-      return null;
+      return new ApiOverHttp("http://localhost:1234");
     }
   }
 }
