@@ -1,6 +1,6 @@
 - Create trial
   - Use "Request Access" as the button text
-- Create entry (blog / twitter / facebook)
+- Create entry (blog / twitter / facebook / linkedin)
   - Allow images
 - Optional: assign labels
   - If a label didn't already exist, it is automatically created
