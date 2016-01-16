@@ -7,6 +7,8 @@ Public repository - CC-by-SA 3.0
 
 * AppendOnly: project for append-only files with variable-length records; I intend to use it in a CQRS project later on. See article at http://mdpopescu.blogspot.com/2013/09/append-only-files.html
 
+* BigDataProcessing: utility that processes GB-sized data sources efficiently, using Rx.NET
+
 * BinarySearchTimings: comparing different search algorithms; see article at http://mdpopescu.blogspot.com/2013/05/optimization-implementing-binary-search.html
 
 * BruteForcePuzzle: solve puzzles of the form RAI + IAR + IA = 824 (the result must be a number); uses the evaluator from my book
