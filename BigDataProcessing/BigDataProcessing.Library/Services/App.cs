@@ -7,7 +7,7 @@ namespace BigDataProcessing.Library.Services
 {
   public class App
   {
-    public App(RxTextReader reader, IEnumerable<LineConverter> processors, RxTextStreamWriter writer)
+    public App(RxTextReader reader, RxTextStreamWriter writer, IEnumerable<LineConverter> processors)
     {
       throw new NotImplementedException();
     }

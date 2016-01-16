@@ -18,21 +18,21 @@ namespace BigDataProcessing.Tests
       using (var output = new MemoryStream())
       {
         var loader = new RxTextStreamReader();
+        var writer = new RxTextStreamWriter();
 
         var processors = new[]
         {
           new HelperConverter(),
         };
 
-        var writer = new RxTextStreamWriter();
-
-        var app = new App(loader, processors, writer);
+        var app = new App(loader, writer, processors);
 
         var config = new Configuration
         {
-          Threads = 1,
+          Connections = 1,
           Input = input,
           Output = output,
+          Threads = 1,
         };
 
         app.Run(config);

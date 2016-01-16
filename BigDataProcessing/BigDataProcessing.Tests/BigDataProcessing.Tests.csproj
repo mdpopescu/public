@@ -83,6 +83,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\RxTextStreamReaderTests.cs" />
+    <Compile Include="Services\RxTextStreamWriterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BigDataProcessing.Library\BigDataProcessing.Library.csproj">

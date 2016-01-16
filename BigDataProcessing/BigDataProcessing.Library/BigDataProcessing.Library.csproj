@@ -59,6 +59,8 @@
     <Compile Include="Contracts\LineConverter.cs" />
     <Compile Include="Contracts\RxReader.cs" />
     <Compile Include="Contracts\RxTextReader.cs" />
+    <Compile Include="Contracts\RxTextWriter.cs" />
+    <Compile Include="Contracts\RxWriter.cs" />
     <Compile Include="Models\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\App.cs" />
