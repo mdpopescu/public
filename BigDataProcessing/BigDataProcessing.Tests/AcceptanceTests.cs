@@ -25,7 +25,7 @@ namespace BigDataProcessing.Tests
           new HelperConverter(),
         };
 
-        var app = new App(loader, writer, processors);
+        var app = new App(new NullLogger(), loader, writer, processors);
 
         var config = new Configuration
         {

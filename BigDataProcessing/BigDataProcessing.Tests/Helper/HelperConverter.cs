@@ -12,7 +12,7 @@ namespace BigDataProcessing.Tests.Helper
         .Select(int.Parse)
         .Select(it => it * 2);
 
-      return string.Join(",", parts);
+      return string.Join(":", parts);
     }
   }
 }
