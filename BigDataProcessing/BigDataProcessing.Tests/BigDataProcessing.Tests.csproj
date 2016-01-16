@@ -75,12 +75,14 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AcceptanceTests.cs" />
+    <Compile Include="Helper\HelperConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\RxTextStreamReaderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BigDataProcessing.Library\BigDataProcessing.Library.csproj">
@@ -100,10 +102,7 @@
   <ItemGroup>
     <None Include="Resources\SmallFile.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helper\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
