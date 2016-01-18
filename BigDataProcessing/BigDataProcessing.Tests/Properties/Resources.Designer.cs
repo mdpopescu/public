@@ -61,6 +61,25 @@ namespace BigDataProcessing.Tests.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to a,b,c,d
+        ///1,a,b,c
+        ///2,d,e,f
+        ///3,g,h,i
+        ///4,j,k,l
+        ///5,m,n,o
+        ///6,p,q,r
+        ///7,s,t,u
+        ///8,v,w,x
+        ///9,y,z,!
+        ///.
+        /// </summary>
+        internal static string LargerFile {
+            get {
+                return ResourceManager.GetString("LargerFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to a,b,c
         ///1,2,3
         ///4,5,6

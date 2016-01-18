@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using BigDataProcessing.Library.Contracts;
 using BigDataProcessing.Library.Models;
@@ -18,18 +20,32 @@ namespace BigDataProcessing.Library.Services
 
     public void Run(Configuration config)
     {
-      var source = reader.Read(config.Input);
-      if (source == null)
+      var inputSplitter = new RxGenericSplitter<string>();
+      var multiReader = new RxMultiReader<object, string>(reader, inputSplitter);
+
+      var sources = multiReader.Read(config.Input, config.Threads, Scheduler.Default);
+      if (sources == null)
       {
         logger.Log("Error reading from the input.");
         return;
       }
 
-      var results = source
-        .Select(Process)
-        .Where(it => it != null);
+      var results = sources
+        .Select(it => it.ObserveOn(NewThreadScheduler.Default))
+        .Select(ProcessSource);
 
-      writer.Write(config.Output, results);
+      foreach (var result in results)
+        writer.Write(config.Output, result);
+
+      //var tasks = sources
+      //  .Select(source => Task.Run(() => ProcessSource(source)))
+      //  .ToArray();
+
+      //foreach (var task in tasks)
+      //{
+      //  task.Wait();
+      //  writer.Write(config.Output, task.Result);
+      //}
     }
 
     //
@@ -38,6 +54,13 @@ namespace BigDataProcessing.Library.Services
     private readonly RxTextReader reader;
     private readonly RxTextWriter writer;
     private readonly LineConverter[] processors;
+
+    private IObservable<string> ProcessSource(IObservable<string> source)
+    {
+      return source
+        .Select(Process)
+        .Where(it => it != null);
+    }
 
     private string Process(string line)
     {

@@ -46,15 +46,15 @@ namespace BigDataProcessing.Tests.Services
     }
 
     [TestMethod]
-    [ExpectedException(typeof (ObjectDisposedException))]
-    public void ClosesTheStreamOnEnd()
+    public void DoesNotCloseTheStream()
     {
-      var input = new MemoryStream(Encoding.UTF8.GetBytes(""));
+      using (var input = new MemoryStream(Encoding.UTF8.GetBytes("")))
+      {
+        sut.Read(input).Subscribe(_ => { });
 
-      sut.Read(input).Subscribe(_ => { });
-
-      // This should throw an ObjectDisposedException
-      input.Seek(0, SeekOrigin.Begin);
+        // This does not throw an exception
+        input.Seek(0, SeekOrigin.Begin);
+      }
     }
 
     [TestMethod]

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reactive.Linq;
+using System.Threading;
 using BigDataProcessing.Library.Contracts;
 using BigDataProcessing.Library.Models;
 using BigDataProcessing.Library.Services;
+using BigDataProcessing.Tests.Helper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -44,7 +47,11 @@ namespace BigDataProcessing.Tests.Services
     [TestMethod]
     public void LogsLoadingErrors()
     {
-      sut.Run(new Configuration());
+      sut.Run(new Configuration
+      {
+        Input = new MemoryStream(),
+        Output = new MemoryStream(),
+      });
 
       logger.Verify(it => it.Log("Error reading from the input."));
     }
@@ -72,23 +79,24 @@ namespace BigDataProcessing.Tests.Services
     {
       var input = new object();
       var config = new Configuration { Input = input };
-      var contents = new[] { "a" }.ToObservable();
+      var contents = new[] { "a", "b", "c" }.ToObservable();
       reader
         .Setup(it => it.Read(input))
         .Returns(contents);
       processor
-        .Setup(it => it.Convert("a"))
-        .Returns("b");
-      var list = new List<string>();
+        .Setup(it => it.Convert(It.IsAny<string>()))
+        .Returns<string>(it => (it[0] - 'a' + 1).ToString());
+      List<string> list = null;
       writer
         .Setup(it => it.Write(It.IsAny<object>(), It.IsAny<IObservable<string>>()))
-        .Callback<object, IObservable<string>>((_, obs) => obs.Subscribe(list.Add))
-        .Verifiable();
+        .Callback<object, IObservable<string>>((_, obs) => list = Extensions.ToList(obs));
 
       sut.Run(config);
 
-      Assert.AreEqual(1, list.Count);
-      Assert.AreEqual("b", list[0]);
+      Assert.AreEqual(3, list.Count);
+      Assert.AreEqual("1", list[0]);
+      Assert.AreEqual("2", list[1]);
+      Assert.AreEqual("3", list[2]);
     }
 
     [TestMethod]
@@ -111,6 +119,7 @@ namespace BigDataProcessing.Tests.Services
 
       sut.Run(config);
 
+      writer.Verify();
       Assert.AreEqual(1, list.Count);
       Assert.AreEqual("b", list[0]);
     }

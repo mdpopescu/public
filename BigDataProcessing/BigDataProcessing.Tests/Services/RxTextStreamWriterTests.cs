@@ -20,14 +20,14 @@ namespace BigDataProcessing.Tests.Services
     [TestMethod]
     public void WritesALineToTheStream()
     {
-      using (var ms = new MemoryStream())
+      using (var output = new MemoryStream())
       {
         var data = new[] { "line1" };
 
-        sut.Write(ms, data.ToObservable());
+        sut.Write(output, data.ToObservable());
 
-        ms.Seek(0, SeekOrigin.Begin);
-        var result = Encoding.UTF8.GetString(ms.ToArray());
+        output.Seek(0, SeekOrigin.Begin);
+        var result = Encoding.UTF8.GetString(output.ToArray());
         Assert.AreEqual("line1\r\n", result);
       }
     }
@@ -35,14 +35,14 @@ namespace BigDataProcessing.Tests.Services
     [TestMethod]
     public void WritesMultipleLinesToTheStream()
     {
-      using (var ms = new MemoryStream())
+      using (var output = new MemoryStream())
       {
         var data = new[] { "line1", "line2" };
 
-        sut.Write(ms, data.ToObservable());
+        sut.Write(output, data.ToObservable());
 
-        ms.Seek(0, SeekOrigin.Begin);
-        var result = Encoding.UTF8.GetString(ms.ToArray());
+        output.Seek(0, SeekOrigin.Begin);
+        var result = Encoding.UTF8.GetString(output.ToArray());
         Assert.AreEqual("line1\r\nline2\r\n", result);
       }
     }
@@ -50,14 +50,14 @@ namespace BigDataProcessing.Tests.Services
     [TestMethod]
     public void DoesNotCloseTheStream()
     {
-      using (var ms = new MemoryStream())
+      using (var output = new MemoryStream())
       {
         var data = new[] { "line1" };
 
-        sut.Write(ms, data.ToObservable());
+        sut.Write(output, data.ToObservable());
 
         // This does not throw an exception
-        ms.Seek(0, SeekOrigin.Begin);
+        output.Seek(0, SeekOrigin.Begin);
       }
     }
   }
