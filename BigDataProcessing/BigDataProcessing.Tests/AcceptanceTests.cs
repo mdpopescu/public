@@ -19,7 +19,7 @@ namespace BigDataProcessing.Tests
       using (var input = new MemoryStream(Encoding.UTF8.GetBytes(Resources.SmallFile)))
       using (var output = new MemoryStream())
       {
-        var loader = new RxTextStreamReader();
+        var loader = new TextStreamReader();
         var writer = new RxTextStreamWriter();
 
         var processors = new[]
@@ -51,7 +51,7 @@ namespace BigDataProcessing.Tests
       using (var input = new MemoryStream(Encoding.UTF8.GetBytes(Resources.LargerFile)))
       using (var output = new MemoryStream())
       {
-        var loader = new RxTextStreamReader();
+        var loader = new TextStreamReader();
         var writer = new RxTextStreamWriter();
 
         var processors = new[]

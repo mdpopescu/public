@@ -1,6 +1,6 @@
 ﻿namespace BigDataProcessing.Library.Contracts
 {
-  public interface RxTextReader : RxReader<object, string>
+  public interface TextReader : Reader<object, string>
   {
   }
 }

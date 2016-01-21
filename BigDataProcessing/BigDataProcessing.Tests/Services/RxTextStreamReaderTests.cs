@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using BigDataProcessing.Library.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,12 +12,12 @@ namespace BigDataProcessing.Tests.Services
   [TestClass]
   public class RxTextStreamReaderTests
   {
-    private RxTextStreamReader sut;
+    private TextStreamReader sut;
 
     [TestInitialize]
     public void SetUp()
     {
-      sut = new RxTextStreamReader();
+      sut = new TextStreamReader();
     }
 
     [TestMethod]
@@ -24,8 +25,7 @@ namespace BigDataProcessing.Tests.Services
     {
       var input = new MemoryStream(Encoding.UTF8.GetBytes("line1"));
 
-      var result = new List<string>();
-      sut.Read(input).Subscribe(result.Add);
+      var result = sut.Read(input).ToList();
 
       Assert.AreEqual(1, result.Count);
       Assert.AreEqual("line1", result[0]);
@@ -36,8 +36,7 @@ namespace BigDataProcessing.Tests.Services
     {
       var input = new MemoryStream(Encoding.UTF8.GetBytes("line1\r\nline2\r\nline3\r\n"));
 
-      var result = new List<string>();
-      sut.Read(input).Subscribe(result.Add);
+      var result = sut.Read(input).ToList();
 
       Assert.AreEqual(3, result.Count);
       Assert.AreEqual("line1", result[0]);
@@ -50,7 +49,7 @@ namespace BigDataProcessing.Tests.Services
     {
       using (var input = new MemoryStream(Encoding.UTF8.GetBytes("")))
       {
-        sut.Read(input).Subscribe(_ => { });
+        sut.Read(input).ToList();
 
         // This does not throw an exception
         input.Seek(0, SeekOrigin.Begin);
@@ -68,11 +67,15 @@ namespace BigDataProcessing.Tests.Services
         .Setup(it => it.Read(It.IsAny<byte[]>(), It.IsAny<int>(), It.IsAny<int>()))
         .Throws(new Exception("error"));
 
-      Exception ex = null;
-      sut.Read(input.Object).Subscribe(_ => { }, it => ex = it);
-
-      Assert.IsNotNull(ex);
-      Assert.AreEqual("error", ex.Message);
+      try
+      {
+        sut.Read(input.Object).ToList();
+        Assert.Fail("Expected an exception to be thrown but it wasn't.");
+      }
+      catch (Exception ex)
+      {
+        Assert.AreEqual("error", ex.Message);
+      }
     }
   }
 }

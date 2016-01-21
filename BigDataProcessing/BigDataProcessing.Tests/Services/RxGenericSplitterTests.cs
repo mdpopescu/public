@@ -1,5 +1,5 @@
-﻿using System.Reactive.Concurrency;
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using BigDataProcessing.Library.Services;
 using BigDataProcessing.Tests.Helper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,10 +22,11 @@ namespace BigDataProcessing.Tests.Services
     {
       var input = new[] { 1, 2, 3 };
 
-      var result = sut.Split(input.ToObservable(), 1, Scheduler.Immediate);
+      var result = sut.Split(input.GetEnumerator(), 1);
 
       Assert.AreEqual(1, result.Length);
-      CollectionAssert.AreEqual(input, Extensions.ToList(result[0]));
+      var result0 = Extensions.ToList(result[0]);
+      CollectionAssert.AreEqual(input, result0);
     }
 
     [TestMethod]
@@ -33,11 +34,34 @@ namespace BigDataProcessing.Tests.Services
     {
       var input = new[] { 1, 2, 3, 4 };
 
-      var result = sut.Split(input.ToObservable(), 2, Scheduler.Immediate);
+      var result = sut.Split(input.GetEnumerator(), 2);
 
       Assert.AreEqual(2, result.Length);
-      CollectionAssert.AreEqual(new[] { 1, 3 }, Extensions.ToList(result[0]));
-      CollectionAssert.AreEqual(new[] { 2, 4 }, Extensions.ToList(result[1]));
+
+      var result0 = Extensions.ToList(result[0]);
+      var result1 = Extensions.ToList(result[1]);
+      CollectionAssert.AreEqual(new[] { 1, 3 }, result0);
+      CollectionAssert.AreEqual(new[] { 2, 4 }, result1);
+    }
+
+    [TestMethod]
+    public void ReturnsTwoStreamsFromValuesGeneratedDynamically()
+    {
+      var input = new Subject<int>();
+
+      var result = sut.Split(input.GetEnumerator(), 2);
+      input.OnNext(1);
+      input.OnNext(2);
+      input.OnNext(3);
+      input.OnNext(4);
+      input.OnCompleted();
+
+      Assert.AreEqual(2, result.Length);
+
+      var result0 = Extensions.ToList(result[0]);
+      var result1 = Extensions.ToList(result[1]);
+      CollectionAssert.AreEqual(new[] { 1, 3 }, result0);
+      CollectionAssert.AreEqual(new[] { 2, 4 }, result1);
     }
   }
 }

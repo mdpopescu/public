@@ -1,22 +1,22 @@
 ﻿using System;
-using System.Reactive.Concurrency;
 using BigDataProcessing.Library.Contracts;
 
 namespace BigDataProcessing.Library.Services
 {
   public class RxMultiReader<TSource, TRecord>
   {
-    public RxMultiReader(RxReader<TSource, TRecord> reader, RxSplitter<TRecord> splitter)
+    public RxMultiReader(Reader<TSource, TRecord> reader, RxSplitter<TRecord> splitter)
     {
       this.reader = reader;
       this.splitter = splitter;
     }
 
-    public IObservable<TRecord>[] Read(TSource source, int count, IScheduler scheduler)
+    public IObservable<TRecord>[] Read(TSource source, int count)
     {
       try
       {
-        return splitter.Split(reader.Read(source), count, scheduler);
+        var records = reader.Read(source);
+        return splitter.Split(records.GetEnumerator(), count);
       }
       catch
       {
@@ -26,7 +26,7 @@ namespace BigDataProcessing.Library.Services
 
     //
 
-    private readonly RxReader<TSource, TRecord> reader;
+    private readonly Reader<TSource, TRecord> reader;
     private readonly RxSplitter<TRecord> splitter;
   }
 }

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reactive.Linq;
-using System.Threading;
 using BigDataProcessing.Library.Contracts;
 using BigDataProcessing.Library.Models;
 using BigDataProcessing.Library.Services;
 using BigDataProcessing.Tests.Helper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using TextReader = BigDataProcessing.Library.Contracts.TextReader;
 
 namespace BigDataProcessing.Tests.Services
 {
@@ -16,7 +15,7 @@ namespace BigDataProcessing.Tests.Services
   public class AppTests
   {
     private Mock<Logger> logger;
-    private Mock<RxTextReader> reader;
+    private Mock<TextReader> reader;
     private Mock<RxTextWriter> writer;
     private Mock<LineConverter> processor;
 
@@ -26,7 +25,7 @@ namespace BigDataProcessing.Tests.Services
     public void SetUp()
     {
       logger = new Mock<Logger>();
-      reader = new Mock<RxTextReader>();
+      reader = new Mock<TextReader>();
       writer = new Mock<RxTextWriter>();
       processor = new Mock<LineConverter>();
 
@@ -61,7 +60,7 @@ namespace BigDataProcessing.Tests.Services
     {
       var input = new object();
       var config = new Configuration { Input = input };
-      var contents = new[] { "a" }.ToObservable();
+      var contents = new[] { "a" };
       reader
         .Setup(it => it.Read(input))
         .Returns(contents);
@@ -79,7 +78,7 @@ namespace BigDataProcessing.Tests.Services
     {
       var input = new object();
       var config = new Configuration { Input = input };
-      var contents = new[] { "a", "b", "c" }.ToObservable();
+      var contents = new[] { "a", "b", "c" };
       reader
         .Setup(it => it.Read(input))
         .Returns(contents);
@@ -104,7 +103,7 @@ namespace BigDataProcessing.Tests.Services
     {
       var input = new object();
       var config = new Configuration { Input = input };
-      var contents = new[] { "a", "error" }.ToObservable();
+      var contents = new[] { "a", "error" };
       reader
         .Setup(it => it.Read(input))
         .Returns(contents);

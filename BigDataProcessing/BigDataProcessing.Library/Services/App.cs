@@ -10,7 +10,7 @@ namespace BigDataProcessing.Library.Services
 {
   public class App
   {
-    public App(Logger logger, RxTextReader reader, RxTextWriter writer, IEnumerable<LineConverter> processors)
+    public App(Logger logger, TextReader reader, RxTextWriter writer, IEnumerable<LineConverter> processors)
     {
       this.logger = logger;
       this.reader = reader;
@@ -23,7 +23,7 @@ namespace BigDataProcessing.Library.Services
       var inputSplitter = new RxGenericSplitter<string>();
       var multiReader = new RxMultiReader<object, string>(reader, inputSplitter);
 
-      var sources = multiReader.Read(config.Input, config.Threads, Scheduler.Default);
+      var sources = multiReader.Read(config.Input, config.Threads);
       if (sources == null)
       {
         logger.Log("Error reading from the input.");
@@ -31,7 +31,7 @@ namespace BigDataProcessing.Library.Services
       }
 
       var results = sources
-        .Select(it => it.ObserveOn(NewThreadScheduler.Default))
+        .Select(it => it.SubscribeOn(NewThreadScheduler.Default))
         .Select(ProcessSource);
 
       foreach (var result in results)
@@ -51,7 +51,7 @@ namespace BigDataProcessing.Library.Services
     //
 
     private readonly Logger logger;
-    private readonly RxTextReader reader;
+    private readonly TextReader reader;
     private readonly RxTextWriter writer;
     private readonly LineConverter[] processors;
 
