@@ -1,6 +1,28 @@
-﻿Using C:\Users\capy\AppData\Local\Temp\tmpC056.tmp - writing and reading 100000
-records
-append - time elapsed: 3176 msec
-read all - time elapsed: 1252 msec
-rebuild index - time elapsed: 273 msec
-Press any key to continue . . .
+﻿HDD:
+
+Using d:\temp\tmp1A66.tmp - sequentially writing and reading 100000 records
+append - time elapsed: 866 msec (115473.44 / sec)
+read all in a single batch - time elapsed: 392 msec (255102.04 / sec)
+read all, individually - time elapsed: 40870 msec (2446.78 / sec)
+rebuild index - time elapsed: 119 msec (840336.13 / sec)
+Using d:\temp\tmpC184.tmp - multi-threaded writing and reading 100000 records
+append - time elapsed: 1284 msec (77881.62 / sec)
+read all in a single batch - time elapsed: 420 msec (238095.24 / sec)
+read all, individually - time elapsed: 27840 msec (3591.95 / sec)
+rebuild index - time elapsed: 126 msec (793650.79 / sec)
+
+SSD:
+
+Using c:\temp\1.tmp - sequentially writing and reading 100000 records
+append - time elapsed: 924 msec (108225.11 / sec)
+read all in a single batch - time elapsed: 409 msec (244498.78 / sec)
+read all, individually - time elapsed: 40816 msec (2450.02 / sec)
+rebuild index - time elapsed: 114 msec (877192.98 / sec)
+Using c:\temp\2.tmp - multi-threaded writing and reading 100000 records
+append - time elapsed: 1366 msec (73206.44 / sec)
+read all in a single batch - time elapsed: 420 msec (238095.24 / sec)
+read all, individually - time elapsed: 26325 msec (3798.67 / sec)
+rebuild index - time elapsed: 117 msec (854700.85 / sec)
+
+
+Something is wrong... the SSD appears slower here

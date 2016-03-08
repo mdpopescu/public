@@ -10,22 +10,27 @@ namespace Renfield.AppendOnly.Spike
 {
   internal class Program
   {
-    private const int COUNT = 10000;
+    private const int COUNT = 100000;
 
-    private static readonly Random rnd = new Random();
+    private static readonly Random RND = new Random();
 
-    private static void Main(string[] args)
+    private static void Main()
     {
       var serializer = new ProtoBufSerializationEngine();
 
       var list = new List<TestClass>();
       for (var i = 0; i < COUNT; i++)
       {
-        var c = new TestClass {Name = GenerateRandomString(20), Address = GenerateRandomString(40)};
+        var c = new TestClass { Name = GenerateRandomString(20), Address = GenerateRandomString(40) };
         list.Add(c);
       }
 
-      var tempFile = Path.GetTempFileName();
+      RunSingleThreaded(@"c:\temp\1.tmp", serializer, list);
+      RunMultiThreaded(@"c:\temp\2.tmp", serializer, list);
+    }
+
+    private static void RunSingleThreaded(string tempFile, SerializationEngine serializer, List<TestClass> list)
+    {
       Console.WriteLine("Using {0} - sequentially writing and reading {1} records", tempFile, COUNT);
       Generate(tempFile, serializer, list, SeqForLoop);
 
@@ -46,15 +51,16 @@ namespace Renfield.AppendOnly.Spike
           Debug.Assert(r.Address == list[i].Address);
         }
       }
+    }
 
-      // multi-threaded test
-      tempFile = Path.GetTempFileName();
+    private static void RunMultiThreaded(string tempFile, SerializationEngine serializer, List<TestClass> list)
+    {
       Console.WriteLine("Using {0} - multi-threaded writing and reading {1} records", tempFile, COUNT);
       Generate(tempFile, serializer, list, ParForLoop);
     }
 
     private static void Generate(string tempFile, SerializationEngine serializer, List<TestClass> list,
-                                 Action<Action<int>> loop)
+      Action<Action<int>> loop)
     {
       using (var stream = new FileStream(tempFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
       {
@@ -65,11 +71,11 @@ namespace Renfield.AppendOnly.Spike
         // append COUNT records
         ShowTime("append", () => loop(i => file.Append(list[i])));
 
-        // read all the records
-        ShowTime("read all", () => { var records = file.ReadFrom(0).ToList(); });
+        // read all the records in a single batch
+        ShowTime("read all in a single batch", () => { var records = file.ReadFrom(0).ToList(); });
 
-        // read all the records, one at a time
-        ShowTime("read all, one at a time", () => loop(i => file.Read(i)));
+        // read all the records, individually
+        ShowTime("read all, individually", () => loop(i => file.Read(i)));
       }
 
       // close and reopen the file (rebuilds the index)
@@ -108,13 +114,13 @@ namespace Renfield.AppendOnly.Spike
 
     private static string GenerateRandomString(int maxLength)
     {
-      var length = rnd.Next(maxLength / 2, maxLength + 1);
+      var length = RND.Next(maxLength / 2, maxLength + 1);
 
-      var result = new List<char>();
+      var result = new char[length];
       for (var i = 0; i < length; i++)
-        result.Add((char) (rnd.Next('A', 'Z' + 1)));
+        result[i] = (char) RND.Next('A', 'Z' + 1);
 
-      return new string(result.ToArray());
+      return new string(result);
     }
   }
 }

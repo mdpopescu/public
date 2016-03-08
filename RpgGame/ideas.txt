@@ -1,0 +1,48 @@
+Basic abilities: STA (stamina), STR (strength), AGI (agility), INT (intelligence)
+STA - determines max energy (STA x 50) and max HP (STA x 10)
+      - gets used by running (1 / sec) and can be used for special attacks, depending on the weapon
+      - if current HP < max HP, every 30 seconds current HP grows with STA; this is the default health recharge rate
+      - same with energy (EP)
+STR - requirement for armor and weapons; influences damage
+      - OE, overextended, x 0.75 if STR < 0.75 x armor / weapon requirement
+      - OP, overpowered, x 1.5 if STR > 1.5 x armor / weapon requirement
+AGI - determines run speed (AGI x 10) and influences evade (chance of avoiding attacks)
+INT - determines mana pool (INT x 10); requirement for spells
+      - if current MP < max MP, every 30 seconds current MP grows with INT; this is the default mana recharge rate
+
+Derived stats:
+- max energy: STA x 50
+- max HP: STA x 10
+- move speed: AGI x 10
+- attack rating: STR x 5 (together with the opponent's evade stat, determines the chance of a hit, miss or critical)
+- evade: AGI x 5 (influences the chance of avoiding incoming hits)
+
+Four types of damage / armor: air, earth, fire, water
+
+Slots:
+- head (armor)
+- body (armor)
+- right arm (armor)
+- left arm (armor)
+- right hand (one- or two-hand weapon)
+- left hand (one-hand weapon / shield)
+- legs (armor)
+- feet (armor)
+- eight implant slots, one for each body part, that can give bonuses
+  - can be implanted anywhere (don't need a special device)
+  - once used, implants have to be destroyed to free the slot
+
+Weapons:
+- damage range: min to max
+- actual damage on each hit calculated as a random value in the [min, max] interval
+- modified by the OE / OP factors, if one is in effect
+- further modified by implants, if any of them have +DMG modifiers
+- incoming damage is further modified by the total armor of the opponent: dmg = round (dmg x (1 - (armor / (armor + 100))))
+  - examples: armor 0 means full damage (no reduction)
+  - armor 1 means incoming damage is ~99%
+  - armor 10 means incoming damage is ~90%
+  - armor 100 means incoming damage is halved
+  - armor 1000 means incoming damage is ~10%
+
+The only damage being checked is the one matching the effective damage type (which is weapon damage unless overriden by spells or items). In other words, if an air
+attack hits someone with 100 earth armor but zero air armor, the zero value matters (so the full damage is applied).
