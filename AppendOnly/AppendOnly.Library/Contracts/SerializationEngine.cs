@@ -1,4 +1,4 @@
-﻿namespace Renfield.AppendOnly.Library
+﻿namespace Renfield.AppendOnly.Library.Contracts
 {
   public interface SerializationEngine
   {

@@ -5,10 +5,7 @@ namespace Renfield.AppendOnly.Library
 {
   public class LowLevelAppendOnlyFile : LowLevelAppendOnly
   {
-    public long[] Index
-    {
-      get { return index.ToArray(); }
-    }
+    public long[] Index => index.ToArray();
 
     public LowLevelAppendOnlyFile(RandomAccessor data, IEnumerable<long> index = null)
     {

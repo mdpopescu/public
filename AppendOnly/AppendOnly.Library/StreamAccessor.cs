@@ -31,12 +31,16 @@ namespace Renfield.AppendOnly.Library
 
     public byte[] read_bytes(long position, long size)
     {
-      var buffer = new byte[size];
+      // The maximum index in any single dimension is 2,147,483,591 (0x7FFFFFC7) for byte arrays
+      // https://msdn.microsoft.com/en-us/library/hh285054(v=vs.110).aspx
+      var iSize = (int) (size & 0xFFFFFFFF);
+
+      var buffer = new byte[iSize];
 
       lock (lockObject)
       {
         stream.Seek(position, SeekOrigin.Begin);
-        stream.Read(buffer, 0, (int) (size & 0xFFFFFFFF));
+        stream.Read(buffer, 0, iSize);
       }
 
       return buffer;
@@ -64,7 +68,8 @@ namespace Renfield.AppendOnly.Library
 
     //
 
-    private readonly Stream stream;
     private readonly object lockObject = new object();
+
+    private readonly Stream stream;
   }
 }

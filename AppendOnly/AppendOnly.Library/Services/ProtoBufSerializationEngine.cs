@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using ProtoBuf;
+using Renfield.AppendOnly.Library.Contracts;
 
-namespace Renfield.AppendOnly.Library
+namespace Renfield.AppendOnly.Library.Services
 {
   public class ProtoBufSerializationEngine : SerializationEngine
   {

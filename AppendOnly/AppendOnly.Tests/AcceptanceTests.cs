@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ProtoBuf;
 using Renfield.AppendOnly.Library;
+using Renfield.AppendOnly.Library.Services;
 
 namespace Renfield.AppendOnly.Tests
 {
@@ -16,7 +17,9 @@ namespace Renfield.AppendOnly.Tests
       var data = new StreamAccessor(stream);
       var file = new LowLevelAppendOnlyFile(data);
       var serializer = new ProtoBufSerializationEngine();
-      var sut = new GenericAppendOnlyFile<TestClass>(file, serializer);
+      // the protobuf serializer might not be thread-safe
+      var safeSerializer = new ConcurrentSerializationEngine(serializer);
+      var sut = new GenericAppendOnlyFile<TestClass>(file, safeSerializer);
 
       sut.Append(new TestClass {Name = "Marcel", Address = "Kennesaw, GA"});
       sut.Append(new TestClass {Name = "Gigi Meseriasu", Address = "Washington, DC"});

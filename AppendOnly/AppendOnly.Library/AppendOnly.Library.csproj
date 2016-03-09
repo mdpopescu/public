@@ -44,19 +44,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GenericAppendOnlyFile.cs" />
+    <Compile Include="Services\ConcurrentSerializationEngine.cs" />
+    <Compile Include="Services\GenericAppendOnlyFile.cs" />
     <Compile Include="LowLevelAppendOnlyFile.cs" />
     <Compile Include="RandomAccessor.cs" />
-    <Compile Include="GenericAppendOnly.cs" />
+    <Compile Include="Contracts\GenericAppendOnly.cs" />
     <Compile Include="LowLevelAppendOnly.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProtoBufSerializationEngine.cs" />
+    <Compile Include="Services\ProtoBufSerializationEngine.cs" />
     <Compile Include="StreamAccessor.cs" />
-    <Compile Include="SerializationEngine.cs" />
+    <Compile Include="Contracts\SerializationEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

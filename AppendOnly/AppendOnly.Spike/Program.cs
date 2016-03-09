@@ -5,18 +5,22 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Renfield.AppendOnly.Library;
+using Renfield.AppendOnly.Library.Contracts;
+using Renfield.AppendOnly.Library.Services;
 
 namespace Renfield.AppendOnly.Spike
 {
   internal class Program
   {
-    private const int COUNT = 100000;
+    private const int COUNT = 25000;
 
     private static readonly Random RND = new Random();
 
     private static void Main()
     {
       var serializer = new ProtoBufSerializationEngine();
+      // the protobuf serializer might not be thread-safe
+      var safeSerializer = new ConcurrentSerializationEngine(serializer);
 
       var list = new List<TestClass>();
       for (var i = 0; i < COUNT; i++)
@@ -25,16 +29,17 @@ namespace Renfield.AppendOnly.Spike
         list.Add(c);
       }
 
-      RunSingleThreaded(@"c:\temp\1.tmp", serializer, list);
-      RunMultiThreaded(@"c:\temp\2.tmp", serializer, list);
+      RunSingleThreaded(@"c:\temp\1.tmp", safeSerializer, list);
+      RunMultiThreaded(@"c:\temp\2.tmp", safeSerializer, list);
     }
 
-    private static void RunSingleThreaded(string tempFile, SerializationEngine serializer, List<TestClass> list)
+    private static void RunSingleThreaded(string tempFile, SerializationEngine serializer, IReadOnlyList<TestClass> list)
     {
       Console.WriteLine("Using {0} - sequentially writing and reading {1} records", tempFile, COUNT);
       Generate(tempFile, serializer, list, SeqForLoop);
 
-      // verify the data
+#if (DEBUG)
+  // verify the data
       using (var stream = new FileStream(tempFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
       {
         var data = new StreamAccessor(stream);
@@ -51,16 +56,16 @@ namespace Renfield.AppendOnly.Spike
           Debug.Assert(r.Address == list[i].Address);
         }
       }
+#endif
     }
 
-    private static void RunMultiThreaded(string tempFile, SerializationEngine serializer, List<TestClass> list)
+    private static void RunMultiThreaded(string tempFile, SerializationEngine serializer, IReadOnlyList<TestClass> list)
     {
       Console.WriteLine("Using {0} - multi-threaded writing and reading {1} records", tempFile, COUNT);
       Generate(tempFile, serializer, list, ParForLoop);
     }
 
-    private static void Generate(string tempFile, SerializationEngine serializer, List<TestClass> list,
-      Action<Action<int>> loop)
+    private static void Generate(string tempFile, SerializationEngine serializer, IReadOnlyList<TestClass> list, Action<Action<int>> loop)
     {
       using (var stream = new FileStream(tempFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
       {
@@ -97,7 +102,8 @@ namespace Renfield.AppendOnly.Spike
 
     private static void ParForLoop(Action<int> action)
     {
-      Parallel.For(0, COUNT, action);
+      var options = new ParallelOptions { MaxDegreeOfParallelism = 32 };
+      Parallel.For(0, COUNT, options, action);
     }
 
     private static void ShowTime(string message, Action action)
