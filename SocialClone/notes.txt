@@ -1,0 +1,11 @@
+- roles: admin and user
+- guests (unauthenticated visitors) see the most popular posts
+- users can register; they are not allowed to login until they confirm their email
+- once the email has been confirmed, they are logged in automatically
+- users can search for other users by email, username or name
+  - when searching by name, the user will be shown a list of matches (with pictures)
+- once presented with a list of matches, the user can decide to follow other users and/or send them messages
+- a user can mute another user (the first user will not see the second user's messages and posts) or block them (neither can see the other user's messages or posts)
+- the current user's homepage shows his own posts and the posts of the users he follows
+  - if there are less than five messages on the home page, the rest is filled with popular posts, clearly marked as such
+- using @username in a post will send a notification to that user, unless the current user is muted / blocked by the other one

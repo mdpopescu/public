@@ -46,3 +46,7 @@ Weapons:
 
 The only damage being checked is the one matching the effective damage type (which is weapon damage unless overriden by spells or items). In other words, if an air
 attack hits someone with 100 earth armor but zero air armor, the zero value matters (so the full damage is applied).
+
+
+The player can choose a race and a patron god; the various races have affinities to various gods (get higher bonuses if they match); maybe even the opposite.
+The gods give bonuses. They can be changed, but it's a very difficult process and there are long-term debuffs when that happens.

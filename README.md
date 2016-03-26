@@ -55,7 +55,11 @@ Public repository - CC-by-SA 3.0
 
 * SimpleViewEngine: a view engine with only two directives, {{if}} / {{else}} / {{endif}} and {{foreach}} / {{endfor}}. Evaluates expressions with {{name}} and the current item itself in a foreach is {{}}.
 
+* SocialClone: a FB-like site
+
 * SocialNetwork: what the name says; written for a job interview.
+
+* SocialNetwork-Python: same thing in Python.
 
 * Spiral: generate a spiral with numbers from 1 to n^2, starting in the middle and going outwards
 
