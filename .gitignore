@@ -47,3 +47,4 @@ rcf/
 # These should be included #
 !NuGet.exe
 !packages/**/*.targets
+/SocialClone/.vs
