@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -13,7 +14,7 @@ namespace SocialClone.Tests
   {
     private const string BASE_URL = "http://localhost:5972";
 
-    private const string COOKIE_NAME = "__RequestVerificationToken";
+    private const string TOKEN_NAME = "__RequestVerificationToken";
 
     [TestMethod]
     public void RegisteringNewUser()
@@ -26,10 +27,8 @@ namespace SocialClone.Tests
       Cookie[] cookies;
       html = Get("Account/Register", out cookies);
       root = Parse(html);
-      var formToken = root.SelectSingleNode("//*[@name='" + COOKIE_NAME + "']");
-      Assert.IsNotNull(formToken);
-      var cookieToken = cookies.Where(it => it.Name == COOKIE_NAME).FirstOrDefault();
-      Assert.IsNotNull(cookieToken);
+      var formToken = GetFormToken(root);
+      var cookieToken = GetCookieToken(cookies);
 
       html = Post("Account/Register", new
       {
@@ -38,7 +37,7 @@ namespace SocialClone.Tests
         Password = unique,
         ConfirmPassword = unique,
       },
-        formToken.GetAttributeValue("value", null), cookieToken.Value);
+        formToken, cookieToken);
       root = Parse(html);
 
       var message = root.SelectSingleNode("//*[@id='message']");
@@ -73,9 +72,9 @@ namespace SocialClone.Tests
 
         web.Headers["Content-Type"] = "application/x-www-form-urlencoded";
         if (formToken != null)
-          data += "&" + COOKIE_NAME + "=" + formToken;
+          data += "&" + TOKEN_NAME + "=" + formToken;
         if (cookieToken != null)
-          web.Headers.Add(HttpRequestHeader.Cookie, COOKIE_NAME + "=" + cookieToken);
+          web.Headers.Add(HttpRequestHeader.Cookie, TOKEN_NAME + "=" + cookieToken);
 
         return web.UploadString(BASE_URL + "/" + url, data);
       }
@@ -100,6 +99,22 @@ namespace SocialClone.Tests
       Assert.IsNotNull(doc.DocumentNode);
 
       return doc.DocumentNode;
+    }
+
+    private static string GetFormToken(HtmlNode root)
+    {
+      var formToken = root.SelectSingleNode("//*[@name='" + TOKEN_NAME + "']");
+      Assert.IsNotNull(formToken);
+
+      return formToken.GetAttributeValue("value", null);
+    }
+
+    private static string GetCookieToken(IEnumerable<Cookie> cookies)
+    {
+      var cookieToken = cookies.Where(it => it.Name == TOKEN_NAME).FirstOrDefault();
+      Assert.IsNotNull(cookieToken);
+
+      return cookieToken.Value;
     }
   }
 }

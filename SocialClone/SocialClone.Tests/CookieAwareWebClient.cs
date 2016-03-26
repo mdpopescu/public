@@ -3,6 +3,7 @@ using System.Net;
 
 namespace SocialClone.Tests
 {
+  // from http://stackoverflow.com/a/29479390
   public class CookieAwareWebClient : WebClient
   {
     public CookieContainer CookieContainer { get; }
