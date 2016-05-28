@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Text;
+﻿using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebScraping.Library.Implementations;
 
@@ -13,19 +12,17 @@ namespace WebScraping.Tests
         {
             const string PROGRAM = "print 'Hello, world'";
 
-            using (var input = new StringReader(""))
+            var compiler = new MultiStepCompiler();
+            var interpreter = new CSharpInterpreter();
+            var sut = new Runner(compiler, interpreter);
+
+            var sb = new StringBuilder();
+            using (var env = ObjectMother.CreateEnvironment("", sb))
             {
-                var sb = new StringBuilder();
-
-                using (var output = new StringWriter(sb))
-                {
-                    var sut = new Runner(input, output);
-
-                    sut.Run(PROGRAM);
-                }
-
-                Assert.AreEqual("Hello, world\r\n", sb.ToString());
+                sut.Run(PROGRAM, env);
             }
+
+            Assert.AreEqual("Hello, world\r\n", sb.ToString());
         }
     }
 }
