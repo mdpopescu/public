@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace WebScraping.Library.Interfaces
+namespace WebScraping.Library.Implementations
 {
     public class Runner
     {

@@ -29,6 +29,8 @@ Public repository - CC-by-SA 3.0
 
 * Giles: social assistant for managing posts to blogs / Twitter / Facebook
 
+* GilesBot: virtual assistant / Skype bot
+
 * Hot Folder Windows Service: Windows service to monitor a specific folder and (for now) log the create / delete / change / rename events
 
 * httpd: Simple web server (only static files)
@@ -80,6 +82,8 @@ Public repository - CC-by-SA 3.0
 * Virtual Machine Interpreter: implements the VM described at http://courses.cms.caltech.edu/cs11/material/c/mike/lab8/lab8.html
 
 * VM: implements a custom virtual machine - I was bored :)
+
+* WebScraping: a new language from retrieving data from the web plus a transpiler from that language to C#
 
 * WebStore: Another implementation of an inventory management system, using an event store
 

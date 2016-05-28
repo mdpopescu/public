@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using WebScraping.Library.Interfaces;
+using WebScraping.Library.Implementations;
 
 namespace WebScraping.Tests
 {
