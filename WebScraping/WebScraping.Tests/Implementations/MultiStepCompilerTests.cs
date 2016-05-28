@@ -15,27 +15,47 @@ namespace WebScraping.Tests.Implementations
         }
 
         [TestMethod]
-        public void ReturnsAnEmptyStringIfProgramIsEmpty()
+        public void ReturnsNullIfProgramIsEmpty()
         {
             var result = sut.Compile("  ");
 
-            Assert.AreEqual("", result);
+            Assert.IsNull(result);
         }
 
         [TestMethod]
         public void ConvertsThePrintStatementToConsoleWriteLine()
         {
+            const string EXPECTED = @"public static class Program
+{
+public void Main(TextReader input, TextWriter output)
+{
+//1//
+output.WriteLine(1);
+}
+}
+";
+
             var result = sut.Compile("print 1");
 
-            Assert.AreEqual("//1//\r\nConsole.WriteLine(1);\r\n", result);
+            Assert.AreEqual(EXPECTED, result);
         }
 
         [TestMethod]
         public void ConvertsPrintStatementsWithStringArgumentsInSingleQuotes()
         {
+            const string EXPECTED = @"public static class Program
+{
+public void Main(TextReader input, TextWriter output)
+{
+//1//
+output.WriteLine(""abc"");
+}
+}
+";
+
             var result = sut.Compile("print 'abc'");
 
-            Assert.AreEqual("//1//\r\nConsole.WriteLine(\"abc\");\r\n", result);
+            Assert.AreEqual(EXPECTED, result);
         }
     }
 }

@@ -17,6 +17,18 @@ namespace WebScraping.Library.Implementations
 
         public string Compile(string program)
         {
+            const string TEMPLATE = @"public static class Program
+{{
+public void Main(TextReader input, TextWriter output)
+{{
+{0}
+}}
+}}
+";
+
+            if (string.IsNullOrWhiteSpace(program))
+                return null;
+
             var lines = program
                 .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(line => line.Trim())
@@ -24,11 +36,7 @@ namespace WebScraping.Library.Implementations
                 .ToArray();
             var result = stages.Aggregate(lines, (current, stage) => stage(current));
 
-            var csProgram = string.Join(Environment.NewLine, result);
-            if (!string.IsNullOrWhiteSpace(csProgram))
-                csProgram += Environment.NewLine;
-
-            return csProgram;
+            return string.Format(TEMPLATE, string.Join(Environment.NewLine, result));
         }
 
         //
@@ -48,7 +56,7 @@ namespace WebScraping.Library.Implementations
                     continue;
 
                 var expr = line.Substring(6).Replace("'", "\"");
-                line = "Console.WriteLine(" + expr + ");";
+                line = "output.WriteLine(" + expr + ");";
                 result.Add(line);
             }
 
