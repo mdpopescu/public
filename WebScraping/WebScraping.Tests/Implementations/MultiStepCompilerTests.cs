@@ -29,5 +29,13 @@ namespace WebScraping.Tests.Implementations
 
             Assert.AreEqual("//1//\r\nConsole.WriteLine(1);\r\n", result);
         }
+
+        [TestMethod]
+        public void ConvertsPrintStatementsWithStringArgumentsInSingleQuotes()
+        {
+            var result = sut.Compile("print 'abc'");
+
+            Assert.AreEqual("//1//\r\nConsole.WriteLine(\"abc\");\r\n", result);
+        }
     }
 }

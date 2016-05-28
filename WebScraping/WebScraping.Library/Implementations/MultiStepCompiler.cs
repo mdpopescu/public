@@ -47,7 +47,8 @@ namespace WebScraping.Library.Implementations
                 if (line.IndexOf("print ", StringComparison.OrdinalIgnoreCase) != 0)
                     continue;
 
-                line = "Console.WriteLine(" + line.Substring(6) + ");";
+                var expr = line.Substring(6).Replace("'", "\"");
+                line = "Console.WriteLine(" + expr + ");";
                 result.Add(line);
             }
 
