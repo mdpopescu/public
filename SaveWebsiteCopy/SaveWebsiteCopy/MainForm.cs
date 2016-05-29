@@ -66,12 +66,34 @@ namespace SaveWebsiteCopy
         .Where(it => !string.IsNullOrWhiteSpace(it));
     }
 
-    private static string LoadPage(string url, out string pageName)
+    private void ResetUI(int max)
+    {
+      txtLog.Clear();
+
+      pbLoading.Minimum = 0;
+      pbLoading.Maximum = max;
+      pbLoading.Value = 0;
+    }
+
+    private void ProcessPage(string page)
+    {
+      pbLoading.Value++;
+
+      var contents = LoadPage(page);
+      if (contents == null)
+      {
+        txtLog.AppendText($"Could not download {page}\r\n");
+        return;
+      }
+
+      var filename = PageToFilename(page);
+      SavePage(txtSaveDirectory.Text, filename, contents);
+    }
+
+    private static string LoadPage(string url)
     {
       using (var web = new WebClient())
       {
-        pageName = null;
-
         var json = web.DownloadString($"http://archive.org/wayback/available?url={url}");
         dynamic obj = SimpleJson.DeserializeObject(json);
 
@@ -87,12 +109,11 @@ namespace SaveWebsiteCopy
         if (actualUrl == null)
           return null;
 
-        pageName = AsPageName(actualUrl);
         return web.DownloadString(actualUrl);
       }
     }
 
-    private static string AsPageName(string url)
+    private static string PageToFilename(string url)
     {
       var result = url
         .Replace("http://", "")
@@ -119,27 +140,11 @@ namespace SaveWebsiteCopy
 
     private void btnLoad_Click(object sender, EventArgs e)
     {
-      txtLog.Clear();
-
       var pages = SearchSite(txtSearchString.Text, txtURL.Text).ToArray();
 
-      pbLoading.Minimum = 0;
-      pbLoading.Maximum = pages.Length;
-      pbLoading.Value = 0;
+      ResetUI(pages.Length);
       foreach (var page in pages)
-      {
-        pbLoading.Value++;
-
-        string filename;
-        var contents = LoadPage(page, out filename);
-        if (contents == null)
-        {
-          txtLog.AppendText($"Could not download {page}\r\n");
-          continue;
-        }
-
-        SavePage(txtSaveDirectory.Text, filename, contents);
-      }
+        ProcessPage(page);
     }
 
     private void txt_TextChanged(object sender, EventArgs e)
