@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Implementations\Bootstrapper.cs" />
     <Compile Include="Implementations\CSharpInterpreter.cs" />
     <Compile Include="Implementations\MultiStepCompiler.cs" />
     <Compile Include="Implementations\Runner.cs" />
