@@ -10,11 +10,6 @@ namespace WebScraping.Library.Implementations
         public MultiStepCompiler(params StatementCompiler[] statementCompilers)
         {
             this.statementCompilers = statementCompilers;
-
-            stages = new List<Func<string[], string[]>>
-            {
-                Stage1,
-            };
         }
 
         public string Compile(string program)
@@ -37,36 +32,48 @@ public static void Main(TextReader input, TextWriter output)
                 .Select(line => line.Trim())
                 .Where(line => !string.IsNullOrWhiteSpace(line))
                 .ToArray();
-            var result = stages.Aggregate(lines, (current, stage) => stage(current));
 
-            return string.Format(TEMPLATE, string.Join(Environment.NewLine, result));
+            bool finished;
+            do
+            {
+                finished = SingleStageCompile(ref lines);
+            } while (!finished);
+
+            return string.Format(TEMPLATE, string.Join(Environment.NewLine, lines));
         }
 
         //
 
         private readonly StatementCompiler[] statementCompilers;
 
-        private readonly List<Func<string[], string[]>> stages;
-
-        private string[] Stage1(string[] lines)
+        private bool SingleStageCompile(ref string[] lines)
         {
             var result = new List<string>();
 
-            for (var i = 0; i < lines.Length; i++)
+            var finished = true;
+            foreach (var line in lines)
             {
-                result.Add($"//{(i + 1)}//");
+                // ignore comment lines
+                if (line.StartsWith("//"))
+                {
+                    result.Add(line);
+                    continue;
+                }
 
-                var line = lines[i];
                 var statement = new[] { line };
 
                 var compiler = statementCompilers.FirstOrDefault(it => it.CanHandle(statement));
-                if (compiler == null)
-                    continue;
+                if (compiler != null)
+                {
+                    statement = compiler.Compile(statement);
+                    finished = false;
+                }
 
-                result.AddRange(compiler.Compile(statement));
+                result.AddRange(statement);
             }
 
-            return result.ToArray();
+            lines = result.ToArray();
+            return finished;
         }
     }
 }
