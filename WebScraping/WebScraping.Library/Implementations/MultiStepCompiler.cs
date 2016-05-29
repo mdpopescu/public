@@ -27,52 +27,49 @@ public static void Main(TextReader input, TextWriter output)
             if (string.IsNullOrWhiteSpace(program))
                 return null;
 
-            var lines = program
-                .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(line => line.Trim())
-                .Where(line => !string.IsNullOrWhiteSpace(line))
-                .ToArray();
+            var statements = GetStatements(program);
 
             bool finished;
             do
             {
-                finished = SingleStageCompile(ref lines);
+                finished = SingleStageCompile(ref statements);
             } while (!finished);
 
-            return string.Format(TEMPLATE, string.Join(Environment.NewLine, lines));
+            return string.Format(TEMPLATE, string.Join(Environment.NewLine, statements.SelectMany(line => line)));
         }
 
         //
 
         private readonly StatementCompiler[] statementCompilers;
 
-        private bool SingleStageCompile(ref string[] lines)
+        private static IEnumerable<string[]> GetStatements(string program)
         {
-            var result = new List<string>();
+            return program
+                .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(line => line.Trim())
+                .Where(line => !string.IsNullOrWhiteSpace(line))
+                .Select(line => new[] { line })
+                .ToArray();
+        }
+
+        private bool SingleStageCompile(ref IEnumerable<string[]> statements)
+        {
+            var result = new List<string[]>();
 
             var finished = true;
-            foreach (var line in lines)
+            foreach (var statement in statements)
             {
-                // ignore comment lines
-                if (line.StartsWith("//"))
-                {
-                    result.Add(line);
-                    continue;
-                }
-
-                var statement = new[] { line };
-
                 var compiler = statementCompilers.FirstOrDefault(it => it.CanHandle(statement));
-                if (compiler != null)
+                if (compiler == null)
+                    result.Add(statement);
+                else
                 {
-                    statement = compiler.Compile(statement);
+                    result.Add(compiler.Compile(statement));
                     finished = false;
                 }
-
-                result.AddRange(statement);
             }
 
-            lines = result.ToArray();
+            statements = result;
             return finished;
         }
     }

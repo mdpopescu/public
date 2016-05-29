@@ -59,16 +59,5 @@ namespace WebScraping.Tests.Implementations
             compiler1.Verify(it => it.Compile(new[] { "abc" }));
             compiler2.Verify(it => it.Compile(new[] { "abc" }), Times.Never);
         }
-
-        [TestMethod]
-        public void DoesNotCheckCommentLines()
-        {
-            var compiler = new Mock<StatementCompiler>();
-            var sut = new MultiStepCompiler(compiler.Object);
-
-            sut.Compile("// comment");
-
-            compiler.Verify(it => it.CanHandle(It.IsAny<string[]>()), Times.Never);
-        }
     }
 }
