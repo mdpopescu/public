@@ -1,0 +1,7 @@
+﻿https://www.upwork.com/jobs/_~01dea9d9c9418bb4f5/
+
+Looking for someone to develop a C# application that does the following:
+
+1. User enters target web site URL, search string, and save directory
+2. Perform a DuckDuckGo search to find all of the pages on the target site that contain the string
+3. Download each DuckDuckGo results from the Wayback Machine into the save directory

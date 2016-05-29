@@ -55,6 +55,8 @@ Public repository - CC-by-SA 3.0
 
 * SafeRedir: time-limited URL redirection; the shortened link will redirect to the real one for only a limited time (default 5 minutes) and then redirect to a "safe" link afterwards; deployed at http://red.renfieldsoftware.com/
 
+* SaveWebsiteCopy: solution for https://www.upwork.com/jobs/~01dea9d9c9418bb4f5 - the description of the project is inside, in the notes.txt file
+
 * SimpleViewEngine: a view engine with only two directives, {{if}} / {{else}} / {{endif}} and {{foreach}} / {{endfor}}. Evaluates expressions with {{name}} and the current item itself in a foreach is {{}}.
 
 * SocialClone: a FB-like site
