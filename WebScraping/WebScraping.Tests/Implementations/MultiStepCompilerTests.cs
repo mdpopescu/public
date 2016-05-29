@@ -25,9 +25,10 @@ namespace WebScraping.Tests.Implementations
         [TestMethod]
         public void ConvertsThePrintStatementToConsoleWriteLine()
         {
-            const string EXPECTED = @"public static class Program
+            const string EXPECTED = @"using System.IO;
+public class Program
 {
-public void Main(TextReader input, TextWriter output)
+public static void Main(TextReader input, TextWriter output)
 {
 //1//
 output.WriteLine(1);
@@ -43,9 +44,10 @@ output.WriteLine(1);
         [TestMethod]
         public void ConvertsPrintStatementsWithStringArgumentsInSingleQuotes()
         {
-            const string EXPECTED = @"public static class Program
+            const string EXPECTED = @"using System.IO;
+public class Program
 {
-public void Main(TextReader input, TextWriter output)
+public static void Main(TextReader input, TextWriter output)
 {
 //1//
 output.WriteLine(""abc"");

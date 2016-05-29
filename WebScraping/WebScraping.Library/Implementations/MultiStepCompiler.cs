@@ -17,9 +17,10 @@ namespace WebScraping.Library.Implementations
 
         public string Compile(string program)
         {
-            const string TEMPLATE = @"public static class Program
+            const string TEMPLATE = @"using System.IO;
+public class Program
 {{
-public void Main(TextReader input, TextWriter output)
+public static void Main(TextReader input, TextWriter output)
 {{
 {0}
 }}
