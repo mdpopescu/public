@@ -7,8 +7,10 @@ namespace WebScraping.Library.Implementations
 {
     public class MultiStepCompiler : Compiler
     {
-        public MultiStepCompiler()
+        public MultiStepCompiler(params StatementCompiler[] statementCompilers)
         {
+            this.statementCompilers = statementCompilers;
+
             stages = new List<Func<string[], string[]>>
             {
                 Stage1,
@@ -42,9 +44,11 @@ public static void Main(TextReader input, TextWriter output)
 
         //
 
+        private readonly StatementCompiler[] statementCompilers;
+
         private readonly List<Func<string[], string[]>> stages;
 
-        private static string[] Stage1(string[] lines)
+        private string[] Stage1(string[] lines)
         {
             var result = new List<string>();
 
@@ -53,12 +57,13 @@ public static void Main(TextReader input, TextWriter output)
                 result.Add($"//{(i + 1)}//");
 
                 var line = lines[i];
-                if (line.IndexOf("print ", StringComparison.OrdinalIgnoreCase) != 0)
+                var statement = new[] { line };
+
+                var compiler = statementCompilers.FirstOrDefault(it => it.CanHandle(statement));
+                if (compiler == null)
                     continue;
 
-                var expr = line.Substring(6).Replace("'", "\"");
-                line = "output.WriteLine(" + expr + ");";
-                result.Add(line);
+                result.AddRange(compiler.Compile(statement));
             }
 
             return result.ToArray();

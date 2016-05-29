@@ -51,8 +51,10 @@
     <Compile Include="Implementations\CSharpInterpreter.cs" />
     <Compile Include="Implementations\MultiStepCompiler.cs" />
     <Compile Include="Implementations\Runner.cs" />
+    <Compile Include="Implementations\StmtComp\PrintCompiler.cs" />
     <Compile Include="Interfaces\Compiler.cs" />
     <Compile Include="Interfaces\Interpreter.cs" />
+    <Compile Include="Interfaces\StatementCompiler.cs" />
     <Compile Include="Models\Environment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripting.evaluator.cs" />

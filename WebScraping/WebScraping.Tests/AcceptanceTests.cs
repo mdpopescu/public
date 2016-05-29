@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebScraping.Library.Implementations;
+using WebScraping.Library.Implementations.StmtComp;
 
 namespace WebScraping.Tests
 {
@@ -12,7 +13,7 @@ namespace WebScraping.Tests
         {
             const string PROGRAM = "print 'Hello, world'";
 
-            var compiler = new MultiStepCompiler();
+            var compiler = new MultiStepCompiler(new PrintCompiler());
             var interpreter = new CSharpInterpreter();
             var sut = new Runner(compiler, interpreter);
 

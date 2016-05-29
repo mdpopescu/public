@@ -1,63 +1,63 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using WebScraping.Library.Implementations;
+using WebScraping.Library.Interfaces;
 
 namespace WebScraping.Tests.Implementations
 {
     [TestClass]
     public class MultiStepCompilerTests
     {
-        private MultiStepCompiler sut;
-
-        [TestInitialize]
-        public void SetUp()
-        {
-            sut = new MultiStepCompiler();
-        }
-
         [TestMethod]
         public void ReturnsNullIfProgramIsEmpty()
         {
+            var sut = new MultiStepCompiler();
+
             var result = sut.Compile("  ");
 
             Assert.IsNull(result);
         }
 
         [TestMethod]
-        public void ConvertsThePrintStatementToConsoleWriteLine()
+        public void ChecksAllStatementCompilersToFindOneThatCanHandleTheStatement()
         {
-            const string EXPECTED = @"using System.IO;
-public class Program
-{
-public static void Main(TextReader input, TextWriter output)
-{
-//1//
-output.WriteLine(1);
-}
-}
-";
+            var compiler = new Mock<StatementCompiler>();
+            var sut = new MultiStepCompiler(compiler.Object);
 
-            var result = sut.Compile("print 1");
+            sut.Compile("abc");
 
-            Assert.AreEqual(EXPECTED, result);
+            compiler.Verify(it => it.CanHandle(new[] { "abc" }));
         }
 
         [TestMethod]
-        public void ConvertsPrintStatementsWithStringArgumentsInSingleQuotes()
+        public void OnceASuitableStatementCompilerWasFoundTheRestAreNotVerified()
         {
-            const string EXPECTED = @"using System.IO;
-public class Program
-{
-public static void Main(TextReader input, TextWriter output)
-{
-//1//
-output.WriteLine(""abc"");
-}
-}
-";
+            var compiler1 = new Mock<StatementCompiler>();
+            compiler1
+                .Setup(it => it.CanHandle(new[] { "abc" }))
+                .Returns(true);
+            var compiler2 = new Mock<StatementCompiler>();
+            var sut = new MultiStepCompiler(compiler1.Object, compiler2.Object);
 
-            var result = sut.Compile("print 'abc'");
+            sut.Compile("abc");
 
-            Assert.AreEqual(EXPECTED, result);
+            compiler2.Verify(it => it.CanHandle(new[] { "abc" }), Times.Never);
+        }
+
+        [TestMethod]
+        public void TheStatementCompilerThatWasFoundIsAskedForATranslation()
+        {
+            var compiler1 = new Mock<StatementCompiler>();
+            compiler1
+                .Setup(it => it.CanHandle(new[] { "abc" }))
+                .Returns(true);
+            var compiler2 = new Mock<StatementCompiler>();
+            var sut = new MultiStepCompiler(compiler1.Object, compiler2.Object);
+
+            sut.Compile("abc");
+
+            compiler1.Verify(it => it.Compile(new[] { "abc" }));
+            compiler2.Verify(it => it.Compile(new[] { "abc" }), Times.Never);
         }
     }
 }

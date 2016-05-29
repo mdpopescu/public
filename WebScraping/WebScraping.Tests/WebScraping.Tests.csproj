@@ -61,6 +61,7 @@
     <Compile Include="AcceptanceTests.cs" />
     <Compile Include="Implementations\MultiStepCompilerTests.cs" />
     <Compile Include="Implementations\RunnerTests.cs" />
+    <Compile Include="Implementations\StmtComp\PrintCompilerTests.cs" />
     <Compile Include="ObjectMother.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
