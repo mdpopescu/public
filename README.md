@@ -59,6 +59,8 @@ Public repository - CC-by-SA 3.0
 
 * SimpleViewEngine: a view engine with only two directives, {{if}} / {{else}} / {{endif}} and {{foreach}} / {{endfor}}. Evaluates expressions with {{name}} and the current item itself in a foreach is {{}}.
 
+* SlotMachine: a slot machine
+
 * SocialClone: a FB-like site
 
 * SocialNetwork: what the name says; written for a job interview.
@@ -67,7 +69,11 @@ Public repository - CC-by-SA 3.0
 
 * Spiral: generate a spiral with numbers from 1 to n^2, starting in the middle and going outwards
 
+* SqlBenchmark: a benchmark written after reading https://ayende.com/blog/174273/how-to-waste-cpu-and-kill-your-disk-by-scaling-100-million-inefficiently (the idea that GUIDs as primary keys are horribly inefficient). On my computer, I INSERT 200K records/sec with INT Ids and 100K records/sec with GUIDs.
+
 * Sudoku: a Sudoku solver based on Peter Norvig's article at http://norvig.com/sudoku.html
+
+* SyncMaster: application for keeping folders synchronized, with some servers designated as "pull-only" or "push-only"
 
 * TaskSpikes: I need a long-running, cancelable task that might need to interact with the UI
 
