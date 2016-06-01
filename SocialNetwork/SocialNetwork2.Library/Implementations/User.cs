@@ -7,16 +7,14 @@ namespace SocialNetwork2.Library.Implementations
 {
     public class User : IUser
     {
-        public string UserName { get; }
-
         public User(string userName)
         {
-            UserName = userName;
+            this.userName = userName;
         }
 
         public void Post(string message)
         {
-            messages.Push(new Message(message));
+            messages.Push(new Message(userName, message));
         }
 
         public IEnumerable<string> Read()
@@ -33,10 +31,10 @@ namespace SocialNetwork2.Library.Implementations
         {
             var allMessages = followedUsers
                 .Concat(new[] { this })
-                .SelectMany(user => user.GetMessages().Select(message => new { user.UserName, message }))
-                .OrderByDescending(it => it.message);
+                .SelectMany(user => user.GetMessages())
+                .OrderByDescending(it => it);
 
-            return allMessages.Select(it => it.UserName + " - " + it.message.ToString());
+            return allMessages.Select(it => it.ToTaggedString());
         }
 
         public IEnumerable<Message> GetMessages()
@@ -48,5 +46,7 @@ namespace SocialNetwork2.Library.Implementations
 
         private readonly Stack<Message> messages = new Stack<Message>();
         private readonly List<IUser> followedUsers = new List<IUser>();
+
+        private readonly string userName;
     }
 }

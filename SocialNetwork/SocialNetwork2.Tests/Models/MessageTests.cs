@@ -8,52 +8,38 @@ namespace SocialNetwork2.Tests.Models
     [TestClass]
     public class MessageTests
     {
-        [TestMethod]
-        public void ReturnsMessagePlusElapsedTimeInSeconds()
+        [TestClass]
+        // ReSharper disable once InconsistentNaming
+        public class _ToString : MessageTests
         {
-            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 5);
-            var sut = new Message("abc");
+            [TestMethod]
+            public void ReturnsMessagePlusElapsedTimeInSeconds()
+            {
+                Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 5);
+                var sut = new Message("user", "abc");
 
-            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 7);
-            var result = sut.ToString();
+                Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 7);
+                var result = sut.ToString();
 
-            Assert.AreEqual("abc (2 seconds ago)", result);
+                Assert.AreEqual("abc (2 seconds ago)", result);
+            }
         }
 
-        [TestMethod]
-        public void ReturnsMessagePlusElapsedTimeInSecondsAsSingular()
+        [TestClass]
+        // ReSharper disable once InconsistentNaming
+        public class _ToTaggedString : MessageTests
         {
-            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 5);
-            var sut = new Message("abc");
+            [TestMethod]
+            public void ReturnsUserNamePlusMessagePlusElapsedTimeInSeconds()
+            {
+                Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 5);
+                var sut = new Message("user", "abc");
 
-            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 6);
-            var result = sut.ToString();
+                Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 7);
+                var result = sut.ToTaggedString();
 
-            Assert.AreEqual("abc (1 second ago)", result);
-        }
-
-        [TestMethod]
-        public void ReturnsMessagePlusElapsedTimeInMinutes()
-        {
-            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 5);
-            var sut = new Message("abc");
-
-            Sys.Time = () => new DateTime(2000, 1, 2, 3, 6, 5);
-            var result = sut.ToString();
-
-            Assert.AreEqual("abc (2 minutes ago)", result);
-        }
-
-        [TestMethod]
-        public void ReturnsMessagePlusElapsedTimeInHours()
-        {
-            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 5);
-            var sut = new Message("abc");
-
-            Sys.Time = () => new DateTime(2000, 1, 2, 5, 4, 5);
-            var result = sut.ToString();
-
-            Assert.AreEqual("abc (2 hours ago)", result);
+                Assert.AreEqual("user - abc (2 seconds ago)", result);
+            }
         }
     }
 }

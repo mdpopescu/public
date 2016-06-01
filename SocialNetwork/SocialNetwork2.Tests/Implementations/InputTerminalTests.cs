@@ -7,13 +7,13 @@ using SocialNetwork2.Library.Interfaces;
 namespace SocialNetwork2.Tests.Implementations
 {
     [TestClass]
-    public class InputHandlerTests
+    public class InputTerminalTests
     {
         private Mock<IUserRepository> userRepository;
         private Mock<IHandler> handler1;
         private Mock<IHandler> handler2;
 
-        private InputHandler sut;
+        private InputTerminal sut;
 
         [TestInitialize]
         public void SetUp()
@@ -21,7 +21,7 @@ namespace SocialNetwork2.Tests.Implementations
             userRepository = new Mock<IUserRepository>();
             handler1 = new Mock<IHandler>();
             handler2 = new Mock<IHandler>();
-            sut = new InputHandler(userRepository.Object, new[] { handler1.Object, handler2.Object });
+            sut = new InputTerminal(userRepository.Object, new[] { handler1.Object, handler2.Object });
         }
 
         [TestMethod]

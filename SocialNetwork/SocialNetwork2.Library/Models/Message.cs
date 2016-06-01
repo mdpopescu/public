@@ -5,10 +5,16 @@ namespace SocialNetwork2.Library.Models
 {
     public class Message : IComparable<Message>
     {
-        public Message(string text)
+        public Message(string userName, string text)
         {
+            this.userName = userName;
             this.text = text;
             timestamp = Sys.Time();
+        }
+
+        public int CompareTo(Message other)
+        {
+            return timestamp < other.timestamp ? -1 : timestamp > other.timestamp ? 1 : 0;
         }
 
         public override string ToString()
@@ -17,13 +23,14 @@ namespace SocialNetwork2.Library.Models
             return $"{text} ({elapsed} ago)";
         }
 
-        public int CompareTo(Message other)
+        public string ToTaggedString()
         {
-            return timestamp < other.timestamp ? -1 : timestamp > other.timestamp ? 1 : 0;
+            return $"{userName} - {this}";
         }
 
         //
 
+        private readonly string userName;
         private readonly string text;
         private readonly DateTime timestamp;
     }

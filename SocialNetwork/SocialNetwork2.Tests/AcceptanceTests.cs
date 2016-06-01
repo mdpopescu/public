@@ -75,7 +75,7 @@ namespace SocialNetwork2.Tests
                 new FollowsHandler(userRepository),
                 new WallHandler(),
             };
-            var inputHandler = new InputHandler(userRepository, knownCommands);
+            var inputHandler = new InputTerminal(userRepository, knownCommands);
 
             // posting
             Sys.Time = () => new DateTime(2000, 1, 1, 10, 0, 0);

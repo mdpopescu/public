@@ -63,7 +63,7 @@
     <Compile Include="Implementations\Handlers\PostHandlerTests.cs" />
     <Compile Include="Implementations\Handlers\ReadHandlerTests.cs" />
     <Compile Include="Implementations\Handlers\WallHandlerTests.cs" />
-    <Compile Include="Implementations\InputHandlerTests.cs" />
+    <Compile Include="Implementations\InputTerminalTests.cs" />
     <Compile Include="Implementations\UserRepositoryTests.cs" />
     <Compile Include="Implementations\UserTests.cs" />
     <Compile Include="Models\DurationTests.cs" />

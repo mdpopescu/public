@@ -18,7 +18,7 @@ namespace SocialNetwork2
                 new FollowsHandler(userRepository),
                 new WallHandler(),
             };
-            var commandHandler = new InputHandler(userRepository, knownCommands);
+            var commandHandler = new InputTerminal(userRepository, knownCommands);
 
             Console.WriteLine("Social Network");
             Console.WriteLine();

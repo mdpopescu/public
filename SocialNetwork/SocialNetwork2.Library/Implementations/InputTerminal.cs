@@ -6,9 +6,9 @@ using SocialNetwork2.Library.Models;
 
 namespace SocialNetwork2.Library.Implementations
 {
-    public class InputHandler
+    public class InputTerminal
     {
-        public InputHandler(IUserRepository userRepository, IEnumerable<IHandler> handlers)
+        public InputTerminal(IUserRepository userRepository, IEnumerable<IHandler> handlers)
         {
             this.userRepository = userRepository;
             this.handlers = handlers;

@@ -43,7 +43,7 @@
     <Compile Include="Implementations\Handlers\FollowsHandler.cs" />
     <Compile Include="Implementations\Handlers\PostHandler.cs" />
     <Compile Include="Implementations\Handlers\WallHandler.cs" />
-    <Compile Include="Implementations\InputHandler.cs" />
+    <Compile Include="Implementations\InputTerminal.cs" />
     <Compile Include="Implementations\Handlers\ReadHandler.cs" />
     <Compile Include="Interfaces\IUser.cs" />
     <Compile Include="Implementations\Sys.cs" />
