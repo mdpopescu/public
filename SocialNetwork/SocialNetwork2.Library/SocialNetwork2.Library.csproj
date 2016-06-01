@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Implementations\CommandHandler.cs" />
     <Compile Include="Implementations\Sys.cs" />
     <Compile Include="Implementations\User.cs" />
     <Compile Include="Implementations\UserRepository.cs" />
