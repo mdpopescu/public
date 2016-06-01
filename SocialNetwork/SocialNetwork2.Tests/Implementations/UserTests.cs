@@ -65,7 +65,7 @@ namespace SocialNetwork2.Tests.Implementations
         }
 
         [TestMethod]
-        public void TheWallReturnsOwnMessagesPrefixedWithName()
+        public void TheWallReturnsOwnMessagePrefixedWithUsername()
         {
             Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 5);
             sut.Post("test");
@@ -75,6 +75,22 @@ namespace SocialNetwork2.Tests.Implementations
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual("abc - test (5 seconds ago)", result[0]);
+        }
+
+        [TestMethod]
+        public void TheWallReturnsFollowedUsersMessagePrefixedWithUsername()
+        {
+            var otherUser = new User("def");
+            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 5);
+            otherUser.Post("test");
+
+            sut.Follow(otherUser);
+
+            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 10);
+            var result = sut.Wall().ToList();
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("def - test (5 seconds ago)", result[0]);
         }
     }
 }

@@ -47,13 +47,13 @@ namespace SocialNetwork2.Tests
 
             Sys.Time = () => new DateTime(2000, 1, 1, 10, 5, 2);
 
-            user.Follow("Alice");
+            user.Follow(userRepository.CreateOrFind("Alice"));
             var response1 = user.Wall().ToList();
             Assert.AreEqual(2, response1.Count);
             Assert.AreEqual("Charlie - I'm in New York today! Anyone want to have a coffee? (2 seconds ago)", response1[0]);
             Assert.AreEqual("Alice - I love the weather today (5 minutes ago)", response1[1]);
 
-            user.Follow("Bob");
+            user.Follow(userRepository.CreateOrFind("Bob"));
             var response2 = user.Wall().ToList();
             Assert.AreEqual(4, response2.Count);
             Assert.AreEqual("Charlie - I'm in New York today! Anyone want to have a coffee? (2 seconds ago)", response2[0]);
