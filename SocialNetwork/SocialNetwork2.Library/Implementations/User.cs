@@ -30,7 +30,8 @@ namespace SocialNetwork2.Library.Implementations
         {
             var allMessages = followedUsers
                 .Concat(new[] { this })
-                .SelectMany(user => user.messages.Select(message => new { user, message }));
+                .SelectMany(user => user.messages.Select(message => new { user, message }))
+                .OrderByDescending(it => it.message);
 
             return allMessages.Select(it => it.user.userName + " - " + it.message.ToString());
         }

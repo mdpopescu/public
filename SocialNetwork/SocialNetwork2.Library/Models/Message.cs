@@ -3,7 +3,7 @@ using SocialNetwork2.Library.Implementations;
 
 namespace SocialNetwork2.Library.Models
 {
-    public class Message
+    public class Message : IComparable<Message>
     {
         public Message(string text)
         {
@@ -15,6 +15,11 @@ namespace SocialNetwork2.Library.Models
         {
             var elapsed = new Duration(Sys.Time() - timestamp);
             return $"{text} ({elapsed} ago)";
+        }
+
+        public int CompareTo(Message other)
+        {
+            return timestamp < other.timestamp ? -1 : timestamp > other.timestamp ? 1 : 0;
         }
 
         //
