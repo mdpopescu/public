@@ -91,7 +91,7 @@ namespace SocialNetwork2.Tests
 
             // following
             Sys.Time = () => new DateTime(2000, 1, 1, 10, 5, 0);
-            handler.Handle("Charlie I'm in New York today! Anyone want to have a coffee?");
+            handler.Handle("Charlie -> I'm in New York today! Anyone want to have a coffee?");
 
             Sys.Time = () => new DateTime(2000, 1, 1, 10, 5, 2);
 
