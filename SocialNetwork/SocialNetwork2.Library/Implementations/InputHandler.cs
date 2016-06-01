@@ -38,7 +38,7 @@ namespace SocialNetwork2.Library.Implementations
             {
                 User = userRepository.CreateOrFind(parts[0]),
                 Command = parts.Length == 1 ? "" : parts[1],
-                RestOfInput = parts.Length == 1 ? "" : string.Join(" ", parts.Skip(2)),
+                RestOfInput = string.Join(" ", parts.Skip(2)),
             };
         }
     }
