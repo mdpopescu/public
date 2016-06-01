@@ -13,27 +13,13 @@ namespace SocialNetwork2.Library.Models
 
         public override string ToString()
         {
-            var elapsed = Formatted(Sys.Time() - timestamp);
-            return $"{text} ({elapsed})";
+            var elapsed = new Duration(Sys.Time() - timestamp);
+            return $"{text} ({elapsed} ago)";
         }
 
         //
 
         private readonly string text;
         private readonly DateTime timestamp;
-
-        private static string Formatted(TimeSpan ts)
-        {
-            var hours = (int) Math.Truncate(ts.TotalHours);
-            var minutes = (int) Math.Truncate(ts.TotalMinutes);
-            var seconds = (int) Math.Truncate(ts.TotalSeconds);
-
-            var duration = hours > 0 ? hours : minutes > 0 ? minutes : seconds;
-            var unit = hours > 0 ? "hour" : minutes > 0 ? "minute" : "second";
-
-            var suffix = duration == 1 ? "" : "s";
-
-            return $"{duration} {unit}{suffix} ago";
-        }
     }
 }

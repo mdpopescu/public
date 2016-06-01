@@ -10,8 +10,21 @@ namespace SocialNetwork2.Library.Models
             var minutes = (int) Math.Truncate(ts.TotalMinutes);
             var seconds = (int) Math.Truncate(ts.TotalSeconds);
 
-            value = hours > 0 ? hours : minutes > 0 ? minutes : seconds;
-            unit = hours > 0 ? "hour" : minutes > 0 ? "minute" : "second";
+            if (hours > 0)
+            {
+                value = hours;
+                unit = "hour";
+            }
+            else if (minutes > 0)
+            {
+                value = minutes;
+                unit = "minute";
+            }
+            else
+            {
+                value = seconds;
+                unit = "second";
+            }
 
             suffix = value == 1 ? "" : "s";
         }
