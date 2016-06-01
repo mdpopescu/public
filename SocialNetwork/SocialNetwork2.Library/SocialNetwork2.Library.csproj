@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Implementations\Sys.cs" />
     <Compile Include="Implementations\User.cs" />
+    <Compile Include="Implementations\UserRepository.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
