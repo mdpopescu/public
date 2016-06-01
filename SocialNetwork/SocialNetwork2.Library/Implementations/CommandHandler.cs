@@ -19,9 +19,14 @@ namespace SocialNetwork2.Library.Implementations
                 var userName = command.Substring(0, index - 1);
                 var user = userRepository.CreateOrFind(userName);
                 user.Post(command.Substring(index + 3));
-            }
 
-            return Enumerable.Empty<string>();
+                return Enumerable.Empty<string>();
+            }
+            else
+            {
+                var user = userRepository.CreateOrFind(command);
+                return user.Read();
+            }
         }
 
         //

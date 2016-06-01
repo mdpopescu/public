@@ -28,5 +28,16 @@ namespace SocialNetwork2.Tests.Implementations
             Assert.AreEqual(1, messages.Count);
             Assert.IsTrue(messages[0].StartsWith("test"));
         }
+
+        [TestMethod]
+        public void ReadingReturnsMessagesFromTheUser()
+        {
+            sut.Handle("abc -> test");
+
+            var result = sut.Handle("abc").ToList();
+
+            Assert.AreEqual(1, result.Count);
+            Assert.IsTrue(result[0].StartsWith("test"));
+        }
     }
 }
