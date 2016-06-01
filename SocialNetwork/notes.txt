@@ -2,8 +2,8 @@
 Implement a console-based social networking application (similar to Twitter) satisfying the scenarios below.
 
 Scenarios
- Posting: Alice can publish messages to a personal timeline
-
+ Posting: Alice can publish messages to a personal timeline                           
+                                                                                                                      
 > Alice -> I love the weather today
 > Bob -> Damn! We lost!
 > Bob -> Good game though.
@@ -14,7 +14,7 @@ Scenarios
 I love the weather today (5 minutes ago)
 > Bob
 Good game though. (1 minute ago)
-Damn! We lost! (2 minutes ago)
+Damn! We lost! (2 minutes ago)                    
 
  Following: Charlie can subscribe to Alice’s and Bob’s timelines, and view an aggregated list of all subscriptions
 
