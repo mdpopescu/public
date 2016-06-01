@@ -63,5 +63,18 @@ namespace SocialNetwork2.Tests.Implementations
             Assert.AreEqual("def (5 seconds ago)", result[0]);
             Assert.AreEqual("abc (10 seconds ago)", result[1]);
         }
+
+        [TestMethod]
+        public void TheWallReturnsOwnMessagesPrefixedWithName()
+        {
+            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 5);
+            sut.Post("test");
+
+            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 10);
+            var result = sut.Wall().ToList();
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("abc - test (5 seconds ago)", result[0]);
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace SocialNetwork2.Library.Implementations
     {
         public User(string userName)
         {
-            //
+            this.userName = userName;
         }
 
         public void Post(string message)
@@ -28,11 +28,13 @@ namespace SocialNetwork2.Library.Implementations
 
         public IEnumerable<string> Wall()
         {
-            return Enumerable.Empty<string>();
+            return messages.Select(it => userName + " - " + it.ToString());
         }
 
         //
 
         private readonly Stack<Message> messages = new Stack<Message>();
+
+        private readonly string userName;
     }
 }
