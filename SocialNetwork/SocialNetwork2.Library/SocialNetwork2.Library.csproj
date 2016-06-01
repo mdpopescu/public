@@ -53,6 +53,7 @@
     <Compile Include="Interfaces\IUserRepository.cs" />
     <Compile Include="Models\Duration.cs" />
     <Compile Include="Models\Message.cs" />
+    <Compile Include="Models\ParsedInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
