@@ -13,7 +13,7 @@ namespace SocialNetwork2.Library.Implementations
 
         public void Post(string message)
         {
-            messages.Add(new Message(message));
+            messages.Push(new Message(message));
         }
 
         public IEnumerable<string> Read()
@@ -33,6 +33,6 @@ namespace SocialNetwork2.Library.Implementations
 
         //
 
-        private readonly List<Message> messages = new List<Message>();
+        private readonly Stack<Message> messages = new Stack<Message>();
     }
 }

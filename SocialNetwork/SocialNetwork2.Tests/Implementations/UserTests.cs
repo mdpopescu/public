@@ -47,5 +47,21 @@ namespace SocialNetwork2.Tests.Implementations
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual("test (5 seconds ago)", result[0]);
         }
+
+        [TestMethod]
+        public void TheMessagesAreReturnedInReverseOrder()
+        {
+            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 5);
+            sut.Post("abc");
+            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 10);
+            sut.Post("def");
+
+            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 15);
+            var result = sut.Read().ToList();
+
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("def (5 seconds ago)", result[0]);
+            Assert.AreEqual("abc (10 seconds ago)", result[1]);
+        }
     }
 }
