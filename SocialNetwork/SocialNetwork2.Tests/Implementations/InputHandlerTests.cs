@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using SocialNetwork2.Library.Implementations;
+using SocialNetwork2.Library.Interfaces;
 
 namespace SocialNetwork2.Tests.Implementations
 {
@@ -15,8 +17,9 @@ namespace SocialNetwork2.Tests.Implementations
         [TestInitialize]
         public void SetUp()
         {
-            userRepository = new UserRepository();
-            sut = new InputHandler(userRepository);
+            userRepository = new UserRepository(name => new User(name));
+            var handler = new Mock<IHandler>();
+            sut = new InputHandler(userRepository, new[] { handler.Object });
         }
 
         [TestMethod]

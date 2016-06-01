@@ -11,7 +11,7 @@ namespace SocialNetwork2.Tests.Implementations
         [TestInitialize]
         public void SetUp()
         {
-            sut = new UserRepository();
+            sut = new UserRepository(name => new User(name));
         }
 
         [TestMethod]

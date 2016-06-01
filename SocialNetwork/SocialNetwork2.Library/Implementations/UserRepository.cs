@@ -1,16 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SocialNetwork2.Library.Interfaces;
 
 namespace SocialNetwork2.Library.Implementations
 {
     public class UserRepository : IUserRepository
     {
-        public User CreateOrFind(string userName)
+        public UserRepository(Func<string, IUser> userFactory)
         {
-            User user;
+            this.userFactory = userFactory;
+        }
+
+        public IUser CreateOrFind(string userName)
+        {
+            IUser user;
             if (!users.TryGetValue(userName, out user))
             {
-                user = new User(userName);
+                user = userFactory.Invoke(userName);
                 users.Add(userName, user);
             }
 
@@ -19,6 +25,8 @@ namespace SocialNetwork2.Library.Implementations
 
         //
 
-        private readonly Dictionary<string, User> users = new Dictionary<string, User>();
+        private readonly Dictionary<string, IUser> users = new Dictionary<string, IUser>();
+
+        private readonly Func<string, IUser> userFactory;
     }
 }

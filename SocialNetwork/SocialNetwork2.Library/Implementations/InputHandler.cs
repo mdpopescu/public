@@ -6,9 +6,10 @@ namespace SocialNetwork2.Library.Implementations
 {
     public class InputHandler
     {
-        public InputHandler(IUserRepository userRepository)
+        public InputHandler(IUserRepository userRepository, IEnumerable<IHandler> handlers)
         {
             this.userRepository = userRepository;
+            this.handlers = handlers;
         }
 
         public IEnumerable<string> Handle(string input)
@@ -45,5 +46,6 @@ namespace SocialNetwork2.Library.Implementations
         //
 
         private readonly IUserRepository userRepository;
+        private IEnumerable<IHandler> handlers;
     }
 }

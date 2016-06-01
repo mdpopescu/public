@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using SocialNetwork2.Library.Implementations;
+using SocialNetwork2.Library.Implementations.Handlers;
+using SocialNetwork2.Library.Interfaces;
 
 namespace SocialNetwork2
 {
@@ -7,8 +10,15 @@ namespace SocialNetwork2
     {
         private static void Main(string[] args)
         {
-            var userRepository = new UserRepository();
-            var commandHandler = new InputHandler(userRepository);
+            var userRepository = new UserRepository(name => new User(name));
+            var knownCommands = new List<IHandler>
+            {
+                new ReadHandler(),
+                new PostHandler(),
+                new FollowsHandler(userRepository),
+                new WallHandler(),
+            };
+            var commandHandler = new InputHandler(userRepository, knownCommands);
 
             Console.WriteLine("Social Network");
             Console.WriteLine();

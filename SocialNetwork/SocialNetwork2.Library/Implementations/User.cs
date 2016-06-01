@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SocialNetwork2.Library.Interfaces;
 using SocialNetwork2.Library.Models;
 
 namespace SocialNetwork2.Library.Implementations
 {
-    public class User
+    public class User : IUser
     {
         public User(string userName)
         {
@@ -21,9 +22,9 @@ namespace SocialNetwork2.Library.Implementations
             return messages.Select(it => it.ToString());
         }
 
-        public void Follow(User otherUser)
+        public void Follow(IUser otherUser)
         {
-            followedUsers.Add(otherUser);
+            followedUsers.Add((User) otherUser);
         }
 
         public IEnumerable<string> Wall()
