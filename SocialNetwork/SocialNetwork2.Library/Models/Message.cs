@@ -24,9 +24,15 @@ namespace SocialNetwork2.Library.Models
 
         private static string Formatted(TimeSpan ts)
         {
-            var duration = (int) Math.Truncate(ts.TotalSeconds);
+            var minutes = (int) Math.Truncate(ts.TotalMinutes);
+            var seconds = (int) Math.Truncate(ts.TotalSeconds);
+
+            var duration = minutes > 0 ? minutes : seconds;
+            var unit = minutes > 0 ? "minute" : "second";
+
             var suffix = duration == 1 ? "" : "s";
-            return $"{duration} second{suffix} ago";
+
+            return $"{duration} {unit}{suffix} ago";
         }
     }
 }
