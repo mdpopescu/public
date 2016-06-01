@@ -8,7 +8,7 @@ namespace SocialNetwork2
         private static void Main(string[] args)
         {
             var userRepository = new UserRepository();
-            var commandHandler = new CommandHandler(userRepository);
+            var commandHandler = new InputHandler(userRepository);
 
             Console.WriteLine("Social Network");
             Console.WriteLine();

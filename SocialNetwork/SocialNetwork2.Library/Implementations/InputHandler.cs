@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SocialNetwork2.Library.Interfaces;
 
 namespace SocialNetwork2.Library.Implementations
 {
-    public class CommandHandler
+    public class InputHandler
     {
-        public CommandHandler(UserRepository userRepository)
+        public InputHandler(IUserRepository userRepository)
         {
             this.userRepository = userRepository;
         }
@@ -43,6 +44,6 @@ namespace SocialNetwork2.Library.Implementations
 
         //
 
-        private readonly UserRepository userRepository;
+        private readonly IUserRepository userRepository;
     }
 }

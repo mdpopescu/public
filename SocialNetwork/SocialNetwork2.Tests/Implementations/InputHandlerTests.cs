@@ -6,17 +6,17 @@ using SocialNetwork2.Library.Implementations;
 namespace SocialNetwork2.Tests.Implementations
 {
     [TestClass]
-    public class CommandHandlerTests
+    public class InputHandlerTests
     {
         private UserRepository userRepository;
 
-        private CommandHandler sut;
+        private InputHandler sut;
 
         [TestInitialize]
         public void SetUp()
         {
             userRepository = new UserRepository();
-            sut = new CommandHandler(userRepository);
+            sut = new InputHandler(userRepository);
         }
 
         [TestMethod]

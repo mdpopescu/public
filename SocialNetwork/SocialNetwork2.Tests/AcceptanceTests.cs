@@ -65,7 +65,7 @@ namespace SocialNetwork2.Tests
         [TestMethod]
         public void UsingTheCommandHandler()
         {
-            var handler = new CommandHandler(userRepository);
+            var handler = new InputHandler(userRepository);
 
             // posting
             Sys.Time = () => new DateTime(2000, 1, 1, 10, 0, 0);

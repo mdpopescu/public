@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using SocialNetwork2.Library.Interfaces;
 
 namespace SocialNetwork2.Library.Implementations
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         public User CreateOrFind(string userName)
         {
