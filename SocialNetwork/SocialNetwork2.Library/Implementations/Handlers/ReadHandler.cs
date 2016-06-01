@@ -7,7 +7,7 @@ namespace SocialNetwork2.Library.Implementations.Handlers
     {
         public string KnownCommand => "";
 
-        public IEnumerable<string> Handle(IUser user, string[] restOfInput)
+        public IEnumerable<string> Handle(IUser user, string restOfInput)
         {
             return user.Read();
         }

@@ -59,6 +59,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AcceptanceTests.cs" />
+    <Compile Include="Implementations\Handlers\FollowsHandlerTests.cs" />
+    <Compile Include="Implementations\Handlers\PostHandlerTests.cs" />
+    <Compile Include="Implementations\Handlers\ReadHandlerTests.cs" />
+    <Compile Include="Implementations\Handlers\WallHandlerTests.cs" />
     <Compile Include="Implementations\InputHandlerTests.cs" />
     <Compile Include="Implementations\UserRepositoryTests.cs" />
     <Compile Include="Implementations\UserTests.cs" />
@@ -75,6 +79,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

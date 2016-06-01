@@ -6,6 +6,6 @@ namespace SocialNetwork2.Library.Interfaces
     {
         string KnownCommand { get; }
 
-        IEnumerable<string> Handle(IUser user, string[] restOfInput);
+        IEnumerable<string> Handle(IUser user, string restOfInput);
     }
 }

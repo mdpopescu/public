@@ -8,9 +8,9 @@ namespace SocialNetwork2.Library.Implementations.Handlers
     {
         public string KnownCommand => "->";
 
-        public IEnumerable<string> Handle(IUser user, string[] restOfInput)
+        public IEnumerable<string> Handle(IUser user, string restOfInput)
         {
-            user.Post(string.Join(" ", restOfInput.Skip(2)));
+            user.Post(restOfInput);
             return Enumerable.Empty<string>();
         }
     }
