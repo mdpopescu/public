@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SocialNetwork2.Library.Interfaces;
 
@@ -19,33 +20,28 @@ namespace SocialNetwork2.Library.Implementations
             var userName = parts[0];
             var user = userRepository.CreateOrFind(userName);
 
-            var command = parts.Length == 1 ? "" : parts[1];
-            switch (command)
+            string command, restOfInput;
+            if (parts.Length == 1)
             {
-                case "":
-                    return user.Read();
-
-                case "->":
-                    user.Post(string.Join(" ", parts.Skip(2)));
-                    return Enumerable.Empty<string>();
-
-                case "wall":
-                    return user.Wall();
-
-                case "follows":
-                    var otherUserName = parts[2];
-                    var otherUser = userRepository.CreateOrFind(otherUserName);
-
-                    user.Follow(otherUser);
-                    return Enumerable.Empty<string>();
+                command = "";
+                restOfInput = input;
+            }
+            else
+            {
+                command = parts[1];
+                restOfInput = string.Join(" ", parts.Skip(2));
             }
 
-            return Enumerable.Empty<string>();
+            var result = handlers
+                .Where(it => string.Compare(command, it.KnownCommand, StringComparison.OrdinalIgnoreCase) == 0)
+                .Select(it => it.Handle(user, restOfInput))
+                .FirstOrDefault();
+            return result ?? Enumerable.Empty<string>();
         }
 
         //
 
         private readonly IUserRepository userRepository;
-        private IEnumerable<IHandler> handlers;
+        private readonly IEnumerable<IHandler> handlers;
     }
 }

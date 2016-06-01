@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using SocialNetwork2.Library.Implementations;
@@ -10,66 +9,94 @@ namespace SocialNetwork2.Tests.Implementations
     [TestClass]
     public class InputHandlerTests
     {
-        private UserRepository userRepository;
+        private Mock<IUserRepository> userRepository;
+        private Mock<IHandler> handler1;
+        private Mock<IHandler> handler2;
 
         private InputHandler sut;
 
         [TestInitialize]
         public void SetUp()
         {
-            userRepository = new UserRepository(name => new User(name));
-            var handler = new Mock<IHandler>();
-            sut = new InputHandler(userRepository, new[] { handler.Object });
+            userRepository = new Mock<IUserRepository>();
+            handler1 = new Mock<IHandler>();
+            handler2 = new Mock<IHandler>();
+            sut = new InputHandler(userRepository.Object, new[] { handler1.Object, handler2.Object });
         }
 
         [TestMethod]
-        public void PostingAddsMessagesToUser()
+        public void AsksEachHandlerForTheCommandItKnows()
         {
-            sut.Handle("abc -> test");
+            sut.Handle("stuff");
 
-            var user = userRepository.CreateOrFind("abc");
-            var messages = user.Read().ToList();
-            Assert.AreEqual(1, messages.Count);
-            Assert.IsTrue(messages[0].StartsWith("test"));
+            handler1.Verify(it => it.KnownCommand);
+            handler2.Verify(it => it.KnownCommand);
         }
 
         [TestMethod]
-        public void ReadingReturnsMessagesFromTheUser()
+        public void RetrievesTheUserBasedOnTheFirstPartOfTheInput()
         {
-            sut.Handle("abc -> test");
+            sut.Handle("abc def ghi");
 
-            var result = sut.Handle("abc").ToList();
-
-            Assert.AreEqual(1, result.Count);
-            Assert.IsTrue(result[0].StartsWith("test"));
+            userRepository.Verify(it => it.CreateOrFind("abc"));
         }
 
         [TestMethod]
-        public void ReturnsMessagesFromTheUserWall()
+        public void InvokesTheHandlerMatchingTheCommandInTheSecondPosition()
         {
-            sut.Handle("abc -> test");
+            handler1
+                .Setup(it => it.KnownCommand)
+                .Returns("def");
 
-            var result = sut.Handle("abc wall").ToList();
+            sut.Handle("abc def ghi");
 
-            Assert.AreEqual(1, result.Count);
-            Assert.IsTrue(result[0].StartsWith("abc - test"));
+            handler1.Verify(it => it.Handle(It.IsAny<IUser>(), It.IsAny<string>()));
         }
 
         [TestMethod]
-        public void FollowsOtherUsers()
+        public void DoesNotInvokeHandlersThatDoNotMatchTheCommand()
         {
-            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 5);
-            sut.Handle("abc -> test1");
-            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 6);
-            sut.Handle("def -> test2");
+            handler1
+                .Setup(it => it.KnownCommand)
+                .Returns("def");
+            handler2
+                .Setup(it => it.KnownCommand)
+                .Returns("zzz");
 
-            sut.Handle("abc follows def");
+            sut.Handle("abc def ghi");
 
-            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 10);
-            var result = sut.Handle("abc wall").ToList();
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual("def - test2 (4 seconds ago)", result[0]);
-            Assert.AreEqual("abc - test1 (5 seconds ago)", result[1]);
+            handler2.Verify(it => it.Handle(It.IsAny<IUser>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [TestMethod]
+        public void OnlyInvokesTheFirstMatchingHandler()
+        {
+            handler1
+                .Setup(it => it.KnownCommand)
+                .Returns("def");
+            handler2
+                .Setup(it => it.KnownCommand)
+                .Returns("def");
+
+            sut.Handle("abc def ghi");
+
+            handler2.Verify(it => it.Handle(It.IsAny<IUser>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [TestMethod]
+        public void ReturnsTheResultOfTheInvokedHandler()
+        {
+            handler1
+                .Setup(it => it.KnownCommand)
+                .Returns("def");
+            var list = new[] { "zzz" };
+            handler1
+                .Setup(it => it.Handle(It.IsAny<User>(), "ghi"))
+                .Returns(list);
+
+            var result = sut.Handle("abc def ghi").ToList();
+
+            CollectionAssert.AreEqual(list, result);
         }
     }
 }
