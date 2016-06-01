@@ -30,11 +30,22 @@ namespace SocialNetwork2.Library.Implementations
                 var user = userRepository.CreateOrFind(userName);
                 return user.Wall();
             }
-            else
+
+            index = command.IndexOf("follows", StringComparison.OrdinalIgnoreCase);
+            if (index < 0)
             {
                 var user = userRepository.CreateOrFind(command);
                 return user.Read();
             }
+
+            var userName1 = command.Substring(0, index - 1);
+            var user1 = userRepository.CreateOrFind(userName1);
+
+            var userName2 = command.Substring(index + 8);
+            var user2 = userRepository.CreateOrFind(userName2);
+
+            user1.Follow(user2);
+            return Enumerable.Empty<string>();
         }
 
         //
