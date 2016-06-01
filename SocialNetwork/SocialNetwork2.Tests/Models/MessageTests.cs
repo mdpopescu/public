@@ -43,5 +43,17 @@ namespace SocialNetwork2.Tests.Models
 
             Assert.AreEqual("abc (2 minutes ago)", result);
         }
+
+        [TestMethod]
+        public void ReturnsMessagePlusElapsedTimeInHours()
+        {
+            Sys.Time = () => new DateTime(2000, 1, 2, 3, 4, 5);
+            var sut = new Message("abc");
+
+            Sys.Time = () => new DateTime(2000, 1, 2, 5, 4, 5);
+            var result = sut.ToString();
+
+            Assert.AreEqual("abc (2 hours ago)", result);
+        }
     }
 }

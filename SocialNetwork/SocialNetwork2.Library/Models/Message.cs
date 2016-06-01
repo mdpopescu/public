@@ -24,11 +24,12 @@ namespace SocialNetwork2.Library.Models
 
         private static string Formatted(TimeSpan ts)
         {
+            var hours = (int) Math.Truncate(ts.TotalHours);
             var minutes = (int) Math.Truncate(ts.TotalMinutes);
             var seconds = (int) Math.Truncate(ts.TotalSeconds);
 
-            var duration = minutes > 0 ? minutes : seconds;
-            var unit = minutes > 0 ? "minute" : "second";
+            var duration = hours > 0 ? hours : minutes > 0 ? minutes : seconds;
+            var unit = hours > 0 ? "hour" : minutes > 0 ? "minute" : "second";
 
             var suffix = duration == 1 ? "" : "s";
 
