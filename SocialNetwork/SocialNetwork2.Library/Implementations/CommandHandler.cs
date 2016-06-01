@@ -22,6 +22,14 @@ namespace SocialNetwork2.Library.Implementations
 
                 return Enumerable.Empty<string>();
             }
+
+            index = command.IndexOf("wall", StringComparison.OrdinalIgnoreCase);
+            if (index >= 0 && index == command.Length - 4)
+            {
+                var userName = command.Substring(0, index - 1);
+                var user = userRepository.CreateOrFind(userName);
+                return user.Wall();
+            }
             else
             {
                 var user = userRepository.CreateOrFind(command);
