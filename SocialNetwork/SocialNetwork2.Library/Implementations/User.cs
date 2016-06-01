@@ -12,12 +12,12 @@ namespace SocialNetwork2.Library.Implementations
 
         public void Post(string message)
         {
-            //
+            messages.Add(message);
         }
 
         public IEnumerable<string> Read()
         {
-            return Enumerable.Empty<string>();
+            return messages.AsEnumerable();
         }
 
         public void Follow(string otherUser)
@@ -29,5 +29,9 @@ namespace SocialNetwork2.Library.Implementations
         {
             return Enumerable.Empty<string>();
         }
+
+        //
+
+        private readonly List<string> messages = new List<string>();
     }
 }
