@@ -61,6 +61,7 @@
     <Compile Include="AcceptanceTests.cs" />
     <Compile Include="Implementations\UserRepositoryTests.cs" />
     <Compile Include="Implementations\UserTests.cs" />
+    <Compile Include="Models\MessageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
