@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SocialNetwork2.Library.Models;
 
 namespace SocialNetwork2.Library.Implementations
 {
@@ -12,12 +13,12 @@ namespace SocialNetwork2.Library.Implementations
 
         public void Post(string message)
         {
-            messages.Add(message);
+            messages.Add(new Message(message));
         }
 
         public IEnumerable<string> Read()
         {
-            return messages.AsEnumerable();
+            return messages.Select(it => it.ToString());
         }
 
         public void Follow(string otherUser)
@@ -32,6 +33,6 @@ namespace SocialNetwork2.Library.Implementations
 
         //
 
-        private readonly List<string> messages = new List<string>();
+        private readonly List<Message> messages = new List<Message>();
     }
 }
