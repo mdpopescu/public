@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 using WebScraping.Library.Interfaces;
 
 namespace WebScraping.Library.Implementations.StmtComp
@@ -7,10 +8,7 @@ namespace WebScraping.Library.Implementations.StmtComp
     {
         public bool CanHandle(string[] statement)
         {
-            if (statement == null)
-                throw new ArgumentNullException(nameof(statement));
-
-            if (statement.Length == 0)
+            if (statement == null || statement.Length == 0)
                 return false;
 
             var line = statement[0];
@@ -20,6 +18,8 @@ namespace WebScraping.Library.Implementations.StmtComp
 
         public string[] Compile(string[] statement)
         {
+            Contract.Requires(statement != null && statement.Length > 0);
+
             var line = statement[0];
 
             var expr = line.Substring(6).Replace("'", "\"");

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebScraping.Library.Implementations.StmtComp;
 
 namespace WebScraping.Tests.Implementations.StmtComp
@@ -19,10 +18,11 @@ namespace WebScraping.Tests.Implementations.StmtComp
         public class CanHandle : PrintCompilerTests
         {
             [TestMethod]
-            [ExpectedException(typeof(ArgumentNullException))]
-            public void ThrowsForNullArgument()
+            public void ReturnsFalseForNullArgument()
             {
-                sut.CanHandle(null);
+                var result = sut.CanHandle(null);
+
+                Assert.IsFalse(result);
             }
 
             [TestMethod]
