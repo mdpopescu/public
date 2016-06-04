@@ -36,6 +36,9 @@ connectionStrings*.config
 *.DotSettings
 *.jtconfig
 
+# Private settings
+privateSettings.config
+
 # Azure folders
 csx/
 rcf/

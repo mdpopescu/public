@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TweetNicer.Library", "TweetNicer.Library\TweetNicer.Library.csproj", "{265422F4-8C97-4D82-BED8-98E32402EF51}"
 EndProject
@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		notes.txt = notes.txt
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TweetNicer.Spike", "TweetNicer.Spike\TweetNicer.Spike.csproj", "{396E5DE2-C5B2-4C2D-91AF-9D30C326E721}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{FE9C5407-6D6A-47A4-8E77-C883E5D2F9B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE9C5407-6D6A-47A4-8E77-C883E5D2F9B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE9C5407-6D6A-47A4-8E77-C883E5D2F9B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{396E5DE2-C5B2-4C2D-91AF-9D30C326E721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{396E5DE2-C5B2-4C2D-91AF-9D30C326E721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{396E5DE2-C5B2-4C2D-91AF-9D30C326E721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{396E5DE2-C5B2-4C2D-91AF-9D30C326E721}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
