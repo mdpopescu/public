@@ -30,7 +30,7 @@ namespace TweetNicer.Spike
 
             using (tokens
                 .Streaming
-                .FilterAsObservable(track => "hearthstone")
+                .FilterAsObservable(track => "football")
                 .OfType<StatusMessage>()
                 .Subscribe(msg => Console.WriteLine(Align(msg.Status.User.ScreenName + ": ", msg.Status.Text))))
             {
@@ -44,22 +44,12 @@ namespace TweetNicer.Spike
             Debug.Assert(text != null);
             Debug.Assert(length > prefix.Length);
 
-            var prefixLength = prefix.Length;
+            var all = prefix + text;
 
-            var sb = new StringBuilder();
-
-            do
-            {
-                var limit = Math.Min(text.Length, length - prefixLength);
-
-                var current = text.Substring(0, limit);
-                sb.Append(prefix + current);
-
-                prefix = new string(' ', prefixLength);
-                text = text.Substring(limit);
-            } while (text != "");
-
-            return sb.ToString();
+            return all.Length <= length
+                ? all
+                : all.Substring(0, length) +
+                  Align(new string(' ', prefix.Length), all.Substring(length), length);
         }
     }
 }
