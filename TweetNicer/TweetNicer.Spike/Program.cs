@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.Reactive.Linq;
-using System.Threading;
+using System.Text;
 using CoreTweet;
 using CoreTweet.Streaming;
 
@@ -21,25 +22,44 @@ namespace TweetNicer.Spike
                 AccessTokenSecret = settings["AccessTokenSecret"],
             };
 
-            //if (string.IsNullOrEmpty(Settings.Default.TwitterPin))
-            //{
-            //    var session = OAuth.Authorize(settings["ConsumerKey"], settings["ConsumerSecret"]);
-            //    Process.Start(session.AuthorizeUri.AbsoluteUri);
-            //    Console.Write("Enter PIN: ");
-            //    Settings.Default.TwitterPin = Console.ReadLine();
-            //    Settings.Default.Save();
-            //}
-
-            //var tokens = session.GetTokens(Settings.Default.TwitterPin);
+            //var session = OAuth.Authorize(settings["ConsumerKey"], settings["ConsumerSecret"]);
+            //Process.Start(session.AuthorizeUri.AbsoluteUri);
+            //Console.Write("Enter PIN: ");
+            //var pin = Console.ReadLine();
+            //var tokens = session.GetTokens(pin);
 
             using (tokens
                 .Streaming
-                .FilterAsObservable(track => "football")
+                .FilterAsObservable(track => "hearthstone")
                 .OfType<StatusMessage>()
-                .Subscribe(x => Console.WriteLine($"{x.Status.User.ScreenName} says about football: {x.Status.Text}")))
+                .Subscribe(msg => Console.WriteLine(Align(msg.Status.User.ScreenName + ": ", msg.Status.Text))))
             {
-                Thread.Sleep(10 * 1000);
+                Console.ReadLine();
             }
+        }
+
+        private static string Align(string prefix, string text, int length = 80)
+        {
+            Debug.Assert(prefix != null);
+            Debug.Assert(text != null);
+            Debug.Assert(length > prefix.Length);
+
+            var prefixLength = prefix.Length;
+
+            var sb = new StringBuilder();
+
+            do
+            {
+                var limit = Math.Min(text.Length, length - prefixLength);
+
+                var current = text.Substring(0, limit);
+                sb.Append(prefix + current);
+
+                prefix = new string(' ', prefixLength);
+                text = text.Substring(limit);
+            } while (text != "");
+
+            return sb.ToString();
         }
     }
 }
