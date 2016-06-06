@@ -55,12 +55,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Implementations\FileSettings.cs" />
     <Compile Include="Implementations\InMemorySettings.cs" />
+    <Compile Include="Implementations\SettingsSerializer.cs" />
     <Compile Include="Implementations\WindowsDataProtector.cs" />
     <Compile Include="Implementations\WindowsFileSystem.cs" />
     <Compile Include="Implementations\WindowsSecureStorage.cs" />
     <Compile Include="Interfaces\FileSystem.cs" />
+    <Compile Include="Interfaces\SecureSettings.cs" />
     <Compile Include="Interfaces\SecureStorage.cs" />
+    <Compile Include="Interfaces\Serializer.cs" />
     <Compile Include="Interfaces\Settings.cs" />
     <Compile Include="Interfaces\DataProtectorAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
