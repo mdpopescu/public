@@ -37,7 +37,7 @@ connectionStrings*.config
 *.jtconfig
 
 # Private settings
-privateSettings.config
+private*.config
 
 # Azure folders
 csx/
