@@ -16,26 +16,26 @@ namespace TweetNicer.Spike
 
             var tokens = GetTokens(settings["ConsumerKey"], settings["ConsumerSecret"]);
 
-            var stream = tokens.Streaming.UserAsObservable().Publish();
+            //var stream = tokens.Streaming.UserAsObservable().Publish();
 
-            //stream.OfType<FriendsMessage>()
-            //    .Subscribe(x => Console.WriteLine("Following: " + string.Join(", ", x)));
+            ////stream.OfType<FriendsMessage>()
+            ////    .Subscribe(x => Console.WriteLine("Following: " + string.Join(", ", x)));
 
-            stream.OfType<StatusMessage>()
-                .Subscribe(x => Console.WriteLine(Align(x.Status.User.ScreenName + ": ", x.Status.Text)));
+            //stream.OfType<StatusMessage>()
+            //    .Subscribe(x => Console.WriteLine(Align(x.Status.User.ScreenName + ": ", x.Status.Text)));
 
-            using (stream.Connect())
-                Console.ReadLine();
-
-            //var stream = tokens
-            //    .Streaming
-            //    .FilterAsObservable(track => "football")
-            //    .OfType<StatusMessage>();
-
-            //using (stream.Subscribe(msg => Console.WriteLine(Align(msg.Status.User.ScreenName + ": ", msg.Status.Text))))
-            //{
+            //using (stream.Connect())
             //    Console.ReadLine();
-            //}
+
+            var stream = tokens
+                .Streaming
+                .FilterAsObservable(track => "football")
+                .OfType<StatusMessage>();
+
+            using (stream.Subscribe(msg => Console.WriteLine(Align(msg.Status.User.ScreenName + ": ", msg.Status.Text))))
+            {
+                Console.ReadLine();
+            }
         }
 
         private static Tokens GetTokens(string consumerKey, string consumerSecret)

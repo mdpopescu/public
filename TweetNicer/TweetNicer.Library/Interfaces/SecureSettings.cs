@@ -1,11 +1,11 @@
 ﻿namespace TweetNicer.Library.Interfaces
 {
-    public interface SecureSettings
+    public interface SecureSettings<in T>
     {
-        Settings LoadUserSettings(string path);
-        Settings LoadMachineSettings(string path, string password);
+        Settings LoadUserSettings(T source);
+        Settings LoadMachineSettings(T source, string password);
 
-        void SaveUserSettings(string path, Settings settings);
-        void SaveMachineSettings(string path, string password, Settings settings);
+        void SaveUserSettings(T destination, Settings settings);
+        void SaveMachineSettings(T destination, string password, Settings settings);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace TweetNicer.Library.Implementations
 {
-    public class FileSettings : SecureSettings
+    public class FileSettings : SecureSettings<string>
     {
         public FileSettings(SecureStorage storage, Serializer<Settings> serializer)
         {
@@ -10,24 +10,24 @@ namespace TweetNicer.Library.Implementations
             this.serializer = serializer;
         }
 
-        public Settings LoadUserSettings(string path)
+        public Settings LoadUserSettings(string source)
         {
-            return serializer.Deserialize(storage.LoadUserData(path));
+            return serializer.Deserialize(storage.LoadUserData(source));
         }
 
-        public Settings LoadMachineSettings(string path, string password)
+        public Settings LoadMachineSettings(string source, string password)
         {
-            return serializer.Deserialize(storage.LoadMachineData(path, password));
+            return serializer.Deserialize(storage.LoadMachineData(source, password));
         }
 
-        public void SaveUserSettings(string path, Settings settings)
+        public void SaveUserSettings(string destination, Settings settings)
         {
-            storage.SaveUserData(path, serializer.Serialize(settings));
+            storage.SaveUserData(destination, serializer.Serialize(settings));
         }
 
-        public void SaveMachineSettings(string path, string password, Settings settings)
+        public void SaveMachineSettings(string destination, string password, Settings settings)
         {
-            storage.SaveMachineData(path, password, serializer.Serialize(settings));
+            storage.SaveMachineData(destination, password, serializer.Serialize(settings));
         }
 
         //
