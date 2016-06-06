@@ -46,6 +46,7 @@
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,7 +56,13 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Implementations\InMemorySettings.cs" />
+    <Compile Include="Implementations\WindowsDataProtector.cs" />
+    <Compile Include="Implementations\WindowsFileSystem.cs" />
+    <Compile Include="Implementations\WindowsSecureStorage.cs" />
+    <Compile Include="Interfaces\FileSystem.cs" />
+    <Compile Include="Interfaces\SecureStorage.cs" />
     <Compile Include="Interfaces\Settings.cs" />
+    <Compile Include="Interfaces\DataProtectorAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
