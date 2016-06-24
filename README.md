@@ -63,6 +63,8 @@ Public repository - CC-by-SA 3.0
 
 * SlotMachine: a slot machine
 
+* Snake: a snake game written in an event-driven fashion
+
 * SocialClone: a FB-like site
 
 * SocialNetwork: what the name says; written for a job interview.
