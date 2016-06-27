@@ -15,8 +15,11 @@ namespace CQRS.Library
     public static void Send(string name, params object[] args)
     {
       HashSet<object> list;
-      if (!subscriptions.TryGetValue(name, out list))
-        return;
+      lock (subscriptionsLock)
+      {
+        if (!subscriptions.TryGetValue(name, out list))
+          return;
+      }
 
       foreach (var target in list)
         Send(target, name, args);
