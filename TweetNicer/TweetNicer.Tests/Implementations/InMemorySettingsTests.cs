@@ -7,12 +7,12 @@ namespace TweetNicer.Tests.Implementations
     [TestClass]
     public class InMemorySettingsTests
     {
-        private InMemorySettings sut;
+        private DictionarySettings sut;
 
         [TestInitialize]
         public void SetUp()
         {
-            sut = new InMemorySettings();
+            sut = new DictionarySettings();
         }
 
         [TestMethod]

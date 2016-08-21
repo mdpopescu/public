@@ -4,7 +4,7 @@ using TweetNicer.Library.Interfaces;
 
 namespace TweetNicer.Library.Implementations
 {
-    public class InMemorySettings : Settings
+    public class DictionarySettings : Settings
     {
         public string this[string key]
         {

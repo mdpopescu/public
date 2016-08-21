@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.Reactive.Linq;
 using CoreTweet;
@@ -8,13 +7,16 @@ using TweetNicer.Library.Implementations;
 
 namespace TweetNicer.Spike
 {
-    class Program
+    internal class Program
     {
+        private const string PASSWORD = "{8E63B644-29FD-47E5-B1A6-1DBFE7F3DF42}";
+
         private static void Main(string[] args)
         {
-            var settings = ConfigurationManager.AppSettings;
+            var envStorage = new EnvironmentStorage(() => new DictionarySettings());
+            var consumerVars = envStorage.LoadUserSettings("TweetNicer.");
 
-            var tokens = GetTokens(settings["ConsumerKey"], settings["ConsumerSecret"]);
+            var tokens = GetTokens(consumerVars["ConsumerKey"], consumerVars["ConsumerSecret"]);
 
             //var stream = tokens.Streaming.UserAsObservable().Publish();
 
@@ -40,8 +42,8 @@ namespace TweetNicer.Spike
 
         private static Tokens GetTokens(string consumerKey, string consumerSecret)
         {
-            var storage = new WindowsSecureStorage(new WindowsFileSystem(), new WindowsDataProtector());
-            var userSettings = new FileSettings(storage, new SettingsSerializer(() => new InMemorySettings()));
+            var storage = new WindowsSecureStorage(new WindowsFileSystem(), new WindowsDataProtector(), PASSWORD);
+            var userSettings = new SerializedSettings(storage, new SettingsSerializer(() => new DictionarySettings()));
 
             try
             {
@@ -63,7 +65,7 @@ namespace TweetNicer.Spike
                 var pin = Console.ReadLine();
                 var tokens = session.GetTokens(pin);
 
-                var settings = new InMemorySettings
+                var settings = new DictionarySettings
                 {
                     ["AccessToken"] = tokens.AccessToken,
                     ["AccessTokenSecret"] = tokens.AccessTokenSecret,
