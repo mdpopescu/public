@@ -34,7 +34,7 @@ namespace TweetNicer.Spike
                 .FilterAsObservable(track => "football")
                 .OfType<StatusMessage>();
 
-            using (stream.Subscribe(msg => Console.WriteLine(Align(msg.Status.User.ScreenName + ": ", msg.Status.Text))))
+            using (stream.Subscribe(msg => Console.WriteLine(Align(msg.Status.User.ScreenName + ": ", msg.Status.Text, Console.WindowWidth))))
             {
                 Console.ReadLine();
             }
