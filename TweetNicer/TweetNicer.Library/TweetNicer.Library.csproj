@@ -56,15 +56,15 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Implementations\EnvironmentStorage.cs" />
-    <Compile Include="Implementations\SerializedSettings.cs" />
+    <Compile Include="Implementations\EncodedSettings.cs" />
     <Compile Include="Implementations\DictionarySettings.cs" />
-    <Compile Include="Implementations\SettingsSerializer.cs" />
+    <Compile Include="Implementations\SettingsEncoder.cs" />
     <Compile Include="Implementations\WindowsDataProtector.cs" />
     <Compile Include="Implementations\WindowsFileSystem.cs" />
     <Compile Include="Implementations\WindowsSecureStorage.cs" />
     <Compile Include="Interfaces\FileSystem.cs" />
-    <Compile Include="Interfaces\SettingsStorage.cs" />
-    <Compile Include="Interfaces\Serializer.cs" />
+    <Compile Include="Interfaces\Storage.cs" />
+    <Compile Include="Interfaces\Encoder.cs" />
     <Compile Include="Interfaces\Settings.cs" />
     <Compile Include="Interfaces\DataProtectorAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

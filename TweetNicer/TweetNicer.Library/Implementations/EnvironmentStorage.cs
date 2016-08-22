@@ -4,29 +4,29 @@ using TweetNicer.Library.Interfaces;
 
 namespace TweetNicer.Library.Implementations
 {
-    public class EnvironmentStorage : SettingsStorage<string, Settings>
+    public class EnvironmentStorage : Storage<string, Settings>
     {
         public EnvironmentStorage(Func<Settings> settingsFactory)
         {
             this.settingsFactory = settingsFactory;
         }
 
-        public Settings LoadUserSettings(string source)
+        public Settings LoadUserValues(string source)
         {
             return Load(source, EnvironmentVariableTarget.User);
         }
 
-        public Settings LoadMachineSettings(string source)
+        public Settings LoadMachineValues(string source)
         {
             return Load(source, EnvironmentVariableTarget.Machine);
         }
 
-        public void SaveUserSettings(string destination, Settings settings)
+        public void SaveUserValues(string destination, Settings settings)
         {
             Save(destination, settings, EnvironmentVariableTarget.User);
         }
 
-        public void SaveMachineSettings(string destination, Settings settings)
+        public void SaveMachineValues(string destination, Settings settings)
         {
             Save(destination, settings, EnvironmentVariableTarget.Machine);
         }

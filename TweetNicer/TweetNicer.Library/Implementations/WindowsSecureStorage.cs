@@ -2,7 +2,7 @@
 
 namespace TweetNicer.Library.Implementations
 {
-    public class WindowsSecureStorage : SettingsStorage<string, string>
+    public class WindowsSecureStorage : Storage<string, string>
     {
         public WindowsSecureStorage(FileSystem fs, DataProtectorAdapter protector, string password)
         {
@@ -11,22 +11,22 @@ namespace TweetNicer.Library.Implementations
             this.password = password;
         }
 
-        public string LoadUserSettings(string path)
+        public string LoadUserValues(string path)
         {
             return protector.DecryptForUser(fs.Load(path));
         }
 
-        public string LoadMachineSettings(string path)
+        public string LoadMachineValues(string path)
         {
             return protector.DecryptForMachine(fs.Load(path), password);
         }
 
-        public void SaveUserSettings(string path, string data)
+        public void SaveUserValues(string path, string data)
         {
             fs.Save(path, protector.EncryptForUser(data));
         }
 
-        public void SaveMachineSettings(string path, string settings)
+        public void SaveMachineValues(string path, string settings)
         {
             fs.Save(path, protector.EncryptForMachine(settings, password));
         }

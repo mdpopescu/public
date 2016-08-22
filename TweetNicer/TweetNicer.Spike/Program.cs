@@ -15,7 +15,7 @@ namespace TweetNicer.Spike
         private static void Main(string[] args)
         {
             var envStorage = new EnvironmentStorage(() => new DictionarySettings());
-            var consumerVars = envStorage.LoadUserSettings("TweetNicer.");
+            var consumerVars = envStorage.LoadUserValues("TweetNicer.");
 
             var tokens = GetTokens(consumerVars["ConsumerKey"], consumerVars["ConsumerSecret"]);
 
@@ -49,11 +49,11 @@ namespace TweetNicer.Spike
         private static Tokens GetTokens(string consumerKey, string consumerSecret)
         {
             var storage = new WindowsSecureStorage(new WindowsFileSystem(), new WindowsDataProtector(), PASSWORD);
-            var userSettings = new SerializedSettings(storage, new SettingsSerializer(() => new DictionarySettings()));
+            var userSettings = new EncodedSettings(storage, new SettingsEncoder(() => new DictionarySettings()));
 
             try
             {
-                var settings = userSettings.LoadUserSettings("user.settings");
+                var settings = userSettings.LoadUserValues("user.settings");
 
                 return new Tokens
                 {
@@ -76,7 +76,7 @@ namespace TweetNicer.Spike
                     ["AccessToken"] = tokens.AccessToken,
                     ["AccessTokenSecret"] = tokens.AccessTokenSecret,
                 };
-                userSettings.SaveUserSettings("user.settings", settings);
+                userSettings.SaveUserValues("user.settings", settings);
 
                 return tokens;
             }

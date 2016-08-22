@@ -4,14 +4,14 @@ using TweetNicer.Library.Interfaces;
 
 namespace TweetNicer.Library.Implementations
 {
-    public class SettingsSerializer : Serializer<Settings>
+    public class SettingsEncoder : Encoder<string, Settings>
     {
-        public SettingsSerializer(Func<Settings> settingsFactory)
+        public SettingsEncoder(Func<Settings> settingsFactory)
         {
             this.settingsFactory = settingsFactory;
         }
 
-        public string Serialize(Settings value)
+        public string Encode(Settings value)
         {
             var doc = new XDocument(new XElement("settings"));
 
@@ -28,7 +28,7 @@ namespace TweetNicer.Library.Implementations
             return doc.ToString();
         }
 
-        public Settings Deserialize(string data)
+        public Settings Decode(string data)
         {
             var result = settingsFactory.Invoke();
 
