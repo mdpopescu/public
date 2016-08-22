@@ -5,7 +5,7 @@ using TweetNicer.Library.Implementations;
 namespace TweetNicer.Tests.Implementations
 {
     [TestClass]
-    public class InMemorySettingsTests
+    public class DictionarySettingsTests
     {
         private DictionarySettings sut;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Linq;
 using CoreTweet;
 using CoreTweet.Streaming;
@@ -29,9 +30,14 @@ namespace TweetNicer.Spike
             //using (stream.Connect())
             //    Console.ReadLine();
 
+            //var stream = tokens
+            //    .Streaming
+            //    .FilterAsObservable(track => "football")
+            //    .OfType<StatusMessage>();
+
             var stream = tokens
                 .Streaming
-                .FilterAsObservable(track => "football")
+                .UserAsObservable()
                 .OfType<StatusMessage>();
 
             using (stream.Subscribe(msg => Console.WriteLine(Align(msg.Status.User.ScreenName + ": ", msg.Status.Text, Console.WindowWidth))))
