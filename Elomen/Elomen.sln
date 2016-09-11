@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elomen.Library", "Elomen.Library\Elomen.Library.csproj", "{77836C27-53F9-4D1F-9683-C4F91C2FF963}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elomen.Tests", "Elomen.Tests\Elomen.Tests.csproj", "{C3465F73-1741-4844-9AD9-B17F468BD855}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77836C27-53F9-4D1F-9683-C4F91C2FF963}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77836C27-53F9-4D1F-9683-C4F91C2FF963}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77836C27-53F9-4D1F-9683-C4F91C2FF963}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77836C27-53F9-4D1F-9683-C4F91C2FF963}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3465F73-1741-4844-9AD9-B17F468BD855}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3465F73-1741-4844-9AD9-B17F468BD855}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3465F73-1741-4844-9AD9-B17F468BD855}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3465F73-1741-4844-9AD9-B17F468BD855}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
