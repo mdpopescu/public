@@ -53,6 +53,23 @@ namespace Elomen.Tests.Implementations
 
                 Assert.AreEqual("I do not know what [b] means.", result);
             }
+
+            [TestMethod]
+            public void ExecutesTheCommand()
+            {
+                var account = new Account();
+                accountRepository
+                    .Setup(it => it.Find("a"))
+                    .Returns(account);
+                var command = new Mock<Command>();
+                commandParser
+                    .Setup(it => it.Parse("b"))
+                    .Returns(command.Object);
+
+                sut.Execute("a", "b");
+
+                command.Verify(it => it.Execute(account));
+            }
         }
     }
 }

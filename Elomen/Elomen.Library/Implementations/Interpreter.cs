@@ -18,8 +18,10 @@ namespace Elomen.Library.Implementations
         /// <returns>A (natural language) confirmation / rejection of the command.</returns>
         public string Execute(string accountId, string commandText)
         {
-            accountRepository.Find(accountId);
-            commandParser.Parse(commandText);
+            var account = accountRepository.Find(accountId);
+            var command = commandParser.Parse(commandText);
+
+            command?.Execute(account);
 
             return $"I do not know what [{commandText}] means.";
         }
