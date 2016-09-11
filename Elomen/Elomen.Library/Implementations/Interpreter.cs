@@ -21,7 +21,7 @@ namespace Elomen.Library.Implementations
             accountRepository.Find(accountId);
             commandParser.Parse(commandText);
 
-            return null;
+            return $"I do not know what [{commandText}] means.";
         }
 
         //

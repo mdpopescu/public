@@ -1,5 +1,6 @@
 ﻿using Elomen.Library.Contracts;
 using Elomen.Library.Implementations;
+using Elomen.Library.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -39,6 +40,18 @@ namespace Elomen.Tests.Implementations
                 sut.Execute("a", "b");
 
                 commandParser.Verify(it => it.Parse("b"));
+            }
+
+            [TestMethod]
+            public void ReturnsAnErrorMessageIfItCannotParseTheCommand()
+            {
+                commandParser
+                    .Setup(it => it.Parse("b"))
+                    .Returns((Command) null);
+
+                var result = sut.Execute("a", "b");
+
+                Assert.AreEqual("I do not know what [b] means.", result);
             }
         }
     }
