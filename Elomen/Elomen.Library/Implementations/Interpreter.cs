@@ -21,9 +21,8 @@ namespace Elomen.Library.Implementations
             var account = accountRepository.Find(accountId);
             var command = commandParser.Parse(commandText);
 
-            command?.Execute(account);
-
-            return $"I do not know what [{commandText}] means.";
+            return command?.Execute(account)
+                   ?? $"I do not know what [{commandText}] means.";
         }
 
         //

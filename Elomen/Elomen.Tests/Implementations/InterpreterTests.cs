@@ -70,6 +70,22 @@ namespace Elomen.Tests.Implementations
 
                 command.Verify(it => it.Execute(account));
             }
+
+            [TestMethod]
+            public void ReturnsTheResultOfTheCommand()
+            {
+                var command = new Mock<Command>();
+                commandParser
+                    .Setup(it => it.Parse("b"))
+                    .Returns(command.Object);
+                command
+                    .Setup(it => it.Execute(It.IsAny<Account>()))
+                    .Returns("message");
+
+                var result = sut.Execute("a", "b");
+
+                Assert.AreEqual("message", result);
+            }
         }
     }
 }
