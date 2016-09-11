@@ -2,5 +2,6 @@
 {
     public class Account
     {
+        public static readonly Account GUEST = new Account();
     }
 }

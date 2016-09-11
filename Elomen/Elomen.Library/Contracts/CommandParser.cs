@@ -1,6 +1,4 @@
-﻿using Elomen.Library.Model;
-
-namespace Elomen.Library.Contracts
+﻿namespace Elomen.Library.Contracts
 {
     public interface CommandParser
     {
