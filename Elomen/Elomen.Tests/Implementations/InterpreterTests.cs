@@ -9,6 +9,7 @@ namespace Elomen.Tests.Implementations
     public class InterpreterTests
     {
         private Mock<AccountRepository> accountRepository;
+        private Mock<CommandParser> commandParser;
 
         private Interpreter sut;
 
@@ -16,8 +17,9 @@ namespace Elomen.Tests.Implementations
         public void SetUp()
         {
             accountRepository = new Mock<AccountRepository>();
+            commandParser = new Mock<CommandParser>();
 
-            sut = new Interpreter(accountRepository.Object);
+            sut = new Interpreter(accountRepository.Object, commandParser.Object);
         }
 
         [TestClass]
@@ -29,6 +31,14 @@ namespace Elomen.Tests.Implementations
                 sut.Execute("a", "b");
 
                 accountRepository.Verify(it => it.Find("a"));
+            }
+
+            [TestMethod]
+            public void ParsesTheCommand()
+            {
+                sut.Execute("a", "b");
+
+                commandParser.Verify(it => it.Parse("b"));
             }
         }
     }

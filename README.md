@@ -25,6 +25,8 @@ Public repository - CC-by-SA 3.0
 
 * DesktopClock: a simple desktop wallpaper clock - trying to learn WPF
 
+* Elomen: notification service (application that can receive natural-language commands and send notification of future events)
+
 * Failover: fail-over algorithm; see article at http://mdpopescu.blogspot.com/2013/06/fail-over-algorithm.html
 
 * FindDuplicates: finds the identical / similar images in the given folder

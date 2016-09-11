@@ -4,20 +4,22 @@ namespace Elomen.Library.Implementations
 {
     public class Interpreter
     {
-        public Interpreter(AccountRepository accountRepository)
+        public Interpreter(AccountRepository accountRepository, CommandParser commandParser)
         {
             this.accountRepository = accountRepository;
+            this.commandParser = commandParser;
         }
 
         /// <summary>
         /// Executes a command.
         /// </summary>
         /// <param name="accountId">The account of the user sending the command.</param>
-        /// <param name="command">The (natural language) command.</param>
+        /// <param name="commandText">The (natural language) command.</param>
         /// <returns>A (natural language) confirmation / rejection of the command.</returns>
-        public string Execute(string accountId, string command)
+        public string Execute(string accountId, string commandText)
         {
             accountRepository.Find(accountId);
+            commandParser.Parse(commandText);
 
             return null;
         }
@@ -25,5 +27,6 @@ namespace Elomen.Library.Implementations
         //
 
         private readonly AccountRepository accountRepository;
+        private readonly CommandParser commandParser;
     }
 }
