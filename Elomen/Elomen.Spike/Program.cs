@@ -11,7 +11,7 @@ namespace Elomen.Spike
     {
         private const string PASSWORD = "{9CF76A0A-A773-4631-9CB0-BA5F4FBC1AF0}";
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             var consumerVars = new CompositeStorage("Elomen.", new EnvironmentStorage(), () => new DictionarySettings());
             var tokens = GetTokens(consumerVars.UserValues["ConsumerKey"], consumerVars.UserValues["ConsumerSecret"]);

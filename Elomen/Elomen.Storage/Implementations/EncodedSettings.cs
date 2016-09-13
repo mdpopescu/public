@@ -4,7 +4,7 @@ namespace Elomen.Storage.Implementations
 {
     public class EncodedSettings : GenericStorage<CompositeSettings>
     {
-        public EncodedSettings(GenericStorage<string> storage, Encoder<string, CompositeSettings> encoder)
+        public EncodedSettings(GenericStorage<string> storage, Encoder<CompositeSettings, string> encoder)
         {
             this.storage = storage;
             this.encoder = encoder;
@@ -25,6 +25,6 @@ namespace Elomen.Storage.Implementations
         //
 
         private readonly GenericStorage<string> storage;
-        private readonly Encoder<string, CompositeSettings> encoder;
+        private readonly Encoder<CompositeSettings, string> encoder;
     }
 }
