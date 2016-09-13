@@ -2,10 +2,10 @@
 {
     public interface Storage<in TKey, TValue>
     {
-        TValue LoadUserValues(TKey source);
-        TValue LoadMachineValues(TKey source);
+        TValue LoadUserValues(TKey key);
+        TValue LoadMachineValues(TKey key);
 
-        void SaveUserValues(TKey destination, TValue settings);
-        void SaveMachineValues(TKey destination, TValue settings);
+        void SaveUserValues(TKey key, TValue settings);
+        void SaveMachineValues(TKey key, TValue settings);
     }
 }

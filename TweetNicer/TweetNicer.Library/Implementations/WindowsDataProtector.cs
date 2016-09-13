@@ -18,7 +18,7 @@ namespace TweetNicer.Library.Implementations
         {
             var plaintext = Encoding.UTF8.GetBytes(data);
             var secret = Encoding.UTF8.GetBytes(password);
-            var encrypted = ProtectedData.Protect(plaintext, secret, DataProtectionScope.CurrentUser);
+            var encrypted = ProtectedData.Protect(plaintext, secret, DataProtectionScope.LocalMachine);
             return Convert.ToBase64String(encrypted);
         }
 
@@ -33,7 +33,7 @@ namespace TweetNicer.Library.Implementations
         {
             var encrypted = Convert.FromBase64String(data);
             var secret = Encoding.UTF8.GetBytes(password);
-            var plaintext = ProtectedData.Unprotect(encrypted, secret, DataProtectionScope.CurrentUser);
+            var plaintext = ProtectedData.Unprotect(encrypted, secret, DataProtectionScope.LocalMachine);
             return Encoding.UTF8.GetString(plaintext);
         }
     }

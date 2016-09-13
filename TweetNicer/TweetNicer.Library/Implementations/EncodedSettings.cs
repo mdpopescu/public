@@ -10,24 +10,24 @@ namespace TweetNicer.Library.Implementations
             this.encoder = encoder;
         }
 
-        public Settings LoadUserValues(string source)
+        public Settings LoadUserValues(string key)
         {
-            return encoder.Decode(basicStorage.LoadUserValues(source));
+            return encoder.Decode(basicStorage.LoadUserValues(key));
         }
 
-        public Settings LoadMachineValues(string source)
+        public Settings LoadMachineValues(string key)
         {
-            return encoder.Decode(basicStorage.LoadMachineValues(source));
+            return encoder.Decode(basicStorage.LoadMachineValues(key));
         }
 
-        public void SaveUserValues(string destination, Settings settings)
+        public void SaveUserValues(string key, Settings settings)
         {
-            basicStorage.SaveUserValues(destination, encoder.Encode(settings));
+            basicStorage.SaveUserValues(key, encoder.Encode(settings));
         }
 
-        public void SaveMachineValues(string destination, Settings settings)
+        public void SaveMachineValues(string key, Settings settings)
         {
-            basicStorage.SaveMachineValues(destination, encoder.Encode(settings));
+            basicStorage.SaveMachineValues(key, encoder.Encode(settings));
         }
 
         //

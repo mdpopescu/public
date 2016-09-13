@@ -16,6 +16,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		notes.txt = notes.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elomen.Spike", "Elomen.Spike\Elomen.Spike.csproj", "{2F1D41C9-3BC7-4615-83EB-D2FF4065C894}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elomen.Storage", "Elomen.Storage\Elomen.Storage.csproj", "{F82210D2-408C-4BB0-AB0A-790A035B834D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +42,14 @@ Global
 		{6B178D09-3358-4A24-AF3A-B9DC19D7E6E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B178D09-3358-4A24-AF3A-B9DC19D7E6E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B178D09-3358-4A24-AF3A-B9DC19D7E6E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F1D41C9-3BC7-4615-83EB-D2FF4065C894}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F1D41C9-3BC7-4615-83EB-D2FF4065C894}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F1D41C9-3BC7-4615-83EB-D2FF4065C894}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F1D41C9-3BC7-4615-83EB-D2FF4065C894}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F82210D2-408C-4BB0-AB0A-790A035B834D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F82210D2-408C-4BB0-AB0A-790A035B834D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F82210D2-408C-4BB0-AB0A-790A035B834D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F82210D2-408C-4BB0-AB0A-790A035B834D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

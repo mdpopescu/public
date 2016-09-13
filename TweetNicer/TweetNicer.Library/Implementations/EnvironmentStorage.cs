@@ -11,24 +11,24 @@ namespace TweetNicer.Library.Implementations
             this.settingsFactory = settingsFactory;
         }
 
-        public Settings LoadUserValues(string source)
+        public Settings LoadUserValues(string key)
         {
-            return Load(source, EnvironmentVariableTarget.User);
+            return Load(key, EnvironmentVariableTarget.User);
         }
 
-        public Settings LoadMachineValues(string source)
+        public Settings LoadMachineValues(string key)
         {
-            return Load(source, EnvironmentVariableTarget.Machine);
+            return Load(key, EnvironmentVariableTarget.Machine);
         }
 
-        public void SaveUserValues(string destination, Settings settings)
+        public void SaveUserValues(string key, Settings settings)
         {
-            Save(destination, settings, EnvironmentVariableTarget.User);
+            Save(key, settings, EnvironmentVariableTarget.User);
         }
 
-        public void SaveMachineValues(string destination, Settings settings)
+        public void SaveMachineValues(string key, Settings settings)
         {
-            Save(destination, settings, EnvironmentVariableTarget.Machine);
+            Save(key, settings, EnvironmentVariableTarget.Machine);
         }
 
         //
