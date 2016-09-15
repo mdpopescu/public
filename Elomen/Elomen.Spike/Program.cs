@@ -9,6 +9,7 @@ namespace Elomen.Spike
 {
     internal class Program
     {
+        private const string FILENAME = "settings.dat";
         private const string PASSWORD = "{9CF76A0A-A773-4631-9CB0-BA5F4FBC1AF0}";
 
         private static void Main()
@@ -29,7 +30,7 @@ namespace Elomen.Spike
 
         private static Tokens GetTokens(string consumerKey, string consumerSecret)
         {
-            var storage = new WindowsSecureStorage("settings.dat", PASSWORD, new WindowsFileSystem(), new WindowsDataEncryptor());
+            var storage = new WindowsSecureStorage(FILENAME, new WindowsFileSystem(), new WindowsDataEncryptor(PASSWORD));
             var userSettings = new EncodedSettings(storage, new SettingsEncoder(() => new DictionarySettings()));
 
             try

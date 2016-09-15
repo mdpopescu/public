@@ -4,10 +4,9 @@ namespace Elomen.Storage.Implementations
 {
     public class WindowsSecureStorage : GenericStorage<string>
     {
-        public WindowsSecureStorage(string path, string password, FileSystem fs, DataEncryptor encryptor)
+        public WindowsSecureStorage(string path, FileSystem fs, DataEncryptor encryptor)
         {
             this.path = path;
-            this.password = password;
             this.fs = fs;
             this.encryptor = encryptor;
         }
@@ -27,18 +26,17 @@ namespace Elomen.Storage.Implementations
         //
 
         private readonly string path;
-        private readonly string password;
         private readonly FileSystem fs;
         private readonly DataEncryptor encryptor;
 
         private string Load(Location location)
         {
-            return encryptor.Decrypt(location, fs.Load(path), password);
+            return encryptor.Decrypt(location, fs.Load(path));
         }
 
         private void Save(Location location, string value)
         {
-            fs.Save(path, encryptor.Encrypt(location, value, password));
+            fs.Save(path, encryptor.Encrypt(location, value));
         }
     }
 }
