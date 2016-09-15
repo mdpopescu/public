@@ -55,7 +55,6 @@
     <Compile Include="Implementations\WindowsDataEncryptor.cs" />
     <Compile Include="Implementations\WindowsFileSystem.cs" />
     <Compile Include="Implementations\WindowsSecureStorage.cs" />
-    <Compile Include="Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

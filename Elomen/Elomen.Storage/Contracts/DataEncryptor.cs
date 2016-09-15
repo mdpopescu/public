@@ -2,7 +2,10 @@
 {
     public interface DataEncryptor
     {
-        string Encrypt(Location location, string data);
-        string Decrypt(Location location, string data);
+        string EncryptForUser(string data);
+        string DecryptForUser(string data);
+
+        string EncryptForMachine(string data);
+        string DecryptForMachine(string data);
     }
 }

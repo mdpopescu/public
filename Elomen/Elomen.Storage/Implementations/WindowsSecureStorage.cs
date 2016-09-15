@@ -13,14 +13,14 @@ namespace Elomen.Storage.Implementations
 
         public string UserValues
         {
-            get { return Load(Location.User); }
-            set { Save(Location.User, value); }
+            get { return encryptor.DecryptForUser(fs.Load(path)); }
+            set { fs.Save(path, encryptor.EncryptForUser(value)); }
         }
 
         public string MachineValues
         {
-            get { return Load(Location.Machine); }
-            set { Save(Location.Machine, value); }
+            get { return encryptor.DecryptForMachine(fs.Load(path)); }
+            set { fs.Save(path, encryptor.EncryptForMachine(value)); }
         }
 
         //
@@ -28,15 +28,5 @@ namespace Elomen.Storage.Implementations
         private readonly string path;
         private readonly FileSystem fs;
         private readonly DataEncryptor encryptor;
-
-        private string Load(Location location)
-        {
-            return encryptor.Decrypt(location, fs.Load(path));
-        }
-
-        private void Save(Location location, string value)
-        {
-            fs.Save(path, encryptor.Encrypt(location, value));
-        }
     }
 }

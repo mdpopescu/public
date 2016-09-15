@@ -10,18 +10,24 @@ namespace Elomen.Storage.Implementations
             this.password = password;
         }
 
-        public string Encrypt(Location location, string data)
+        public string EncryptForUser(string data)
         {
-            return location == Location.User
-                ? ProtectedDataAdapter.Protect(data, null, DataProtectionScope.CurrentUser)
-                : ProtectedDataAdapter.Protect(data, password, DataProtectionScope.LocalMachine);
+            return ProtectedDataAdapter.Protect(data, null, DataProtectionScope.CurrentUser);
         }
 
-        public string Decrypt(Location location, string data)
+        public string DecryptForUser(string data)
         {
-            return location == Location.User
-                ? ProtectedDataAdapter.Unprotect(data, null, DataProtectionScope.CurrentUser)
-                : ProtectedDataAdapter.Unprotect(data, password, DataProtectionScope.LocalMachine);
+            return ProtectedDataAdapter.Unprotect(data, null, DataProtectionScope.CurrentUser);
+        }
+
+        public string EncryptForMachine(string data)
+        {
+            return ProtectedDataAdapter.Protect(data, password, DataProtectionScope.LocalMachine);
+        }
+
+        public string DecryptForMachine(string data)
+        {
+            return ProtectedDataAdapter.Unprotect(data, password, DataProtectionScope.LocalMachine);
         }
 
         //
