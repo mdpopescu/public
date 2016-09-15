@@ -23,12 +23,6 @@ namespace SocialNetwork2.Tests.Implementations.Handlers
         }
 
         [TestMethod]
-        public void HandlesTheFollowsCommand()
-        {
-            Assert.AreEqual("follows", sut.KnownCommand);
-        }
-
-        [TestMethod]
         public void RetrievesTheOtherUserFromTheRepository()
         {
             sut.Handle(new User(""), "a");

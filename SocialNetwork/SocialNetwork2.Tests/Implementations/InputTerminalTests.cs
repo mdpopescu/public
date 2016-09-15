@@ -10,8 +10,7 @@ namespace SocialNetwork2.Tests.Implementations
     public class InputTerminalTests
     {
         private Mock<IUserRepository> userRepository;
-        private Mock<IHandler> handler1;
-        private Mock<IHandler> handler2;
+        private Mock<IHandlerFactory> handlerFactory;
 
         private InputTerminal sut;
 
@@ -19,80 +18,47 @@ namespace SocialNetwork2.Tests.Implementations
         public void SetUp()
         {
             userRepository = new Mock<IUserRepository>();
-            handler1 = new Mock<IHandler>();
-            handler2 = new Mock<IHandler>();
-            sut = new InputTerminal(userRepository.Object, new[] { handler1.Object, handler2.Object });
-        }
-
-        [TestMethod]
-        public void AsksEachHandlerForTheCommandItKnows()
-        {
-            sut.Handle("stuff");
-
-            handler1.Verify(it => it.KnownCommand);
-            handler2.Verify(it => it.KnownCommand);
+            handlerFactory = new Mock<IHandlerFactory>();
+            sut = new InputTerminal(userRepository.Object, handlerFactory.Object);
         }
 
         [TestMethod]
         public void RetrievesTheUserBasedOnTheFirstPartOfTheInput()
         {
+            var handler = new Mock<IHandler>();
+            handlerFactory
+                .Setup(it => it.GetHandler(It.IsAny<string>()))
+                .Returns(handler.Object);
+
             sut.Handle("abc def ghi");
 
             userRepository.Verify(it => it.CreateOrFind("abc"));
         }
 
         [TestMethod]
-        public void InvokesTheHandlerMatchingTheCommandInTheSecondPosition()
+        public void InvokesTheHandlerMatchingTheSecondPartOfTheInput()
         {
-            handler1
-                .Setup(it => it.KnownCommand)
-                .Returns("def");
+            var handler = new Mock<IHandler>();
+            handlerFactory
+                .Setup(it => it.GetHandler("def"))
+                .Returns(handler.Object);
 
             sut.Handle("abc def ghi");
 
-            handler1.Verify(it => it.Handle(It.IsAny<IUser>(), It.IsAny<string>()));
-        }
-
-        [TestMethod]
-        public void DoesNotInvokeHandlersThatDoNotMatchTheCommand()
-        {
-            handler1
-                .Setup(it => it.KnownCommand)
-                .Returns("def");
-            handler2
-                .Setup(it => it.KnownCommand)
-                .Returns("zzz");
-
-            sut.Handle("abc def ghi");
-
-            handler2.Verify(it => it.Handle(It.IsAny<IUser>(), It.IsAny<string>()), Times.Never);
-        }
-
-        [TestMethod]
-        public void OnlyInvokesTheFirstMatchingHandler()
-        {
-            handler1
-                .Setup(it => it.KnownCommand)
-                .Returns("def");
-            handler2
-                .Setup(it => it.KnownCommand)
-                .Returns("def");
-
-            sut.Handle("abc def ghi");
-
-            handler2.Verify(it => it.Handle(It.IsAny<IUser>(), It.IsAny<string>()), Times.Never);
+            handler.Verify(it => it.Handle(It.IsAny<IUser>(), It.IsAny<string>()));
         }
 
         [TestMethod]
         public void ReturnsTheResultOfTheInvokedHandler()
         {
-            handler1
-                .Setup(it => it.KnownCommand)
-                .Returns("def");
             var list = new[] { "zzz" };
-            handler1
+            var handler = new Mock<IHandler>();
+            handler
                 .Setup(it => it.Handle(It.IsAny<User>(), "ghi"))
                 .Returns(list);
+            handlerFactory
+                .Setup(it => it.GetHandler("def"))
+                .Returns(handler.Object);
 
             var result = sut.Handle("abc def ghi").ToList();
 

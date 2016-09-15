@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SocialNetwork2.Library.Implementations;
-using SocialNetwork2.Library.Implementations.Handlers;
-using SocialNetwork2.Library.Interfaces;
 
 namespace SocialNetwork2.Tests
 {
@@ -68,14 +65,7 @@ namespace SocialNetwork2.Tests
         [TestMethod]
         public void UsingTheInputHandler()
         {
-            var knownCommands = new List<IHandler>
-            {
-                new ReadHandler(),
-                new PostHandler(),
-                new FollowsHandler(userRepository),
-                new WallHandler(),
-            };
-            var inputHandler = new InputTerminal(userRepository, knownCommands);
+            var inputHandler = new InputTerminal(userRepository, new HandlerFactory(userRepository));
 
             // posting
             Sys.Time = () => new DateTime(2000, 1, 1, 10, 0, 0);

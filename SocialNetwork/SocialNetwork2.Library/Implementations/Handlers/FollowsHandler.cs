@@ -11,8 +11,6 @@ namespace SocialNetwork2.Library.Implementations.Handlers
             this.userRepository = userRepository;
         }
 
-        public string KnownCommand => "follows";
-
         public IEnumerable<string> Handle(IUser user, string restOfInput)
         {
             var otherUser = userRepository.CreateOrFind(restOfInput);

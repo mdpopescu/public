@@ -40,9 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Implementations\HandlerFactory.cs" />
     <Compile Include="Implementations\Handlers\FollowsHandler.cs" />
+    <Compile Include="Implementations\Handlers\NullHandler.cs" />
     <Compile Include="Implementations\Handlers\PostHandler.cs" />
     <Compile Include="Implementations\Handlers\WallHandler.cs" />
+    <Compile Include="Interfaces\IHandlerFactory.cs" />
     <Compile Include="Implementations\InputTerminal.cs" />
     <Compile Include="Implementations\Handlers\ReadHandler.cs" />
     <Compile Include="Interfaces\IUser.cs" />

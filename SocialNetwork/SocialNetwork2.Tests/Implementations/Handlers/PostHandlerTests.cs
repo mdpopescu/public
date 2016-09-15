@@ -18,12 +18,6 @@ namespace SocialNetwork2.Tests.Implementations.Handlers
         }
 
         [TestMethod]
-        public void HandlesTheArrowCommand()
-        {
-            Assert.AreEqual("->", sut.KnownCommand);
-        }
-
-        [TestMethod]
         public void CallsTheUserPostMethod()
         {
             var user = new Mock<IUser>();

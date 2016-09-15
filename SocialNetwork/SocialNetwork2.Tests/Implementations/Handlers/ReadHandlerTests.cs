@@ -18,12 +18,6 @@ namespace SocialNetwork2.Tests.Implementations.Handlers
         }
 
         [TestMethod]
-        public void HandlesTheEmptyCommand()
-        {
-            Assert.AreEqual("", sut.KnownCommand);
-        }
-
-        [TestMethod]
         public void CallsTheUserReadMethod()
         {
             var user = new Mock<IUser>();
