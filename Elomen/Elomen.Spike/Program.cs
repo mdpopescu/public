@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reactive.Linq;
 using CoreTweet;
 using CoreTweet.Streaming;
+using Elomen.Storage.Contracts;
 using Elomen.Storage.Implementations;
 
 namespace Elomen.Spike
@@ -10,7 +11,6 @@ namespace Elomen.Spike
     internal class Program
     {
         private const string FILENAME = "settings.dat";
-        private const string PASSWORD = "{9CF76A0A-A773-4631-9CB0-BA5F4FBC1AF0}";
 
         private static void Main()
         {
@@ -31,10 +31,12 @@ namespace Elomen.Spike
         private static Tokens GetTokens(string consumerKey, string consumerSecret)
         {
             var store = new FileStore(FILENAME);
-            //var secureStorage = new WindowsSecureStorage(store, new UserEncryptor(), new MachineEncryptor(PASSWORD));
-            //var userSettings = new EncodedSettings(secureStorage, new SettingsEncoder(() => new DictionarySettings()));
-            var encryptedStore = new EncodedStore<string>(store, new UserEncryptor());
-            var userSettings = new EncodedSettings(encryptedStore, new SettingsEncoder(() => new DictionarySettings()));
+
+            var encryptor = new UserEncryptor();
+            var encryptedStore = new EncodedStore<string, string>(store, encryptor);
+
+            var encoder = new SettingsEncoder(() => new DictionarySettings());
+            var userSettings = new EncodedStore<CompositeSettings, string>(encryptedStore, encoder);
 
             try
             {

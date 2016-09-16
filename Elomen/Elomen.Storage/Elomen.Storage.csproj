@@ -45,7 +45,6 @@
     <Compile Include="Contracts\Encoder.cs" />
     <Compile Include="Contracts\ValueStore.cs" />
     <Compile Include="Contracts\ResourceStore.cs" />
-    <Compile Include="Implementations\EncodedSettings.cs" />
     <Compile Include="Implementations\FileStore.cs" />
     <Compile Include="Implementations\ProtectedDataAdapter.cs" />
     <Compile Include="Implementations\EnvironmentStorage.cs" />
@@ -55,7 +54,6 @@
     <Compile Include="Implementations\SettingsEncoder.cs" />
     <Compile Include="Implementations\MachineEncryptor.cs" />
     <Compile Include="Implementations\UserEncryptor.cs" />
-    <Compile Include="Implementations\WindowsSecureStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
