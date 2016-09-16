@@ -46,7 +46,9 @@
     <Compile Include="Contracts\Encoder.cs" />
     <Compile Include="Contracts\FileSystem.cs" />
     <Compile Include="Contracts\GenericStorage.cs" />
+    <Compile Include="Contracts\ResourceStore.cs" />
     <Compile Include="Implementations\EncodedSettings.cs" />
+    <Compile Include="Implementations\FileStore.cs" />
     <Compile Include="Implementations\ProtectedDataAdapter.cs" />
     <Compile Include="Implementations\EnvironmentStorage.cs" />
     <Compile Include="Implementations\CompositeStorage.cs" />
