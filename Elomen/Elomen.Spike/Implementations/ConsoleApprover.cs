@@ -4,7 +4,7 @@ using Elomen.Spike.Contracts;
 
 namespace Elomen.Spike.Implementations
 {
-    public class ConsoleApprover : Approver
+    public class ConsoleApprover : Authorizable
     {
         public string Authorize(string url)
         {

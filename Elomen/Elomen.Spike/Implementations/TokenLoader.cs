@@ -8,11 +8,11 @@ namespace Elomen.Spike.Implementations
 {
     public class TokenLoader
     {
-        public TokenLoader(ResourceStore<CompositeSettings> appStore, ResourceStore<CompositeSettings> userStore, Approver approver)
+        public TokenLoader(ResourceStore<CompositeSettings> appStore, ResourceStore<CompositeSettings> userStore, Authorizable authorizable)
         {
             this.appStore = appStore;
             this.userStore = userStore;
-            this.approver = approver;
+            this.authorizable = authorizable;
         }
 
         public Tokens Load()
@@ -25,7 +25,7 @@ namespace Elomen.Spike.Implementations
 
         private readonly ResourceStore<CompositeSettings> appStore;
         private readonly ResourceStore<CompositeSettings> userStore;
-        private readonly Approver approver;
+        private readonly Authorizable authorizable;
 
         private Tokens GetTokens(string consumerKey, string consumerSecret)
         {
@@ -44,7 +44,7 @@ namespace Elomen.Spike.Implementations
             catch (Exception)
             {
                 var session = OAuth.Authorize(consumerKey, consumerSecret);
-                var pin = approver.Authorize(session.AuthorizeUri.AbsoluteUri);
+                var pin = authorizable.Authorize(session.AuthorizeUri.AbsoluteUri);
                 var tokens = session.GetTokens(pin);
 
                 SaveUserSettings(tokens);
