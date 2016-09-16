@@ -2,29 +2,27 @@
 
 namespace Elomen.Storage.Implementations
 {
-    public class EncodedSettings : GenericStorage<CompositeSettings>
+    public class EncodedSettings : ResourceStore<CompositeSettings>
     {
-        public EncodedSettings(GenericStorage<string> storage, Encoder<CompositeSettings, string> encoder)
+        public EncodedSettings(ResourceStore<string> store, Encoder<CompositeSettings, string> encoder)
         {
-            this.storage = storage;
+            this.store = store;
             this.encoder = encoder;
         }
 
-        public CompositeSettings UserValues
+        public CompositeSettings Load()
         {
-            get { return encoder.Decode(storage.UserValues); }
-            set { storage.UserValues = encoder.Encode(value); }
+            return encoder.Decode(store.Load());
         }
 
-        public CompositeSettings MachineValues
+        public void Save(CompositeSettings value)
         {
-            get { return encoder.Decode(storage.MachineValues); }
-            set { storage.MachineValues = encoder.Encode(value); }
+            store.Save(encoder.Encode(value));
         }
 
         //
 
-        private readonly GenericStorage<string> storage;
+        private readonly ResourceStore<string> store;
         private readonly Encoder<CompositeSettings, string> encoder;
     }
 }

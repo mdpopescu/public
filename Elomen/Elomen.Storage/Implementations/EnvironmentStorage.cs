@@ -5,7 +5,7 @@ using Elomen.Storage.Contracts;
 
 namespace Elomen.Storage.Implementations
 {
-    public class EnvironmentStorage : GenericStorage<IDictionary<string, string>>
+    public class EnvironmentStorage : ValueStore<IDictionary<string, string>>
     {
         public IDictionary<string, string> UserValues
         {

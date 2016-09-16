@@ -6,9 +6,9 @@ using Elomen.Storage.Contracts;
 
 namespace Elomen.Storage.Implementations
 {
-    public class CompositeStorage : GenericStorage<CompositeSettings>
+    public class CompositeStorage : ValueStore<CompositeSettings>
     {
-        public CompositeStorage(string prefix, GenericStorage<IDictionary<string, string>> strings, Func<CompositeSettings> settingsFactory)
+        public CompositeStorage(string prefix, ValueStore<IDictionary<string, string>> strings, Func<CompositeSettings> settingsFactory)
         {
             Debug.Assert(prefix != null, nameof(prefix));
             Debug.Assert(strings != null, nameof(strings));
@@ -36,7 +36,7 @@ namespace Elomen.Storage.Implementations
         //
 
         private readonly string prefix;
-        private readonly GenericStorage<IDictionary<string, string>> strings;
+        private readonly ValueStore<IDictionary<string, string>> strings;
         private readonly Func<CompositeSettings> settingsFactory;
 
         private readonly int prefixLength;

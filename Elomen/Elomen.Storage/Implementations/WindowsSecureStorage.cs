@@ -2,7 +2,7 @@
 
 namespace Elomen.Storage.Implementations
 {
-    public class WindowsSecureStorage : GenericStorage<string>
+    public class WindowsSecureStorage : ValueStore<string>
     {
         public WindowsSecureStorage(ResourceStore<string> store, Encoder<string, string> userEncryptor, Encoder<string, string> machineEncryptor)
         {

@@ -31,12 +31,14 @@ namespace Elomen.Spike
         private static Tokens GetTokens(string consumerKey, string consumerSecret)
         {
             var store = new FileStore(FILENAME);
-            var secureStorage = new WindowsSecureStorage(store, new UserEncryptor(), new MachineEncryptor(PASSWORD));
-            var userSettings = new EncodedSettings(secureStorage, new SettingsEncoder(() => new DictionarySettings()));
+            //var secureStorage = new WindowsSecureStorage(store, new UserEncryptor(), new MachineEncryptor(PASSWORD));
+            //var userSettings = new EncodedSettings(secureStorage, new SettingsEncoder(() => new DictionarySettings()));
+            var encryptedStore = new EncodedStore<string>(store, new UserEncryptor());
+            var userSettings = new EncodedSettings(encryptedStore, new SettingsEncoder(() => new DictionarySettings()));
 
             try
             {
-                var settings = userSettings.UserValues;
+                var settings = userSettings.Load();
 
                 return new Tokens
                 {
@@ -59,7 +61,7 @@ namespace Elomen.Spike
                     ["AccessToken"] = tokens.AccessToken,
                     ["AccessTokenSecret"] = tokens.AccessTokenSecret,
                 };
-                userSettings.UserValues = settings;
+                userSettings.Save(settings);
 
                 return tokens;
             }
