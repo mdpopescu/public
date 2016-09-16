@@ -28,11 +28,11 @@ namespace Elomen.Storage.Implementations
             return doc.ToString();
         }
 
-        public CompositeSettings Decode(string data)
+        public CompositeSettings Decode(string value)
         {
             var result = settingsFactory.Invoke();
 
-            var doc = XDocument.Parse(data);
+            var doc = XDocument.Parse(value);
             if (doc.Root == null)
                 return result;
 

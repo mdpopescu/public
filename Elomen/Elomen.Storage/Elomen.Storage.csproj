@@ -42,7 +42,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\CompositeSettings.cs" />
-    <Compile Include="Contracts\DataEncryptor.cs" />
     <Compile Include="Contracts\Encoder.cs" />
     <Compile Include="Contracts\FileSystem.cs" />
     <Compile Include="Contracts\GenericStorage.cs" />
@@ -54,7 +53,8 @@
     <Compile Include="Implementations\CompositeStorage.cs" />
     <Compile Include="Implementations\DictionarySettings.cs" />
     <Compile Include="Implementations\SettingsEncoder.cs" />
-    <Compile Include="Implementations\WindowsDataEncryptor.cs" />
+    <Compile Include="Implementations\MachineEncryptor.cs" />
+    <Compile Include="Implementations\UserEncryptor.cs" />
     <Compile Include="Implementations\WindowsFileSystem.cs" />
     <Compile Include="Implementations\WindowsSecureStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -31,7 +31,7 @@ namespace Elomen.Spike
         private static Tokens GetTokens(string consumerKey, string consumerSecret)
         {
             var store = new FileStore(new WindowsFileSystem(), FILENAME);
-            var secureStorage = new WindowsSecureStorage(store, new WindowsDataEncryptor(PASSWORD));
+            var secureStorage = new WindowsSecureStorage(store, new UserEncryptor(), new MachineEncryptor(PASSWORD));
             var userSettings = new EncodedSettings(secureStorage, new SettingsEncoder(() => new DictionarySettings()));
 
             try

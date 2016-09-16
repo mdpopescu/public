@@ -4,27 +4,29 @@ namespace Elomen.Storage.Implementations
 {
     public class WindowsSecureStorage : GenericStorage<string>
     {
-        public WindowsSecureStorage(ResourceStore<string> store, DataEncryptor encryptor)
+        public WindowsSecureStorage(ResourceStore<string> store, Encoder<string, string> userEncryptor, Encoder<string, string> machineEncryptor)
         {
             this.store = store;
-            this.encryptor = encryptor;
+            this.userEncryptor = userEncryptor;
+            this.machineEncryptor = machineEncryptor;
         }
 
         public string UserValues
         {
-            get { return encryptor.DecryptForUser(store.Load()); }
-            set { store.Save(encryptor.EncryptForUser(value)); }
+            get { return userEncryptor.Decode(store.Load()); }
+            set { store.Save(userEncryptor.Decode(value)); }
         }
 
         public string MachineValues
         {
-            get { return encryptor.DecryptForMachine(store.Load()); }
-            set { store.Save(encryptor.EncryptForMachine(value)); }
+            get { return machineEncryptor.Decode(store.Load()); }
+            set { store.Save(machineEncryptor.Decode(value)); }
         }
 
         //
 
         private readonly ResourceStore<string> store;
-        private readonly DataEncryptor encryptor;
+        private readonly Encoder<string, string> userEncryptor;
+        private readonly Encoder<string, string> machineEncryptor;
     }
 }

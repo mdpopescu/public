@@ -3,6 +3,6 @@
     public interface Encoder<TOriginal, TEncoded>
     {
         TEncoded Encode(TOriginal value);
-        TOriginal Decode(TEncoded data);
+        TOriginal Decode(TEncoded value);
     }
 }
