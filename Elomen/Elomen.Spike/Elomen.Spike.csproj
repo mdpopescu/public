@@ -72,6 +72,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\Approver.cs" />
+    <Compile Include="Implementations\ConsoleApprover.cs" />
+    <Compile Include="Implementations\TokenLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
