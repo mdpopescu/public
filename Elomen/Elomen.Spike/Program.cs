@@ -14,8 +14,10 @@ namespace Elomen.Spike
 
         private static void Main()
         {
-            var consumerVars = new CompositeStorage("Elomen.", new EnvironmentStorage(), () => new DictionarySettings());
-            var tokens = GetTokens(consumerVars.UserValues["ConsumerKey"], consumerVars.UserValues["ConsumerSecret"]);
+            var store = new EnvironmentStore(EnvironmentVariableTarget.User, "Elomen.", () => new DictionarySettings());
+
+            var consumerVars = store.Load();
+            var tokens = GetTokens(consumerVars["ConsumerKey"], consumerVars["ConsumerSecret"]);
 
             var stream = tokens
                 .Streaming

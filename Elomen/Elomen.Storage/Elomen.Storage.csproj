@@ -54,6 +54,7 @@
     <Compile Include="Implementations\SettingsEncoder.cs" />
     <Compile Include="Implementations\MachineEncryptor.cs" />
     <Compile Include="Implementations\UserEncryptor.cs" />
+    <Compile Include="Implementations\EnvironmentStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
