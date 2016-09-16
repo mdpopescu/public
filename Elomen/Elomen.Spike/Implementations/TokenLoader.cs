@@ -8,38 +8,30 @@ namespace Elomen.Spike.Implementations
 {
     public class TokenLoader
     {
-        public TokenLoader(string filename, Approver approver)
+        public TokenLoader(ResourceStore<CompositeSettings> appStore, ResourceStore<CompositeSettings> userStore, Approver approver)
         {
-            this.filename = filename;
+            this.appStore = appStore;
+            this.userStore = userStore;
             this.approver = approver;
         }
 
         public Tokens Load()
         {
-            var store = new EnvironmentStore(EnvironmentVariableTarget.User, "Elomen.", new DictionarySettingsFactory());
-
-            var consumerVars = store.Load();
+            var consumerVars = appStore.Load();
             return GetTokens(consumerVars["ConsumerKey"], consumerVars["ConsumerSecret"]);
         }
 
         //
 
-        private readonly string filename;
+        private readonly ResourceStore<CompositeSettings> appStore;
+        private readonly ResourceStore<CompositeSettings> userStore;
         private readonly Approver approver;
 
         private Tokens GetTokens(string consumerKey, string consumerSecret)
         {
-            var store = new FileStore(filename);
-
-            var encryptor = new UserEncryptor();
-            var encryptedStore = new EncodedStore<string, string>(store, encryptor);
-
-            var encoder = new XmlSettingsEncoder(new DictionarySettingsFactory());
-            var userSettings = new EncodedStore<CompositeSettings, string>(encryptedStore, encoder);
-
             try
             {
-                var settings = userSettings.Load();
+                var settings = userStore.Load();
 
                 return new Tokens
                 {
@@ -55,15 +47,20 @@ namespace Elomen.Spike.Implementations
                 var pin = approver.Authorize(session.AuthorizeUri.AbsoluteUri);
                 var tokens = session.GetTokens(pin);
 
-                var settings = new DictionarySettings
-                {
-                    ["AccessToken"] = tokens.AccessToken,
-                    ["AccessTokenSecret"] = tokens.AccessTokenSecret,
-                };
-                userSettings.Save(settings);
+                SaveUserSettings(tokens);
 
                 return tokens;
             }
+        }
+
+        private void SaveUserSettings(Tokens tokens)
+        {
+            var settings = new DictionarySettings
+            {
+                ["AccessToken"] = tokens.AccessToken,
+                ["AccessTokenSecret"] = tokens.AccessTokenSecret,
+            };
+            userStore.Save(settings);
         }
     }
 }
