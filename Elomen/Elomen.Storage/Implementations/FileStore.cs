@@ -4,6 +4,9 @@ using Elomen.Storage.Contracts;
 
 namespace Elomen.Storage.Implementations
 {
+    /// <summary>
+    /// Stores data in a file.
+    /// </summary>
     public class FileStore : ResourceStore<string>
     {
         public FileStore(string path)

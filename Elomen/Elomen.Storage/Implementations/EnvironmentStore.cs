@@ -5,6 +5,9 @@ using Elomen.Storage.Contracts;
 
 namespace Elomen.Storage.Implementations
 {
+    /// <summary>
+    /// Stores data in the environment variables (user or machine).
+    /// </summary>
     public class EnvironmentStore : ResourceStore<CompositeSettings>
     {
         public EnvironmentStore(EnvironmentVariableTarget target, string prefix, Func<CompositeSettings> settingsFactory)

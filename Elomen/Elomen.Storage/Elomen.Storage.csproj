@@ -43,12 +43,9 @@
   <ItemGroup>
     <Compile Include="Contracts\CompositeSettings.cs" />
     <Compile Include="Contracts\Encoder.cs" />
-    <Compile Include="Contracts\ValueStore.cs" />
     <Compile Include="Contracts\ResourceStore.cs" />
     <Compile Include="Implementations\FileStore.cs" />
     <Compile Include="Implementations\ProtectedDataAdapter.cs" />
-    <Compile Include="Implementations\EnvironmentStorage.cs" />
-    <Compile Include="Implementations\CompositeStorage.cs" />
     <Compile Include="Implementations\DictionarySettings.cs" />
     <Compile Include="Implementations\EncodedStore.cs" />
     <Compile Include="Implementations\SettingsEncoder.cs" />
