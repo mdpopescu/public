@@ -14,7 +14,7 @@ namespace Elomen.Spike
 
         private static void Main()
         {
-            var store = new EnvironmentStore(EnvironmentVariableTarget.User, "Elomen.", () => new DictionarySettings());
+            var store = new EnvironmentStore(EnvironmentVariableTarget.User, "Elomen.", new DictionarySettingsFactory());
 
             var consumerVars = store.Load();
             var tokens = GetTokens(consumerVars["ConsumerKey"], consumerVars["ConsumerSecret"]);
@@ -37,7 +37,7 @@ namespace Elomen.Spike
             var encryptor = new UserEncryptor();
             var encryptedStore = new EncodedStore<string, string>(store, encryptor);
 
-            var encoder = new SettingsEncoder(() => new DictionarySettings());
+            var encoder = new SettingsEncoder(new DictionarySettingsFactory());
             var userSettings = new EncodedStore<CompositeSettings, string>(encryptedStore, encoder);
 
             try

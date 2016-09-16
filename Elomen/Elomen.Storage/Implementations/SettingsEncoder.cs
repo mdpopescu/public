@@ -1,12 +1,11 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using Elomen.Storage.Contracts;
 
 namespace Elomen.Storage.Implementations
 {
     public class SettingsEncoder : Encoder<CompositeSettings, string>
     {
-        public SettingsEncoder(Func<CompositeSettings> settingsFactory)
+        public SettingsEncoder(CompositeSettingsFactory settingsFactory)
         {
             this.settingsFactory = settingsFactory;
         }
@@ -30,7 +29,7 @@ namespace Elomen.Storage.Implementations
 
         public CompositeSettings Decode(string value)
         {
-            var result = settingsFactory.Invoke();
+            var result = settingsFactory.Create();
 
             var doc = XDocument.Parse(value);
             if (doc.Root == null)
@@ -48,6 +47,6 @@ namespace Elomen.Storage.Implementations
 
         //
 
-        private readonly Func<CompositeSettings> settingsFactory;
+        private readonly CompositeSettingsFactory settingsFactory;
     }
 }

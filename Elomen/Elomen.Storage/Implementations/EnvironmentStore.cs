@@ -10,7 +10,7 @@ namespace Elomen.Storage.Implementations
     /// </summary>
     public class EnvironmentStore : ResourceStore<CompositeSettings>
     {
-        public EnvironmentStore(EnvironmentVariableTarget target, string prefix, Func<CompositeSettings> settingsFactory)
+        public EnvironmentStore(EnvironmentVariableTarget target, string prefix, CompositeSettingsFactory settingsFactory)
         {
             Debug.Assert(!string.IsNullOrEmpty(prefix), nameof(prefix));
 
@@ -29,7 +29,7 @@ namespace Elomen.Storage.Implementations
                 .Cast<string>()
                 .Where(it => it.StartsWith(prefix));
 
-            var settings = settingsFactory.Invoke();
+            var settings = settingsFactory.Create();
             foreach (var key in keys)
                 settings[key.Substring(prefixLength)] = values[key] + "";
 
@@ -46,7 +46,7 @@ namespace Elomen.Storage.Implementations
 
         private readonly EnvironmentVariableTarget target;
         private readonly string prefix;
-        private readonly Func<CompositeSettings> settingsFactory;
+        private readonly CompositeSettingsFactory settingsFactory;
 
         private readonly int prefixLength;
     }

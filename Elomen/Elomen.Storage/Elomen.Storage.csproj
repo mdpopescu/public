@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\CompositeSettings.cs" />
+    <Compile Include="Contracts\CompositeSettingsFactory.cs" />
     <Compile Include="Contracts\Encoder.cs" />
     <Compile Include="Contracts\ResourceStore.cs" />
+    <Compile Include="Implementations\DictionarySettingsFactory.cs" />
     <Compile Include="Implementations\FileStore.cs" />
     <Compile Include="Implementations\ProtectedDataAdapter.cs" />
     <Compile Include="Implementations\DictionarySettings.cs" />

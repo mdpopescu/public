@@ -3,7 +3,7 @@
 namespace Elomen.Storage.Contracts
 {
     /// <summary>
-    ///     Key-Value store.
+    ///     Key-Value store acting as a pseudo-dictionary.
     /// </summary>
     public interface CompositeSettings
     {
