@@ -50,7 +50,7 @@
     <Compile Include="Implementations\ProtectedDataAdapter.cs" />
     <Compile Include="Implementations\DictionarySettings.cs" />
     <Compile Include="Implementations\EncodedStore.cs" />
-    <Compile Include="Implementations\SettingsEncoder.cs" />
+    <Compile Include="Implementations\XmlSettingsEncoder.cs" />
     <Compile Include="Implementations\MachineEncryptor.cs" />
     <Compile Include="Implementations\UserEncryptor.cs" />
     <Compile Include="Implementations\EnvironmentStore.cs" />

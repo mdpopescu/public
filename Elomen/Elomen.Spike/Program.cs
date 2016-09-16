@@ -37,7 +37,7 @@ namespace Elomen.Spike
             var encryptor = new UserEncryptor();
             var encryptedStore = new EncodedStore<string, string>(store, encryptor);
 
-            var encoder = new SettingsEncoder(new DictionarySettingsFactory());
+            var encoder = new XmlSettingsEncoder(new DictionarySettingsFactory());
             var userSettings = new EncodedStore<CompositeSettings, string>(encryptedStore, encoder);
 
             try

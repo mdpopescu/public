@@ -3,9 +3,9 @@ using Elomen.Storage.Contracts;
 
 namespace Elomen.Storage.Implementations
 {
-    public class SettingsEncoder : Encoder<CompositeSettings, string>
+    public class XmlSettingsEncoder : Encoder<CompositeSettings, string>
     {
-        public SettingsEncoder(CompositeSettingsFactory settingsFactory)
+        public XmlSettingsEncoder(CompositeSettingsFactory settingsFactory)
         {
             this.settingsFactory = settingsFactory;
         }
