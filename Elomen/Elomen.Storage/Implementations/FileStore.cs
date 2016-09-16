@@ -1,28 +1,28 @@
-﻿using Elomen.Storage.Contracts;
+﻿using System.IO;
+using System.Text;
+using Elomen.Storage.Contracts;
 
 namespace Elomen.Storage.Implementations
 {
     public class FileStore : ResourceStore<string>
     {
-        public FileStore(FileSystem fs, string path)
+        public FileStore(string path)
         {
-            this.fs = fs;
             this.path = path;
         }
 
         public string Load()
         {
-            return fs.Load(path);
+            return File.ReadAllText(path, Encoding.UTF8);
         }
 
         public void Save(string value)
         {
-            fs.Save(path, value);
+            File.WriteAllText(path, value, Encoding.UTF8);
         }
 
         //
 
-        private readonly FileSystem fs;
         private readonly string path;
     }
 }
