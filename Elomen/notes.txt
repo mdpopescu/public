@@ -1,6 +1,14 @@
 x Replace the Account with an accountId in Message
 
 
+- TwitterChannel.Send is not working:
+  - It needs the "in reply to" id / name
+  - Sending the whole thing leads to "msg7" ->
+    "I do not know what [@ElomenBot msg7] means" ->
+    "I do not know what [I do not know what [@ElomenBot msg7] means.] means." -> ...
+  ! Need to ensure that I'm not spamming others, so do NOT send / process a message that does not start with "@ElomenBot" or that
+    has any other "@" sign except for the first one
+
 
 - Write a Twitter client
 - All times should be UTC; confirmations should be similar to "I will notify you at 03:35 UTC (08:35 local) to ...".

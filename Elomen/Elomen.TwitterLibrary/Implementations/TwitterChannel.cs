@@ -17,7 +17,11 @@ namespace Elomen.TwitterLibrary.Implementations
         public void Send(Message message)
         {
             // TODO: this is not working correctly
-            tokens.Statuses.Update(new StatusResponse { InReplyToScreenName = message.AccountId, Text = message.Text });
+            // TODO: 1. This needs the "in reply to" id / name
+            // TODO: 2. Sending the whole thing leads to "msg7" ->
+            // TODO:    "I do not know what [@ElomenBot msg7] means" ->
+            // TODO:    "I do not know what [I do not know what [@ElomenBot msg7] means.] means." -> ...
+            tokens.Statuses.Update(status => message.Text);
         }
 
         public IObservable<Message> Receive()
