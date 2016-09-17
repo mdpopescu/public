@@ -5,17 +5,14 @@ namespace Elomen.TwitterLibrary.Implementations
 {
     public class DefaultTokenLoader : Loadable<Tokens>
     {
-        public DefaultTokenLoader(ResourceStore<CompositeSettings> appStore, ResourceStore<CompositeSettings> userStore)
+        public DefaultTokenLoader(CompositeSettings appSettings, CompositeSettings userSettings)
         {
-            this.appStore = appStore;
-            this.userStore = userStore;
+            this.appSettings = appSettings;
+            this.userSettings = userSettings;
         }
 
         public Tokens Load()
         {
-            var appSettings = appStore.Load();
-            var userSettings = userStore.Load();
-
             return new Tokens
             {
                 ConsumerKey = appSettings["ConsumerKey"],
@@ -27,7 +24,7 @@ namespace Elomen.TwitterLibrary.Implementations
 
         //
 
-        private readonly ResourceStore<CompositeSettings> appStore;
-        private readonly ResourceStore<CompositeSettings> userStore;
+        private readonly CompositeSettings appSettings;
+        private readonly CompositeSettings userSettings;
     }
 }

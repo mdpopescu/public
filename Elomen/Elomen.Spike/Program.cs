@@ -14,10 +14,11 @@ namespace Elomen.Spike
 
         private static void Main()
         {
-            var appStore = GetAppStore(APP_PREFIX);
+            var appSettings = GetAppStore(APP_PREFIX).Load();
             var userStore = GetUserStore(FILENAME);
-            var loader = new DefaultTokenLoader(appStore, userStore);
-            var authorizer = new ConsoleAuthorizer(appStore.Load());
+
+            var loader = new DefaultTokenLoader(appSettings, userStore.Load());
+            var authorizer = new ConsoleAuthorizer(appSettings);
 
             var safeLoader = new AuthorizingTokenLoader(loader, authorizer, userStore);
             var tokens = safeLoader.Load();
