@@ -57,7 +57,7 @@ namespace Elomen.Tests.Implementations
             [TestMethod]
             public void ExecutesTheCommand()
             {
-                var account = new Account();
+                var account = new Account("");
                 accountRepository
                     .Setup(it => it.Find("a"))
                     .Returns(account);
