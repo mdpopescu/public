@@ -48,10 +48,8 @@ namespace Elomen.Tests.Implementations
             public void ReturnsTheResultOfAuthorizationIfTheUnderlyingLoadThrows()
             {
                 loader.Setup(it => it.Load()).Throws<Exception>();
-                appSettings["ConsumerKey"] = "a";
-                appSettings["ConsumerSecret"] = "b";
                 var tokens = new Tokens();
-                authorizer.Setup(it => it.Authorize("a", "b")).Returns(tokens);
+                authorizer.Setup(it => it.Authorize(appSettings)).Returns(tokens);
                 userStore.Setup(it => it.Load()).Returns(new DictionarySettings());
 
                 var result = sut.Load();
@@ -68,7 +66,7 @@ namespace Elomen.Tests.Implementations
                     AccessToken = "a",
                     AccessTokenSecret = "b",
                 };
-                authorizer.Setup(it => it.Authorize(It.IsAny<string>(), It.IsAny<string>())).Returns(tokens);
+                authorizer.Setup(it => it.Authorize(appSettings)).Returns(tokens);
                 var userSettings = new DictionarySettings();
                 userStore.Setup(it => it.Load()).Returns(userSettings);
 

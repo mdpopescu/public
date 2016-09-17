@@ -23,7 +23,7 @@ namespace Elomen.TwitterLibrary.Implementations
             }
             catch
             {
-                var tokens = authorizer.Authorize(appSettings["ConsumerKey"], appSettings["ConsumerSecret"]);
+                var tokens = authorizer.Authorize(appSettings);
 
                 SaveUserSettings(tokens);
                 return tokens;
