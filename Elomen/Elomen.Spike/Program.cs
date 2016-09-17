@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reactive.Linq;
 using CoreTweet.Streaming;
-using Elomen.Spike.Implementations;
 using Elomen.Storage.Contracts;
 using Elomen.Storage.Implementations;
+using Elomen.TwitterLibrary.Implementations;
 
 namespace Elomen.Spike
 {
@@ -16,10 +16,11 @@ namespace Elomen.Spike
         {
             var appStore = GetAppStore(APP_PREFIX);
             var userStore = GetUserStore(FILENAME);
-            var approver = new ConsoleApprover();
+            var authorizer = new ConsoleAuthorizer();
 
-            var tokenLoader = new TokenLoader(appStore, userStore, approver);
-            var tokens = tokenLoader.Load();
+            var loader = new DefaultTokenLoader(appStore, userStore);
+            var safeLoader = new AuthorizingTokenLoader(loader, appStore, userStore, authorizer);
+            var tokens = safeLoader.Load();
 
             var stream = tokens
                 .Streaming

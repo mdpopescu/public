@@ -44,7 +44,9 @@
     <Compile Include="Contracts\CompositeSettings.cs" />
     <Compile Include="Contracts\CompositeSettingsFactory.cs" />
     <Compile Include="Contracts\Encoder.cs" />
+    <Compile Include="Contracts\Loadable.cs" />
     <Compile Include="Contracts\ResourceStore.cs" />
+    <Compile Include="Contracts\Saveable.cs" />
     <Compile Include="Implementations\DictionarySettingsFactory.cs" />
     <Compile Include="Implementations\FileStore.cs" />
     <Compile Include="Implementations\ProtectedDataAdapter.cs" />

@@ -40,8 +40,16 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="CoreTweet, Version=0.7.1.345, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CoreTweet.0.7.1.345\lib\net45\CoreTweet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Moq, Version=4.5.21.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.5.21\lib\net45\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -80,6 +88,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Implementations\AuthorizingTokenLoaderTests.cs" />
     <Compile Include="Implementations\InterpreterTests.cs" />
     <Compile Include="Implementations\ChannelMonitorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,6 +97,14 @@
     <ProjectReference Include="..\Elomen.Library\Elomen.Library.csproj">
       <Project>{77836c27-53f9-4d1f-9683-c4f91c2ff963}</Project>
       <Name>Elomen.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Elomen.Storage\Elomen.Storage.csproj">
+      <Project>{f82210d2-408c-4bb0-ab0a-790a035b834d}</Project>
+      <Name>Elomen.Storage</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Elomen.TwitterLibrary\Elomen.TwitterLibrary.csproj">
+      <Project>{a199aab0-3758-440c-883f-6f452f48833c}</Project>
+      <Name>Elomen.TwitterLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
