@@ -74,6 +74,23 @@ namespace Elomen.Tests.Implementations
                 Assert.AreEqual("a", userSettings["AccessToken"]);
                 Assert.AreEqual("b", userSettings["AccessTokenSecret"]);
             }
+
+            [TestMethod]
+            public void CreatesNewSettingsIfUserStoreLoadFails()
+            {
+                loader.Setup(it => it.Load()).Throws<Exception>();
+                var tokens = new Tokens
+                {
+                    AccessToken = "a",
+                    AccessTokenSecret = "b",
+                };
+                authorizer.Setup(it => it.Authorize()).Returns(tokens);
+                userStore.Setup(it => it.Load()).Throws<Exception>();
+
+                sut.Load();
+
+                userStore.Verify(it => it.Save(It.Is<CompositeSettings>(s => s["AccessToken"] == "a" && s["AccessTokenSecret"] == "b")));
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CoreTweet;
 using Elomen.Storage.Contracts;
+using Elomen.Storage.Implementations;
 using Elomen.TwitterLibrary.Contracts;
 
 namespace Elomen.TwitterLibrary.Implementations
@@ -36,12 +37,24 @@ namespace Elomen.TwitterLibrary.Implementations
 
         private void SaveUserSettings(Tokens tokens)
         {
-            var settings = userStore.Load();
+            var settings = LoadUserSettings();
 
             settings["AccessToken"] = tokens.AccessToken;
             settings["AccessTokenSecret"] = tokens.AccessTokenSecret;
 
             userStore.Save(settings);
+        }
+
+        private CompositeSettings LoadUserSettings()
+        {
+            try
+            {
+                return userStore.Load();
+            }
+            catch
+            {
+                return new DictionarySettings();
+            }
         }
     }
 }

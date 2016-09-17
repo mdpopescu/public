@@ -1,5 +1,4 @@
 ﻿using System;
-using Elomen.Library.Contracts;
 using Elomen.Library.Implementations;
 using Elomen.Spike.Implementations;
 using Elomen.Storage.Contracts;
@@ -11,27 +10,35 @@ namespace Elomen.Spike
     internal class Program
     {
         private const string APP_PREFIX = "Elomen.";
-        private const string FILENAME = "settings.dat";
+        private const string FILENAME = "ElomenBot.dat";
 
         private static void Main()
         {
             var appSettings = GetAppStore(APP_PREFIX).Load();
             var userStore = GetUserStore(FILENAME);
 
-            var loader = new DefaultTokenLoader(appSettings, userStore.Load());
+            var loader = new DefaultTokenLoader(appSettings, userStore);
             var authorizer = new ConsoleAuthorizer(appSettings);
 
             var safeLoader = new AuthorizingTokenLoader(loader, authorizer, userStore);
             var tokens = safeLoader.Load();
+            var channel = new TwitterChannel(tokens);
 
             var interpreter = new Interpreter(new NullAccountRepository(), new FakeCommandParser());
             var monitor = new ChannelMonitor(interpreter);
 
-            Channel channel = null;
-
             monitor.Monitor(channel);
-
             Console.ReadLine();
+
+            //using (tokens
+            //    .Streaming
+            //    .UserAsObservable()
+            //    .OfType<StatusMessage>()
+            //    .Subscribe(msg => Console.WriteLine(msg.Status.User.ScreenName + ": " + msg.Status.Text)))
+            //{
+            //    Console.ReadLine();
+            //}
+
 
             //var stream = tokens
             //    .Streaming
