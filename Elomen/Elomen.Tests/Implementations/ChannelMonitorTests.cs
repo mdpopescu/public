@@ -36,7 +36,7 @@ namespace Elomen.Tests.Implementations
                     .Returns("response");
                 sut.Monitor(channel.Object);
 
-                incoming.OnNext(new Message(new Account(""), "command"));
+                incoming.OnNext(new Message("", "command"));
 
                 channel.Verify(it => it.Send(It.Is<Message>(m => m.Text == "response")));
             }

@@ -15,7 +15,7 @@ namespace Elomen.Library.Implementations
         {
             channel
                 .Receive()
-                .Subscribe(m => channel.Send(new Message(m.Account, interpreter.Execute(m.Account.Id, m.Text))));
+                .Subscribe(m => channel.Send(new Message(m.AccountId, interpreter.Execute(m.AccountId, m.Text))));
         }
 
         //

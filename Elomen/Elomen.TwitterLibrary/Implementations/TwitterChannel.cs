@@ -16,7 +16,8 @@ namespace Elomen.TwitterLibrary.Implementations
 
         public void Send(Message message)
         {
-            tokens.Statuses.Update(new StatusResponse { /*InReplyToScreenName = message.Account.Id, */Text = message.Text });
+            // TODO: this is not working correctly
+            tokens.Statuses.Update(new StatusResponse { InReplyToScreenName = message.AccountId, Text = message.Text });
         }
 
         public IObservable<Message> Receive()
@@ -34,7 +35,7 @@ namespace Elomen.TwitterLibrary.Implementations
 
         private static Message ConvertMessage(StatusMessage message)
         {
-            return new Message(Account.GUEST, message.Status.Text);
+            return new Message(message.Status.User.ScreenName, message.Status.Text);
         }
     }
 }

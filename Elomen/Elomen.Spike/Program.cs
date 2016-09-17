@@ -27,6 +27,7 @@ namespace Elomen.Spike
             var interpreter = new Interpreter(new NullAccountRepository(), new FakeCommandParser());
             var monitor = new ChannelMonitor(interpreter);
 
+            Console.WriteLine("Monitoring...");
             monitor.Monitor(channel);
             Console.ReadLine();
 
