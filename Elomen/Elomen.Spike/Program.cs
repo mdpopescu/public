@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Reactive.Linq;
-using CoreTweet.Streaming;
+using Elomen.Library.Contracts;
+using Elomen.Library.Implementations;
+using Elomen.Spike.Implementations;
 using Elomen.Storage.Contracts;
 using Elomen.Storage.Implementations;
 using Elomen.TwitterLibrary.Implementations;
@@ -23,15 +24,24 @@ namespace Elomen.Spike
             var safeLoader = new AuthorizingTokenLoader(loader, authorizer, userStore);
             var tokens = safeLoader.Load();
 
-            var stream = tokens
-                .Streaming
-                .UserAsObservable()
-                .OfType<StatusMessage>();
+            var interpreter = new Interpreter(new NullAccountRepository(), new FakeCommandParser());
+            var monitor = new ChannelMonitor(interpreter);
 
-            using (stream.Subscribe(msg => Console.WriteLine(msg.Status.User.ScreenName + ": " + msg.Status.Text)))
-            {
-                Console.ReadLine();
-            }
+            Channel channel = null;
+
+            monitor.Monitor(channel);
+
+            Console.ReadLine();
+
+            //var stream = tokens
+            //    .Streaming
+            //    .UserAsObservable()
+            //    .OfType<StatusMessage>();
+
+            //using (stream.Subscribe(msg => Console.WriteLine(msg.Status.User.ScreenName + ": " + msg.Status.Text)))
+            //{
+            //    Console.ReadLine();
+            //}
         }
 
         //

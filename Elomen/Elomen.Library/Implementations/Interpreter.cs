@@ -2,7 +2,7 @@
 
 namespace Elomen.Library.Implementations
 {
-    public class Interpreter
+    public class Interpreter : Executable
     {
         public Interpreter(AccountRepository accountRepository, CommandParser commandParser)
         {
