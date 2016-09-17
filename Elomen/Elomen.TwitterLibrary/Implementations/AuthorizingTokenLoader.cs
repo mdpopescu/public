@@ -6,13 +6,11 @@ namespace Elomen.TwitterLibrary.Implementations
 {
     public class AuthorizingTokenLoader : Loadable<Tokens>
     {
-        public AuthorizingTokenLoader(Loadable<Tokens> loader, CompositeSettings appSettings, ResourceStore<CompositeSettings> userStore,
-            Authorizable authorizer)
+        public AuthorizingTokenLoader(Loadable<Tokens> loader, Authorizable authorizer, ResourceStore<CompositeSettings> userStore)
         {
             this.loader = loader;
-            this.appSettings = appSettings;
-            this.userStore = userStore;
             this.authorizer = authorizer;
+            this.userStore = userStore;
         }
 
         public Tokens Load()
@@ -23,7 +21,7 @@ namespace Elomen.TwitterLibrary.Implementations
             }
             catch
             {
-                var tokens = authorizer.Authorize(appSettings);
+                var tokens = authorizer.Authorize();
 
                 SaveUserSettings(tokens);
                 return tokens;
@@ -33,9 +31,8 @@ namespace Elomen.TwitterLibrary.Implementations
         //
 
         private readonly Loadable<Tokens> loader;
-        private readonly CompositeSettings appSettings;
-        private readonly ResourceStore<CompositeSettings> userStore;
         private readonly Authorizable authorizer;
+        private readonly ResourceStore<CompositeSettings> userStore;
 
         private void SaveUserSettings(Tokens tokens)
         {

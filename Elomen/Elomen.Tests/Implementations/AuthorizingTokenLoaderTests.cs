@@ -13,9 +13,8 @@ namespace Elomen.Tests.Implementations
     public class AuthorizingTokenLoaderTests
     {
         private Mock<Loadable<Tokens>> loader;
-        private CompositeSettings appSettings;
-        private Mock<ResourceStore<CompositeSettings>> userStore;
         private Mock<Authorizable> authorizer;
+        private Mock<ResourceStore<CompositeSettings>> userStore;
 
         private AuthorizingTokenLoader sut;
 
@@ -23,11 +22,10 @@ namespace Elomen.Tests.Implementations
         public void SetUp()
         {
             loader = new Mock<Loadable<Tokens>>();
-            appSettings = new DictionarySettings();
-            userStore = new Mock<ResourceStore<CompositeSettings>>();
             authorizer = new Mock<Authorizable>();
+            userStore = new Mock<ResourceStore<CompositeSettings>>();
 
-            sut = new AuthorizingTokenLoader(loader.Object, appSettings, userStore.Object, authorizer.Object);
+            sut = new AuthorizingTokenLoader(loader.Object, authorizer.Object, userStore.Object);
         }
 
         [TestClass]
@@ -49,7 +47,7 @@ namespace Elomen.Tests.Implementations
             {
                 loader.Setup(it => it.Load()).Throws<Exception>();
                 var tokens = new Tokens();
-                authorizer.Setup(it => it.Authorize(appSettings)).Returns(tokens);
+                authorizer.Setup(it => it.Authorize()).Returns(tokens);
                 userStore.Setup(it => it.Load()).Returns(new DictionarySettings());
 
                 var result = sut.Load();
@@ -66,7 +64,7 @@ namespace Elomen.Tests.Implementations
                     AccessToken = "a",
                     AccessTokenSecret = "b",
                 };
-                authorizer.Setup(it => it.Authorize(appSettings)).Returns(tokens);
+                authorizer.Setup(it => it.Authorize()).Returns(tokens);
                 var userSettings = new DictionarySettings();
                 userStore.Setup(it => it.Load()).Returns(userSettings);
 

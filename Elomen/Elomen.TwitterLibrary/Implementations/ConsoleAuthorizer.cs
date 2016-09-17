@@ -8,7 +8,12 @@ namespace Elomen.TwitterLibrary.Implementations
 {
     public class ConsoleAuthorizer : Authorizable
     {
-        public Tokens Authorize(CompositeSettings appSettings)
+        public ConsoleAuthorizer(CompositeSettings appSettings)
+        {
+            this.appSettings = appSettings;
+        }
+
+        public Tokens Authorize()
         {
             var session = OAuth.Authorize(appSettings["ConsumerKey"], appSettings["ConsumerSecret"]);
             Process.Start(session.AuthorizeUri.AbsoluteUri);
@@ -18,5 +23,9 @@ namespace Elomen.TwitterLibrary.Implementations
 
             return session.GetTokens(pin);
         }
+
+        //
+
+        private readonly CompositeSettings appSettings;
     }
 }
