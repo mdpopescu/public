@@ -15,7 +15,7 @@ namespace Elomen.Library.Implementations
         /// </summary>
         /// <param name="accountId">The account of the user sending the command.</param>
         /// <param name="commandText">The (natural language) command.</param>
-        /// <returns>A (natural language) confirmation / rejection of the command.</returns>
+        /// <returns>The result of executing the command (or an error message).</returns>
         public string Execute(string accountId, string commandText)
         {
             var account = accountRepository.Find(accountId);

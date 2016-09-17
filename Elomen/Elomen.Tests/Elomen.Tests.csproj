@@ -60,6 +60,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Implementations\InterpreterTests.cs" />
+    <Compile Include="Implementations\MonitorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

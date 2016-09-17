@@ -42,10 +42,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\AccountRepository.cs" />
+    <Compile Include="Contracts\Channel.cs" />
     <Compile Include="Contracts\Command.cs" />
     <Compile Include="Contracts\CommandParser.cs" />
+    <Compile Include="Contracts\Executable.cs" />
+    <Compile Include="Contracts\Receiver.cs" />
+    <Compile Include="Contracts\Sender.cs" />
     <Compile Include="Implementations\Interpreter.cs" />
+    <Compile Include="Implementations\Monitor.cs" />
     <Compile Include="Model\Account.cs" />
+    <Compile Include="Model\Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
