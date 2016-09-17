@@ -13,7 +13,7 @@ namespace Elomen.Tests.Implementations
     public class AuthorizingTokenLoaderTests
     {
         private Mock<Loadable<Tokens>> loader;
-        private Mock<Loadable<CompositeSettings>> appStore;
+        private CompositeSettings appSettings;
         private Mock<ResourceStore<CompositeSettings>> userStore;
         private Mock<Authorizable> authorizer;
 
@@ -23,11 +23,11 @@ namespace Elomen.Tests.Implementations
         public void SetUp()
         {
             loader = new Mock<Loadable<Tokens>>();
-            appStore = new Mock<Loadable<CompositeSettings>>();
+            appSettings = new DictionarySettings();
             userStore = new Mock<ResourceStore<CompositeSettings>>();
             authorizer = new Mock<Authorizable>();
 
-            sut = new AuthorizingTokenLoader(loader.Object, appStore.Object, userStore.Object, authorizer.Object);
+            sut = new AuthorizingTokenLoader(loader.Object, appSettings, userStore.Object, authorizer.Object);
         }
 
         [TestClass]
@@ -48,12 +48,8 @@ namespace Elomen.Tests.Implementations
             public void ReturnsTheResultOfAuthorizationIfTheUnderlyingLoadThrows()
             {
                 loader.Setup(it => it.Load()).Throws<Exception>();
-                var appSettings = new DictionarySettings
-                {
-                    ["ConsumerKey"] = "a",
-                    ["ConsumerSecret"] = "b",
-                };
-                appStore.Setup(it => it.Load()).Returns(appSettings);
+                appSettings["ConsumerKey"] = "a";
+                appSettings["ConsumerSecret"] = "b";
                 var tokens = new Tokens();
                 authorizer.Setup(it => it.Authorize("a", "b")).Returns(tokens);
                 userStore.Setup(it => it.Load()).Returns(new DictionarySettings());
@@ -67,7 +63,6 @@ namespace Elomen.Tests.Implementations
             public void SavesTheResultOfAuthorizationIfTheUnderlyingLoadThrows()
             {
                 loader.Setup(it => it.Load()).Throws<Exception>();
-                appStore.Setup(it => it.Load()).Returns(new DictionarySettings());
                 var tokens = new Tokens
                 {
                     AccessToken = "a",
