@@ -11,7 +11,7 @@ namespace Elomen.Library.Implementations
             this.interpreter = interpreter;
         }
 
-        public void Monitor(Channel channel)
+        public void Monitor(Channel<Message> channel)
         {
             channel
                 .Receive()
@@ -22,10 +22,10 @@ namespace Elomen.Library.Implementations
 
         private readonly Executable interpreter;
 
-        private void Reply(Sender channel, Message m)
+        private void Reply(Sender<Message> channel, Message m)
         {
             var response = interpreter.Execute(m.Account, m.Text);
-            channel.Send(new Message(m.Account, response));
+            channel.Send(new Message { Parent = m, Account = m.Account, Text = response });
         }
     }
 }

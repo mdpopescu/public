@@ -1,7 +1,13 @@
 x Replace the Account with an accountId in Message
 
 
-- Refactor Interpreter to accept Account instead of AccountId
+Message should have an Account, there should be an AccountMapper used by TwitterChannel that knows to convert between TwitterAccount and Account
+
+
+
+
+- TwitterChannel might need refactoring, there is a lot of embedded business logic
+
 - TwitterChannel.Send is not working:
   - It needs the "in reply to" id / name
   - Sending the whole thing leads to "msg7" ->

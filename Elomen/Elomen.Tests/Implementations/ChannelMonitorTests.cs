@@ -25,7 +25,7 @@ namespace Elomen.Tests.Implementations
         [TestMethod]
         public void ExecutesIncomingCommands()
         {
-            var channel = new Mock<Channel>();
+            var channel = new Mock<Channel<Message>>();
             using (var incoming = new Subject<Message>())
             {
                 channel
@@ -37,7 +37,7 @@ namespace Elomen.Tests.Implementations
                     .Returns("response");
                 sut.Monitor(channel.Object);
 
-                incoming.OnNext(new Message(account, "command"));
+                incoming.OnNext(new Message { Account = account, Text = "command" });
 
                 channel.Verify(it => it.Send(It.Is<Message>(m => m.Account == account && m.Text == "response")));
             }

@@ -23,12 +23,13 @@ namespace Elomen.Spike
             var safeLoader = new AuthorizingTokenLoader(loader, authorizer, userStore);
             var tokens = safeLoader.Load();
             var channel = new TwitterChannel(tokens);
+            var channelAdapter = new TwitterChannelAdapter(channel, new NullAccountRepository());
 
             var interpreter = new Interpreter(new FakeCommandParser());
             var monitor = new ChannelMonitor(interpreter);
 
             Console.WriteLine("Monitoring...");
-            monitor.Monitor(channel);
+            monitor.Monitor(channelAdapter);
             Console.ReadLine();
         }
 

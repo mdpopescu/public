@@ -1,9 +1,7 @@
-﻿using Elomen.Library.Model;
-
-namespace Elomen.Library.Contracts
+﻿namespace Elomen.Library.Contracts
 {
-    public interface Sender
+    public interface Sender<in T>
     {
-        void Send(Message message);
+        void Send(T message);
     }
 }

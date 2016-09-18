@@ -91,6 +91,7 @@
     <Compile Include="Implementations\AuthorizingTokenLoaderTests.cs" />
     <Compile Include="Implementations\InterpreterTests.cs" />
     <Compile Include="Implementations\ChannelMonitorTests.cs" />
+    <Compile Include="Implementations\TwitterChannelAdapterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

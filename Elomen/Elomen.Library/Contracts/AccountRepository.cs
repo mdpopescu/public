@@ -1,9 +1,7 @@
-﻿using Elomen.Library.Model;
-
-namespace Elomen.Library.Contracts
+﻿namespace Elomen.Library.Contracts
 {
-    public interface AccountRepository
+    public interface Repository<in TKey, out TValue>
     {
-        Account Find(long accountId);
+        TValue Find(TKey id);
     }
 }

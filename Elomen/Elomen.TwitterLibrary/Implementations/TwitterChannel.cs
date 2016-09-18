@@ -3,24 +3,23 @@ using System.Reactive.Linq;
 using CoreTweet;
 using CoreTweet.Streaming;
 using Elomen.Library.Contracts;
-using Elomen.Library.Model;
+using Elomen.TwitterLibrary.Models;
 
 namespace Elomen.TwitterLibrary.Implementations
 {
-    // TODO: this needs a lot of refactoring, there is too much embedded business logic
-    public class TwitterChannel : Channel
+    public class TwitterChannel : Channel<TwitterMessage>
     {
         public TwitterChannel(Tokens tokens)
         {
             this.tokens = tokens;
         }
 
-        public void Send(Message message)
+        public void Send(TwitterMessage message)
         {
             tokens.Statuses.Update($"@{message.Account.Username} {message.Text}", message.Account.Id);
         }
 
-        public IObservable<Message> Receive()
+        public IObservable<TwitterMessage> Receive()
         {
             return tokens
                 .Streaming
@@ -36,10 +35,12 @@ namespace Elomen.TwitterLibrary.Implementations
 
         private readonly Tokens tokens;
 
-        private static Message ConvertMessage(StatusMessage message)
+        private static TwitterMessage ConvertMessage(StatusMessage message)
         {
-            var account = new Account(message.Status.User.Id.GetValueOrDefault(), message.Status.User.ScreenName);
-            return new Message(account, message.Status.Text.Substring(BOT_NAME.Length + 1).Replace("@", ""));
+            var account = new TwitterAccount(message.Status.User);
+            var text = message.Status.Text.Substring(BOT_NAME.Length + 1).Replace("@", "");
+
+            return new TwitterMessage(account, text);
         }
     }
 }

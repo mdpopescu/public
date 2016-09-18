@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using Elomen.Storage.Contracts;
 
@@ -12,7 +11,8 @@ namespace Elomen.Storage.Implementations
     {
         public EnvironmentStore(EnvironmentVariableTarget target, string prefix, CompositeSettingsFactory settingsFactory)
         {
-            Debug.Assert(!string.IsNullOrEmpty(prefix), nameof(prefix));
+            if (string.IsNullOrEmpty(prefix))
+                throw new NullReferenceException(nameof(prefix));
 
             this.target = target;
             this.prefix = prefix;

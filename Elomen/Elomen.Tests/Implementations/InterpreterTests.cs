@@ -13,12 +13,16 @@ namespace Elomen.Tests.Implementations
 
         private Interpreter sut;
 
+        private Account account;
+
         [TestInitialize]
         public void SetUp()
         {
             commandParser = new Mock<CommandParser>();
 
             sut = new Interpreter(commandParser.Object);
+
+            account = new Account(1, "a");
         }
 
         [TestClass]
@@ -27,7 +31,7 @@ namespace Elomen.Tests.Implementations
             [TestMethod]
             public void ParsesTheCommand()
             {
-                sut.Execute(Account.GUEST, "x");
+                sut.Execute(account, "x");
 
                 commandParser.Verify(it => it.Parse("x"));
             }
@@ -39,7 +43,7 @@ namespace Elomen.Tests.Implementations
                     .Setup(it => it.Parse("x"))
                     .Returns((Command) null);
 
-                var result = sut.Execute(Account.GUEST, "x");
+                var result = sut.Execute(account, "x");
 
                 Assert.AreEqual("I do not know what [x] means.", result);
             }
@@ -52,9 +56,9 @@ namespace Elomen.Tests.Implementations
                     .Setup(it => it.Parse("x"))
                     .Returns(command.Object);
 
-                sut.Execute(Account.GUEST, "x");
+                sut.Execute(account, "x");
 
-                command.Verify(it => it.Execute(Account.GUEST));
+                command.Verify(it => it.Execute(account));
             }
 
             [TestMethod]
@@ -68,7 +72,7 @@ namespace Elomen.Tests.Implementations
                     .Setup(it => it.Execute(It.IsAny<Account>()))
                     .Returns("message");
 
-                var result = sut.Execute(Account.GUEST, "x");
+                var result = sut.Execute(account, "x");
 
                 Assert.AreEqual("message", result);
             }

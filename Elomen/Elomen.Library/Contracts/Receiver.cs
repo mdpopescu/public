@@ -1,10 +1,9 @@
 ﻿using System;
-using Elomen.Library.Model;
 
 namespace Elomen.Library.Contracts
 {
-    public interface Receiver
+    public interface Receiver<out T>
     {
-        IObservable<Message> Receive();
+        IObservable<T> Receive();
     }
 }
