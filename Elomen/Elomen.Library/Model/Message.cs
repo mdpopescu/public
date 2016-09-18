@@ -2,12 +2,12 @@
 {
     public class Message
     {
-        public string AccountId { get; private set; }
+        public Account Account { get; private set; }
         public string Text { get; private set; }
 
-        public Message(string accountId, string text)
+        public Message(Account account, string text)
         {
-            AccountId = accountId;
+            Account = account;
             Text = text;
         }
     }

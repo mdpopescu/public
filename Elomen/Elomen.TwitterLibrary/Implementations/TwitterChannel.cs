@@ -7,6 +7,7 @@ using Elomen.Library.Model;
 
 namespace Elomen.TwitterLibrary.Implementations
 {
+    // TODO: this needs a lot of refactoring, there is too much embedded business logic
     public class TwitterChannel : Channel
     {
         public TwitterChannel(Tokens tokens)
@@ -16,12 +17,7 @@ namespace Elomen.TwitterLibrary.Implementations
 
         public void Send(Message message)
         {
-            // TODO: this is not working correctly
-            // TODO: 1. This needs the "in reply to" id / name
-            // TODO: 2. Sending the whole thing leads to "msg7" ->
-            // TODO:    "I do not know what [@ElomenBot msg7] means" ->
-            // TODO:    "I do not know what [I do not know what [@ElomenBot msg7] means.] means." -> ...
-            tokens.Statuses.Update(status => message.Text);
+            tokens.Statuses.Update($"@{message.Account.Username} {message.Text}", message.Account.Id);
         }
 
         public IObservable<Message> Receive()
@@ -30,16 +26,20 @@ namespace Elomen.TwitterLibrary.Implementations
                 .Streaming
                 .UserAsObservable()
                 .OfType<StatusMessage>()
+                .Where(m => m.Status.Text.StartsWith(BOT_NAME))
                 .Select(ConvertMessage);
         }
 
         //
 
+        private const string BOT_NAME = "@ElomenBot";
+
         private readonly Tokens tokens;
 
         private static Message ConvertMessage(StatusMessage message)
         {
-            return new Message(message.Status.User.ScreenName, message.Status.Text);
+            var account = new Account(message.Status.User.Id.GetValueOrDefault(), message.Status.User.ScreenName);
+            return new Message(account, message.Status.Text.Substring(BOT_NAME.Length + 1).Replace("@", ""));
         }
     }
 }

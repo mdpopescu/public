@@ -4,6 +4,6 @@ namespace Elomen.Library.Contracts
 {
     public interface AccountRepository
     {
-        Account Find(string accountId);
+        Account Find(long accountId);
     }
 }

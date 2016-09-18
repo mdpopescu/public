@@ -15,11 +15,17 @@ namespace Elomen.Library.Implementations
         {
             channel
                 .Receive()
-                .Subscribe(m => channel.Send(new Message(m.AccountId, interpreter.Execute(m.AccountId, m.Text))));
+                .Subscribe(m => Reply(channel, m));
         }
 
         //
 
         private readonly Executable interpreter;
+
+        private void Reply(Sender channel, Message m)
+        {
+            var response = interpreter.Execute(m.Account.Id, m.Text);
+            channel.Send(new Message(m.Account, response));
+        }
     }
 }

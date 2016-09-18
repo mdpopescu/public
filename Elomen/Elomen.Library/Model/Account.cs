@@ -2,13 +2,15 @@
 {
     public class Account
     {
-        public static readonly Account GUEST = new Account("");
+        public static readonly Account GUEST = new Account(0, "");
 
-        public string Id { get; private set; }
+        public long Id { get; private set; }
+        public string Username { get; private set; }
 
-        public Account(string id)
+        public Account(long id, string username)
         {
             Id = id;
+            Username = username;
         }
     }
 }

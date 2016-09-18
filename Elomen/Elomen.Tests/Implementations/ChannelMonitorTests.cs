@@ -32,13 +32,14 @@ namespace Elomen.Tests.Implementations
                     .Setup(it => it.Receive())
                     .Returns(incoming);
                 interpreter
-                    .Setup(it => it.Execute(It.IsAny<string>(), "command"))
+                    .Setup(it => it.Execute(1, "command"))
                     .Returns("response");
+                var account = new Account(1, "guest");
                 sut.Monitor(channel.Object);
 
-                incoming.OnNext(new Message("", "command"));
+                incoming.OnNext(new Message(account, "command"));
 
-                channel.Verify(it => it.Send(It.Is<Message>(m => m.Text == "response")));
+                channel.Verify(it => it.Send(It.Is<Message>(m => m.Account == account && m.Text == "response")));
             }
         }
     }

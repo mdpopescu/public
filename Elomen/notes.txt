@@ -1,6 +1,7 @@
 x Replace the Account with an accountId in Message
 
 
+- Refactor Interpreter to accept Account instead of AccountId
 - TwitterChannel.Send is not working:
   - It needs the "in reply to" id / name
   - Sending the whole thing leads to "msg7" ->

@@ -5,7 +5,7 @@ namespace Elomen.Spike.Implementations
 {
     public class NullAccountRepository : AccountRepository
     {
-        public Account Find(string accountId)
+        public Account Find(long accountId)
         {
             return Account.GUEST;
         }

@@ -29,46 +29,45 @@ namespace Elomen.Tests.Implementations
             [TestMethod]
             public void LooksUpTheAccount()
             {
-                sut.Execute("a", "b");
+                sut.Execute(1, "x");
 
-                accountRepository.Verify(it => it.Find("a"));
+                accountRepository.Verify(it => it.Find(1));
             }
 
             [TestMethod]
             public void ParsesTheCommand()
             {
-                sut.Execute("a", "b");
+                sut.Execute(1, "x");
 
-                commandParser.Verify(it => it.Parse("b"));
+                commandParser.Verify(it => it.Parse("x"));
             }
 
             [TestMethod]
             public void ReturnsAnErrorMessageIfItCannotParseTheCommand()
             {
                 commandParser
-                    .Setup(it => it.Parse("b"))
+                    .Setup(it => it.Parse("x"))
                     .Returns((Command) null);
 
-                var result = sut.Execute("a", "b");
+                var result = sut.Execute(1, "x");
 
-                Assert.AreEqual("I do not know what [b] means.", result);
+                Assert.AreEqual("I do not know what [x] means.", result);
             }
 
             [TestMethod]
             public void ExecutesTheCommand()
             {
-                var account = new Account("");
                 accountRepository
-                    .Setup(it => it.Find("a"))
-                    .Returns(account);
+                    .Setup(it => it.Find(1))
+                    .Returns(Account.GUEST);
                 var command = new Mock<Command>();
                 commandParser
-                    .Setup(it => it.Parse("b"))
+                    .Setup(it => it.Parse("x"))
                     .Returns(command.Object);
 
-                sut.Execute("a", "b");
+                sut.Execute(1, "x");
 
-                command.Verify(it => it.Execute(account));
+                command.Verify(it => it.Execute(Account.GUEST));
             }
 
             [TestMethod]
@@ -76,13 +75,13 @@ namespace Elomen.Tests.Implementations
             {
                 var command = new Mock<Command>();
                 commandParser
-                    .Setup(it => it.Parse("b"))
+                    .Setup(it => it.Parse("x"))
                     .Returns(command.Object);
                 command
                     .Setup(it => it.Execute(It.IsAny<Account>()))
                     .Returns("message");
 
-                var result = sut.Execute("a", "b");
+                var result = sut.Execute(1, "x");
 
                 Assert.AreEqual("message", result);
             }
