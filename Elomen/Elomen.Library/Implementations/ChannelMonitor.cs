@@ -24,7 +24,7 @@ namespace Elomen.Library.Implementations
 
         private void Reply(Sender channel, Message m)
         {
-            var response = interpreter.Execute(m.Account.Id, m.Text);
+            var response = interpreter.Execute(m.Account, m.Text);
             channel.Send(new Message(m.Account, response));
         }
     }

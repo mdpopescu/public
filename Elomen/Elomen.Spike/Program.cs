@@ -1,5 +1,4 @@
 ﻿using System;
-using CoreTweet;
 using Elomen.Library.Implementations;
 using Elomen.Spike.Implementations;
 using Elomen.Storage.Contracts;
@@ -25,10 +24,8 @@ namespace Elomen.Spike
             var tokens = safeLoader.Load();
             var channel = new TwitterChannel(tokens);
 
-            var interpreter = new Interpreter(new NullAccountRepository(), new FakeCommandParser());
+            var interpreter = new Interpreter(new FakeCommandParser());
             var monitor = new ChannelMonitor(interpreter);
-
-            //tokens.Statuses.Update(status => "Hello");
 
             Console.WriteLine("Monitoring...");
             monitor.Monitor(channel);

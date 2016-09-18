@@ -1,24 +1,23 @@
 ﻿using Elomen.Library.Contracts;
+using Elomen.Library.Model;
 
 namespace Elomen.Library.Implementations
 {
     public class Interpreter : Executable
     {
-        public Interpreter(AccountRepository accountRepository, CommandParser commandParser)
+        public Interpreter(CommandParser commandParser)
         {
-            this.accountRepository = accountRepository;
             this.commandParser = commandParser;
         }
 
         /// <summary>
         /// Executes a command.
         /// </summary>
-        /// <param name="accountId">The account of the user sending the command.</param>
+        /// <param name="account">The account of the user sending the command.</param>
         /// <param name="commandText">The (natural language) command.</param>
         /// <returns>The result of executing the command (or an error message).</returns>
-        public string Execute(long accountId, string commandText)
+        public string Execute(Account account, string commandText)
         {
-            var account = accountRepository.Find(accountId);
             var command = commandParser.Parse(commandText);
 
             return command?.Execute(account)
@@ -27,7 +26,6 @@ namespace Elomen.Library.Implementations
 
         //
 
-        private readonly AccountRepository accountRepository;
         private readonly CommandParser commandParser;
     }
 }

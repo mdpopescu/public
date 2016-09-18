@@ -74,6 +74,7 @@
     <Compile Include="Implementations\ConsoleAuthorizer.cs" />
     <Compile Include="Implementations\DefaultTokenLoader.cs" />
     <Compile Include="Implementations\TwitterChannel.cs" />
+    <Compile Include="Models\TwitterAccount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -31,10 +31,10 @@ namespace Elomen.Tests.Implementations
                 channel
                     .Setup(it => it.Receive())
                     .Returns(incoming);
-                interpreter
-                    .Setup(it => it.Execute(1, "command"))
-                    .Returns("response");
                 var account = new Account(1, "guest");
+                interpreter
+                    .Setup(it => it.Execute(account, "command"))
+                    .Returns("response");
                 sut.Monitor(channel.Object);
 
                 incoming.OnNext(new Message(account, "command"));

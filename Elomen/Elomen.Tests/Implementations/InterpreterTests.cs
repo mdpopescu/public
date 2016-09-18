@@ -9,7 +9,6 @@ namespace Elomen.Tests.Implementations
     [TestClass]
     public class InterpreterTests
     {
-        private Mock<AccountRepository> accountRepository;
         private Mock<CommandParser> commandParser;
 
         private Interpreter sut;
@@ -17,27 +16,18 @@ namespace Elomen.Tests.Implementations
         [TestInitialize]
         public void SetUp()
         {
-            accountRepository = new Mock<AccountRepository>();
             commandParser = new Mock<CommandParser>();
 
-            sut = new Interpreter(accountRepository.Object, commandParser.Object);
+            sut = new Interpreter(commandParser.Object);
         }
 
         [TestClass]
         public class Execute : InterpreterTests
         {
             [TestMethod]
-            public void LooksUpTheAccount()
-            {
-                sut.Execute(1, "x");
-
-                accountRepository.Verify(it => it.Find(1));
-            }
-
-            [TestMethod]
             public void ParsesTheCommand()
             {
-                sut.Execute(1, "x");
+                sut.Execute(Account.GUEST, "x");
 
                 commandParser.Verify(it => it.Parse("x"));
             }
@@ -49,7 +39,7 @@ namespace Elomen.Tests.Implementations
                     .Setup(it => it.Parse("x"))
                     .Returns((Command) null);
 
-                var result = sut.Execute(1, "x");
+                var result = sut.Execute(Account.GUEST, "x");
 
                 Assert.AreEqual("I do not know what [x] means.", result);
             }
@@ -57,15 +47,12 @@ namespace Elomen.Tests.Implementations
             [TestMethod]
             public void ExecutesTheCommand()
             {
-                accountRepository
-                    .Setup(it => it.Find(1))
-                    .Returns(Account.GUEST);
                 var command = new Mock<Command>();
                 commandParser
                     .Setup(it => it.Parse("x"))
                     .Returns(command.Object);
 
-                sut.Execute(1, "x");
+                sut.Execute(Account.GUEST, "x");
 
                 command.Verify(it => it.Execute(Account.GUEST));
             }
@@ -81,7 +68,7 @@ namespace Elomen.Tests.Implementations
                     .Setup(it => it.Execute(It.IsAny<Account>()))
                     .Returns("message");
 
-                var result = sut.Execute(1, "x");
+                var result = sut.Execute(Account.GUEST, "x");
 
                 Assert.AreEqual("message", result);
             }
