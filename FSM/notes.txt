@@ -1,0 +1,37 @@
+FSM language ideas
+==================
+
+
+state, event -> action, state
+
+class FSM
+  private state
+  
+  when s, e:
+    action
+	return s'
+  ... repeat as many times as necessary
+  
+  alternative (simplifies the description)
+  
+  when f(s), e:
+    action
+	return s'
+  
+  
+  void FSM(State initialState)
+  {
+    state = initialState
+  }
+  
+  State Handle(Event ev)
+  {
+	look up matching "when s, e" entry
+	if not found
+	  return ERROR
+	call action
+	return s'
+  }  
+end
+
+two states that always exist (and terminate processing): ERROR, SUCCESS

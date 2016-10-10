@@ -1,93 +1,62 @@
 ﻿using System;
-using Renfield.FSM.Library;
 
 namespace Renfield.FSM.ParseNumbers
 {
-  internal class Program
-  {
-    private static FSM<char> fsm;
-
-    private static void Main(string[] args)
+    internal class Program
     {
-      fsm = new FSM<char>("start");
+        private static FSMParser parser;
 
-      fsm.Add("start", '+', null, "whole");
-      fsm.Add("start", '-', c => fsm.Variables.sign = -1, "whole");
-      fsm.Add("start", char.IsDigit, AddChar, "whole");
-      fsm.Add("start", '.', c => fsm.Variables.divisor = 0.1, "fract");
+        private static void Main(string[] args)
+        {
+            parser = new FSMParser();
+            Verify();
 
-      fsm.Add("whole", char.IsDigit, AddChar);
-      fsm.Add("whole", '.', c => fsm.Variables.divisor = 0.1, "fract");
+            do
+            {
+                Console.Write("Enter a number: ");
+                var s = Console.ReadLine();
+                if (string.IsNullOrEmpty(s))
+                    break;
 
-      fsm.Add("fract", char.IsDigit, c =>
-      {
-        fsm.Variables.number += fsm.Variables.divisor * (c - '0');
-        fsm.Variables.divisor /= 10;
-      });
+                try
+                {
+                    Console.WriteLine($"The number is {parser.Parse(s)}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            } while (true);
+        }
 
-      fsm.OnStart = () =>
-      {
-        fsm.Variables.sign = 1;
-        fsm.Variables.number = 0.0;
-        fsm.Variables.divisor = 0.0;
-      };
+        private static void Verify()
+        {
+            AssertEquals(0.0, "");
+            AssertEquals(0.0, "0");
+            AssertEquals(0.0, "-0");
+            AssertEquals(0.0, "+0");
+            AssertEquals(0.0, "-00.00");
+            AssertEquals(0.0, "+00.00");
+            AssertEquals(0.1, ".1");
+            AssertEquals(0.1, "0.1");
+            AssertEquals(0.1, "00.1");
+            AssertEquals(0.1, "000.100");
+            AssertEquals(-0.1, "-.1");
+            AssertEquals(-0.1, "-0.1");
+            AssertEquals(-0.1, "-00.10");
+            AssertEquals(-12.34, "-12.34");
+            AssertEquals(12.34, "12.34");
+            AssertEquals(12.34, "+12.34");
+            AssertEquals(12.34, "+012.340");
+        }
 
-      Verify();
-
-      do
-      {
-        Console.Write("Enter a number: ");
-        var s = Console.ReadLine();
-        if (string.IsNullOrEmpty(s))
-          break;
-
-        fsm.Restart();
-        foreach (var c in s)
-          fsm.Handle(c);
-
-        Console.WriteLine("The number is " + fsm.Variables.sign * fsm.Variables.number);
-      } while (true);
+        private static void AssertEquals(double expected, string s)
+        {
+            var actual = parser.Parse(s);
+            if (Math.Abs(expected - actual) < 0.00001)
+                Console.WriteLine($"[{s}] ok");
+            else
+                throw new Exception($"Assertion failed: parsing {s} resulted in {actual} but was expecting {expected}");
+        }
     }
-
-    private static void AddChar(char c)
-    {
-      fsm.Variables.number = fsm.Variables.number * 10 + (c - '0');
-    }
-
-    private static void Verify()
-    {
-      AssertEquals(0.0, "");
-      AssertEquals(0.0, "0");
-      AssertEquals(0.0, "-0");
-      AssertEquals(0.0, "+0");
-      AssertEquals(0.0, "-00.00");
-      AssertEquals(0.0, "+00.00");
-      AssertEquals(0.1, ".1");
-      AssertEquals(0.1, "0.1");
-      AssertEquals(0.1, "00.1");
-      AssertEquals(0.1, "000.100");
-      AssertEquals(-0.1, "-.1");
-      AssertEquals(-0.1, "-0.1");
-      AssertEquals(-0.1, "-00.10");
-      AssertEquals(-12.34, "-12.34");
-      AssertEquals(12.34, "12.34");
-      AssertEquals(12.34, "+12.34");
-      AssertEquals(12.34, "+012.340");
-    }
-
-    private static void AssertEquals(double result, string s)
-    {
-      fsm.Restart();
-
-      foreach (var c in s)
-        fsm.Handle(c);
-
-      fsm.Variables.number *= fsm.Variables.sign;
-      if (Math.Abs(result - fsm.Variables.number) < 0.00001)
-        Console.WriteLine("[{0}] ok", s);
-      else
-        throw new Exception(string.Format("Assertion failed: parsing {0} resulted in {1} but was expecting {2}", s,
-          fsm.Variables.number, result));
-    }
-  }
 }
