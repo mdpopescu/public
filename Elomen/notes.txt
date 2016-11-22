@@ -1,8 +1,10 @@
 x Replace the Account with an accountId in Message
 
 
-Message should have an Account, there should be an AccountMapper used by TwitterChannel that knows to convert between TwitterAccount and Account
+- Message should have an Account, there should be an AccountMapper used by TwitterChannel that knows to convert between TwitterAccount and Account
 
+- TwitterMessage should inherit from Message and only add TwitterAccount
+  ?? what do I do about base.Account then?
 
 
 

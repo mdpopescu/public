@@ -1,4 +1,7 @@
-﻿using Elomen.Library.Contracts;
+﻿using System;
+using System.Collections.Generic;
+using System.Reactive.Subjects;
+using Elomen.Library.Contracts;
 using Elomen.Library.Model;
 using Elomen.TwitterLibrary.Implementations;
 using Elomen.TwitterLibrary.Models;
@@ -39,6 +42,29 @@ namespace Elomen.Tests.Implementations
                 channel.Verify(it => it.Send(It.Is<TwitterMessage>(m => m.Account.Id == 2 &&
                                                                         m.Account.Username == "b" &&
                                                                         m.Text == "abc")));
+            }
+        }
+
+        [TestClass]
+        public class Receive : TwitterChannelAdapterTests
+        {
+            [TestMethod]
+            public void ConvertsTheUnderlyingChannelMessages()
+            {
+                using (var messages = new Subject<TwitterMessage>())
+                {
+                    channel
+                        .Setup(it => it.Receive())
+                        .Returns(messages);
+                    var list = new List<Message>();
+                    sut.Receive().Subscribe(list.Add);
+
+                    messages.OnNext(new TwitterMessage(new TwitterAccount(1, "a"), "b"));
+
+                    Assert.AreEqual(1, list.Count);
+                    Assert.Fail("I don't know how to test the account");
+                    Assert.AreEqual("b", list[0].Text);
+                }
             }
         }
     }
