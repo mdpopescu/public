@@ -27,6 +27,8 @@ Public repository - CC-by-SA 3.0
 
 * Elomen: notification service (application that can receive natural-language commands and send notification of future events)
 
+* EverythingIsADatabase: trying to play with ideas from http://witheve.com/
+
 * Failover: fail-over algorithm; see article at http://mdpopescu.blogspot.com/2013/06/fail-over-algorithm.html
 
 * FindDuplicates: finds the identical / similar images in the given folder
