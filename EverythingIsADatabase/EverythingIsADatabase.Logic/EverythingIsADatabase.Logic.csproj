@@ -48,6 +48,7 @@
     <Compile Include="Implementations\SessionDatabase.cs" />
     <Compile Include="Models\Attribute.cs" />
     <Compile Include="Models\AttributeMatch.cs" />
+    <Compile Include="Models\GenericAttributeMatch.cs" />
     <Compile Include="Models\Record.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

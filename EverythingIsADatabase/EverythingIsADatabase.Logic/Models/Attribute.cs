@@ -22,5 +22,15 @@
             return other.Name == Name &&
                    (other.Value == null || (Value != null && other.Value.Equals(Value)));
         }
+
+        public bool Matches(AttributeMatch match)
+        {
+            // if the names don't match, return false
+            // if the match has no predicate, return true
+            // return the evaluation of the predicate with this one's value
+
+            return match.Name == Name &&
+                   (match.Predicate == null || match.Predicate(Value));
+        }
     }
 }

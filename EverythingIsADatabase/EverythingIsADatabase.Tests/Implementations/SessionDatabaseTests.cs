@@ -63,5 +63,29 @@ namespace EverythingIsADatabase.Tests.Implementations
             var r4 = sut.Search(new Attribute("firstname", "Marcel"), new Attribute("age", 30)).ToList();
             Assert.AreEqual(0, r4.Count);
         }
+
+        [TestMethod]
+        public void SearchingByNameAndPredicate()
+        {
+            var record = new Record(new Attribute("firstname", "Marcel"), new Attribute("age", 44));
+
+            sut.Commit(record);
+
+            // finds by single name and predicate
+            var r1 = sut.Search(new AttributeMatch("firstname", it => it.Equals("Marcel"))).ToList();
+            Assert.AreEqual(1, r1.Count);
+
+            // does not find if the predicate fails
+            var r2 = sut.Search(new AttributeMatch("firstname", it => it.Equals("Gigi"))).ToList();
+            Assert.AreEqual(0, r2.Count);
+
+            // finds by multiple names and predicates
+            var r3 = sut.Search(new AttributeMatch("firstname", it => it.Equals("Marcel")), new AttributeMatch("age", it => (int) it > 30)).ToList();
+            Assert.AreEqual(1, r3.Count);
+
+            // does not find if some predicates fail
+            var r4 = sut.Search(new AttributeMatch("firstname", it => it.Equals("Marcel")), new AttributeMatch("age", it => (int) it < 30)).ToList();
+            Assert.AreEqual(0, r4.Count);
+        }
     }
 }

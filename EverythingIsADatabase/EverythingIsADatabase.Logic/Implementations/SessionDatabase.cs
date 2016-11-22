@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EverythingIsADatabase.Logic.Contracts;
 using EverythingIsADatabase.Logic.Models;
-using Attribute = EverythingIsADatabase.Logic.Models.Attribute;
 
 namespace EverythingIsADatabase.Logic.Implementations
 {
@@ -24,7 +22,7 @@ namespace EverythingIsADatabase.Logic.Implementations
 
         public IEnumerable<Record> Search(params AttributeMatch[] matches)
         {
-            throw new NotImplementedException();
+            return list.Where(r => AreMatching(r.Attributes.ToList(), matches));
         }
 
         public void Commit(params Record[] records)
@@ -48,6 +46,11 @@ namespace EverythingIsADatabase.Logic.Implementations
         }
 
         private static bool AreMatching(IList<Attribute> attributes, IEnumerable<Attribute> toMatch)
+        {
+            return toMatch.All(it => attributes.Any(a => a.Matches(it)));
+        }
+
+        private static bool AreMatching(List<Attribute> attributes, IEnumerable<AttributeMatch> toMatch)
         {
             return toMatch.All(it => attributes.Any(a => a.Matches(it)));
         }
