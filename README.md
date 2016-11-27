@@ -1,6 +1,8 @@
 Public repository - CC-by-SA 3.0
 ======
 
+* Accounting: (very rudimentary) personal accounting
+
 * Acta: a journaling database
 
 * Anagrams: generates anagrams for a phrase; using a unix words dictionary (see the about box for source)
