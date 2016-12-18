@@ -25,6 +25,8 @@ Public repository - CC-by-SA 3.0
 
 * CQRS, CQRS2: playing with ideas for implementing the CQRS pattern
 
+* CustomCrypto: a custom encryption / decryption algorithm (NOT recommended, I am not a professional cryptographer!)
+
 * DesktopClock: a simple desktop wallpaper clock - trying to learn WPF
 
 * Elomen: notification service (application that can receive natural-language commands and send notification of future events)

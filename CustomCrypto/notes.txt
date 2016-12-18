@@ -1,0 +1,9 @@
+Idea based on Heidi Lamar's invention
+
+- generate an unsigned, 31-bit int based on the key
+- use that number as a seed for the C# Random(); call the instance rng
+
+- for each bit in the message:
+  - generate 32-bit random numbers (cryptographically secure)
+  - when encrypting: set the (rng.Next() % 32) bit to the message bit value
+  - when decrypting: get the (rng.Next() % 32) bit as the message bit value
