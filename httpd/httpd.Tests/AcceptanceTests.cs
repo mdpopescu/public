@@ -13,7 +13,7 @@ namespace httpd.Tests
       var port = Sys.FindAvailablePort();
 
       var path = basePath + @"\httpd\bin\debug\httpd.exe";
-      var args = string.Format(@"{0} {1}\httpd.Tests\Web", port, basePath);
+      var args = $@"{port} {basePath}\httpd.Tests\Web";
 
       var process = Sys.Run(path, args);
       try

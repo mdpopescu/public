@@ -105,6 +105,8 @@ Public repository - CC-by-SA 3.0
 
 * VM: implements a custom virtual machine - I was bored :)
 
+* WClone: clone a website into a local folder, rewriting URLs as needed.
+
 * WebScraping: a new language from retrieving data from the web plus a transpiler from that language to C#
 
 * WebStore: Another implementation of an inventory management system, using an event store

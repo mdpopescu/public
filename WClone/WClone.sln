@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WClone.Library", "WClone.Library\WClone.Library.csproj", "{69A58C86-9484-441A-AFF2-132D066CF04D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WClone", "WClone\WClone.csproj", "{9FBF9E89-E154-430C-847D-CFFC71340406}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WClone.Tests", "WClone.Tests\WClone.Tests.csproj", "{A90DD496-2804-41DE-A902-7395D67C4CBC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69A58C86-9484-441A-AFF2-132D066CF04D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69A58C86-9484-441A-AFF2-132D066CF04D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69A58C86-9484-441A-AFF2-132D066CF04D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69A58C86-9484-441A-AFF2-132D066CF04D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FBF9E89-E154-430C-847D-CFFC71340406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FBF9E89-E154-430C-847D-CFFC71340406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FBF9E89-E154-430C-847D-CFFC71340406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FBF9E89-E154-430C-847D-CFFC71340406}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A90DD496-2804-41DE-A902-7395D67C4CBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A90DD496-2804-41DE-A902-7395D67C4CBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A90DD496-2804-41DE-A902-7395D67C4CBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A90DD496-2804-41DE-A902-7395D67C4CBC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
