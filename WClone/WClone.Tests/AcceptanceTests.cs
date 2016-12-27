@@ -29,7 +29,7 @@ namespace WClone.Tests
 
                 Sys
                     .Run(path, args)
-                    .WaitForExit();
+                    .WaitForExit(1000);
             }
 
             var files = Directory.GetFiles(outputPath);

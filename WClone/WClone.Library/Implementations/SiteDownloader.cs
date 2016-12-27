@@ -2,7 +2,7 @@
 
 namespace WClone.Library.Implementations
 {
-    public class WebDownloader
+    public class SiteDownloader
     {
         public void Download(string url, Settings settings)
         {

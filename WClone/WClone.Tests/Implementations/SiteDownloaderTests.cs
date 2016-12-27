@@ -4,14 +4,14 @@ using WClone.Library.Implementations;
 namespace WClone.Tests.Implementations
 {
     [TestClass]
-    public class WebDownloaderTests
+    public class SiteDownloaderTests
     {
-        private WebDownloader sut;
+        private SiteDownloader sut;
 
         [TestInitialize]
         public void SetUp()
         {
-            sut = new WebDownloader();
+            sut = new SiteDownloader();
         }
     }
 }

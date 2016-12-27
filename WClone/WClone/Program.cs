@@ -20,7 +20,7 @@ namespace WClone
             );
             opts.ParseOptions(args);
 
-            var downloader = new WebDownloader();
+            var downloader = new SiteDownloader();
             if (opts.AdditionalParameters.Any())
                 downloader.Download(opts.AdditionalParameters[0], SETTINGS);
         }

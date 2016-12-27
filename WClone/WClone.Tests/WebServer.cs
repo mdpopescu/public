@@ -49,20 +49,20 @@ namespace WClone.Tests
         private void ProcessRequests(HttpListener server, CancellationToken token)
         {
             while (server.IsListening && !token.IsCancellationRequested)
-            {
-                var requestTask = Task.Run(() => server.GetContext(), token);
-                try
-                {
-                    ProcessRequest(requestTask.Result, token);
-                }
-                catch (OperationCanceledException)
-                {
-                    break;
-                }
-            }
+                server.BeginGetContext(RequestCallback, server);
         }
 
-        private void ProcessRequest(HttpListenerContext context, CancellationToken token)
+        private void RequestCallback(IAsyncResult result)
+        {
+            var server = (HttpListener) result.AsyncState;
+            var context = server.EndGetContext(result);
+
+            ProcessRequest(context);
+
+            server.BeginGetContext(RequestCallback, server);
+        }
+
+        private void ProcessRequest(HttpListenerContext context)
         {
             var response = context.Response;
 
@@ -74,8 +74,8 @@ namespace WClone.Tests
             }
 
             Task
-                .Run(() => SendResponse(key, response), token)
-                .Wait(token);
+                .Run(() => SendResponse(key, response))
+                .Wait(TimeSpan.FromSeconds(1));
         }
 
         private void SendResponse(string key, HttpListenerResponse response)
