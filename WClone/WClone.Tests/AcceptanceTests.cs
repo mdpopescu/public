@@ -19,24 +19,23 @@ namespace WClone.Tests
             DeleteFilesInFolder(outputPath);
 
             var port = Sys.FindAvailablePort();
-            using (var web = new WebServer("localhost", port))
-            {
-                web.Add($"/{FILENAME}", CONTENTS);
-                web.Start();
+            var web = new WebServer(port);
+            web.Add($"/{FILENAME}", CONTENTS);
 
-                //var path = @"\..\..\..\WClone\bin\Debug\WClone.exe";
+            using (web.Start())
+            {
                 var path = Path.Combine(basePath, @"..\..\..\WClone\bin\Debug\WClone.exe");
-                var args = $@"-p {port} -o {outputPath}";
+                var args = $@"-o {outputPath} http://localhost:{port}/{FILENAME}";
 
                 Sys
                     .Run(path, args)
                     .WaitForExit();
-
-                var files = Directory.GetFiles(outputPath);
-                Assert.AreEqual(1, files.Length);
-                Assert.AreEqual(FILENAME, files[0]);
-                Assert.AreEqual(CONTENTS, File.ReadAllText(files[0]));
             }
+
+            var files = Directory.GetFiles(outputPath);
+            Assert.AreEqual(1, files.Length);
+            Assert.AreEqual(FILENAME, files[0]);
+            Assert.AreEqual(CONTENTS, File.ReadAllText(files[0]));
         }
 
         private static void DeleteFilesInFolder(string path)
