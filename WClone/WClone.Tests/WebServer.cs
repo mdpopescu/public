@@ -50,12 +50,15 @@ namespace WClone.Tests
         {
             while (server.IsListening && !token.IsCancellationRequested)
             {
-                var context = await Task.Factory.FromAsync(server.BeginGetContext, server.EndGetContext, server);
-                ProcessRequest(context);
+                var context = await Task
+                    .Factory
+                    .FromAsync(server.BeginGetContext, server.EndGetContext, server)
+                    .ConfigureAwait(false);
+                await ProcessRequestAsync(context);
             }
         }
 
-        private void ProcessRequest(HttpListenerContext context)
+        private async Task ProcessRequestAsync(HttpListenerContext context)
         {
             var response = context.Response;
 
@@ -66,18 +69,19 @@ namespace WClone.Tests
                 return;
             }
 
-            Task
-                .Run(() => SendResponse(key, response))
-                .Wait(TimeSpan.FromSeconds(1));
+            await SendResponseAsync(key, response).ConfigureAwait(false);
         }
 
-        private void SendResponse(string key, HttpListenerResponse response)
+        private async Task SendResponseAsync(string key, HttpListenerResponse response)
         {
             var contents = dict[key];
             var buffer = Encoding.UTF8.GetBytes(contents);
 
             response.ContentLength64 = buffer.Length;
-            response.OutputStream.Write(buffer, 0, buffer.Length);
+            await response
+                .OutputStream
+                .WriteAsync(buffer, 0, buffer.Length)
+                .ConfigureAwait(false);
         }
     }
 }
