@@ -63,25 +63,21 @@ namespace WClone.Tests
             var response = context.Response;
 
             var key = context.Request.Url.AbsolutePath;
-            if (!dict.ContainsKey(key))
+            if (dict.ContainsKey(key))
+            {
+                var contents = dict[key];
+                var buffer = Encoding.UTF8.GetBytes(contents);
+
+                response.ContentLength64 = buffer.Length;
+                await response
+                    .OutputStream
+                    .WriteAsync(buffer, 0, buffer.Length)
+                    .ConfigureAwait(false);
+            }
+            else
             {
                 response.StatusCode = 404;
-                return;
             }
-
-            await SendResponseAsync(key, response).ConfigureAwait(false);
-        }
-
-        private async Task SendResponseAsync(string key, HttpListenerResponse response)
-        {
-            var contents = dict[key];
-            var buffer = Encoding.UTF8.GetBytes(contents);
-
-            response.ContentLength64 = buffer.Length;
-            await response
-                .OutputStream
-                .WriteAsync(buffer, 0, buffer.Length)
-                .ConfigureAwait(false);
         }
     }
 }
