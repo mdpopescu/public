@@ -27,7 +27,7 @@ namespace WClone.Tests
             server.Start();
 
             var cts = new CancellationTokenSource();
-            var task = Task.Run(() => ProcessRequests(server, cts.Token), cts.Token);
+            var task = Task.Run(async () => await ProcessRequestsAsync(server, cts.Token), cts.Token);
 
             return Disposable.Create(() =>
             {
@@ -46,20 +46,13 @@ namespace WClone.Tests
 
         private readonly int port;
 
-        private void ProcessRequests(HttpListener server, CancellationToken token)
+        private async Task ProcessRequestsAsync(HttpListener server, CancellationToken token)
         {
             while (server.IsListening && !token.IsCancellationRequested)
-                server.BeginGetContext(RequestCallback, server);
-        }
-
-        private void RequestCallback(IAsyncResult result)
-        {
-            var server = (HttpListener) result.AsyncState;
-            var context = server.EndGetContext(result);
-
-            ProcessRequest(context);
-
-            server.BeginGetContext(RequestCallback, server);
+            {
+                var context = await Task.Factory.FromAsync(server.BeginGetContext, server.EndGetContext, server);
+                ProcessRequest(context);
+            }
         }
 
         private void ProcessRequest(HttpListenerContext context)
