@@ -31,7 +31,13 @@ namespace ExpressionCompiler
 
         private const int DEPTH_BOOST = 10;
 
-        private static readonly Operation[] OPERATIONS = { new Operation('+', 1), new Operation('-', 1), new Operation('*', 2), new Operation('/', 2), };
+        private static readonly Operation[] OPERATIONS =
+        {
+            new Operation('+', 1, (a, b) => a + b),
+            new Operation('-', 1, (a, b) => a - b),
+            new Operation('*', 2, (a, b) => a * b),
+            new Operation('/', 2, (a, b) => a / b),
+        };
 
         private static string Eval(string expr)
         {
@@ -74,7 +80,7 @@ namespace ExpressionCompiler
                              let position = index++
                              let depth = acc += GetDepthBoost(c)
                              let operation = from op in GetOperation(c)
-                                             select new OperationEx(position, new Operation(c, op.Priority + depth))
+                                             select new OperationEx(position, c, op.Priority + depth, op.Compute)
                              orderby operation.Select(it => it.Priority).OrElse(0) descending
                              where acc == 0
                              select operation;
@@ -98,28 +104,7 @@ namespace ExpressionCompiler
         {
             return from op1 in subexpr.Substring(0, operation.Index).TryParse()
                    from op2 in subexpr.Substring(operation.Index + 1).TryParse()
-                   select Extensions.Safe(() => EvalSymbol(operation.Symbol, op1, op2).ToString());
-        }
-
-        private static int EvalSymbol(char symbol, int op1, int op2)
-        {
-            switch (symbol)
-            {
-                case '+':
-                    return op1 + op2;
-
-                case '-':
-                    return op1 - op2;
-
-                case '*':
-                    return op1 * op2;
-
-                case '/':
-                    return op1 / op2;
-
-                default:
-                    throw new ArgumentException(nameof(symbol));
-            }
+                   select Extensions.Safe(() => operation.Compute(op1, op2).ToString());
         }
     }
 }
