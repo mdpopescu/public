@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>WinFileSystem class</title>
+</head>
+<body>
+
+<h1>WinFileSystem class</h1>
+<p><b>Namespace:</b> DINGO.Library.Implementations</p>
+
+<h2>Syntax:</h2>
+<p>public class WinFileSystem : FileSystem</p>
+<p>The WinFileSystem class exposes the following members:</p>
+
+<h3>Constructors:</h3>
+<table>
+<thead>
+<th>
+<td></td>
+<td>Name</td>
+<td>Description</td>
+</th>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>WinFileSystem</td>
+<td>Creates an instance of the WinFileSystem class.</td>
+</tr>
+</tbody>
+</table>
+
+<h3>Properties:</h3>
+
+<h3>Methods:</h3>
+<table>
+<thead>
+<th>
+<td></td>
+<td>Name</td>
+<td>Description</td>
+</th>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>public IEnumerable<string> GetFiles(string path)</td>
+<td>Returns all files in the given path and its subfolders.</td>
+</tr>
+</tbody>
+</table>
+
+</body>
+</html>
