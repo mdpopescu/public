@@ -29,6 +29,8 @@ Public repository - CC-by-SA 3.0
 
 * DesktopClock: a simple desktop wallpaper clock - trying to learn WPF
 
+* DINGO: DocumentatIoN GeneratOr - generate HTML documentation from C# code
+
 * Elomen: notification service (application that can receive natural-language commands and send notification of future events)
 
 * EverythingIsADatabase: trying to play with ideas from http://witheve.com/

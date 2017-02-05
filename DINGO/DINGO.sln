@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DINGO.Library", "DINGO.Library\DINGO.Library.csproj", "{FA727D7E-CED2-41B1-B683-78DF8F48F6F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DINGO.Tests", "DINGO.Tests\DINGO.Tests.csproj", "{8C5EE6D2-497F-4CB4-9A57-1706743986DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DINGO", "DINGO\DINGO.csproj", "{10660E10-B964-42DD-9764-0C94F0BF6BB4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FA727D7E-CED2-41B1-B683-78DF8F48F6F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA727D7E-CED2-41B1-B683-78DF8F48F6F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA727D7E-CED2-41B1-B683-78DF8F48F6F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA727D7E-CED2-41B1-B683-78DF8F48F6F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C5EE6D2-497F-4CB4-9A57-1706743986DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C5EE6D2-497F-4CB4-9A57-1706743986DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C5EE6D2-497F-4CB4-9A57-1706743986DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C5EE6D2-497F-4CB4-9A57-1706743986DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10660E10-B964-42DD-9764-0C94F0BF6BB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10660E10-B964-42DD-9764-0C94F0BF6BB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10660E10-B964-42DD-9764-0C94F0BF6BB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10660E10-B964-42DD-9764-0C94F0BF6BB4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
