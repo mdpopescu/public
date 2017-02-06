@@ -29,6 +29,8 @@ namespace ExpressionCompiler
 
         //
 
+        private const char OPEN_PAR = '(';
+        private const char CLOSED_PAR = ')';
         private const int DEPTH_BOOST = 10;
 
         private static readonly Operation[] OPERATIONS =
@@ -51,7 +53,7 @@ namespace ExpressionCompiler
             return expr;
         }
 
-        private static int GetDepthBoost(char c) => c == '(' ? DEPTH_BOOST : c == ')' ? -DEPTH_BOOST : 0;
+        private static int GetDepthBoost(char c) => c == OPEN_PAR ? DEPTH_BOOST : c == CLOSED_PAR ? -DEPTH_BOOST : 0;
         private static Maybe<Operation> GetOperation(char c) => OPERATIONS.Where(op => op.Symbol == c).FirstMaybe();
 
         private static string Replace(string expr, int start, int end, string newValue) => expr.Substring(0, start) + newValue + expr.Substring(end + 1);
@@ -61,31 +63,45 @@ namespace ExpressionCompiler
             // todo: the parentheses mess up the replacement; get rid of them *after* computing the priority
 
             return from operation in FindMostImportantOperation(expr)
-                   let op1 = FindLeftOperandStart(expr, operation.Index)
-                   let op2 = FindRightOperandEnd(expr, operation.Index)
-                   let subexpr = expr.Substring(op1, op2 - op1 + 1)
-                   let result = from eval in EvalSubexpr(subexpr, operation)
-                                select Replace(expr, op1, op2, eval)
-                   select result;
+                   select IdentifySubexpr(expr, operation);
         }
 
         private static Maybe<OperationEx> FindMostImportantOperation(string expr)
         {
             var acc = 0;
-            var index = 0;
+            var depths = from c in expr
+                         select acc += GetDepthBoost(c);
 
-            // ensure that the parentheses are balanced (acc == 0)
+            // ensure that the parentheses are balanced
+            if (acc != 0)
+                return Maybe<OperationEx>.Nothing;
+
+            // remove the parentheses
+            var paired = expr
+                .Zip(depths, Tuple.Create)
+                .Where(tuple => tuple.Item1 != OPEN_PAR && tuple.Item1 != CLOSED_PAR);
+
             // note: do not inline the position variable or it won't be called for each character
-            var operations = from c in expr
+            var index = 0;
+            var operations = from pair in paired
                              let position = index++
-                             let depth = acc += GetDepthBoost(c)
-                             let operation = from op in GetOperation(c)
-                                             select new OperationEx(position, c, op.Priority + depth, op.Compute)
+                             let operation = from op in GetOperation(pair.Item1)
+                                             select new OperationEx(position, pair.Item1, op.Priority + pair.Item2, op.Compute)
                              orderby operation.Select(it => it.Priority).OrElse(0) descending
                              where acc == 0
                              select operation;
 
             return operations.FirstMaybe();
+        }
+
+        private static Maybe<string> IdentifySubexpr(string expr, OperationEx operation)
+        {
+            var index1 = FindLeftOperandStart(expr, operation.Index);
+            var index2 = FindRightOperandEnd(expr, operation.Index);
+            var subexpr = expr.Substring(index1, index2 - index1 + 1);
+
+            return from eval in EvalSubexpr(subexpr, operation, index1)
+                   select Replace(expr, index1, index2, eval);
         }
 
         private static int FindLeftOperandStart(string expr, int index)
@@ -100,10 +116,10 @@ namespace ExpressionCompiler
             return index - 1;
         }
 
-        private static Maybe<string> EvalSubexpr(string subexpr, OperationEx operation)
+        private static Maybe<string> EvalSubexpr(string subexpr, OperationEx operation, int offset)
         {
-            return from op1 in subexpr.Substring(0, operation.Index).TryParse()
-                   from op2 in subexpr.Substring(operation.Index + 1).TryParse()
+            return from op1 in subexpr.Substring(0, operation.Index - offset).TryParse()
+                   from op2 in subexpr.Substring(operation.Index - offset + 1).TryParse()
                    select Extensions.Safe(() => operation.Compute(op1, op2).ToString());
         }
     }
