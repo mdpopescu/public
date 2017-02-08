@@ -48,8 +48,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
-    <Compile Include="Models\Operation.cs" />
-    <Compile Include="Models\OperationEx.cs" />
+    <Compile Include="Implementations\Lexer.cs" />
+    <Compile Include="Models\ClosedPar.cs" />
+    <Compile Include="Models\OpenPar.cs" />
+    <Compile Include="Models\Operands\Integer.cs" />
+    <Compile Include="Models\Operand.cs" />
+    <Compile Include="Models\Operator.cs" />
+    <Compile Include="Models\Operators\IntegerDivision.cs" />
+    <Compile Include="Models\Operators\IntegerMultiplication.cs" />
+    <Compile Include="Models\Operators\IntegerAddition.cs" />
+    <Compile Include="Models\Operators\IntegerSubtraction.cs" />
+    <Compile Include="Models\Token.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -57,6 +66,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
