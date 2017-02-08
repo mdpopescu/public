@@ -59,6 +59,7 @@
     <Compile Include="Models\Operators\IntegerDivision.cs" />
     <Compile Include="Models\Operators\IntegerMultiplication.cs" />
     <Compile Include="Models\Operators\IntegerAddition.cs" />
+    <Compile Include="Models\Operators\IntegerOperator.cs" />
     <Compile Include="Models\Operators\IntegerSubtraction.cs" />
     <Compile Include="Models\PriorityBooster.cs" />
     <Compile Include="Models\Token.cs" />

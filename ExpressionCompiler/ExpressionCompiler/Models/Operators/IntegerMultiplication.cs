@@ -1,6 +1,6 @@
 ﻿namespace ExpressionCompiler.Models.Operators
 {
-    public class IntegerMultiplication : Operator<int>
+    public class IntegerMultiplication : IntegerOperator
     {
         public IntegerMultiplication()
             : base("*", 2, (a, b) => a * b)

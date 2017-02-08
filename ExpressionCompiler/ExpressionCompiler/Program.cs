@@ -5,6 +5,7 @@ using ExpressionCompiler.Contracts;
 using ExpressionCompiler.Implementations;
 using ExpressionCompiler.Models;
 using ExpressionCompiler.Models.Operands;
+using ExpressionCompiler.Models.Operators;
 using Functional.Maybe;
 
 namespace ExpressionCompiler
@@ -78,7 +79,7 @@ namespace ExpressionCompiler
 
             for (var i = 0; i < tokens.Count; i++)
             {
-                var token = tokens[i] as Operator<int>;
+                var token = tokens[i] as IntegerOperator;
                 if (token == null || token.Priority <= priority)
                     continue;
 
@@ -91,7 +92,7 @@ namespace ExpressionCompiler
 
         private static Token EvalOperation(IReadOnlyList<Token> tokens, int index)
         {
-            var op = (Operator<int>) tokens[index];
+            var op = (IntegerOperator) tokens[index];
 
             // if the operator is unary, there might not be a left operand; default to zero
             var lOperand = (index > 0 ? tokens[index - 1] as Integer : null) ?? new Integer(0);

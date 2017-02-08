@@ -1,6 +1,6 @@
 ﻿namespace ExpressionCompiler.Models.Operators
 {
-    public class IntegerDivision : Operator<int>
+    public class IntegerDivision : IntegerOperator
     {
         public IntegerDivision()
             : base("/", 2, (a, b) => a / b)
