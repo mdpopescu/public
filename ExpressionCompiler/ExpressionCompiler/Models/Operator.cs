@@ -1,17 +1,30 @@
 ﻿using System;
+using ExpressionCompiler.Contracts;
 
 namespace ExpressionCompiler.Models
 {
-    public class Operator<T> : Token
+    public abstract class Operator<T> : Token, ICloneable, IBoostable
     {
-        public Operator(string value, int intrinsicPriority, Func<T, T, T> compute)
-            : base(value)
+        public int Priority { get; protected set; }
+        public Func<T, T, T> Compute { get; }
+
+        public abstract object Clone();
+
+        public Token Boost(int boost)
         {
-            IntrinsicPriority = intrinsicPriority;
-            Compute = compute;
+            var newOperator = (Operator<T>) Clone();
+            newOperator.Priority += boost;
+
+            return newOperator;
         }
 
-        public int IntrinsicPriority { get; }
-        public Func<T, T, T> Compute { get; }
+        //
+
+        protected Operator(string value, int priority, Func<T, T, T> compute)
+            : base(value)
+        {
+            Priority = priority;
+            Compute = compute;
+        }
     }
 }

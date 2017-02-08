@@ -47,10 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
+    <Compile Include="Contracts\IBoostable.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Implementations\Lexer.cs" />
-    <Compile Include="Models\ClosedPar.cs" />
-    <Compile Include="Models\OpenPar.cs" />
+    <Compile Include="Models\Boosters\ClosedPar.cs" />
+    <Compile Include="Models\Boosters\OpenPar.cs" />
     <Compile Include="Models\Operands\Integer.cs" />
     <Compile Include="Models\Operand.cs" />
     <Compile Include="Models\Operator.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Models\Operators\IntegerMultiplication.cs" />
     <Compile Include="Models\Operators\IntegerAddition.cs" />
     <Compile Include="Models\Operators\IntegerSubtraction.cs" />
+    <Compile Include="Models\PriorityBooster.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

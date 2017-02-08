@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ExpressionCompiler.Models;
+using ExpressionCompiler.Models.Boosters;
 using ExpressionCompiler.Models.Operands;
 using ExpressionCompiler.Models.Operators;
 using Functional.Maybe;

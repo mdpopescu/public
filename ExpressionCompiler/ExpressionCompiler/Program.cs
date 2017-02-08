@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ExpressionCompiler.Contracts;
 using ExpressionCompiler.Implementations;
 using ExpressionCompiler.Models;
+using Functional.Maybe;
 
 namespace ExpressionCompiler
 {
@@ -28,31 +32,35 @@ namespace ExpressionCompiler
 
         //
 
-        private const char OPEN_PAR = '(';
-        private const char CLOSED_PAR = ')';
-        private const int DEPTH_BOOST = 10;
-
-        private static readonly Operator<int>[] KNOWN_OPERATORS =
-        {
-            new Operator<int>("+", 1, (a, b) => a + b),
-            new Operator<int>("-", 1, (a, b) => a - b),
-            new Operator<int>("*", 2, (a, b) => a * b),
-            new Operator<int>("/", 2, (a, b) => a / b),
-        };
-
         private static readonly Lexer LEXER = new Lexer();
 
         private static string Eval(string expr)
         {
-            var tokens = LEXER.Parse(expr);
+            var tokens = AdjustPriorities(LEXER.Parse(expr)).OrElse(() => new Exception("The parentheses are unbalanced."));
 
             foreach (var token in tokens)
-            {
                 Console.WriteLine($"{token.Value} {token.GetType().Name}");
-            }
 
             return "";
         }
+
+        private static Maybe<IEnumerable<Token>> AdjustPriorities(IEnumerable<Token> tokens)
+        {
+            var acc = 0;
+
+            // must call ToList() here, otherwise nothing would be evaluated and acc will stay zero
+            var result = (from token in tokens
+                          let boost = acc += GetDepthBoost(token)
+                          where !(token is PriorityBooster)
+                          select BoostToken(token, boost))
+                .ToList();
+
+            // ensure that the parentheses are balanced
+            return (acc == 0).Then(result.AsEnumerable);
+        }
+
+        private static int GetDepthBoost(Token token) => (token as PriorityBooster)?.Boost ?? 0;
+        private static Token BoostToken(Token token, int boost) => (token as IBoostable)?.Boost(boost) ?? token;
 
         //private static string Eval(string expr)
         //{
