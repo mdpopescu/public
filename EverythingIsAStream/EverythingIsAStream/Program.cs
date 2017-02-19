@@ -8,12 +8,12 @@ namespace EverythingIsAStream
     {
         private static void Main()
         {
-            Take2();
+            Take3();
         }
 
         private static void Take1()
         {
-            var nameStream = Helpers.ToStream(GetName, Scheduler.CurrentThread);
+            var nameStream = Helpers.ToStream(() => ReadLine("Your name: "), Scheduler.CurrentThread);
 
             nameStream
                 .TakeWhile(name => !string.IsNullOrWhiteSpace(name))
@@ -22,13 +22,26 @@ namespace EverythingIsAStream
 
         private static void Take2()
         {
-            var nameStream = Helpers.ToStream(GetName, Scheduler.CurrentThread);
-            var ageStream = Helpers.ToStream(GetAge, Scheduler.CurrentThread);
+            var nameStream = Helpers.ToStream(() => ReadLine("Your name: "), Scheduler.CurrentThread);
+            var ageStream = Helpers.ToStream(() => int.Parse(ReadLine("Your age: ")), Scheduler.CurrentThread);
 
             var bothStream = nameStream.Zip(ageStream, (name, age) => new { name, age });
 
             bothStream
                 .TakeWhile(both => !string.IsNullOrWhiteSpace(both.name) && both.age >= 18 && both.age < 100)
+                .Subscribe(
+                    both => Console.WriteLine($"Hello, {both.name} who is {both.age} years old!"),
+                    ex => Console.WriteLine($"Error: {ex.Message}"));
+        }
+
+        private static void Take3()
+        {
+            var nameStream = Helpers.ToStream(() => ReadLine("Your name: "), Scheduler.CurrentThread);
+            var ageStream = Helpers.ToStream(() => int.Parse(ReadLine("Your age: ")), Scheduler.CurrentThread);
+
+            nameStream
+                .TakeWhile(name => !string.IsNullOrWhiteSpace(name))
+                .Zip(ageStream.Where(age => age >= 18 && age < 100), (name, age) => new { name, age })
                 .Subscribe(
                     both => Console.WriteLine($"Hello, {both.name} who is {both.age} years old!"),
                     ex => Console.WriteLine($"Error: {ex.Message}"));
@@ -41,9 +54,5 @@ namespace EverythingIsAStream
             Console.Write(prefix);
             return Console.ReadLine();
         }
-
-        private static string GetName() => ReadLine("Your name: ");
-
-        private static int GetAge() => int.Parse(ReadLine("Your age: "));
     }
 }
