@@ -43,7 +43,9 @@ namespace EverythingIsAStream
                 .ToStream(() => int.Parse(ReadLine("Your age: ")), Scheduler.CurrentThread)
                 .Where(age => age >= 18 && age < 100);
 
-            var bothStream = nameStream.Zip(ageStream, (name, age) => new { name, age });
+            var bothStream = from name in nameStream
+                             from age in ageStream.Take(1)
+                             select new { name, age };
 
             bothStream
                 .Subscribe(
