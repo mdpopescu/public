@@ -41,10 +41,14 @@ namespace EverythingIsAStream
 
             nameStream
                 .TakeWhile(name => !string.IsNullOrWhiteSpace(name))
-                .Zip(ageStream.Where(age => age >= 18 && age < 100), (name, age) => new { name, age })
-                .Subscribe(
-                    both => Console.WriteLine($"Hello, {both.name} who is {both.age} years old!"),
-                    ex => Console.WriteLine($"Error: {ex.Message}"));
+                .Subscribe(name =>
+                {
+                    ageStream
+                        .Where(age => age >= 18 && age < 100)
+                        .Subscribe(
+                            age => Console.WriteLine($"Hello, {name} who is {age} years old!"),
+                            ex => Console.WriteLine($"Error: {ex.Message}"));
+                });
         }
 
         //
