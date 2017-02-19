@@ -1,0 +1,49 @@
+﻿using System;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+
+namespace EverythingIsAStream
+{
+    internal class Program
+    {
+        private static void Main()
+        {
+            Take2();
+        }
+
+        private static void Take1()
+        {
+            var nameStream = Helpers.ToStream(GetName, Scheduler.CurrentThread);
+
+            nameStream
+                .TakeWhile(name => !string.IsNullOrWhiteSpace(name))
+                .Subscribe(name => Console.WriteLine($"Hello, {name}"));
+        }
+
+        private static void Take2()
+        {
+            var nameStream = Helpers.ToStream(GetName, Scheduler.CurrentThread);
+            var ageStream = Helpers.ToStream(GetAge, Scheduler.CurrentThread);
+
+            var bothStream = nameStream.Zip(ageStream, (name, age) => new { name, age });
+
+            bothStream
+                .TakeWhile(both => !string.IsNullOrWhiteSpace(both.name) && both.age >= 18 && both.age < 100)
+                .Subscribe(
+                    both => Console.WriteLine($"Hello, {both.name} who is {both.age} years old!"),
+                    ex => Console.WriteLine($"Error: {ex.Message}"));
+        }
+
+        //
+
+        private static string ReadLine(string prefix)
+        {
+            Console.Write(prefix);
+            return Console.ReadLine();
+        }
+
+        private static string GetName() => ReadLine("Your name: ");
+
+        private static int GetAge() => int.Parse(ReadLine("Your age: "));
+    }
+}

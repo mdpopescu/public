@@ -35,6 +35,8 @@ Public repository - CC-by-SA 3.0
 
 * EverythingIsADatabase: trying to play with ideas from http://witheve.com/
 
+* EverythingIsAStream: example of replacing simple variables with streams
+
 * ExpressionCompiler: an expression evaluator using a multi-stage process, similar to a compiler
 
 * Failover: fail-over algorithm; see article at http://mdpopescu.blogspot.com/2013/06/fail-over-algorithm.html
