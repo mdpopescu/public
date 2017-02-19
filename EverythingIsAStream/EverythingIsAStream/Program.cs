@@ -44,7 +44,7 @@ namespace EverythingIsAStream
                 .Where(age => age >= 18 && age < 100);
 
             var bothStream = from name in nameStream
-                             from age in ageStream.Take(1)
+                             from age in ageStream
                              select new { name, age };
 
             bothStream
