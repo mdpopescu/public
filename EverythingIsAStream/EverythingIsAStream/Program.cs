@@ -36,19 +36,19 @@ namespace EverythingIsAStream
 
         private static void Take3()
         {
-            var nameStream = Helpers.ToStream(() => ReadLine("Your name: "), Scheduler.CurrentThread);
-            var ageStream = Helpers.ToStream(() => int.Parse(ReadLine("Your age: ")), Scheduler.CurrentThread);
+            var nameStream = Helpers
+                .ToStream(() => ReadLine("Your name: "), Scheduler.CurrentThread)
+                .TakeWhile(name => !string.IsNullOrWhiteSpace(name));
+            var ageStream = Helpers
+                .ToStream(() => int.Parse(ReadLine("Your age: ")), Scheduler.CurrentThread)
+                .Where(age => age >= 18 && age < 100);
 
-            nameStream
-                .TakeWhile(name => !string.IsNullOrWhiteSpace(name))
-                .Subscribe(name =>
-                {
-                    ageStream
-                        .Where(age => age >= 18 && age < 100)
-                        .Subscribe(
-                            age => Console.WriteLine($"Hello, {name} who is {age} years old!"),
-                            ex => Console.WriteLine($"Error: {ex.Message}"));
-                });
+            var bothStream = nameStream.Zip(ageStream, (name, age) => new { name, age });
+
+            bothStream
+                .Subscribe(
+                    both => Console.WriteLine($"Hello, {both.name} who is {both.age} years old!"),
+                    ex => Console.WriteLine($"Error: {ex.Message}"));
         }
 
         //
