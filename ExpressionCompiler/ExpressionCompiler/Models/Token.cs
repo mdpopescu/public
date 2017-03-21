@@ -2,13 +2,13 @@
 {
     public abstract class Token
     {
-        public string Value { get; }
+        public string Symbol { get; }
 
         //
 
-        protected Token(string value)
+        protected Token(string symbol)
         {
-            Value = value;
+            Symbol = symbol;
         }
     }
 }

@@ -2,10 +2,11 @@
 {
     public abstract class Operand<T> : Token
     {
-        public abstract T ActualValue { get; }
+        public T Value { get; protected set; }
 
-        protected Operand(string value)
-            : base(value)
+        //
+
+        protected Operand(string symbol) : base(symbol)
         {
         }
     }
