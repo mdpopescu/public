@@ -61,6 +61,8 @@ Public repository - CC-by-SA 3.0
 
 * MaxRecursion: answer to a problem posed by Karl Seguin on Twitter https://twitter.com/karlseguin/status/521592595282006016 - Write code that prints out the maximum depth of recursion allowed.
 
+* NetMqBenchmark: see how many messages can be sent / received per second, using two processes on the same computer
+
 * PageFaults: project from https://www.freelancer.com/projects/C-Sharp-Programming/FIFO-OPTIMAL-LRU.html (I included the detailed spec in the project); apparently someone else is taking the same exam - https://www.freelancer.com/projects/C-Sharp-Programming/lab-rep-project-repost.4718106.html
 
 * Propagators: code based on ideas from https://www.youtube.com/watch?v=O3tVctB_VSU and http://mcdonnell.mit.edu/sussman_slides.pdf
