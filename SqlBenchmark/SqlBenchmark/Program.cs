@@ -9,8 +9,8 @@ namespace SqlBenchmark
 {
     internal class Program
     {
-        private const string CONNECTION_STRING = @"Data Source=.\sqlexpress;Initial Catalog=zzz;Integrated Security=True";
-        private const int COUNT = 10 * 1000 * 1000;
+        private const string CONNECTION_STRING = @"Data Source=.;Initial Catalog=zzz;Integrated Security=True";
+        private const int COUNT = 100 * 1000;
         private const int BATCH_SIZE = 1000;
 
         private static readonly Random RND = new Random();
@@ -35,9 +35,9 @@ namespace SqlBenchmark
             //WriteResult(table3, Run(COUNT, () => InsertWithId(table3)));
 
             Console.WriteLine("Bulk inserts");
-            WriteResult(table1, Run(COUNT / BATCH_SIZE, () => BulkInsertWithoutId(table1)));
-            WriteResult(table2, Run(COUNT / BATCH_SIZE, () => BulkInsertWithGuidId(table2)));
-            WriteResult(table3, Run(COUNT / BATCH_SIZE, () => BulkInsertWithStringId(table3)));
+            WriteResult(table1, Run(1, () => BulkInsertWithoutId(table1)));
+            WriteResult(table2, Run(1, () => BulkInsertWithGuidId(table2)));
+            WriteResult(table3, Run(1, () => BulkInsertWithStringId(table3)));
 
             Console.WriteLine("Queries");
             WriteResult(table1, Run(1000, () => SelectByInt(table1)));
@@ -81,7 +81,7 @@ namespace SqlBenchmark
 
         private static void WriteResult(string table, TimeSpan ts)
         {
-            Console.WriteLine($"{table} {ts} {COUNT / ts.TotalMilliseconds * 1000} operations per second");
+            Console.WriteLine($"{table} {ts} {(COUNT / ts.TotalMilliseconds * 1000):F} operations per second");
         }
 
         private static TimeSpan Run(int count, Action action)
@@ -116,10 +116,11 @@ namespace SqlBenchmark
         {
             using (var data = new DataTable())
             {
+                data.Columns.Add("Id", typeof(int));
                 data.Columns.Add("Text", typeof(string));
 
-                for (var i = 0; i < BATCH_SIZE; i++)
-                    data.Rows.Add("zzz");
+                for (var i = 0; i < COUNT; i++)
+                    data.Rows.Add(0, "zzz");
 
                 BulkInsert(tableName, data);
             }
@@ -137,7 +138,7 @@ namespace SqlBenchmark
                 GUIDS.Add(guid);
                 data.Rows.Add(guid, "zzz");
 
-                for (var i = 1; i < BATCH_SIZE; i++)
+                for (var i = 1; i < COUNT; i++)
                     data.Rows.Add(GetUniqueId(), "zzz");
 
                 BulkInsert(tableName, data);
@@ -156,7 +157,7 @@ namespace SqlBenchmark
                 GUIDS.Add(guid);
                 data.Rows.Add(guid, "zzz");
 
-                for (var i = 1; i < BATCH_SIZE; i++)
+                for (var i = 1; i < COUNT; i++)
                     data.Rows.Add(GetUniqueId(), "zzz");
 
                 BulkInsert(tableName, data);
@@ -169,7 +170,7 @@ namespace SqlBenchmark
             {
                 cx.Open();
 
-                using (var bulk = new SqlBulkCopy(cx.ConnectionString, SqlBulkCopyOptions.TableLock))
+                using (var bulk = new SqlBulkCopy(CONNECTION_STRING, SqlBulkCopyOptions.TableLock))
                 {
                     bulk.BatchSize = BATCH_SIZE;
                     bulk.DestinationTableName = tableName;
