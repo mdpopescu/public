@@ -6,30 +6,30 @@ using Acta.Library.Models;
 
 namespace Acta.Library.Services
 {
-  public class ActaMemoryStorage : ActaStorage
-  {
-    public ActaMemoryStorage()
+    public class ActaMemoryStorage : ActaStorage
     {
-      list = new List<ActaTuple>();
+        public ActaMemoryStorage()
+        {
+            list = new List<ActaTuple>();
+        }
+
+        public void Append(ActaTuple tuple)
+        {
+            list.Add(tuple);
+        }
+
+        public IEnumerable<ActaTuple> Get()
+        {
+            return list.AsEnumerable();
+        }
+
+        public IEnumerable<ActaTuple> GetById(Guid id)
+        {
+            return list.Where(it => it.Id == id);
+        }
+
+        //
+
+        private readonly List<ActaTuple> list;
     }
-
-    public void Append(ActaTuple tuple)
-    {
-      list.Add(tuple);
-    }
-
-    public IEnumerable<ActaTuple> Get()
-    {
-      return list.AsEnumerable();
-    }
-
-    public IEnumerable<ActaTuple> GetById(Guid id)
-    {
-      return list.Where(it => it.Id == id);
-    }
-
-    //
-
-    private readonly List<ActaTuple> list;
-  }
 }
