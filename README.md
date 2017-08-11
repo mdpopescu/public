@@ -93,6 +93,8 @@ Public repository - CC-by-SA 3.0
 
 * SqlBenchmark: a benchmark written after reading https://ayende.com/blog/174273/how-to-waste-cpu-and-kill-your-disk-by-scaling-100-million-inefficiently (the idea that GUIDs as primary keys are horribly inefficient). On my computer, I INSERT 200K records/sec with INT Ids and 100K records/sec with GUIDs.
 
+* StaticBlog: a blogging tool that generates static files based on a template (and regenerates them when the template is changed)
+
 * Sudoku: a Sudoku solver based on Peter Norvig's article at http://norvig.com/sudoku.html
 
 * SyncMaster: application for keeping folders synchronized, with some servers designated as "pull-only" or "push-only"
