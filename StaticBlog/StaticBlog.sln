@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticBlog.Library", "StaticBlog.Library\StaticBlog.Library.csproj", "{E430D44B-35BC-4B48-AD0F-9941D15BC2CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticBlog.Site.Admin", "StaticBlog.Site.Admin\StaticBlog.Site.Admin.csproj", "{10B19907-1E21-45A2-82FE-8A085DEB145F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticBlog.Site.Admin", "StaticBlog.Site.Admin\StaticBlog.Site.Admin.csproj", "{586B17AF-F363-4B48-B6B3-B98206B91E00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{E430D44B-35BC-4B48-AD0F-9941D15BC2CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E430D44B-35BC-4B48-AD0F-9941D15BC2CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E430D44B-35BC-4B48-AD0F-9941D15BC2CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10B19907-1E21-45A2-82FE-8A085DEB145F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10B19907-1E21-45A2-82FE-8A085DEB145F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10B19907-1E21-45A2-82FE-8A085DEB145F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10B19907-1E21-45A2-82FE-8A085DEB145F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{586B17AF-F363-4B48-B6B3-B98206B91E00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{586B17AF-F363-4B48-B6B3-B98206B91E00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{586B17AF-F363-4B48-B6B3-B98206B91E00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{586B17AF-F363-4B48-B6B3-B98206B91E00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
