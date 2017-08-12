@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticBlog.Library", "Stati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticBlog.Site.Admin", "StaticBlog.Site.Admin\StaticBlog.Site.Admin.csproj", "{586B17AF-F363-4B48-B6B3-B98206B91E00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaticBlog.Tests", "StaticBlog.Tests\StaticBlog.Tests.csproj", "{61D2099D-582D-4ACE-80F1-F1FA5A6097DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{586B17AF-F363-4B48-B6B3-B98206B91E00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{586B17AF-F363-4B48-B6B3-B98206B91E00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{586B17AF-F363-4B48-B6B3-B98206B91E00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61D2099D-582D-4ACE-80F1-F1FA5A6097DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61D2099D-582D-4ACE-80F1-F1FA5A6097DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61D2099D-582D-4ACE-80F1-F1FA5A6097DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61D2099D-582D-4ACE-80F1-F1FA5A6097DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
