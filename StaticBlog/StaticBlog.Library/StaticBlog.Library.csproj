@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="Contracts\SystemClock.cs" />
     <Compile Include="Implementations\Authenticator.cs" />
-    <Compile Include="Models\KnownAccounts.cs" />
+    <Compile Include="Models\Account.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
