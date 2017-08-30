@@ -8,12 +8,14 @@ namespace Renfield.AppendOnly.Library
         public StreamAccessor(Stream stream)
         {
             this.stream = stream;
+
+            length = stream.Length;
         }
 
         public long get_length()
         {
             lock (lockObject)
-                return stream.Length;
+                return length;
         }
 
         public long read_long(long position)
@@ -54,6 +56,9 @@ namespace Renfield.AppendOnly.Library
             {
                 stream.Seek(position, SeekOrigin.Begin);
                 stream.Write(buffer, 0, sizeof(long));
+
+                if (length < position + sizeof(long))
+                    length = position + sizeof(long);
             }
         }
 
@@ -63,6 +68,9 @@ namespace Renfield.AppendOnly.Library
             {
                 stream.Seek(position, SeekOrigin.Begin);
                 stream.Write(value, 0, value.Length);
+
+                if (length < position + value.Length)
+                    length = position + value.Length;
             }
         }
 
@@ -71,5 +79,7 @@ namespace Renfield.AppendOnly.Library
         private readonly object lockObject = new object();
 
         private readonly Stream stream;
+
+        private long length;
     }
 }

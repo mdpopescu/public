@@ -29,8 +29,11 @@ namespace Renfield.AppendOnly.Spike
                 list.Add(c);
             }
 
-            RunSingleThreaded(@"c:\temp\1.tmp", safeSerializer, list);
-            RunMultiThreaded(@"c:\temp\2.tmp", safeSerializer, list);
+            ShowTimeWithoutOpsPerSec("Overall", () =>
+            {
+                RunSingleThreaded(@"d:\temp\1.tmp", safeSerializer, list);
+                RunMultiThreaded(@"d:\temp\2.tmp", safeSerializer, list);
+            });
         }
 
         private static void RunSingleThreaded(string tempFile, SerializationEngine serializer, IReadOnlyList<TestClass> list)
@@ -38,8 +41,7 @@ namespace Renfield.AppendOnly.Spike
             Console.WriteLine("Using {0} - sequentially writing and reading {1} records", tempFile, COUNT);
             Generate(tempFile, serializer, list, SeqForLoop);
 
-#if (DEBUG)
-            // verify the data
+#if (DEBUG) // verify the data
             using (var stream = new FileStream(tempFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
             {
                 var data = new StreamAccessor(stream);
@@ -74,20 +76,20 @@ namespace Renfield.AppendOnly.Spike
                 var file = new GenericAppendOnlyFile<TestClass>(lFile, serializer);
 
                 // append COUNT records
-                ShowTime("append", () => loop(i => file.Append(list[i])));
+                ShowTimeIncludingOpsPerSec("append", () => loop(i => file.Append(list[i])));
 
                 // read all the records in a single batch
-                ShowTime("read all in a single batch", () =>
+                ShowTimeIncludingOpsPerSec("read all in a single batch", () =>
                 {
                     var records = file.ReadFrom(0).ToList();
                 });
 
                 // read all the records, individually
-                ShowTime("read all, individually", () => loop(i => file.Read(i)));
+                ShowTimeIncludingOpsPerSec("read all, individually", () => loop(i => file.Read(i)));
             }
 
             // close and reopen the file (rebuilds the index)
-            ShowTime("rebuild index", () =>
+            ShowTimeIncludingOpsPerSec("rebuild index", () =>
             {
                 using (var stream = new FileStream(tempFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                 {
@@ -109,16 +111,27 @@ namespace Renfield.AppendOnly.Spike
             Parallel.For(0, COUNT, options, action);
         }
 
-        private static void ShowTime(string message, Action action)
+        private static void ShowTimeWithoutOpsPerSec(string message, Action action)
+        {
+            var msec = ComputeElapsed(action);
+            Console.WriteLine("{0} - time elapsed: {1} msec", message, msec);
+        }
+
+        private static void ShowTimeIncludingOpsPerSec(string message, Action action)
+        {
+            var msec = ComputeElapsed(action);
+            Console.WriteLine("{0} - time elapsed: {1} msec ({2:0.00} / sec)", message, msec, (double) COUNT / msec * 1000.0);
+        }
+
+        private static long ComputeElapsed(Action action)
         {
             var sw = new Stopwatch();
+
             sw.Start();
-
             action.Invoke();
-
             sw.Stop();
-            Console.WriteLine("{0} - time elapsed: {1} msec ({2:0.00} / sec)", message, sw.ElapsedMilliseconds,
-                (double) COUNT / sw.ElapsedMilliseconds * 1000.0);
+
+            return sw.ElapsedMilliseconds;
         }
 
         private static string GenerateRandomString(int maxLength)
