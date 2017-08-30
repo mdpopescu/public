@@ -13,16 +13,13 @@ rebuild index - time elapsed: 126 msec (793650.79 / sec)
 
 SSD:
 
-Using c:\temp\1.tmp - sequentially writing and reading 100000 records
-append - time elapsed: 924 msec (108225.11 / sec)
-read all in a single batch - time elapsed: 409 msec (244498.78 / sec)
-read all, individually - time elapsed: 40816 msec (2450.02 / sec)
-rebuild index - time elapsed: 114 msec (877192.98 / sec)
-Using c:\temp\2.tmp - multi-threaded writing and reading 100000 records
-append - time elapsed: 1366 msec (73206.44 / sec)
-read all in a single batch - time elapsed: 420 msec (238095.24 / sec)
-read all, individually - time elapsed: 26325 msec (3798.67 / sec)
-rebuild index - time elapsed: 117 msec (854700.85 / sec)
-
-
-Something is wrong... the SSD appears slower here
+Using c:\temp\1.tmp - sequentially writing and reading 25000 records
+append - time elapsed: 185 msec (135135.14 / sec)
+read all in a single batch - time elapsed: 66 msec (378787.88 / sec)
+read all, individually - time elapsed: 92 msec (271739.13 / sec)
+rebuild index - time elapsed: 20 msec (1250000.00 / sec)
+Using c:\temp\2.tmp - multi-threaded writing and reading 25000 records
+append - time elapsed: 191 msec (130890.05 / sec)
+read all in a single batch - time elapsed: 64 msec (390625.00 / sec)
+read all, individually - time elapsed: 122 msec (204918.03 / sec)
+rebuild index - time elapsed: 20 msec (1250000.00 / sec)
