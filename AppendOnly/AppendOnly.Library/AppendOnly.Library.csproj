@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="protobuf-net">
@@ -45,16 +46,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\WinFileFlagsAndAttributes.cs" />
     <Compile Include="Services\ConcurrentSerializationEngine.cs" />
     <Compile Include="Services\GenericAppendOnlyFile.cs" />
-    <Compile Include="LowLevelAppendOnlyFile.cs" />
-    <Compile Include="RandomAccessor.cs" />
+    <Compile Include="Services\LowLevelAppendOnlyFile.cs" />
+    <Compile Include="Contracts\RandomAccessor.cs" />
     <Compile Include="Contracts\GenericAppendOnly.cs" />
-    <Compile Include="LowLevelAppendOnly.cs" />
+    <Compile Include="Contracts\LowLevelAppendOnly.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\NativeMethods.cs" />
     <Compile Include="Services\ProtoBufSerializationEngine.cs" />
-    <Compile Include="StreamAccessor.cs" />
+    <Compile Include="Services\StreamAccessor.cs" />
     <Compile Include="Contracts\SerializationEngine.cs" />
+    <Compile Include="Services\WinFileIO.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

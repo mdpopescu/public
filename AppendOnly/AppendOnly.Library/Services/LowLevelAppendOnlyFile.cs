@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Renfield.AppendOnly.Library.Contracts;
 
-namespace Renfield.AppendOnly.Library
+namespace Renfield.AppendOnly.Library.Services
 {
     public class LowLevelAppendOnlyFile : LowLevelAppendOnly
     {
@@ -22,10 +23,10 @@ namespace Renfield.AppendOnly.Library
             lock (lockObject)
             {
                 var position = data.get_length();
-                data.write_long(position, record.Length);
+                data.write_int(position, record.Length);
                 index.Add(position);
 
-                position += sizeof(long);
+                position += sizeof(int);
                 data.write_bytes(position, record);
             }
         }
@@ -40,8 +41,8 @@ namespace Renfield.AppendOnly.Library
             var length = data.get_length();
             var position = index[i];
 
-            var size = data.read_long(position);
-            position += sizeof(long);
+            var size = data.read_int(position);
+            position += sizeof(int);
 
             if (position + size > length)
                 throw new Exception($"Internal error: cannot read {size} bytes starting at {position}; i = {i}, Index[i] = {index[i]}, length = {length}");
@@ -60,8 +61,8 @@ namespace Renfield.AppendOnly.Library
             var position = index[i];
             while (position < length)
             {
-                var size = data.read_long(position);
-                position += sizeof(long);
+                var size = data.read_int(position);
+                position += sizeof(int);
 
                 yield return data.read_bytes(position, size);
                 position += size;
@@ -82,8 +83,8 @@ namespace Renfield.AppendOnly.Library
             {
                 yield return position;
 
-                var size = data.read_long(position);
-                position += size + sizeof(long);
+                var size = data.read_int(position);
+                position += size + sizeof(int);
             }
         }
     }

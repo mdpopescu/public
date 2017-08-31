@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Renfield.AppendOnly.Library
+namespace Renfield.AppendOnly.Library.Contracts
 {
     public interface LowLevelAppendOnly
     {
