@@ -11,7 +11,7 @@ namespace Renfield.AppendOnly.Spike
 {
     internal class Program
     {
-        private const int COUNT = 50;
+        private const int COUNT = 25000;
 
         private static readonly Random RND = new Random();
 
@@ -24,7 +24,7 @@ namespace Renfield.AppendOnly.Spike
             var list = new List<TestClass>();
             for (var i = 0; i < COUNT; i++)
             {
-                var c = new TestClass { Name = GenerateRandomString(20), Address = GenerateRandomString(40) };
+                var c = new TestClass { Name = GenerateRandomString(20), Address = GenerateRandomString(32) };
                 list.Add(c);
             }
 
@@ -148,7 +148,8 @@ namespace Renfield.AppendOnly.Spike
 
         private static string GenerateRandomString(int maxLength)
         {
-            var length = RND.Next(maxLength / 2, maxLength + 1);
+            //var length = RND.Next(maxLength / 2, maxLength + 1);
+            var length = maxLength;
 
             var result = new char[length];
             for (var i = 0; i < length; i++)
@@ -166,6 +167,10 @@ namespace Renfield.AppendOnly.Spike
                 var file = new GenericAppendOnlyFile<TestClass>(lFile, serializer);
 
                 var records = file.ReadFrom(0).ToList();
+
+                // fails without sorting the lists, so the ordering is somehow incorrect
+                list = list.OrderBy(it => it.Name).ToList();
+                records = records.OrderBy(it => it.Name).ToList();
 
                 // verify that the index is built correctly
                 for (var i = 0; i < COUNT; i++)
@@ -187,6 +192,10 @@ namespace Renfield.AppendOnly.Spike
                 var file = new GenericAppendOnlyFile<TestClass>(lFile, serializer);
 
                 var records = file.ReadFrom(0).ToList();
+
+                // fails even when sorting the lists
+                list = list.OrderBy(it => it.Name).ToList();
+                records = records.OrderBy(it => it.Name).ToList();
 
                 // verify that the index is built correctly
                 for (var i = 0; i < COUNT; i++)

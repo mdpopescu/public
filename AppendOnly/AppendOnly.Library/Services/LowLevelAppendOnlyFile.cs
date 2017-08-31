@@ -14,10 +14,6 @@ namespace Renfield.AppendOnly.Library.Services
             this.index = new List<long>(index ?? RebuildIndex());
         }
 
-        /// <summary>
-        /// Adds a record to the file
-        /// </summary>
-        /// <param name="record">Record to add</param>
         public void Append(byte[] record)
         {
             lock (lockObject)
@@ -31,11 +27,6 @@ namespace Renfield.AppendOnly.Library.Services
             }
         }
 
-        /// <summary>
-        /// Returns the i-th record
-        /// </summary>
-        /// <param name="i">The record number (0-based)</param>
-        /// <returns>The contents of the record</returns>
         public byte[] Read(int i)
         {
             var length = data.get_length();
@@ -50,15 +41,11 @@ namespace Renfield.AppendOnly.Library.Services
             return data.read_bytes(position, size);
         }
 
-        /// <summary>
-        /// Returns all records from the i-th on
-        /// </summary>
-        /// <param name="i">The record number (0-based) to start reading from</param>
-        /// <returns>The records from the i-th on</returns>
         public IEnumerable<byte[]> ReadFrom(int i)
         {
             var length = data.get_length();
             var position = index[i];
+
             while (position < length)
             {
                 var size = data.read_int(position);
