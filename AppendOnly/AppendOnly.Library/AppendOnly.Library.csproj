@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Models\WinFileFlagsAndAttributes.cs" />
     <Compile Include="Services\ConcurrentSerializationEngine.cs" />
+    <Compile Include="Services\FileAccessor.cs" />
     <Compile Include="Services\GenericAppendOnlyFile.cs" />
     <Compile Include="Services\LowLevelAppendOnlyFile.cs" />
     <Compile Include="Contracts\RandomAccessor.cs" />

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Renfield.AppendOnly.Library;
 using Renfield.AppendOnly.Library.Contracts;
 using Renfield.AppendOnly.Library.Services;
 
@@ -12,7 +11,7 @@ namespace Renfield.AppendOnly.Spike
 {
     internal class Program
     {
-        private const int COUNT = 25000;
+        private const int COUNT = 50;
 
         private static readonly Random RND = new Random();
 
@@ -29,63 +28,39 @@ namespace Renfield.AppendOnly.Spike
                 list.Add(c);
             }
 
-            ShowTimeWithoutOpsPerSec("Overall", () =>
+            ShowTimeWithoutOpsPerSec("Overall - 1", () =>
             {
-                RunSingleThreaded(@"d:\temp\1.tmp", safeSerializer, list);
-                RunMultiThreaded(@"d:\temp\2.tmp", safeSerializer, list);
+                Run($"Sequentially writing and reading {COUNT} records", () => Generate1(@"d:\temp\1.tmp", safeSerializer, list, SeqForLoop));
+                Verify1(@"d:\temp\1.tmp", safeSerializer, list);
+
+                Run($"Multi-threaded writing and reading {COUNT} records", () => Generate1(@"d:\temp\2.tmp", safeSerializer, list, ParForLoop));
+                Verify1(@"d:\temp\2.tmp", safeSerializer, list);
+            });
+
+            ShowTimeWithoutOpsPerSec("Overall - 2", () =>
+            {
+                Run($"Sequentially writing and reading {COUNT} records", () => Generate2(@"d:\temp\1.tmp", safeSerializer, list, SeqForLoop));
+                Verify2(@"d:\temp\1.tmp", safeSerializer, list);
+
+                Run($"Multi-threaded writing and reading {COUNT} records", () => Generate2(@"d:\temp\2.tmp", safeSerializer, list, ParForLoop));
+                Verify2(@"d:\temp\2.tmp", safeSerializer, list);
             });
         }
 
-        private static void RunSingleThreaded(string tempFile, SerializationEngine serializer, IReadOnlyList<TestClass> list)
+        private static void Run(string comment, Action generate)
         {
-            Console.WriteLine("Using {0} - sequentially writing and reading {1} records", tempFile, COUNT);
-            Generate(tempFile, serializer, list, SeqForLoop);
-
-#if (DEBUG) // verify the data
-            using (var stream = new FileStream(tempFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
-            {
-                var data = new StreamAccessor(stream);
-                var lFile = new LowLevelAppendOnlyFile(data);
-                var file = new GenericAppendOnlyFile<TestClass>(lFile, serializer);
-
-                var records = file.ReadFrom(0).ToList();
-
-                // verify that the index is built correctly
-                for (var i = 0; i < COUNT; i++)
-                {
-                    var r = records[i];
-                    Debug.Assert(r.Name == list[i].Name);
-                    Debug.Assert(r.Address == list[i].Address);
-                }
-            }
-#endif
+            Console.WriteLine(comment);
+            generate();
         }
 
-        private static void RunMultiThreaded(string tempFile, SerializationEngine serializer, IReadOnlyList<TestClass> list)
+        private static void Generate1(string tempFile, SerializationEngine serializer, IReadOnlyList<TestClass> list, Action<Action<int>> loop)
         {
-            Console.WriteLine("Using {0} - multi-threaded writing and reading {1} records", tempFile, COUNT);
-            Generate(tempFile, serializer, list, ParForLoop);
-        }
+            Console.WriteLine($"Using {tempFile}");
 
-        private static void Generate(string tempFile, SerializationEngine serializer, IReadOnlyList<TestClass> list, Action<Action<int>> loop)
-        {
             using (var stream = new FileStream(tempFile, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
             {
                 var data = new StreamAccessor(stream);
-                var lFile = new LowLevelAppendOnlyFile(data);
-                var file = new GenericAppendOnlyFile<TestClass>(lFile, serializer);
-
-                // append COUNT records
-                ShowTimeIncludingOpsPerSec("append", () => loop(i => file.Append(list[i])));
-
-                // read all the records in a single batch
-                ShowTimeIncludingOpsPerSec("read all in a single batch", () =>
-                {
-                    var records = file.ReadFrom(0).ToList();
-                });
-
-                // read all the records, individually
-                ShowTimeIncludingOpsPerSec("read all, individually", () => loop(i => file.Read(i)));
+                CreateAndProcessFile(data, serializer, list, loop);
             }
 
             // close and reopen the file (rebuilds the index)
@@ -97,6 +72,43 @@ namespace Renfield.AppendOnly.Spike
                     var lFile = new LowLevelAppendOnlyFile(data);
                 }
             });
+        }
+
+        private static void Generate2(string tempFile, SerializationEngine serializer, IReadOnlyList<TestClass> list, Action<Action<int>> loop)
+        {
+            Console.WriteLine($"Using {tempFile}");
+
+            using (var data = new FileAccessor(tempFile))
+            {
+                CreateAndProcessFile(data, serializer, list, loop);
+            }
+
+            // close and reopen the file (rebuilds the index)
+            ShowTimeIncludingOpsPerSec("rebuild index", () =>
+            {
+                using (var data = new FileAccessor(tempFile))
+                {
+                    var lFile = new LowLevelAppendOnlyFile(data);
+                }
+            });
+        }
+
+        private static void CreateAndProcessFile(RandomAccessor data, SerializationEngine serializer, IReadOnlyList<TestClass> list, Action<Action<int>> loop)
+        {
+            var lFile = new LowLevelAppendOnlyFile(data);
+            var file = new GenericAppendOnlyFile<TestClass>(lFile, serializer);
+
+            // append COUNT records
+            ShowTimeIncludingOpsPerSec("append", () => loop(i => file.Append(list[i])));
+
+            // read all the records in a single batch
+            ShowTimeIncludingOpsPerSec("read all in a single batch", () =>
+            {
+                var records = file.ReadFrom(0).ToList();
+            });
+
+            // read all the records, individually
+            ShowTimeIncludingOpsPerSec("read all, individually", () => loop(i => file.Read(i)));
         }
 
         private static void SeqForLoop(Action<int> action)
@@ -143,6 +155,49 @@ namespace Renfield.AppendOnly.Spike
                 result[i] = (char) RND.Next('A', 'Z' + 1);
 
             return new string(result);
+        }
+
+        private static void Verify1(string tempFile, SerializationEngine serializer, IReadOnlyList<TestClass> list)
+        {
+            using (var stream = new FileStream(tempFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+            {
+                var data = new StreamAccessor(stream);
+                var lFile = new LowLevelAppendOnlyFile(data);
+                var file = new GenericAppendOnlyFile<TestClass>(lFile, serializer);
+
+                var records = file.ReadFrom(0).ToList();
+
+                // verify that the index is built correctly
+                for (var i = 0; i < COUNT; i++)
+                {
+                    var r = records[i];
+                    if (r.Name != list[i].Name)
+                        throw new Exception($"Verify1: Expected [{list[i].Name}] but was [{r.Name}].");
+                    if (r.Address != list[i].Address)
+                        throw new Exception($"Verify1: Expected [{list[i].Address}] but was [{r.Address}].");
+                }
+            }
+        }
+
+        private static void Verify2(string tempFile, SerializationEngine serializer, IReadOnlyList<TestClass> list)
+        {
+            using (var data = new FileAccessor(tempFile))
+            {
+                var lFile = new LowLevelAppendOnlyFile(data);
+                var file = new GenericAppendOnlyFile<TestClass>(lFile, serializer);
+
+                var records = file.ReadFrom(0).ToList();
+
+                // verify that the index is built correctly
+                for (var i = 0; i < COUNT; i++)
+                {
+                    var r = records[i];
+                    if (r.Name != list[i].Name)
+                        throw new Exception($"Verify2: Expected [{list[i].Name}] but was [{r.Name}].");
+                    if (r.Address != list[i].Address)
+                        throw new Exception($"Verify2: Expected [{list[i].Address}] but was [{r.Address}].");
+                }
+            }
         }
     }
 }

@@ -38,7 +38,9 @@ namespace Renfield.AppendOnly.Library.Services
         private const uint GENERIC_WRITE = 0x40000000;
         private const uint FILE_SHARE_READ = 0x00000001;
 
+        // ReSharper disable UnusedMember.Local
         private const uint CREATE_NEW = 1;
+
         private const uint CREATE_ALWAYS = 2;
         private const uint OPEN_EXISTING = 3;
         private const uint OPEN_ALWAYS = 4;
@@ -46,7 +48,9 @@ namespace Renfield.AppendOnly.Library.Services
 
         private const uint FILE_BEGIN = 0;
         private const uint FILE_CURRENT = 1;
+
         private const uint FILE_END = 2;
+        // ReSharper restore UnusedMember.Local
 
         private IntPtr pHandle;
         private long position;
