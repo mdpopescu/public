@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Renfield.AppendOnly.Library.Contracts;
 
 namespace Renfield.AppendOnly.Library.Services
 {
     public class LowLevelAppendOnlyFile : LowLevelAppendOnly
     {
-        public long[] GetIndex() => index.ToArray();
+        public long[] GetIndex()
+        {
+            lock (lockObject)
+                return index.ToArray();
+        }
 
         public LowLevelAppendOnlyFile(RandomAccessor data, IEnumerable<long> index = null)
         {
@@ -29,30 +33,35 @@ namespace Renfield.AppendOnly.Library.Services
 
         public byte[] Read(int i)
         {
-            var length = data.get_length();
-            var position = index[i];
+            lock (lockObject)
+            {
+                var length = data.get_length();
+                var position = index[i];
 
-            var size = data.read_int(position);
-            position += sizeof(int);
+                var size = data.read_int(position);
+                position += sizeof(int);
 
-            if (position + size > length)
-                throw new Exception($"Internal error: cannot read {size} bytes starting at {position}; i = {i}, Index[i] = {index[i]}, length = {length}");
+                Debug.Assert(position + size <= length,
+                    $"Internal error: cannot read {size} bytes starting at {position}; i = {i}, Index[i] = {index[i]}, length = {length}");
 
-            return data.read_bytes(position, size);
+                return data.read_bytes(position, size);
+            }
         }
 
         public IEnumerable<byte[]> ReadFrom(int i)
         {
-            var length = data.get_length();
-            var position = index[i];
-
-            while (position < length)
+            lock (lockObject)
             {
-                var size = data.read_int(position);
-                position += sizeof(int);
+                var position = index[i];
 
-                yield return data.read_bytes(position, size);
-                position += size;
+                while (i++ < index.Count)
+                {
+                    var size = data.read_int(position);
+                    position += sizeof(int);
+
+                    yield return data.read_bytes(position, size);
+                    position += size;
+                }
             }
         }
 
@@ -66,12 +75,13 @@ namespace Renfield.AppendOnly.Library.Services
         {
             var length = data.get_length();
             long position = 0;
+
             while (position < length)
             {
                 yield return position;
 
                 var size = data.read_int(position);
-                position += size + sizeof(int);
+                position += sizeof(int) + size;
             }
         }
     }

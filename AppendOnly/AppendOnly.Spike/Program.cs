@@ -24,7 +24,7 @@ namespace Renfield.AppendOnly.Spike
             var list = new List<TestClass>();
             for (var i = 0; i < COUNT; i++)
             {
-                var c = new TestClass { Name = GenerateRandomString(20), Address = GenerateRandomString(32) };
+                var c = new TestClass { Name = "N" + i, Address = "A" + i };
                 list.Add(c);
             }
 
@@ -169,8 +169,8 @@ namespace Renfield.AppendOnly.Spike
                 var records = file.ReadFrom(0).ToList();
 
                 // fails without sorting the lists, so the ordering is somehow incorrect
-                list = list.OrderBy(it => it.Name).ToList();
-                records = records.OrderBy(it => it.Name).ToList();
+                //list = list.OrderBy(it => it.Name).ToList();
+                //records = records.OrderBy(it => it.Name).ToList();
 
                 // verify that the index is built correctly
                 for (var i = 0; i < COUNT; i++)
@@ -194,8 +194,8 @@ namespace Renfield.AppendOnly.Spike
                 var records = file.ReadFrom(0).ToList();
 
                 // fails even when sorting the lists
-                list = list.OrderBy(it => it.Name).ToList();
-                records = records.OrderBy(it => it.Name).ToList();
+                //list = list.OrderBy(it => it.Name).ToList();
+                //records = records.OrderBy(it => it.Name).ToList();
 
                 // verify that the index is built correctly
                 for (var i = 0; i < COUNT; i++)

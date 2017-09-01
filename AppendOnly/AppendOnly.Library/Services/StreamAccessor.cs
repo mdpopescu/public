@@ -45,13 +45,15 @@ namespace Renfield.AppendOnly.Library.Services
 
         public void write_bytes(long position, byte[] value)
         {
+            var len = value.Length;
+
             lock (lockObject)
             {
                 stream.Seek(position, SeekOrigin.Begin);
-                stream.Write(value, 0, value.Length);
+                stream.Write(value, 0, len);
 
-                if (length < position + value.Length)
-                    length = position + value.Length;
+                if (length < position + len)
+                    length = position + len;
             }
         }
 
