@@ -117,8 +117,6 @@ Public repository - CC-by-SA 3.0
 
 * WClone: clone a website into a local folder, rewriting URLs as needed.
 
-* WebScraping: a new language from retrieving data from the web plus a transpiler from that language to C#
-
 * WebStore: Another implementation of an inventory management system, using an event store
 
 * YelpSearch: search Yelp for businesses (eg hotels) near a given zip; solution for https://www.odesk.com/jobs/~~d5624935369d26d1 (I didn't get the job so the code is mine)

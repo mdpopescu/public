@@ -1,7 +1,0 @@
-Parsing https://news.ycombinator.com/
-
-let table = first <table .class="itemlist"> # "first" is optional
-let articles = all <tr .class="athing">
-for each article in articles # "article in" is optional
-  inside <td .class="title">
-    return <a .class="storylink"> .InnerText
