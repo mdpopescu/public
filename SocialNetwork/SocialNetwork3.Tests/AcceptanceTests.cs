@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SocialNetwork3.Library.Services;
+using SocialNetwork3.Library.Implementations;
 
 namespace SocialNetwork3.Tests
 {
@@ -11,23 +11,29 @@ namespace SocialNetwork3.Tests
         [TestMethod]
         public void EndToEnd()
         {
-            var network = new Network();
+            var processor = new MessageProcessor();
+            var messages = new MessageRepository();
+            var currentTime = DateTime.MinValue;
+
+            // I know that I'm accessing a modified closure here; this is intentional
+            // ReSharper disable once AccessToModifiedClosure
+            var network = new Network(processor, messages, () => currentTime);
 
             // posting
-            Sys.Time = () => new DateTime(2000, 1, 1, 10, 0, 0);
+            currentTime = new DateTime(2000, 1, 1, 10, 0, 0);
             network.Enter("Alice -> I love the weather today");
 
-            Sys.Time = () => new DateTime(2000, 1, 1, 10, 3, 0);
+            currentTime = new DateTime(2000, 1, 1, 10, 3, 0);
             network.Enter("Bob -> Damn! We lost!");
 
-            Sys.Time = () => new DateTime(2000, 1, 1, 10, 4, 0);
+            currentTime = new DateTime(2000, 1, 1, 10, 4, 0);
             network.Enter("Bob -> Good game though.");
 
-            Sys.Time = () => new DateTime(2000, 1, 1, 10, 5, 0);
+            currentTime = new DateTime(2000, 1, 1, 10, 5, 0);
             network.Enter("Charlie -> I'm in New York today! Anyone want to have a coffee?");
 
             // reading
-            Sys.Time = () => new DateTime(2000, 1, 1, 10, 5, 0);
+            currentTime = new DateTime(2000, 1, 1, 10, 5, 0);
 
             var response1 = network.Enter("Alice").ToList();
             Assert.AreEqual(1, response1.Count);
@@ -39,7 +45,7 @@ namespace SocialNetwork3.Tests
             Assert.AreEqual("Damn! We lost! (2 minutes ago)", response2[1]);
 
             // following
-            Sys.Time = () => new DateTime(2000, 1, 1, 10, 5, 2);
+            currentTime = new DateTime(2000, 1, 1, 10, 5, 2);
 
             network.Enter("Charlie follows Alice");
             var response3 = network.Enter("Charlie wall").ToList();

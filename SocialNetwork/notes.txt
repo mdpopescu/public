@@ -45,3 +45,8 @@ Details
   • Non-existing users should be created as they post their first message. Application should not start with a pre-defined list of users.
   • Use whichever language, libraries, frameworks and tools you like.
   • Provide instructions on how to run the application.
+
+
+===
+
+The 3rd version attempts to use the "functional core, imperative shell" design
