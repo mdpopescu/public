@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetwork", "SocialNetwork\SocialNetwork.csproj", "{DC31DA51-4925-47A0-907D-E2133AF38D39}"
 EndProject
@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetwork2", "SocialNetwork2\SocialNetwork2.csproj", "{7C7617B8-F4F9-4E26-A9B3-8C3B297F2F7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetwork3.Library", "SocialNetwork3.Library\SocialNetwork3.Library.csproj", "{37B7C667-23BC-4644-BAA8-8DD738432624}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialNetwork3.Tests", "SocialNetwork3.Tests\SocialNetwork3.Tests.csproj", "{A499F0FE-A576-4FE4-9A9E-A135223854EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,8 +54,19 @@ Global
 		{7C7617B8-F4F9-4E26-A9B3-8C3B297F2F7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C7617B8-F4F9-4E26-A9B3-8C3B297F2F7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C7617B8-F4F9-4E26-A9B3-8C3B297F2F7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37B7C667-23BC-4644-BAA8-8DD738432624}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37B7C667-23BC-4644-BAA8-8DD738432624}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37B7C667-23BC-4644-BAA8-8DD738432624}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37B7C667-23BC-4644-BAA8-8DD738432624}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A499F0FE-A576-4FE4-9A9E-A135223854EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A499F0FE-A576-4FE4-9A9E-A135223854EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A499F0FE-A576-4FE4-9A9E-A135223854EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A499F0FE-A576-4FE4-9A9E-A135223854EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D83EFC8F-E485-46DE-8EE6-392F13674165}
 	EndGlobalSection
 EndGlobal
