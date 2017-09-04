@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\NetworkCoordinator.cs" />
+    <Compile Include="Services\Network.cs" />
     <Compile Include="Services\Sys.cs" />
   </ItemGroup>
   <ItemGroup>
