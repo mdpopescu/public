@@ -15,21 +15,21 @@ namespace SocialNetwork3.Library.Logic
             if (string.Equals(follower, followed, StringComparison.OrdinalIgnoreCase))
                 return;
 
-            if (!followers.ContainsKey(followed))
-                followers.Add(followed, new List<string>());
+            if (!following.ContainsKey(follower))
+                following.Add(follower, new List<string>());
 
-            var list = followers[followed];
-            if (!list.Contains(follower, StringComparer.OrdinalIgnoreCase))
-                list.Add(follower);
+            var list = following[follower];
+            if (!list.Contains(followed, StringComparer.OrdinalIgnoreCase))
+                list.Add(followed);
         }
 
-        /// <summary>Gets the followers of the given user.</summary>
+        /// <summary>Gets the users being followed by the given user.</summary>
         /// <param name="user">The user.</param>
-        /// <returns>The list of followers.</returns>
-        public IEnumerable<string> GetFollowers(string user) => followers.ContainsKey(user) ? followers[user] : Enumerable.Empty<string>();
+        /// <returns>The list of users being followed.</returns>
+        public IEnumerable<string> GetFollowed(string user) => following.ContainsKey(user) ? following[user] : Enumerable.Empty<string>();
 
         //
 
-        private readonly Dictionary<string, List<string>> followers = new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, List<string>> following = new Dictionary<string, List<string>>();
     }
 }

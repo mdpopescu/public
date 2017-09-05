@@ -16,12 +16,12 @@ namespace SocialNetwork3.Tests.Logic
         }
 
         [TestMethod]
-        public void ReturnsTheFollowers()
+        public void ReturnsTheFollowed()
         {
-            sut.AddFollower("a", "z");
-            sut.AddFollower("b", "z");
+            sut.AddFollower("z", "a");
+            sut.AddFollower("z", "b");
 
-            var result = sut.GetFollowers("z").ToArray();
+            var result = sut.GetFollowed("z").ToArray();
 
             CollectionAssert.AreEqual(new[] { "a", "b" }, result);
         }
@@ -29,11 +29,11 @@ namespace SocialNetwork3.Tests.Logic
         [TestMethod]
         public void DoesNotAddTheSameFollowerTwice()
         {
-            sut.AddFollower("a", "z");
-            sut.AddFollower("b", "z");
-            sut.AddFollower("a", "z");
+            sut.AddFollower("z", "a");
+            sut.AddFollower("z", "b");
+            sut.AddFollower("z", "a");
 
-            var result = sut.GetFollowers("z").ToArray();
+            var result = sut.GetFollowed("z").ToArray();
 
             CollectionAssert.AreEqual(new[] { "a", "b" }, result);
         }
@@ -41,11 +41,11 @@ namespace SocialNetwork3.Tests.Logic
         [TestMethod]
         public void DoesNotAddAUserAsFollowerToHimself()
         {
-            sut.AddFollower("a", "z");
-            sut.AddFollower("b", "z");
+            sut.AddFollower("z", "a");
+            sut.AddFollower("z", "b");
             sut.AddFollower("z", "z");
 
-            var result = sut.GetFollowers("z").ToArray();
+            var result = sut.GetFollowed("z").ToArray();
 
             CollectionAssert.AreEqual(new[] { "a", "b" }, result);
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SocialNetwork3.Library.Logic;
+using SocialNetwork3.Library.Models;
 
 namespace SocialNetwork3.Library.Coordinators.Commands
 {
@@ -21,10 +22,10 @@ namespace SocialNetwork3.Library.Coordinators.Commands
         /// <inheritdoc />
         public override List<string> Execute(DateTime time, string user, string argument)
         {
-            var list = users.GetFollowers(user).Concat(new[] { user }).ToList();
+            var list = users.GetFollowed(user).Concat(new[] { user }).ToList();
             return messages
                 .GetMessagesBy(list)
-                .Select(m => formatter.Format(m, time))
+                .Select(m => IncludeSender(m, time))
                 .ToList();
         }
 
@@ -33,5 +34,7 @@ namespace SocialNetwork3.Library.Coordinators.Commands
         private readonly MessageRepository messages;
         private readonly UserRepository users;
         private readonly MessageFormatter formatter;
+
+        private string IncludeSender(Message m, DateTime time) => m.User + " - " + formatter.Format(m, time);
     }
 }
