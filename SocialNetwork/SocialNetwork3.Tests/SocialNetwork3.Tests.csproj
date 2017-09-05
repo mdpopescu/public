@@ -52,6 +52,7 @@
     <Compile Include="Logic\MessageFormatterTests.cs" />
     <Compile Include="Logic\MessageParserTests.cs" />
     <Compile Include="Logic\MessageRepositoryTests.cs" />
+    <Compile Include="Logic\UserRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
