@@ -9,12 +9,13 @@ namespace SocialNetwork3.Library.Coordinators
     {
         /// <summary>Initializes a new instance of the <see cref="CommandFactory"/> class.</summary>
         /// <param name="messages">The message repository.</param>
-        /// <param name="formatter">The message formatter.</param>
         /// <param name="users">The user repository.</param>
-        public CommandFactory(MessageRepository messages, MessageFormatter formatter, UserRepository users)
+        /// <param name="formatter">The message formatter.</param>
+        public CommandFactory(MessageRepository messages, UserRepository users, MessageFormatter formatter)
         {
             MAP.Add("->", () => new PostCommand(messages));
             MAP.Add("FOLLOWS", () => new FollowsCommand(users));
+            MAP.Add("WALL", () => new WallCommand(messages, users, formatter));
             MAP.Add("", () => new ReadCommand(messages, formatter));
         }
 

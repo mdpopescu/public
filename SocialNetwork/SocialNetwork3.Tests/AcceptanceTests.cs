@@ -14,7 +14,7 @@ namespace SocialNetwork3.Tests
         {
             //var processor = new MessageProcessor();
             var parser = new MessageParser();
-            var commandFactory = new CommandFactory(new MessageRepository(), new MessageFormatter(), new UserRepository());
+            var commandFactory = new CommandFactory(new MessageRepository(), new UserRepository(), new MessageFormatter());
             var currentTime = DateTime.MinValue;
 
             // I know that I'm accessing a modified closure here; this is intentional

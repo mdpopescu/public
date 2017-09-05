@@ -45,6 +45,7 @@
     <Compile Include="Coordinators\Commands\FollowsCommand.cs" />
     <Compile Include="Coordinators\Commands\PostCommand.cs" />
     <Compile Include="Coordinators\Commands\ReadCommand.cs" />
+    <Compile Include="Coordinators\Commands\WallCommand.cs" />
     <Compile Include="Logic\MessageFormatter.cs" />
     <Compile Include="Logic\MessageParser.cs" />
     <Compile Include="Logic\MessageRepository.cs" />
