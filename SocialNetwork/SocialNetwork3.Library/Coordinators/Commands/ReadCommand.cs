@@ -8,8 +8,8 @@ namespace SocialNetwork3.Library.Coordinators.Commands
     public class ReadCommand : Command
     {
         /// <summary>Initializes a new instance of the <see cref="ReadCommand"/> class.</summary>
-        /// <param name="messages">The messages repository.</param>
-        /// <param name="formatter">The formatter.</param>
+        /// <param name="messages">The message repository.</param>
+        /// <param name="formatter">The message formatter.</param>
         public ReadCommand(MessageRepository messages, MessageFormatter formatter)
         {
             this.messages = messages;

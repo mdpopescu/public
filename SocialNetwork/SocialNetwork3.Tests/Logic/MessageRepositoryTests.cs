@@ -43,5 +43,18 @@ namespace SocialNetwork3.Tests.Logic
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual("2", result[0].Text);
         }
+
+        [TestMethod]
+        public void SortsTheMessagesByTimeInDescendingOrder()
+        {
+            sut.Add(new Message(new DateTime(2000, 1, 2, 3, 4, 5), "a", "1"));
+            sut.Add(new Message(new DateTime(2000, 1, 2, 3, 4, 6), "a", "2"));
+
+            var result = sut.GetMessagesBy("a").ToList();
+
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("2", result[0].Text);
+            Assert.AreEqual("1", result[1].Text);
+        }
     }
 }

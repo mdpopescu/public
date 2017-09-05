@@ -42,11 +42,13 @@
   <ItemGroup>
     <Compile Include="Coordinators\CommandFactory.cs" />
     <Compile Include="Coordinators\Commands\Command.cs" />
+    <Compile Include="Coordinators\Commands\FollowsCommand.cs" />
     <Compile Include="Coordinators\Commands\PostCommand.cs" />
     <Compile Include="Coordinators\Commands\ReadCommand.cs" />
     <Compile Include="Logic\MessageFormatter.cs" />
     <Compile Include="Logic\MessageParser.cs" />
     <Compile Include="Logic\MessageRepository.cs" />
+    <Compile Include="Logic\UserRepository.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\ParsedLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

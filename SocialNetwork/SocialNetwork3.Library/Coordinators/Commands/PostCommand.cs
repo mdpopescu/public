@@ -8,7 +8,7 @@ namespace SocialNetwork3.Library.Coordinators.Commands
     public class PostCommand : Command
     {
         /// <summary>Initializes a new instance of the <see cref="PostCommand"/> class.</summary>
-        /// <param name="messages">The messages repository.</param>
+        /// <param name="messages">The message repository.</param>
         public PostCommand(MessageRepository messages)
         {
             this.messages = messages;

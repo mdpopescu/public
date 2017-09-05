@@ -14,7 +14,9 @@ namespace SocialNetwork3.Library.Logic
         /// <summary>Gets the messages sent by the given user.</summary>
         /// <param name="user">The user.</param>
         /// <returns>The list of messages sent by the given user.</returns>
-        public IEnumerable<Message> GetMessagesBy(string user) => messages.Where(it => string.Equals(it.User, user, StringComparison.OrdinalIgnoreCase));
+        public IEnumerable<Message> GetMessagesBy(string user) => messages
+            .Where(it => string.Equals(it.User, user, StringComparison.OrdinalIgnoreCase))
+            .OrderByDescending(it => it.Time);
 
         //
 
