@@ -6,6 +6,9 @@ namespace SocialNetwork3.Library.Logic
 {
     public class MessageParser
     {
+        /// <summary>Parses the specified line.</summary>
+        /// <param name="line">The line.</param>
+        /// <returns>The parsed line.</returns>
         public ParsedLine Parse(string line)
         {
             return KNOWN_COMMANDS

@@ -23,7 +23,7 @@ namespace SocialNetwork3.Library.Logic
                 list.Add(followed);
         }
 
-        /// <summary>Gets the users being followed by the given user.</summary>
+        /// <summary>Returns the users being followed by the given user.</summary>
         /// <param name="user">The user.</param>
         /// <returns>The list of users being followed.</returns>
         public IEnumerable<string> GetFollowed(string user) => following.ContainsKey(user) ? following[user] : Enumerable.Empty<string>();
