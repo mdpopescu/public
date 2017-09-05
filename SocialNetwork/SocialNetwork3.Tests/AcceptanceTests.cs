@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SocialNetwork3.Library.Implementations;
+using SocialNetwork3.Library.Coordinators;
+using SocialNetwork3.Library.Logic;
 
 namespace SocialNetwork3.Tests
 {
@@ -11,13 +12,14 @@ namespace SocialNetwork3.Tests
         [TestMethod]
         public void EndToEnd()
         {
-            var processor = new MessageProcessor();
-            var messages = new MessageRepository();
+            //var processor = new MessageProcessor();
+            var parser = new MessageParser();
+            var commandFactory = new CommandFactory(new MessageRepository(), new MessageFormatter());
             var currentTime = DateTime.MinValue;
 
             // I know that I'm accessing a modified closure here; this is intentional
             // ReSharper disable once AccessToModifiedClosure
-            var network = new Network(processor, messages, () => currentTime);
+            var network = new Network(parser, commandFactory, () => currentTime);
 
             // posting
             currentTime = new DateTime(2000, 1, 1, 10, 0, 0);
