@@ -7,11 +7,14 @@ namespace SocialNetwork3.Library.Coordinators.Commands
 {
     public class PostCommand : Command
     {
+        /// <summary>Initializes a new instance of the <see cref="PostCommand"/> class.</summary>
+        /// <param name="messages">The messages repository.</param>
         public PostCommand(MessageRepository messages)
         {
             this.messages = messages;
         }
 
+        /// <inheritdoc />
         public override List<string> Execute(DateTime time, string user, string argument)
         {
             messages.Add(new Message(time, user, argument));

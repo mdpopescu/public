@@ -7,12 +7,16 @@ namespace SocialNetwork3.Library.Coordinators.Commands
 {
     public class ReadCommand : Command
     {
+        /// <summary>Initializes a new instance of the <see cref="ReadCommand"/> class.</summary>
+        /// <param name="messages">The messages repository.</param>
+        /// <param name="formatter">The formatter.</param>
         public ReadCommand(MessageRepository messages, MessageFormatter formatter)
         {
             this.messages = messages;
             this.formatter = formatter;
         }
 
+        /// <inheritdoc />
         public override List<string> Execute(DateTime time, string user, string argument) =>
             messages
                 .GetMessagesBy(user)
