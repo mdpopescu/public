@@ -6,6 +6,10 @@ namespace SocialNetwork3.Library.Coordinators
 {
     public class Network
     {
+        /// <summary>Initializes a new instance of the <see cref="Network"/> class.</summary>
+        /// <param name="parser">The message parser.</param>
+        /// <param name="commandFactory">The command factory.</param>
+        /// <param name="getTime">The "get current time" function.</param>
         public Network(MessageParser parser, CommandFactory commandFactory, Func<DateTime> getTime)
         {
             this.parser = parser;

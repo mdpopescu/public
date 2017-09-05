@@ -12,7 +12,6 @@ namespace SocialNetwork3.Tests
         [TestMethod]
         public void EndToEnd()
         {
-            //var processor = new MessageProcessor();
             var parser = new MessageParser();
             var commandFactory = new CommandFactory(new MessageRepository(), new UserRepository(), new MessageFormatter());
             var currentTime = DateTime.MinValue;
