@@ -15,7 +15,7 @@ namespace SocialNetwork3.Tests.Logic
         }
 
         [TestMethod]
-        public void ParsesPostingLine()
+        public void ParsesPost()
         {
             var result = sut.Parse("user -> message");
 
@@ -25,13 +25,31 @@ namespace SocialNetwork3.Tests.Logic
         }
 
         [TestMethod]
-        public void ParsesReadingLine()
+        public void ParsesRead()
         {
             var result = sut.Parse("user");
 
             Assert.AreEqual("user", result.User);
             Assert.AreEqual("", result.Command);
-            Assert.IsNull(result.Rest);
+        }
+
+        [TestMethod]
+        public void ParsesFollows()
+        {
+            var result = sut.Parse("user1 follows user2");
+
+            Assert.AreEqual("user1", result.User);
+            Assert.AreEqual("FOLLOWS", result.Command);
+            Assert.AreEqual("user2", result.Rest);
+        }
+
+        [TestMethod]
+        public void ParsesWall()
+        {
+            var result = sut.Parse("user wall");
+
+            Assert.AreEqual("user", result.User);
+            Assert.AreEqual("WALL", result.Command);
         }
     }
 }

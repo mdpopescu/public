@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using SocialNetwork3.Library.Models;
 
 namespace SocialNetwork3.Library.Logic
@@ -7,26 +8,26 @@ namespace SocialNetwork3.Library.Logic
     {
         public ParsedLine Parse(string line)
         {
-            return TryParsingPost(line)
-                ?? TryParsingRead(line);
+            return KNOWN_COMMANDS
+                    .Select(it => TryParsing(line, it))
+                    .Where(it => it != null)
+                    .FirstOrDefault()
+                ?? new ParsedLine(line, "", null);
         }
 
         //
 
-        private static ParsedLine TryParsingPost(string line)
+        private static readonly string[] KNOWN_COMMANDS = { "->", "follows", "wall" };
+
+        private static ParsedLine TryParsing(string line, string command)
         {
-            var index = line.IndexOf("->", StringComparison.Ordinal);
+            var index = line.IndexOf(command, StringComparison.OrdinalIgnoreCase);
             if (index < 0)
                 return null;
 
             var user = line.Substring(0, index).Trim();
-            var text = line.Substring(index + 2).TrimStart();
-            return new ParsedLine(user, "->", text);
-        }
-
-        private static ParsedLine TryParsingRead(string line)
-        {
-            return new ParsedLine(line, "", null);
+            var text = line.Substring(index + command.Length).TrimStart();
+            return new ParsedLine(user, command.ToUpperInvariant(), text);
         }
     }
 }
