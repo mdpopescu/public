@@ -101,6 +101,8 @@ Public repository - CC-by-SA 3.0
 
 * TaskSpikes: I need a long-running, cancelable task that might need to interact with the UI
 
+* TechnicalDrawing: a program to transform a text stream with 3D start/end coordinates for lines into a technical drawing (3 parts with the XY, XZ and YZ plans and one part with an arbitrary projection)
+
 * TextGeneration: (for now) using Markov chains to generate plausibly-looking texts.
 
 * TransformyClone: library based on the idea from http://www.transformy.io/

@@ -1,0 +1,16 @@
+Given a file of the form
+
+L 1.000 2.000 3.000 4.000 5.000 6.000
+...
+
+(L followed by six floating-point numbers, separated by spaces)
+
+create (as an initial version) a drawing containing the lines defined in the file, split into 4 quadrants, with three of the quadrants containing the XY, XZ and YZ projections of the lines.
+
+Future improvements:
+- Add more commands (like C for Circle and A for Arc)
+- Auto-generate labels with sizes for some of the lines
+- Show an arbitrary projection in the fourth quadrant (allow rotation and zooming with the mouse and/or keyboard)
+- Allow the user to click on a line and show details about it (like length and start/end coordinates)
+- Allow more complex definitions for the geometric figures (like circle with given center and radius, or circle defined by three points)
+- Allow the user to move the directly defined figures and recreate the derived ones from them (if one of the three points defining a circle moves, change the circle accordingly)
