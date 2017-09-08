@@ -9,14 +9,12 @@ namespace SocialNetwork3.Library.Logic
         /// <summary>Parses the specified line.</summary>
         /// <param name="line">The line.</param>
         /// <returns>The parsed line.</returns>
-        public ParsedLine Parse(string line)
-        {
-            return KNOWN_COMMANDS
-                    .Select(it => TryParsing(line, it))
-                    .Where(it => it != null)
-                    .FirstOrDefault()
-                ?? new ParsedLine(line, "", null);
-        }
+        public ParsedLine Parse(string line) =>
+            KNOWN_COMMANDS
+                .Select(it => TryParsing(line, it))
+                .Where(it => it != null)
+                .FirstOrDefault()
+            ?? new ParsedLine(line, "", null);
 
         //
 

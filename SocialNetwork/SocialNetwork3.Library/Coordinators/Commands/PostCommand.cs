@@ -14,7 +14,6 @@ namespace SocialNetwork3.Library.Coordinators.Commands
             this.messages = messages;
         }
 
-        /// <inheritdoc />
         public override List<string> Execute(DateTime time, string user, string argument)
         {
             messages.Add(new Message(time, user, argument));

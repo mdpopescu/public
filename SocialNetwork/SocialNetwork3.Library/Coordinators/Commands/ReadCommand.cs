@@ -16,7 +16,6 @@ namespace SocialNetwork3.Library.Coordinators.Commands
             this.formatter = formatter;
         }
 
-        /// <inheritdoc />
         public override List<string> Execute(DateTime time, string user, string argument) =>
             messages
                 .GetMessagesBy(new[] { user })

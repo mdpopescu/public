@@ -23,7 +23,7 @@ namespace SocialNetwork3.Tests.Logic
 
             var result = sut.GetFollowed("z").ToArray();
 
-            CollectionAssert.AreEqual(new[] { "a", "b" }, result);
+            CollectionAssert.AreEqual(new[] { "a", "b", "z" }, result);
         }
 
         [TestMethod]
@@ -35,19 +35,7 @@ namespace SocialNetwork3.Tests.Logic
 
             var result = sut.GetFollowed("z").ToArray();
 
-            CollectionAssert.AreEqual(new[] { "a", "b" }, result);
-        }
-
-        [TestMethod]
-        public void DoesNotAddAUserAsFollowerToHimself()
-        {
-            sut.AddFollower("z", "a");
-            sut.AddFollower("z", "b");
-            sut.AddFollower("z", "z");
-
-            var result = sut.GetFollowed("z").ToArray();
-
-            CollectionAssert.AreEqual(new[] { "a", "b" }, result);
+            CollectionAssert.AreEqual(new[] { "a", "b", "z" }, result);
         }
     }
 }

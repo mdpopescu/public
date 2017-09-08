@@ -13,7 +13,6 @@ namespace SocialNetwork3.Library.Coordinators.Commands
             this.users = users;
         }
 
-        /// <inheritdoc />
         public override List<string> Execute(DateTime time, string user, string argument)
         {
             users.AddFollower(user, argument);

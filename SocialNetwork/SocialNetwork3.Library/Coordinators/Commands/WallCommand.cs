@@ -19,15 +19,11 @@ namespace SocialNetwork3.Library.Coordinators.Commands
             this.formatter = formatter;
         }
 
-        /// <inheritdoc />
-        public override List<string> Execute(DateTime time, string user, string argument)
-        {
-            var list = users.GetFollowed(user).Concat(new[] { user }).ToList();
-            return messages
-                .GetMessagesBy(list)
+        public override List<string> Execute(DateTime time, string user, string argument) =>
+            messages
+                .GetMessagesBy(users.GetFollowed(user).ToList())
                 .Select(m => IncludeSender(m, time))
                 .ToList();
-        }
 
         //
 

@@ -23,13 +23,19 @@ namespace SocialNetwork3.Library.Logic
                 list.Add(followed);
         }
 
-        /// <summary>Returns the users being followed by the given user.</summary>
+        /// <summary>Returns the users being followed by the given user (including the given user).</summary>
         /// <param name="user">The user.</param>
         /// <returns>The list of users being followed.</returns>
-        public IEnumerable<string> GetFollowed(string user) => following.ContainsKey(user) ? following[user] : Enumerable.Empty<string>();
+        /// <remarks>The list being returned includes the given user.</remarks>
+        public IEnumerable<string> GetFollowed(string user) => SafeGet(following, user).Concat(new[] { user });
 
         //
 
         private readonly Dictionary<string, List<string>> following = new Dictionary<string, List<string>>();
+
+        private static IEnumerable<string> SafeGet(IReadOnlyDictionary<string, List<string>> dictionary, string user) =>
+            dictionary.ContainsKey(user)
+                ? dictionary[user]
+                : Enumerable.Empty<string>();
     }
 }
