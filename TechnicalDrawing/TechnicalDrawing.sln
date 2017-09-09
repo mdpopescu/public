@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechnicalDrawing.Library", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechnicalDrawing.Tests", "TechnicalDrawing.Tests\TechnicalDrawing.Tests.csproj", "{11CBE60D-BC24-4534-9177-FE54433FEE58}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Soilution Items", "Soilution Items", "{CD4FAA79-06E2-468A-B9D7-7C97045237BB}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CD4FAA79-06E2-468A-B9D7-7C97045237BB}"
 	ProjectSection(SolutionItems) = preProject
 		notes.txt = notes.txt
 	EndProjectSection

@@ -8,12 +8,12 @@ namespace TechnicalDrawing.Library.Shell
 {
     public class DrawingApp
     {
-        public DrawingApp(FileSystem fs, Parser parser, Projector projector, Canvas canvas)
+        public DrawingApp(FileSystem fs, Parser parser, Projector projector, Func<Canvas> canvasFactory)
         {
             this.fs = fs;
             this.parser = parser;
             this.projector = projector;
-            this.canvas = canvas;
+            this.canvasFactory = canvasFactory;
         }
 
         public void OpenFile(Func<string> getFilename)
@@ -30,6 +30,7 @@ namespace TechnicalDrawing.Library.Shell
                            from parsedCommand in parsedCommands
                            select CreateCommand(plane, parsedCommand);
 
+            var canvas = canvasFactory.Invoke();
             foreach (var command in commands)
                 canvas.Execute(command);
         }
@@ -39,7 +40,7 @@ namespace TechnicalDrawing.Library.Shell
         private readonly FileSystem fs;
         private readonly Parser parser;
         private readonly Projector projector;
-        private readonly Canvas canvas;
+        private readonly Func<Canvas> canvasFactory;
 
         /// <summary>Projects a command to the given plane.</summary>
         /// <param name="plane">The plane.</param>
