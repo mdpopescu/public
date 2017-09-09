@@ -37,7 +37,7 @@ namespace TechnicalDrawing
             XZImage.Image = CreateImage(XZImage.Width, XZImage.Height, Color.White);
             YZImage.Image = CreateImage(YZImage.Width, YZImage.Height, Color.White);
 
-            var canvas = new ImageCanvas(XYImage.Image, XZImage.Image, YZImage.Image);
+            var canvas = new ImageCanvas(XYImage, XZImage, YZImage);
             app = new DrawingApp(new WinFileSystem(), new Parser(), new Projector(), canvas);
         }
 
