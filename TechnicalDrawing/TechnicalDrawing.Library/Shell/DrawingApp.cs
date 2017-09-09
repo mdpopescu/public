@@ -26,8 +26,7 @@ namespace TechnicalDrawing.Library.Shell
                            from parsedCommand in parsedCommands
                            select CreateCommand(plane, parsedCommand);
 
-            foreach (var command in commands)
-                canvas.Execute(command);
+            canvas.Execute(commands);
         }
 
         //

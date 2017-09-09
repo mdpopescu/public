@@ -1,9 +1,10 @@
-﻿using TechnicalDrawing.Library.Models;
+﻿using System.Collections.Generic;
+using TechnicalDrawing.Library.Models;
 
 namespace TechnicalDrawing.Library.Contracts
 {
     public interface Canvas
     {
-        void Execute(ProjectedCommand command);
+        void Execute(IEnumerable<ProjectedCommand> commands);
     }
 }

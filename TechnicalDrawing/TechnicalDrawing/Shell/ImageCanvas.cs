@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using TechnicalDrawing.Library.Contracts;
 using TechnicalDrawing.Library.Models;
@@ -17,21 +19,17 @@ namespace TechnicalDrawing.Shell
             quadrants = new[] { xyQuadrant, xzQuadrant, yzQuadrant };
         }
 
-        public void Execute(ProjectedCommand command)
+        public void Execute(IEnumerable<ProjectedCommand> commands)
         {
-            var picture = quadrants[(int) command.Plane];
+            var groups = commands.GroupBy(it => it.Plane);
+            foreach (var group in groups)
+            {
+                var picture = quadrants[(int) group.Key];
 
-            // only lines are implemented for now
-            using (var g = Graphics.FromImage(picture.Image))
-            using (var pen = new Pen(Color.Black, 1))
-                g.DrawLine(
-                    pen,
-                    command.Points[0].X,
-                    picture.Height - command.Points[0].Y,
-                    command.Points[1].X,
-                    picture.Height - command.Points[1].Y);
+                RunBatch(picture, group);
 
-            picture.Invalidate();
+                picture.Invalidate();
+            }
         }
 
         //
@@ -53,6 +51,24 @@ namespace TechnicalDrawing.Shell
                 g.FillRectangle(b, 0, 0, image.Width, image.Height);
 
             return image;
+        }
+
+        private static void RunBatch(PictureBox picture, IEnumerable<ProjectedCommand> commands)
+        {
+            using (var g = Graphics.FromImage(picture.Image))
+            using (var pen = new Pen(Color.Black, 1))
+            {
+                foreach (var command in commands)
+                {
+                    // only lines are implemented for now
+                    g.DrawLine(
+                        pen,
+                        command.Points[0].X,
+                        picture.Height - command.Points[0].Y,
+                        command.Points[1].X,
+                        picture.Height - command.Points[1].Y);
+                }
+            }
         }
     }
 }
