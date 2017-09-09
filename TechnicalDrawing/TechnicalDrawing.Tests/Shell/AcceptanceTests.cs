@@ -12,9 +12,9 @@ namespace TechnicalDrawing.Tests.Shell
         public void Test1()
         {
             var canvas = new FakeCanvas();
-            var app = new DrawingApp(new WinFileSystem(), new Parser(), new Projector(), () => canvas);
+            var app = new DrawingApp(new WinFileSystem(), new Parser(), new Projector(), canvas);
 
-            app.OpenFile(() => @"Data\d1.txt");
+            app.OpenFile(@"Data\d1.txt");
 
             Assert.AreEqual(6, canvas.Commands.Count);
             Assert.AreEqual(new ProjectedCommand(Plane.XY, CommandName.Line, new Point2D(10, 20), new Point2D(40, 50)).ToString(),

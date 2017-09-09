@@ -38,8 +38,13 @@ namespace TechnicalDrawing
 
         private void FileOpenMenu_Click(object sender, EventArgs e)
         {
-            var app = new DrawingApp(fs, parser, projector, () => new ImageCanvas(XYImage, XZImage, YZImage));
-            app.OpenFile(GetFilename);
+            var filename = GetFilename();
+            if (filename == null)
+                return;
+
+            var canvas = new ImageCanvas(XYImage, XZImage, YZImage);
+            var app = new DrawingApp(fs, parser, projector, canvas);
+            app.OpenFile(filename);
         }
     }
 }
