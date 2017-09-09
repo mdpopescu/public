@@ -22,9 +22,9 @@ namespace TechnicalDrawing.Library.Shell
                 .ReadLines(filename)
                 .Select(parser.Parse)
                 .ToList();
-            var commands = from quadrant in Enum.GetValues(typeof(Plane)).Cast<Plane>()
+            var commands = from plane in Enum.GetValues(typeof(Plane)).Cast<Plane>()
                            from parsedLine in parsedLines
-                           select projector.Project(quadrant, parsedLine);
+                           select CreateCommand(plane, parsedLine);
 
             foreach (var command in commands)
                 canvas.Execute(command);
@@ -36,5 +36,8 @@ namespace TechnicalDrawing.Library.Shell
         private readonly Parser parser;
         private readonly Projector projector;
         private readonly Canvas canvas;
+
+        private ProjectedCommand CreateCommand(Plane plane, ParsedCommand parsedLine) =>
+            new ProjectedCommand(plane, parsedLine.Name, projector.Project(plane, parsedLine.Args));
     }
 }

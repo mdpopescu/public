@@ -7,20 +7,17 @@ namespace TechnicalDrawing.Library.Core
 {
     public class Projector
     {
-        public ProjectedCommand Project(Plane plane, ParsedCommand command)
+        public QuadrantPoint[] Project(Plane plane, params float[] values)
         {
             var projection = PROJECTION_INDICES[plane];
 
-            var projectedPoints = command
-                .Args
+            return values
                 .Select((value, index) => new { value, index })
                 .GroupBy(tuple => tuple.index / 3)
                 .Select(g => g.Select(it => it.value).ToArray())
                 .ToList()
                 .Select(arr => MapToPlane(arr, projection))
                 .ToArray();
-
-            return new ProjectedCommand(plane, command.Name, projectedPoints);
         }
 
         //
