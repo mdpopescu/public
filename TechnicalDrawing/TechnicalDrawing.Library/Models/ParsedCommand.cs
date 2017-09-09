@@ -1,14 +1,14 @@
 ﻿namespace TechnicalDrawing.Library.Models
 {
-    public struct ParsedLine
+    public struct ParsedCommand
     {
-        public ParsedLine(string name, params float[] args)
+        public ParsedCommand(CommandName name, params float[] args)
         {
             Name = name;
             Args = args;
         }
 
-        public string Name { get; }
+        public CommandName Name { get; }
         public float[] Args { get; }
     }
 }

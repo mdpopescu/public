@@ -44,12 +44,13 @@
     <Compile Include="Contracts\FileSystem.cs" />
     <Compile Include="Core\Parser.cs" />
     <Compile Include="Core\Projector.cs" />
+    <Compile Include="Models\ProjectedCommand.cs" />
+    <Compile Include="Models\CommandName.cs" />
     <Compile Include="Shell\DrawingApp.cs" />
     <Compile Include="Shell\WinFileSystem.cs" />
-    <Compile Include="Models\Command.cs" />
-    <Compile Include="Models\ParsedLine.cs" />
+    <Compile Include="Models\ParsedCommand.cs" />
     <Compile Include="Models\Quadrant.cs" />
-    <Compile Include="Models\ScreenPoint.cs" />
+    <Compile Include="Models\QuadrantPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

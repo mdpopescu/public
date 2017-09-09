@@ -6,10 +6,10 @@ namespace TechnicalDrawing.Library.Core
 {
     public class Parser
     {
-        public ParsedLine Parse(string line)
+        public ParsedCommand Parse(string line)
         {
             var parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            return new ParsedLine(parts[0], parts.Skip(1).Select(float.Parse).ToArray());
+            return new ParsedCommand(CommandName.Line, parts.Skip(1).Select(float.Parse).ToArray());
         }
     }
 }

@@ -18,12 +18,12 @@ namespace TechnicalDrawing.Tests.Shell
 
             app.Load(@"Data\d1.txt");
 
-            canvas.Verify(it => it.Line(Quadrant.XY, new ScreenPoint(1, 2), new ScreenPoint(4, 5)));
-            canvas.Verify(it => it.Line(Quadrant.XY, new ScreenPoint(2, 3), new ScreenPoint(5, 6)));
-            canvas.Verify(it => it.Line(Quadrant.XZ, new ScreenPoint(1, 3), new ScreenPoint(4, 6)));
-            canvas.Verify(it => it.Line(Quadrant.XZ, new ScreenPoint(2, 4), new ScreenPoint(5, 7)));
-            canvas.Verify(it => it.Line(Quadrant.YZ, new ScreenPoint(2, 3), new ScreenPoint(5, 6)));
-            canvas.Verify(it => it.Line(Quadrant.YZ, new ScreenPoint(3, 4), new ScreenPoint(6, 7)));
+            canvas.Verify(it => it.Execute(new ProjectedCommand(CommandName.Line, Quadrant.XY, new QuadrantPoint(10, 20), new QuadrantPoint(40, 50))));
+            canvas.Verify(it => it.Execute(new ProjectedCommand(CommandName.Line, Quadrant.XY, new QuadrantPoint(20, 30), new QuadrantPoint(50, 60))));
+            canvas.Verify(it => it.Execute(new ProjectedCommand(CommandName.Line, Quadrant.XZ, new QuadrantPoint(10, 30), new QuadrantPoint(40, 60))));
+            canvas.Verify(it => it.Execute(new ProjectedCommand(CommandName.Line, Quadrant.XZ, new QuadrantPoint(20, 40), new QuadrantPoint(50, 70))));
+            canvas.Verify(it => it.Execute(new ProjectedCommand(CommandName.Line, Quadrant.YZ, new QuadrantPoint(20, 30), new QuadrantPoint(50, 60))));
+            canvas.Verify(it => it.Execute(new ProjectedCommand(CommandName.Line, Quadrant.YZ, new QuadrantPoint(30, 40), new QuadrantPoint(60, 70))));
         }
     }
 }

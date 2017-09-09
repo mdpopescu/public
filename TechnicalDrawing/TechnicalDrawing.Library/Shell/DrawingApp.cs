@@ -27,7 +27,7 @@ namespace TechnicalDrawing.Library.Shell
                            select projector.Project(parsedLine, quadrant);
 
             foreach (var command in commands)
-                command.Execute(canvas);
+                canvas.Execute(command);
         }
 
         //

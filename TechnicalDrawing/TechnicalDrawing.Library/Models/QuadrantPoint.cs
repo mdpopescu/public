@@ -1,8 +1,8 @@
 ﻿namespace TechnicalDrawing.Library.Models
 {
-    public struct ScreenPoint
+    public struct QuadrantPoint
     {
-        public ScreenPoint(int x, int y)
+        public QuadrantPoint(int x, int y)
         {
             X = x;
             Y = y;
@@ -10,5 +10,7 @@
 
         public int X { get; }
         public int Y { get; }
+
+        public override string ToString() => $"({X}, {Y})";
     }
 }
