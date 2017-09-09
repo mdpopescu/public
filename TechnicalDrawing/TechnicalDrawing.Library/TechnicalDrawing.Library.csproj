@@ -49,7 +49,7 @@
     <Compile Include="Shell\DrawingApp.cs" />
     <Compile Include="Shell\WinFileSystem.cs" />
     <Compile Include="Models\ParsedCommand.cs" />
-    <Compile Include="Models\Quadrant.cs" />
+    <Compile Include="Models\Plane.cs" />
     <Compile Include="Models\QuadrantPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

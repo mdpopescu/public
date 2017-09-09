@@ -2,7 +2,7 @@
 
 namespace TechnicalDrawing.Library.Models
 {
-    public enum Quadrant
+    public enum Plane
     {
         XY,
         XZ,

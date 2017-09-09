@@ -22,9 +22,9 @@ namespace TechnicalDrawing.Library.Shell
                 .ReadLines(filename)
                 .Select(parser.Parse)
                 .ToList();
-            var commands = from parsedLine in parsedLines
-                           from quadrant in Enum.GetValues(typeof(Quadrant)).Cast<Quadrant>()
-                           select projector.Project(parsedLine, quadrant);
+            var commands = from quadrant in Enum.GetValues(typeof(Plane)).Cast<Plane>()
+                           from parsedLine in parsedLines
+                           select projector.Project(quadrant, parsedLine);
 
             foreach (var command in commands)
                 canvas.Execute(command);

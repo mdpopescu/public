@@ -18,11 +18,21 @@ namespace TechnicalDrawing.Tests.Core
         [TestMethod]
         public void ProjectsOnePointToTheXYPlane()
         {
-            var result = sut.Project(new ParsedCommand(CommandName.Line, 1.0f, 2.0f, 3.0f), Quadrant.XY);
+            var result = sut.Project(Plane.XY, new ParsedCommand(CommandName.Line, 1.0f, 2.0f, 3.0f));
 
-            Assert.AreEqual(Quadrant.XY, result.Quadrant);
+            Assert.AreEqual(Plane.XY, result.Plane);
             Assert.AreEqual(1, result.Points.Length);
             Assert.AreEqual(new QuadrantPoint(1, 2), result.Points[0]);
+        }
+
+        [TestMethod]
+        public void ProjectsOnePointToTheXZPlane()
+        {
+            var result = sut.Project(Plane.XZ, new ParsedCommand(CommandName.Line, 1.0f, 2.0f, 3.0f));
+
+            Assert.AreEqual(Plane.XZ, result.Plane);
+            Assert.AreEqual(1, result.Points.Length);
+            Assert.AreEqual(new QuadrantPoint(1, 3), result.Points[0]);
         }
     }
 }
