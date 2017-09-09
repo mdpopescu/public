@@ -13,10 +13,11 @@ namespace TechnicalDrawing.Shell
 
         public void Execute(ProjectedCommand command)
         {
-            // only lines are implemented for now
+            var image = quadrants[(int) command.Plane];
 
-            using (var g = Graphics.FromImage(quadrants[(int) command.Plane]))
-            using (var pen = new Pen(Color.Black, 1.0f))
+            // only lines are implemented for now
+            using (var g = Graphics.FromImage(image))
+            using (var pen = new Pen(Color.Black, 1))
                 g.DrawLine(pen, command.Points[0].X, command.Points[0].Y, command.Points[1].X, command.Points[1].Y);
         }
 
