@@ -15,25 +15,29 @@ namespace TechnicalDrawing
 
         //
 
-        private DrawingApp app;
-
-        //
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            var canvas = new ImageCanvas(XYImage, XZImage, YZImage);
-            app = new DrawingApp(new WinFileSystem(), new Parser(), new Projector(), canvas);
-        }
-
-        private void FileOpenMenu_Click(object sender, EventArgs e)
+        private static string GetFilename()
         {
             using (var dlg = new OpenFileDialog())
             {
                 dlg.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
 
-                if (dlg.ShowDialog() == DialogResult.OK)
-                    app.Load(dlg.FileName);
+                return dlg.ShowDialog() == DialogResult.OK ? dlg.FileName : null;
             }
+        }
+
+        //
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            //
+        }
+
+        private void FileOpenMenu_Click(object sender, EventArgs e)
+        {
+            var canvas = new ImageCanvas(XYImage, XZImage, YZImage);
+            var app = new DrawingApp(new WinFileSystem(), new Parser(), new Projector(), canvas);
+
+            app.OpenFile(GetFilename);
         }
     }
 }

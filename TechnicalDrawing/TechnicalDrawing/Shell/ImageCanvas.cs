@@ -33,8 +33,9 @@ namespace TechnicalDrawing.Shell
 
         private readonly PictureBox[] quadrants;
 
-        private void Initialize(PictureBox picture)
+        private static void Initialize(PictureBox picture)
         {
+            picture.Image?.Dispose();
             picture.Image = CreateImage(picture.Width, picture.Height, Color.White);
         }
 

@@ -50,7 +50,7 @@
     <Compile Include="Shell\WinFileSystem.cs" />
     <Compile Include="Models\ParsedCommand.cs" />
     <Compile Include="Models\Plane.cs" />
-    <Compile Include="Models\QuadrantPoint.cs" />
+    <Compile Include="Models\Point2D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

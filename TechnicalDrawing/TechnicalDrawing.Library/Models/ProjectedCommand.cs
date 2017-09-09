@@ -2,7 +2,7 @@
 {
     public struct ProjectedCommand
     {
-        public ProjectedCommand(Plane plane, CommandName name, params QuadrantPoint[] points)
+        public ProjectedCommand(Plane plane, CommandName name, params Point2D[] points)
         {
             Plane = plane;
             Name = name;
@@ -11,7 +11,7 @@
 
         public Plane Plane { get; }
         public CommandName Name { get; }
-        public QuadrantPoint[] Points { get; }
+        public Point2D[] Points { get; }
 
         public override string ToString() => $"{Plane} {Name} {string.Join(", ", Points)}";
     }

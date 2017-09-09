@@ -1,8 +1,8 @@
 ﻿namespace TechnicalDrawing.Library.Models
 {
-    public struct QuadrantPoint
+    public struct Point2D
     {
-        public QuadrantPoint(int x, int y)
+        public Point2D(int x, int y)
         {
             X = x;
             Y = y;

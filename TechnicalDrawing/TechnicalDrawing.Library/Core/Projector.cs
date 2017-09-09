@@ -7,7 +7,7 @@ namespace TechnicalDrawing.Library.Core
 {
     public class Projector
     {
-        public QuadrantPoint[] Project(Plane plane, params float[] values)
+        public Point2D[] Project(Plane plane, params float[] values)
         {
             var projection = PROJECTION_INDICES[(int) plane];
 
@@ -32,7 +32,7 @@ namespace TechnicalDrawing.Library.Core
         /// <param name="coordinates">The coordinates.</param>
         /// <param name="projection">The appropriate indices for the given plane.</param>
         /// <returns>The mapped coordinates (rounded to the nearest integer).</returns>
-        private static QuadrantPoint MapToPlane(IReadOnlyList<float> coordinates, Tuple<int, int> projection) =>
-            new QuadrantPoint((int) Math.Round(coordinates[projection.Item1]), (int) Math.Round(coordinates[projection.Item2]));
+        private static Point2D MapToPlane(IReadOnlyList<float> coordinates, Tuple<int, int> projection) =>
+            new Point2D((int) Math.Round(coordinates[projection.Item1]), (int) Math.Round(coordinates[projection.Item2]));
     }
 }

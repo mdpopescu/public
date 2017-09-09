@@ -16,8 +16,12 @@ namespace TechnicalDrawing.Library.Shell
             this.canvas = canvas;
         }
 
-        public void Load(string filename)
+        public void OpenFile(Func<string> getFilename)
         {
+            var filename = getFilename();
+            if (filename == null)
+                return;
+
             var parsedCommands = fs
                 .ReadLines(filename)
                 .Select(parser.Parse)
@@ -40,7 +44,7 @@ namespace TechnicalDrawing.Library.Shell
         /// <summary>Projects a command to the given plane.</summary>
         /// <param name="plane">The plane.</param>
         /// <param name="parsedCommand">The parsed command.</param>
-        /// <returns>The command with its coordinates projected to the given plane as <see cref="QuadrantPoint"/>s.</returns>
+        /// <returns>The command with its coordinates projected to the given plane as <see cref="Point2D"/>s.</returns>
         private ProjectedCommand CreateCommand(Plane plane, ParsedCommand parsedCommand) =>
             new ProjectedCommand(plane, parsedCommand.Name, projector.Project(plane, parsedCommand.Args));
     }
