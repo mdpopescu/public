@@ -9,6 +9,11 @@ namespace TechnicalDrawing.Shell
     {
         public ImageCanvas(PictureBox xyQuadrant, PictureBox xzQuadrant, PictureBox yzQuadrant)
         {
+            // create the blank images
+            Initialize(xyQuadrant);
+            Initialize(xzQuadrant);
+            Initialize(yzQuadrant);
+
             quadrants = new[] { xyQuadrant, xzQuadrant, yzQuadrant };
         }
 
@@ -27,5 +32,21 @@ namespace TechnicalDrawing.Shell
         //
 
         private readonly PictureBox[] quadrants;
+
+        private void Initialize(PictureBox picture)
+        {
+            picture.Image = CreateImage(picture.Width, picture.Height, Color.White);
+        }
+
+        private static Image CreateImage(int width, int height, Color color)
+        {
+            var image = new Bitmap(width, height);
+
+            using (var g = Graphics.FromImage(image))
+            using (var b = new SolidBrush(color))
+                g.FillRectangle(b, 0, 0, image.Width, image.Height);
+
+            return image;
+        }
     }
 }
