@@ -54,7 +54,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AcceptanceTests.cs" />
+    <Compile Include="Shell\AcceptanceTests.cs" />
+    <Compile Include="Core\ParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

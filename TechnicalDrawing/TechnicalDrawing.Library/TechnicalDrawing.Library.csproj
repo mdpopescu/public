@@ -41,7 +41,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\Canvas.cs" />
-    <Compile Include="Implementations\DrawingApp.cs" />
+    <Compile Include="Contracts\FileSystem.cs" />
+    <Compile Include="Core\Parser.cs" />
+    <Compile Include="Core\Projector.cs" />
+    <Compile Include="Shell\DrawingApp.cs" />
+    <Compile Include="Shell\WinFileSystem.cs" />
+    <Compile Include="Models\Command.cs" />
+    <Compile Include="Models\ParsedLine.cs" />
     <Compile Include="Models\Quadrant.cs" />
     <Compile Include="Models\ScreenPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
