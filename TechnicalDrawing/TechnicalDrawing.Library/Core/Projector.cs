@@ -15,7 +15,6 @@ namespace TechnicalDrawing.Library.Core
                 .Select((value, index) => new { value, index })
                 .GroupBy(tuple => tuple.index / 3)
                 .Select(g => g.Select(it => it.value).ToArray())
-                .ToList()
                 .Select(arr => MapToPlane(arr, projection))
                 .ToArray();
         }

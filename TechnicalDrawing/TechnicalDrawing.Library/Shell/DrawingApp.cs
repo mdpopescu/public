@@ -18,13 +18,13 @@ namespace TechnicalDrawing.Library.Shell
 
         public void Load(string filename)
         {
-            var parsedLines = fs
+            var parsedCommands = fs
                 .ReadLines(filename)
                 .Select(parser.Parse)
                 .ToList();
             var commands = from plane in Enum.GetValues(typeof(Plane)).Cast<Plane>()
-                           from parsedLine in parsedLines
-                           select CreateCommand(plane, parsedLine);
+                           from parsedCommand in parsedCommands
+                           select CreateCommand(plane, parsedCommand);
 
             foreach (var command in commands)
                 canvas.Execute(command);
@@ -37,7 +37,11 @@ namespace TechnicalDrawing.Library.Shell
         private readonly Projector projector;
         private readonly Canvas canvas;
 
-        private ProjectedCommand CreateCommand(Plane plane, ParsedCommand parsedLine) =>
-            new ProjectedCommand(plane, parsedLine.Name, projector.Project(plane, parsedLine.Args));
+        /// <summary>Projects a command to the given plane.</summary>
+        /// <param name="plane">The plane.</param>
+        /// <param name="parsedCommand">The parsed command.</param>
+        /// <returns>The command with its coordinates projected to the given plane as <see cref="QuadrantPoint"/>s.</returns>
+        private ProjectedCommand CreateCommand(Plane plane, ParsedCommand parsedCommand) =>
+            new ProjectedCommand(plane, parsedCommand.Name, projector.Project(plane, parsedCommand.Args));
     }
 }
