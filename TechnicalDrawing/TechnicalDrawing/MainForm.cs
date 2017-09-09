@@ -44,7 +44,7 @@ namespace TechnicalDrawing
 
             var canvas = new ImageCanvas(XYImage, XZImage, YZImage);
             var app = new DrawingApp(fs, parser, projector, canvas);
-            app.OpenFile(filename);
+            app.Load(filename);
         }
     }
 }

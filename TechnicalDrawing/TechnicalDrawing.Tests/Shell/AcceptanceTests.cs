@@ -14,7 +14,7 @@ namespace TechnicalDrawing.Tests.Shell
             var canvas = new FakeCanvas();
             var app = new DrawingApp(new WinFileSystem(), new Parser(), new Projector(), canvas);
 
-            app.OpenFile(@"Data\d1.txt");
+            app.Load(@"Data\d1.txt");
 
             Assert.AreEqual(6, canvas.Commands.Count);
             Assert.AreEqual(new ProjectedCommand(Plane.XY, CommandName.Line, new Point2D(10, 20), new Point2D(40, 50)).ToString(),

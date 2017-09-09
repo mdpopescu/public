@@ -16,7 +16,7 @@ namespace TechnicalDrawing.Library.Shell
             this.canvas = canvas;
         }
 
-        public void OpenFile(string filename)
+        public void Load(string filename)
         {
             var parsedCommands = fs
                 .ReadLines(filename)
