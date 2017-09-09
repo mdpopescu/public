@@ -24,7 +24,12 @@ namespace TechnicalDrawing.Shell
             // only lines are implemented for now
             using (var g = Graphics.FromImage(picture.Image))
             using (var pen = new Pen(Color.Black, 1))
-                g.DrawLine(pen, command.Points[0].X, command.Points[0].Y, command.Points[1].X, command.Points[1].Y);
+                g.DrawLine(
+                    pen,
+                    command.Points[0].X,
+                    picture.Height - command.Points[0].Y,
+                    command.Points[1].X,
+                    picture.Height - command.Points[1].Y);
 
             picture.Invalidate();
         }
