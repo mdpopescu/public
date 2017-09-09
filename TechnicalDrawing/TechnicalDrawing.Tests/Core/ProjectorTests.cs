@@ -34,5 +34,15 @@ namespace TechnicalDrawing.Tests.Core
             Assert.AreEqual(1, result.Points.Length);
             Assert.AreEqual(new QuadrantPoint(1, 3), result.Points[0]);
         }
+
+        [TestMethod]
+        public void ProjectsOnePointToTheYZPlane()
+        {
+            var result = sut.Project(Plane.YZ, new ParsedCommand(CommandName.Line, 1.0f, 2.0f, 3.0f));
+
+            Assert.AreEqual(Plane.YZ, result.Plane);
+            Assert.AreEqual(1, result.Points.Length);
+            Assert.AreEqual(new QuadrantPoint(2, 3), result.Points[0]);
+        }
     }
 }
