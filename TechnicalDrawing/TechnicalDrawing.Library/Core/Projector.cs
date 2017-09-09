@@ -9,7 +9,7 @@ namespace TechnicalDrawing.Library.Core
     {
         public QuadrantPoint[] Project(Plane plane, params float[] values)
         {
-            var projection = PROJECTION_INDICES[plane];
+            var projection = PROJECTION_INDICES[(int) plane];
 
             return values
                 .Select((value, index) => new { value, index })
@@ -21,11 +21,11 @@ namespace TechnicalDrawing.Library.Core
 
         //
 
-        private static readonly Dictionary<Plane, Tuple<int, int>> PROJECTION_INDICES = new Dictionary<Plane, Tuple<int, int>>
+        private static readonly List<Tuple<int, int>> PROJECTION_INDICES = new List<Tuple<int, int>>
         {
-            { Plane.XY, Tuple.Create(0, 1) },
-            { Plane.XZ, Tuple.Create(0, 2) },
-            { Plane.YZ, Tuple.Create(1, 2) },
+            Tuple.Create(0, 1),
+            Tuple.Create(0, 2),
+            Tuple.Create(1, 2),
         };
 
         /// <summary>Maps 3D coordinates to a plane.</summary>
