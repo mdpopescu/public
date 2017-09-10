@@ -19,17 +19,14 @@ namespace TechnicalDrawing.Shell
             quadrants = new[] { xyQuadrant, xzQuadrant, yzQuadrant };
         }
 
-        public void Execute(IEnumerable<ProjectedCommand> commands)
+        public void Execute(IReadOnlyCollection<ProjectedCommand> commands)
         {
-            var groups = commands.GroupBy(it => it.Plane);
-            foreach (var group in groups)
-            {
-                var picture = quadrants[(int) group.Key];
+            // assume all commands have the same plane, and there is at least one command
+            var picture = quadrants[(int) commands.First().Plane];
 
-                RunBatch(picture, group);
+            RunBatch(picture, commands);
 
-                picture.Invalidate();
-            }
+            picture.Invalidate();
         }
 
         //

@@ -22,11 +22,13 @@ namespace TechnicalDrawing.Library.Shell
                 .ReadLines(filename)
                 .Select(parser.Parse)
                 .ToList();
-            var commands = from plane in Enum.GetValues(typeof(Plane)).Cast<Plane>()
-                           from parsedCommand in parsedCommands
-                           select CreateCommand(plane, parsedCommand);
+            var groups = from plane in Enum.GetValues(typeof(Plane)).Cast<Plane>()
+                         from parsedCommand in parsedCommands
+                         let command = CreateCommand(plane, parsedCommand)
+                         group command by command.Plane;
 
-            canvas.Execute(commands);
+            foreach (var g in groups)
+                canvas.Execute(g.ToList());
         }
 
         //

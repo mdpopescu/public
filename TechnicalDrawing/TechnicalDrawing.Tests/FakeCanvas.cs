@@ -7,8 +7,8 @@ namespace TechnicalDrawing.Tests
 {
     public class FakeCanvas : Canvas
     {
-        public List<string> Commands { get; } = new List<string>();
+        public List<List<string>> Commands { get; } = new List<List<string>>();
 
-        public void Execute(IEnumerable<ProjectedCommand> commands) => Commands.AddRange(commands.Select(it => it.ToString()));
+        public void Execute(IReadOnlyCollection<ProjectedCommand> commands) => Commands.Add(new List<string>(commands.Select(it => it.ToString())));
     }
 }
