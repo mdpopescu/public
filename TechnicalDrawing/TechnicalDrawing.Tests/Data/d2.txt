@@ -1,0 +1,6 @@
+﻿# single line comment
+L 10.000 20.000 30.000 40.000 50.000 60.000 # comment at the end of a line
+
+# empty lines are also allowed
+
+L 20.000 30.000 40.000 50.000 60.000 70.000

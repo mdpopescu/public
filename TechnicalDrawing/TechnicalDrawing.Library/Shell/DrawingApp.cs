@@ -21,6 +21,7 @@ namespace TechnicalDrawing.Library.Shell
             var parsedCommands = fs
                 .ReadLines(filename)
                 .Select(parser.Parse)
+                .Where(it => it.Name != CommandName.None)
                 .ToList();
             var groups = from plane in Enum.GetValues(typeof(Plane)).Cast<Plane>()
                          from parsedCommand in parsedCommands

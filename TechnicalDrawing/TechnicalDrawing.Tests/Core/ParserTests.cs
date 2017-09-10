@@ -24,5 +24,37 @@ namespace TechnicalDrawing.Tests.Core
             Assert.AreEqual(CommandName.Line, result.Name);
             CollectionAssert.AreEqual(new[] { 1.1f, 2.2f, 3.3f }, result.Args);
         }
+
+        [TestMethod]
+        public void ReturnsNoneForEmptyLines()
+        {
+            var result = sut.Parse("  ");
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(CommandName.None, result.Name);
+            Assert.IsNotNull(result.Args);
+            Assert.AreEqual(0, result.Args.Length);
+        }
+
+        [TestMethod]
+        public void IgnoresComments_1()
+        {
+            var result = sut.Parse(" # comment ");
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(CommandName.None, result.Name);
+            Assert.IsNotNull(result.Args);
+            Assert.AreEqual(0, result.Args.Length);
+        }
+
+        [TestMethod]
+        public void IgnoresComments_2()
+        {
+            var result = sut.Parse("L 1.1 2.2 3.3 # comment");
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(CommandName.Line, result.Name);
+            CollectionAssert.AreEqual(new[] { 1.1f, 2.2f, 3.3f }, result.Args);
+        }
     }
 }
