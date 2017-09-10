@@ -143,7 +143,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "MainForm";
+            this.Text = "Technical Drawing";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
