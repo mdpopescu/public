@@ -10,18 +10,20 @@ namespace TechnicalDrawing.Tests.Shell
     {
         private FakeCanvas canvas;
 
+        private DrawingApp sut;
+
         [TestInitialize]
         public void SetUp()
         {
             canvas = new FakeCanvas();
+
+            sut = new DrawingApp(new FileParser(new WinFileSystem(), new LineParser()), new Projector(), canvas);
         }
 
         [TestMethod]
         public void Test1()
         {
-            var app = new DrawingApp(new WinFileSystem(), new Parser(), new Projector(), canvas);
-
-            app.Load(@"Data\d1.txt");
+            sut.Load(@"Data\d1.txt");
 
             Assert.AreEqual(3, canvas.Commands.Count);
             CollectionAssert.AreEqual(new[]
@@ -44,9 +46,7 @@ namespace TechnicalDrawing.Tests.Shell
         [TestMethod]
         public void Test2()
         {
-            var app = new DrawingApp(new WinFileSystem(), new Parser(), new Projector(), canvas);
-
-            app.Load(@"Data\d2.txt");
+            sut.Load(@"Data\d2.txt");
 
             Assert.AreEqual(3, canvas.Commands.Count);
             CollectionAssert.AreEqual(new[]

@@ -51,7 +51,7 @@
     <Compile Include="Core\ProjectorTests.cs" />
     <Compile Include="FakeCanvas.cs" />
     <Compile Include="Shell\AcceptanceTests.cs" />
-    <Compile Include="Core\ParserTests.cs" />
+    <Compile Include="Core\LineParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

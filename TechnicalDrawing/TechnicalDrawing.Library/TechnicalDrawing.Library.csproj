@@ -42,11 +42,12 @@
   <ItemGroup>
     <Compile Include="Contracts\Canvas.cs" />
     <Compile Include="Contracts\FileSystem.cs" />
-    <Compile Include="Core\Parser.cs" />
+    <Compile Include="Core\LineParser.cs" />
     <Compile Include="Core\Projector.cs" />
     <Compile Include="Models\ProjectedCommand.cs" />
     <Compile Include="Models\CommandName.cs" />
     <Compile Include="Shell\DrawingApp.cs" />
+    <Compile Include="Shell\FileParser.cs" />
     <Compile Include="Shell\WinFileSystem.cs" />
     <Compile Include="Models\ParsedCommand.cs" />
     <Compile Include="Models\Plane.cs" />

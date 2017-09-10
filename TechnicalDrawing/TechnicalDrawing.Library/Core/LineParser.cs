@@ -4,7 +4,7 @@ using TechnicalDrawing.Library.Models;
 
 namespace TechnicalDrawing.Library.Core
 {
-    public class Parser
+    public class LineParser
     {
         public ParsedCommand Parse(string line)
         {

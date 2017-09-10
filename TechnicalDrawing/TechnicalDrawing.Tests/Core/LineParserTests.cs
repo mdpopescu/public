@@ -5,14 +5,14 @@ using TechnicalDrawing.Library.Models;
 namespace TechnicalDrawing.Tests.Core
 {
     [TestClass]
-    public class ParserTests
+    public class LineParserTests
     {
-        private Parser sut;
+        private LineParser sut;
 
         [TestInitialize]
         public void SetUp()
         {
-            sut = new Parser();
+            sut = new LineParser();
         }
 
         [TestMethod]

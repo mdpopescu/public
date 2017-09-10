@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using TechnicalDrawing.Library.Contracts;
 using TechnicalDrawing.Library.Core;
 using TechnicalDrawing.Library.Shell;
 using TechnicalDrawing.Shell;
@@ -27,8 +26,7 @@ namespace TechnicalDrawing
 
         //
 
-        private readonly FileSystem fs = new WinFileSystem();
-        private readonly Parser parser = new Parser();
+        private readonly FileParser fileParser = new FileParser(new WinFileSystem(), new LineParser());
         private readonly Projector projector = new Projector();
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -43,7 +41,7 @@ namespace TechnicalDrawing
                 return;
 
             var canvas = new ImageCanvas(XYImage, XZImage, YZImage);
-            var app = new DrawingApp(fs, parser, projector, canvas);
+            var app = new DrawingApp(fileParser, projector, canvas);
             app.Load(filename);
         }
     }

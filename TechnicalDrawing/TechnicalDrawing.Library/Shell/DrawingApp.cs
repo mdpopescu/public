@@ -8,22 +8,19 @@ namespace TechnicalDrawing.Library.Shell
 {
     public class DrawingApp
     {
-        public DrawingApp(FileSystem fs, Parser parser, Projector projector, Canvas canvas)
+        public DrawingApp(FileParser fileParser, Projector projector, Canvas canvas)
         {
-            this.fs = fs;
-            this.parser = parser;
+            this.fileParser = fileParser;
             this.projector = projector;
             this.canvas = canvas;
         }
 
         public void Load(string filename)
         {
-            var parsedCommands = fs
-                .ReadLines(filename)
-                .Select(parser.Parse)
-                .Where(it => it.Name != CommandName.None)
-                .ToList();
-            var groups = from plane in Enum.GetValues(typeof(Plane)).Cast<Plane>()
+            var planes = Enum.GetValues(typeof(Plane)).Cast<Plane>().ToList();
+            var parsedCommands = fileParser.Parse(filename).ToList();
+
+            var groups = from plane in planes
                          from parsedCommand in parsedCommands
                          let command = CreateCommand(plane, parsedCommand)
                          group command by command.Plane;
@@ -34,8 +31,7 @@ namespace TechnicalDrawing.Library.Shell
 
         //
 
-        private readonly FileSystem fs;
-        private readonly Parser parser;
+        private readonly FileParser fileParser;
         private readonly Projector projector;
         private readonly Canvas canvas;
 
