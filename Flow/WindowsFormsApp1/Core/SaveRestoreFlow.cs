@@ -41,12 +41,17 @@ namespace WindowsFormsApp1.Core
             var restoredWeights = restored.Select(wh => new LabeledValue("restore-weight", wh.Item1));
             var restoredHeights = restored.Select(wh => new LabeledValue("restore-height", wh.Item2));
 
+            var enableRestore = saves
+                .Take(1)
+                .Select(_ => new LabeledValue("enable-restore", null));
+
             // ReSharper disable once InvokeAsExtensionMethod
             return Observable.Merge(
                 saved.Select(wh => new LabeledValue("save-weight", wh.Item1)),
                 saved.Select(wh => new LabeledValue("save-height", wh.Item2)),
                 restoredWeights,
-                restoredHeights);
+                restoredHeights,
+                enableRestore);
         }
 
         protected override IReadOnlyDictionary<string, IObservable<LabeledValue>> View(IObservable<LabeledValue> outputs)
@@ -57,6 +62,7 @@ namespace WindowsFormsApp1.Core
                 ["save-height"] = outputs.Transform<int>("save-height", "Text", h => $"Saved height: {h}"),
                 ["set-weight"] = outputs.Relabel("restore-weight", "Value"),
                 ["set-height"] = outputs.Relabel("restore-height", "Value"),
+                ["enable-restore"] = outputs.Transform<object>("enable-restore", "Enabled", _ => true),
             };
         }
     }

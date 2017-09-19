@@ -37,6 +37,7 @@ namespace WindowsFormsApp1
             env.AddOutput("save-height", new PropertySetter(lblSavedHeight));
             env.AddOutput("set-weight", new PropertySetter(tbWeight));
             env.AddOutput("set-height", new PropertySetter(tbHeight));
+            env.AddOutput("enable-restore", new PropertySetter(btnRestore));
         }
 
         //
