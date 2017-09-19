@@ -43,6 +43,8 @@ Public repository - CC-by-SA 3.0
 
 * FindDuplicates: finds the identical / similar images in the given folder
 
+* Flow: a framework inspired by Cycle.js - especially https://egghead.io/courses/cycle-js-fundamentals - for treating IO as a stream of values
+
 * FSM: quick implementation of a generic finite state machine; see article at http://mdpopescu.blogspot.com/2013/08/a-generic-implementation-of-finite.html
 
 * Giles: social assistant for managing posts to blogs / Twitter / Facebook
