@@ -43,7 +43,7 @@ namespace WindowsFormsApp1.Core
 
             var enableRestore = saves
                 .Take(1)
-                .Select(_ => new LabeledValue("enable-restore", null));
+                .Select(_ => new LabeledValue("enable-restore", true));
 
             // ReSharper disable once InvokeAsExtensionMethod
             return Observable.Merge(
@@ -62,7 +62,7 @@ namespace WindowsFormsApp1.Core
                 ["save-height"] = outputs.Transform<int>("save-height", "Text", h => $"Saved height: {h}"),
                 ["set-weight"] = outputs.Relabel("restore-weight", "Value"),
                 ["set-height"] = outputs.Relabel("restore-height", "Value"),
-                ["enable-restore"] = outputs.Transform<object>("enable-restore", "Enabled", _ => true),
+                ["enable-restore"] = outputs.Relabel("enable-restore", "Enabled"),
             };
         }
     }
