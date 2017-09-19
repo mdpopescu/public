@@ -65,7 +65,7 @@
     <Compile Include="Contracts\IOutput.cs" />
     <Compile Include="Contracts\IFlow.cs" />
     <Compile Include="Core\PropertySetter.cs" />
-    <Compile Include="Core\ResetFlow.cs" />
+    <Compile Include="Core\SaveRestoreFlow.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Core\SliderFlow.cs" />
     <Compile Include="MainForm.cs">
@@ -80,6 +80,7 @@
     <Compile Include="Core\BmiFlow.cs" />
     <Compile Include="Core\Flow.cs" />
     <Compile Include="Shell\FlowEnvironment.cs" />
+    <Compile Include="Shell\ObservableTrace.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

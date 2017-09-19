@@ -33,7 +33,8 @@
             this.lblHeight = new System.Windows.Forms.Label();
             this.tbHeight = new System.Windows.Forms.TrackBar();
             this.lblBMI = new System.Windows.Forms.Label();
-            this.btnReset = new System.Windows.Forms.Button();
+            this.btnRestore = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tbWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbHeight)).BeginInit();
             this.SuspendLayout();
@@ -86,21 +87,31 @@
             this.lblBMI.TabIndex = 4;
             this.lblBMI.Text = "BMI: 000";
             // 
-            // btnReset
+            // btnRestore
             // 
-            this.btnReset.Location = new System.Drawing.Point(492, 164);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(75, 23);
-            this.btnReset.TabIndex = 5;
-            this.btnReset.Text = "Reset";
-            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnRestore.Location = new System.Drawing.Point(492, 164);
+            this.btnRestore.Name = "btnRestore";
+            this.btnRestore.Size = new System.Drawing.Size(75, 23);
+            this.btnRestore.TabIndex = 5;
+            this.btnRestore.Text = "Restore";
+            this.btnRestore.UseVisualStyleBackColor = true;
+            // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(492, 135);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.TabIndex = 6;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(678, 347);
-            this.Controls.Add(this.btnReset);
+            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.btnRestore);
             this.Controls.Add(this.lblBMI);
             this.Controls.Add(this.lblHeight);
             this.Controls.Add(this.tbHeight);
@@ -124,7 +135,8 @@
     private System.Windows.Forms.Label lblHeight;
     private System.Windows.Forms.TrackBar tbHeight;
     private System.Windows.Forms.Label lblBMI;
-        private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.Button btnRestore;
+        private System.Windows.Forms.Button btnSave;
     }
 }
 

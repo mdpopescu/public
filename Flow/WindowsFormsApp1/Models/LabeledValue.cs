@@ -10,5 +10,7 @@
             Label = label;
             Value = value;
         }
+
+        public override string ToString() => $"{Label}: {Value}";
     }
 }

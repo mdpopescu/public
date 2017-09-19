@@ -16,7 +16,7 @@ namespace WindowsFormsApp1.Core
             target
                 .GetType()
                 .GetProperty(labeledValue.Label, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty)
-                .Do(p => p.SetValue(target, labeledValue.Value));
+                .IfNotNull(p => p.SetValue(target, labeledValue.Value));
         }
 
         //

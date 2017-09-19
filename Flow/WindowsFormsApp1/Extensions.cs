@@ -72,7 +72,7 @@ namespace WindowsFormsApp1
         /// <typeparam name="T">The object type.</typeparam>
         /// <param name="obj">The object.</param>
         /// <param name="action">The action.</param>
-        public static void Do<T>(this T obj, Action<T> action)
+        public static void IfNotNull<T>(this T obj, Action<T> action)
         {
             if (obj != null)
                 action(obj);
