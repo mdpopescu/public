@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\IOutput.cs" />
+    <Compile Include="Contracts\IFlow.cs" />
     <Compile Include="Core\PropertySetter.cs" />
     <Compile Include="Core\ResetFlow.cs" />
     <Compile Include="Extensions.cs" />

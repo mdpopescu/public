@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using WindowsFormsApp1.Contracts;
 using WindowsFormsApp1.Models;
 
 namespace WindowsFormsApp1.Core
 {
-    public abstract class Flow
+    public abstract class Flow : IFlow
     {
         public virtual IReadOnlyDictionary<string, IObservable<LabeledValue>> Process(IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs)
         {

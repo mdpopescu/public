@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using WindowsFormsApp1.Contracts;
-using WindowsFormsApp1.Core;
 using WindowsFormsApp1.Models;
 
 namespace WindowsFormsApp1.Shell
@@ -20,7 +19,7 @@ namespace WindowsFormsApp1.Shell
             environment = Extensions.Combine(environment, inputEnvironment);
         }
 
-        public void AddFlow(Flow flow)
+        public void AddFlow(IFlow flow)
         {
             environment = Extensions.Combine(environment, flow.Process(environment));
         }
