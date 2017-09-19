@@ -16,10 +16,10 @@ namespace WindowsFormsApp1
 
         //
 
+        private readonly FlowEnvironment env = new FlowEnvironment();
+
         private void SetUp()
         {
-            var env = new FlowEnvironment();
-
             env.AddInput("weight", tbWeight.Intercept("ValueChanged"));
             env.AddInput("height", tbHeight.Intercept("ValueChanged"));
             env.AddInput("reset", btnReset.Intercept("Click"));
@@ -41,6 +41,11 @@ namespace WindowsFormsApp1
         private void MainForm_Load(object sender, EventArgs e)
         {
             SetUp();
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            env.Dispose();
         }
     }
 }

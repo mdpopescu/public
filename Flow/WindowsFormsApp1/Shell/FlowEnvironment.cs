@@ -5,8 +5,14 @@ using WindowsFormsApp1.Models;
 
 namespace WindowsFormsApp1.Shell
 {
-    public class FlowEnvironment
+    public class FlowEnvironment : IDisposable
     {
+        public void Dispose()
+        {
+            foreach (var subscription in subscriptions)
+                subscription.Dispose();
+        }
+
         public void AddInput(string key, IObservable<LabeledValue> inputs)
         {
             var inputEnvironment = new Dictionary<string, IObservable<LabeledValue>> { [key] = inputs };
@@ -18,12 +24,14 @@ namespace WindowsFormsApp1.Shell
             environment = Extensions.Combine(environment, flow.Process(environment));
         }
 
-        public IDisposable AddOutput(string key, object output)
+        public void AddOutput(string key, object output)
         {
-            return environment.AddOutput(key, output);
+            subscriptions.Add(environment.AddOutput(key, output));
         }
 
         //
+
+        private readonly List<IDisposable> subscriptions = new List<IDisposable>();
 
         private IReadOnlyDictionary<string, IObservable<LabeledValue>> environment = new Dictionary<string, IObservable<LabeledValue>>();
     }

@@ -108,6 +108,7 @@
             this.Controls.Add(this.tbWeight);
             this.Name = "MainForm";
             this.Text = "MainForm";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.tbWeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbHeight)).EndInit();
