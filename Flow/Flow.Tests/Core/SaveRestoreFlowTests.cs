@@ -39,22 +39,42 @@ namespace Flow.Tests.Core
         }
 
         [TestMethod]
-        public void SavesTheWeightAndHeightOnSave()
+        public void SavesTheWeightAndHeight()
         {
             var results = sut.Process(inputs);
 
-            var savedWeights = new List<int>();
-            var savedHeights = new List<int>();
+            var savedWeights = new List<string>();
+            var savedHeights = new List<string>();
 
-            results["save-weight"].Subscribe(it => savedWeights.Add((int) it.Value));
-            results["save-height"].Subscribe(it => savedHeights.Add((int) it.Value));
+            results["save-weight"].Subscribe(it => savedWeights.Add((string) it.Value));
+            results["save-height"].Subscribe(it => savedHeights.Add((string) it.Value));
 
             weights.OnNext(new LabeledValue("value", 12));
             heights.OnNext(new LabeledValue("value", 34));
             saves.OnNext(new LabeledValue("Click", null));
 
-            CollectionAssert.AreEqual(new[] { 12 }, savedWeights);
-            CollectionAssert.AreEqual(new[] { 34 }, savedHeights);
+            CollectionAssert.AreEqual(new[] { "Saved weight: 12" }, savedWeights);
+            CollectionAssert.AreEqual(new[] { "Saved height: 34" }, savedHeights);
+        }
+
+        [TestMethod]
+        public void RestoresTheWeightAndHeight()
+        {
+            var results = sut.Process(inputs);
+
+            var setWeights = new List<int>();
+            var setHeights = new List<int>();
+
+            results["set-weight"].Subscribe(it => setWeights.Add((int) it.Value));
+            results["set-height"].Subscribe(it => setHeights.Add((int) it.Value));
+
+            weights.OnNext(new LabeledValue("value", 12));
+            heights.OnNext(new LabeledValue("value", 34));
+            saves.OnNext(new LabeledValue("Click", null));
+            restores.OnNext(new LabeledValue("Click", null));
+
+            CollectionAssert.AreEqual(new[] { 12 }, setWeights);
+            CollectionAssert.AreEqual(new[] { 34 }, setHeights);
         }
     }
 }

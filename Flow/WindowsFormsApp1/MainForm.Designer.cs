@@ -35,6 +35,8 @@
             this.lblBMI = new System.Windows.Forms.Label();
             this.btnRestore = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
+            this.lblSavedWeight = new System.Windows.Forms.Label();
+            this.lblSavedHeight = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.tbWeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbHeight)).BeginInit();
             this.SuspendLayout();
@@ -105,11 +107,31 @@
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             // 
+            // lblSavedWeight
+            // 
+            this.lblSavedWeight.AutoSize = true;
+            this.lblSavedWeight.Location = new System.Drawing.Point(12, 236);
+            this.lblSavedWeight.Name = "lblSavedWeight";
+            this.lblSavedWeight.Size = new System.Drawing.Size(96, 13);
+            this.lblSavedWeight.TabIndex = 7;
+            this.lblSavedWeight.Text = "Saved weight: 000";
+            // 
+            // lblSavedHeight
+            // 
+            this.lblSavedHeight.AutoSize = true;
+            this.lblSavedHeight.Location = new System.Drawing.Point(12, 260);
+            this.lblSavedHeight.Name = "lblSavedHeight";
+            this.lblSavedHeight.Size = new System.Drawing.Size(94, 13);
+            this.lblSavedHeight.TabIndex = 8;
+            this.lblSavedHeight.Text = "Saved height: 000";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(678, 347);
+            this.Controls.Add(this.lblSavedHeight);
+            this.Controls.Add(this.lblSavedWeight);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnRestore);
             this.Controls.Add(this.lblBMI);
@@ -137,6 +159,8 @@
     private System.Windows.Forms.Label lblBMI;
         private System.Windows.Forms.Button btnRestore;
         private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Label lblSavedWeight;
+        private System.Windows.Forms.Label lblSavedHeight;
     }
 }
 

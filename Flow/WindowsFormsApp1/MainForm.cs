@@ -33,6 +33,8 @@ namespace WindowsFormsApp1
             env.AddOutput("weight", new PropertySetter(lblWeight));
             env.AddOutput("height", new PropertySetter(lblHeight));
             env.AddOutput("bmi", new PropertySetter(lblBMI));
+            env.AddOutput("save-weight", new PropertySetter(lblSavedWeight));
+            env.AddOutput("save-height", new PropertySetter(lblSavedHeight));
             env.AddOutput("set-weight", new PropertySetter(tbWeight));
             env.AddOutput("set-height", new PropertySetter(tbHeight));
         }

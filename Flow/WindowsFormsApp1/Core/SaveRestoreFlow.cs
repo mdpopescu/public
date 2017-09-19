@@ -32,16 +32,19 @@ namespace WindowsFormsApp1.Core
             var saves = states.Extract<object>("save");
             var restores = states.Extract<object>("restore");
 
-            var savedWeights = saves.CombineLatest(weights, (_, w) => w);
-            var savedHeights = saves.CombineLatest(heights, (_, h) => h);
+            // ReSharper disable once InvokeAsExtensionMethod
+            var both = Observable.CombineLatest(weights, heights, Tuple.Create);
 
-            var restoredWeights = restores.CombineLatest(savedWeights, (_, w) => new LabeledValue("restore-weight", w));
-            var restoredHeights = restores.CombineLatest(savedHeights, (_, h) => new LabeledValue("restore-height", h));
+            var saved = both.Whenever(saves);
+            var restored = saved.Whenever(restores);
+
+            var restoredWeights = restored.Select(wh => new LabeledValue("restore-weight", wh.Item1));
+            var restoredHeights = restored.Select(wh => new LabeledValue("restore-height", wh.Item2));
 
             // ReSharper disable once InvokeAsExtensionMethod
             return Observable.Merge(
-                savedWeights.Select(w => new LabeledValue("save-weight", w)),
-                savedHeights.Select(h => new LabeledValue("save-height", h)),
+                saved.Select(wh => new LabeledValue("save-weight", wh.Item1)),
+                saved.Select(wh => new LabeledValue("save-height", wh.Item2)),
                 restoredWeights,
                 restoredHeights);
         }
@@ -50,8 +53,8 @@ namespace WindowsFormsApp1.Core
         {
             return new Dictionary<string, IObservable<LabeledValue>>
             {
-                ["save-weight"] = outputs.Where(it => it.Label == "save-weight"),
-                ["save-height"] = outputs.Where(it => it.Label == "save-height"),
+                ["save-weight"] = outputs.Transform<int>("save-weight", "Text", w => $"Saved weight: {w}"),
+                ["save-height"] = outputs.Transform<int>("save-height", "Text", h => $"Saved height: {h}"),
                 ["set-weight"] = outputs.Relabel("restore-weight", "Value"),
                 ["set-height"] = outputs.Relabel("restore-height", "Value"),
             };
