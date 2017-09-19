@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reflection;
 using WindowsFormsApp1.Models;
 
 namespace WindowsFormsApp1
@@ -57,6 +56,9 @@ namespace WindowsFormsApp1
                 .Select(it => new LabeledValue(outputLabel, it));
         }
 
+        /// <summary>Combines the specified dictionaries.</summary>
+        /// <param name="dictionaries">The dictionaries.</param>
+        /// <returns>A single dictionary combining all inputs.</returns>
         public static IReadOnlyDictionary<string, IObservable<LabeledValue>> Combine(
             params IReadOnlyDictionary<string, IObservable<LabeledValue>>[] dictionaries)
         {
@@ -66,27 +68,10 @@ namespace WindowsFormsApp1
                 .ToDictionary(group => group.Key, group => group.Merge());
         }
 
-        public static IDisposable AddOutput(this IReadOnlyDictionary<string, IObservable<LabeledValue>> values, string key, object output)
-        {
-            return values
-                .SafeGet(key)
-                .Subscribe(labeledValue => SetProperty(output, labeledValue));
-        }
-
         public static void Do<T>(this T obj, Action<T> action)
         {
             if (obj != null)
                 action(obj);
-        }
-
-        //
-
-        private static void SetProperty(object output, LabeledValue labeledValue)
-        {
-            output
-                .GetType()
-                .GetProperty(labeledValue.Label, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty)
-                .Do(p => p.SetValue(output, labeledValue.Value));
         }
     }
 }
