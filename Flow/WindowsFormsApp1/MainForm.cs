@@ -29,11 +29,11 @@ namespace WindowsFormsApp1
             env.AddFlow(new BmiFlow());
             env.AddFlow(new ResetFlow());
 
-            env.AddOutput("weight", lblWeight);
-            env.AddOutput("height", lblHeight);
-            env.AddOutput("bmi", lblBMI);
-            env.AddOutput("set-weight", tbWeight);
-            env.AddOutput("set-height", tbHeight);
+            env.AddOutput("weight", new PropertySetter(lblWeight));
+            env.AddOutput("height", new PropertySetter(lblHeight));
+            env.AddOutput("bmi", new PropertySetter(lblBMI));
+            env.AddOutput("set-weight", new PropertySetter(tbWeight));
+            env.AddOutput("set-height", new PropertySetter(tbHeight));
         }
 
         //

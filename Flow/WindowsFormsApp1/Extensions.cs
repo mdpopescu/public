@@ -68,6 +68,10 @@ namespace WindowsFormsApp1
                 .ToDictionary(group => group.Key, group => group.Merge());
         }
 
+        /// <summary>Executes an action if the given object is not <c>null</c>.</summary>
+        /// <typeparam name="T">The object type.</typeparam>
+        /// <param name="obj">The object.</param>
+        /// <param name="action">The action.</param>
         public static void Do<T>(this T obj, Action<T> action)
         {
             if (obj != null)

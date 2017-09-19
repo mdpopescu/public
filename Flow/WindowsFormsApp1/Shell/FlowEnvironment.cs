@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
+using WindowsFormsApp1.Contracts;
 using WindowsFormsApp1.Core;
 using WindowsFormsApp1.Models;
 
@@ -25,12 +25,9 @@ namespace WindowsFormsApp1.Shell
             environment = Extensions.Combine(environment, flow.Process(environment));
         }
 
-        public void AddOutput(string key, object output)
+        public void AddOutput(string key, IOutput output)
         {
-            var subscription = environment
-                .SafeGet(key)
-                .Subscribe(labeledValue => SetProperty(output, labeledValue));
-            subscriptions.Add(subscription);
+            subscriptions.Add(environment.SafeGet(key).Subscribe(output.Set));
         }
 
         //
@@ -38,13 +35,5 @@ namespace WindowsFormsApp1.Shell
         private readonly List<IDisposable> subscriptions = new List<IDisposable>();
 
         private IReadOnlyDictionary<string, IObservable<LabeledValue>> environment = new Dictionary<string, IObservable<LabeledValue>>();
-
-        private static void SetProperty(object output, LabeledValue labeledValue)
-        {
-            output
-                .GetType()
-                .GetProperty(labeledValue.Label, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty)
-                .Do(p => p.SetValue(output, labeledValue.Value));
-        }
     }
 }
