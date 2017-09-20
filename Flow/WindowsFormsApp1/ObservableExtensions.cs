@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
@@ -18,8 +17,11 @@ namespace WindowsFormsApp1
                 observer =>
                 {
                     var id1 = ++id;
+
+                    // ReSharper disable once ConvertToLocalFunction
                     Action<string, string> trace = (m, v) => Debug.WriteLine("{0}{1}: {2}({3})", name, id1, m, v);
                     //trace("Subscribe", "");
+
                     var disposable = source.Subscribe(
                         v =>
                         {
@@ -56,15 +58,7 @@ namespace WindowsFormsApp1
 
         public static IObservable<T> Whenever<T, TGate>(this IObservable<T> observable, IObservable<TGate> gate)
         {
-            return Observable.Create<T>(
-                o =>
-                {
-                    var latest = default(T);
-                    var s1 = observable.Subscribe(value => latest = value);
-                    var s2 = gate.Subscribe(_ => o.OnNext(latest));
-
-                    return new CompositeDisposable(s1, s2);
-                });
+            return gate.WithLatestFrom(observable, (_, value) => value);
         }
 
         /// <remarks>
