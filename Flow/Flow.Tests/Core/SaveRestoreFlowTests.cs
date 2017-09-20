@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Subjects;
-using WindowsFormsApp1.Core;
 using WindowsFormsApp1.Core.Flows;
 using WindowsFormsApp1.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -42,7 +41,7 @@ namespace Flow.Tests.Core
         [TestMethod]
         public void SavesTheWeightAndHeight()
         {
-            var results = sut.Process(inputs);
+            var results = sut.Link(inputs);
 
             var savedWeights = new List<string>();
             var savedHeights = new List<string>();
@@ -61,7 +60,7 @@ namespace Flow.Tests.Core
         [TestMethod]
         public void RestoresTheWeightAndHeight()
         {
-            var results = sut.Process(inputs);
+            var results = sut.Link(inputs);
 
             var setWeights = new List<int>();
             var setHeights = new List<int>();

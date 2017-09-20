@@ -6,6 +6,6 @@ namespace WindowsFormsApp1.Contracts
 {
     public interface IFlow
     {
-        IReadOnlyDictionary<string, IObservable<LabeledValue>> Process(IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs);
+        IReadOnlyDictionary<string, IObservable<LabeledValue>> Link(IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs);
     }
 }

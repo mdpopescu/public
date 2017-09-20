@@ -21,7 +21,7 @@ namespace WindowsFormsApp1.Shell
 
         public void AddFlow(IFlow flow)
         {
-            environment = Extensions.Combine(environment, flow.Process(environment));
+            environment = Extensions.Combine(environment, flow.Link(environment));
         }
 
         public void AddOutput(string category, IOutput output)

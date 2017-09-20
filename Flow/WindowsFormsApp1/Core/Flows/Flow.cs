@@ -10,7 +10,7 @@ namespace WindowsFormsApp1.Core.Flows
 {
     public abstract class Flow : IFlow
     {
-        public virtual IReadOnlyDictionary<string, IObservable<LabeledValue>> Process(IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs)
+        public virtual IReadOnlyDictionary<string, IObservable<LabeledValue>> Link(IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs)
         {
             var states = Intent(inputs);
             var outputs = Model(states);
