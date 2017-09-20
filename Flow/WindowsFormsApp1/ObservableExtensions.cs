@@ -46,20 +46,20 @@ namespace WindowsFormsApp1
                 });
         }
 
-        public static IObservable<T> When<T>(this IObservable<T> observable, IObservable<bool> gate) => gate
-            .StartWith(false)
-            .Select(enabled => enabled ? observable : Observable.Never<T>())
-            .Switch();
+        public static IObservable<T> When<T>(this IObservable<T> observable, IObservable<bool> gate) =>
+            gate
+                .StartWith(false)
+                .Select(enabled => enabled ? observable : Observable.Never<T>())
+                .Switch();
 
-        public static IObservable<T> When<T>(this IObservable<T> observable, IObservable<bool> gate, T defaultValue) => gate
-            .StartWith(false)
-            .Select(enabled => enabled ? observable : observable.Select(_ => defaultValue))
-            .Switch();
+        public static IObservable<T> When<T>(this IObservable<T> observable, IObservable<bool> gate, T defaultValue) =>
+            gate
+                .StartWith(false)
+                .Select(enabled => enabled ? observable : observable.Select(_ => defaultValue))
+                .Switch();
 
-        public static IObservable<T> Whenever<T, TGate>(this IObservable<T> observable, IObservable<TGate> gate)
-        {
-            return gate.WithLatestFrom(observable, (_, value) => value);
-        }
+        public static IObservable<T> Whenever<T, TGate>(this IObservable<T> observable, IObservable<TGate> gate) =>
+            gate.WithLatestFrom(observable, (_, value) => value);
 
         /// <remarks>
         /// This method will leak the <c>hot</c> subject.
