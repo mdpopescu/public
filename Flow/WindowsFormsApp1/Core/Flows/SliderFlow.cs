@@ -8,17 +8,16 @@ namespace WindowsFormsApp1.Core.Flows
 {
     public class SliderFlow : Flow
     {
-        public SliderFlow(string key, string label, int startValue)
+        public SliderFlow(string category, string label, int startValue)
         {
-            this.key = key;
+            this.category = category;
             this.label = label;
             this.startValue = startValue;
         }
 
         //
 
-        protected override IObservable<LabeledValue> Intent(IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs) =>
-            inputs.SafeGet(key);
+        protected override IEnumerable<InputSelection> DeclareInputs() => new[] { new InputSelection(category) };
 
         protected override IObservable<LabeledValue> Model(IObservable<LabeledValue> states) =>
             states
@@ -28,13 +27,13 @@ namespace WindowsFormsApp1.Core.Flows
         protected override IReadOnlyDictionary<string, IObservable<LabeledValue>> View(IObservable<LabeledValue> outputs) =>
             new Dictionary<string, IObservable<LabeledValue>>
             {
-                [key] = outputs.Transform<int>("value", "Text", value => $"{label}: {value}"),
-                [key + "-values"] = outputs,
+                [category] = outputs.Transform<int>("value", "Text", value => $"{label}: {value}"),
+                [category + "-values"] = outputs,
             };
 
         //
 
-        private readonly string key;
+        private readonly string category;
         private readonly string label;
         private readonly int startValue;
     }

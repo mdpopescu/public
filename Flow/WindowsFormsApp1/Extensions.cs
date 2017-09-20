@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reactive.Linq;
 using WindowsFormsApp1.Models;
@@ -46,14 +47,23 @@ namespace WindowsFormsApp1
         /// <param name="inputLabel">The input label.</param>
         /// <param name="outputLabel">The output label.</param>
         /// <returns>A stream of labeled values.</returns>
-        public static IObservable<LabeledValue> Relabel(
-            this IObservable<LabeledValue> labeledValues,
-            string inputLabel,
-            string outputLabel)
+        public static IObservable<LabeledValue> Relabel(this IObservable<LabeledValue> labeledValues, string inputLabel, string outputLabel)
         {
             return labeledValues
                 .Extract<object>(inputLabel)
                 .Select(it => new LabeledValue(outputLabel, it));
+        }
+
+        [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
+        public static IObservable<LabeledValue> SelectInput(this IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs, InputSelection selection)
+        {
+            var selected = inputs.SafeGet(selection.Category);
+
+            if (selection.InputLabel == null)
+                return selected;
+            if (selection.OutputLabel == null)
+                return selected.Where(it => string.Equals(it.Label, selection.InputLabel, StringComparison.OrdinalIgnoreCase));
+            return selected.Relabel(selection.InputLabel, selection.OutputLabel);
         }
 
         /// <summary>Combines the specified dictionaries.</summary>

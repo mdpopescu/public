@@ -13,9 +13,9 @@ namespace WindowsFormsApp1.Shell
                 subscription.Dispose();
         }
 
-        public void AddInput(string key, IObservable<LabeledValue> inputs)
+        public void AddInput(string category, IObservable<LabeledValue> inputs)
         {
-            var inputEnvironment = new Dictionary<string, IObservable<LabeledValue>> { [key] = inputs };
+            var inputEnvironment = new Dictionary<string, IObservable<LabeledValue>> { [category] = inputs };
             environment = Extensions.Combine(environment, inputEnvironment);
         }
 
@@ -24,9 +24,9 @@ namespace WindowsFormsApp1.Shell
             environment = Extensions.Combine(environment, flow.Process(environment));
         }
 
-        public void AddOutput(string key, IOutput output)
+        public void AddOutput(string category, IOutput output)
         {
-            subscriptions.Add(environment.SafeGet(key).Subscribe(output.Set));
+            subscriptions.Add(environment.SafeGet(category).Subscribe(output.Set));
         }
 
         //

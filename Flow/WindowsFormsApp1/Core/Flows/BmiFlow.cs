@@ -7,17 +7,12 @@ namespace WindowsFormsApp1.Core.Flows
 {
     public class BmiFlow : Flow
     {
-        protected override IObservable<LabeledValue> Intent(IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs)
-        {
-            var weights = inputs
-                .SafeGet("weight-values")
-                .Relabel("value", "weight");
-            var heights = inputs
-                .SafeGet("height-values")
-                .Relabel("value", "height");
-
-            return weights.Merge(heights);
-        }
+        protected override IEnumerable<InputSelection> DeclareInputs() =>
+            new[]
+            {
+                new InputSelection("weight-values", "value", "weight"),
+                new InputSelection("height-values", "value", "height"),
+            };
 
         protected override IObservable<LabeledValue> Model(IObservable<LabeledValue> states)
         {

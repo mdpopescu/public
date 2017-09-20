@@ -7,23 +7,14 @@ namespace WindowsFormsApp1.Core.Flows
 {
     public class SaveRestoreFlow : Flow
     {
-        protected override IObservable<LabeledValue> Intent(IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs)
-        {
-            var weights = inputs
-                .SafeGet("weight-values")
-                .Relabel("value", "weight");
-            var heights = inputs
-                .SafeGet("height-values")
-                .Relabel("value", "height");
-            var saves = inputs
-                .SafeGet("save")
-                .Relabel("Click", "save");
-            var restores = inputs
-                .SafeGet("restore")
-                .Relabel("Click", "restore");
-
-            return Observable.Merge(weights, heights, saves, restores);
-        }
+        protected override IEnumerable<InputSelection> DeclareInputs() =>
+            new[]
+            {
+                new InputSelection("weight-values", "value", "weight"),
+                new InputSelection("height-values", "value", "height"),
+                new InputSelection("save", "Click", "save"),
+                new InputSelection("restore", "Click", "restore"),
+            };
 
         protected override IObservable<LabeledValue> Model(IObservable<LabeledValue> states)
         {
