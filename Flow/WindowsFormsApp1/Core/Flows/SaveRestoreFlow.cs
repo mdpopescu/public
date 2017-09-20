@@ -19,12 +19,13 @@ namespace WindowsFormsApp1.Core.Flows
             var saves = states.Extract<object>("save");
             var restores = states.Extract<object>("restore");
 
-            // ReSharper disable once InvokeAsExtensionMethod
-            var both = Observable.CombineLatest(weights, heights, Tuple.Create);
+            var both = weights.CombineLatest(heights, Tuple.Create);
 
             var saved = both.Whenever(saves);
-            var restored = saved.Whenever(restores);
+            var savedWeights = saved.Select(wh => new LabeledValue("save-weight", wh.Item1));
+            var savedHeights = saved.Select(wh => new LabeledValue("save-height", wh.Item2));
 
+            var restored = saved.Whenever(restores);
             var restoredWeights = restored.Select(wh => new LabeledValue("restore-weight", wh.Item1));
             var restoredHeights = restored.Select(wh => new LabeledValue("restore-height", wh.Item2));
 
@@ -34,8 +35,8 @@ namespace WindowsFormsApp1.Core.Flows
 
             // ReSharper disable once InvokeAsExtensionMethod
             return Observable.Merge(
-                saved.Select(wh => new LabeledValue("save-weight", wh.Item1)),
-                saved.Select(wh => new LabeledValue("save-height", wh.Item2)),
+                savedWeights,
+                savedHeights,
                 restoredWeights,
                 restoredHeights,
                 enableRestore);
