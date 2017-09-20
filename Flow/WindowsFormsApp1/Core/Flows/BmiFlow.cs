@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using WindowsFormsApp1.Models;
 
-namespace WindowsFormsApp1.Core
+namespace WindowsFormsApp1.Core.Flows
 {
     public class BmiFlow : Flow
     {

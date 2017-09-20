@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using WindowsFormsApp1.Contracts;
 using WindowsFormsApp1.Models;
 
-namespace WindowsFormsApp1.Core
+namespace WindowsFormsApp1.Core.Flows
 {
     public abstract class Flow : IFlow
     {

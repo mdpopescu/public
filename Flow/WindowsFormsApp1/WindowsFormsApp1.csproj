@@ -65,9 +65,9 @@
     <Compile Include="Contracts\IOutput.cs" />
     <Compile Include="Contracts\IFlow.cs" />
     <Compile Include="Core\PropertySetter.cs" />
-    <Compile Include="Core\SaveRestoreFlow.cs" />
+    <Compile Include="Core\Flows\SaveRestoreFlow.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Core\SliderFlow.cs" />
+    <Compile Include="Core\Flows\SliderFlow.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,8 +77,8 @@
     <Compile Include="Models\LabeledValue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Core\BmiFlow.cs" />
-    <Compile Include="Core\Flow.cs" />
+    <Compile Include="Core\Flows\BmiFlow.cs" />
+    <Compile Include="Core\Flows\Flow.cs" />
     <Compile Include="Shell\FlowEnvironment.cs" />
     <Compile Include="ObservableExtensions.cs" />
     <EmbeddedResource Include="MainForm.resx">

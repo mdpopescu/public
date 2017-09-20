@@ -4,7 +4,7 @@ using System.Reactive.Linq;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 
-namespace WindowsFormsApp1.Core
+namespace WindowsFormsApp1.Core.Flows
 {
     public class SliderFlow : Flow
     {
@@ -18,12 +18,11 @@ namespace WindowsFormsApp1.Core
         //
 
         protected override IObservable<LabeledValue> Intent(IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs) =>
-            inputs
-                .SafeGet(key)
-                .Transform<TrackBar>("ValueChanged", "value", trackBar => trackBar.Value);
+            inputs.SafeGet(key);
 
         protected override IObservable<LabeledValue> Model(IObservable<LabeledValue> states) =>
             states
+                .Transform<TrackBar>("ValueChanged", "value", trackBar => trackBar.Value)
                 .StartWith(new LabeledValue("value", startValue));
 
         protected override IReadOnlyDictionary<string, IObservable<LabeledValue>> View(IObservable<LabeledValue> outputs) =>

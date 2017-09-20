@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using WindowsFormsApp1.Core;
+using WindowsFormsApp1.Core.Flows;
 using WindowsFormsApp1.Shell;
 
 // based on ideas from https://egghead.io/courses/cycle-js-fundamentals
