@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using WindowsFormsApp1.Attributes;
 using WindowsFormsApp1.Models;
 
 namespace WindowsFormsApp1.Core.Flows
 {
+    [DeclareInput("weight-values", "value", "weight")]
+    [DeclareInput("height-values", "value", "height")]
     public class BmiFlow : Flow
     {
-        protected override IEnumerable<InputSelection> DeclareInputs() =>
-            new[]
-            {
-                new InputSelection("weight-values", "value", "weight"),
-                new InputSelection("height-values", "value", "height"),
-            };
-
         protected override IObservable<LabeledValue> Model(IObservable<LabeledValue> states)
         {
             var weights = states.Extract<int>("weight");

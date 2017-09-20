@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Windows.Forms;
+using WindowsFormsApp1.Attributes;
 using WindowsFormsApp1.Models;
 
 namespace WindowsFormsApp1.Core.Flows
@@ -17,7 +18,7 @@ namespace WindowsFormsApp1.Core.Flows
 
         //
 
-        protected override IEnumerable<InputSelection> DeclareInputs() => new[] { new InputSelection(category) };
+        protected override DeclareInputAttribute[] DeclaredInputs => new[] { new DeclareInputAttribute(category) };
 
         protected override IObservable<LabeledValue> Model(IObservable<LabeledValue> states) =>
             states

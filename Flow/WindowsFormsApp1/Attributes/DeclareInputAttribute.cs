@@ -1,23 +1,26 @@
-﻿namespace WindowsFormsApp1.Models
+﻿using System;
+
+namespace WindowsFormsApp1.Attributes
 {
-    public class InputSelection
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    public class DeclareInputAttribute : Attribute
     {
         public string Category { get; }
         public string InputLabel { get; }
         public string OutputLabel { get; }
 
-        public InputSelection(string category)
+        public DeclareInputAttribute(string category)
         {
             Category = category;
         }
 
-        public InputSelection(string category, string inputLabel)
+        public DeclareInputAttribute(string category, string inputLabel)
         {
             Category = category;
             InputLabel = inputLabel;
         }
 
-        public InputSelection(string category, string inputLabel, string outputLabel)
+        public DeclareInputAttribute(string category, string inputLabel, string outputLabel)
         {
             Category = category;
             InputLabel = inputLabel;

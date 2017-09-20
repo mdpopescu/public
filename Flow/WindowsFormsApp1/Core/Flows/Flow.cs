@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using WindowsFormsApp1.Attributes;
 using WindowsFormsApp1.Contracts;
 using WindowsFormsApp1.Models;
 
@@ -20,10 +21,18 @@ namespace WindowsFormsApp1.Core.Flows
 
         //
 
-        protected virtual IEnumerable<InputSelection> DeclareInputs() => Enumerable.Empty<InputSelection>();
+        protected virtual DeclareInputAttribute[] DeclaredInputs { get; }
+
+        protected Flow()
+        {
+            DeclaredInputs = Attribute
+                .GetCustomAttributes(GetType(), typeof(DeclareInputAttribute))
+                .Cast<DeclareInputAttribute>()
+                .ToArray();
+        }
 
         protected virtual IObservable<LabeledValue> Intent(IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs) =>
-            DeclareInputs()
+            DeclaredInputs
                 .ToObservable()
                 .Select(inputs.SelectInput)
                 .Merge();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reactive.Linq;
+using WindowsFormsApp1.Attributes;
 using WindowsFormsApp1.Models;
 
 namespace WindowsFormsApp1
@@ -55,7 +56,9 @@ namespace WindowsFormsApp1
         }
 
         [SuppressMessage("ReSharper", "ConvertIfStatementToReturnStatement")]
-        public static IObservable<LabeledValue> SelectInput(this IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs, InputSelection selection)
+        public static IObservable<LabeledValue> SelectInput(
+            this IReadOnlyDictionary<string, IObservable<LabeledValue>> inputs,
+            DeclareInputAttribute selection)
         {
             var selected = inputs.SafeGet(selection.Category);
 
