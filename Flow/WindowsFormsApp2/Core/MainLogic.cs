@@ -56,13 +56,22 @@ namespace WindowsFormsApp2.Core
             var btnRestore = saves
                 .Select(_ => new LabeledValue("btnRestore", "Enabled", true));
 
+            var tbWeight = savedWeights
+                .Whenever(restores)
+                .Select(w => new LabeledValue("tbWeight", "Value", w));
+            var tbHeight = savedHeights
+                .Whenever(restores)
+                .Select(h => new LabeledValue("tbHeight", "Value", h));
+
             return Observable.Merge(
                 lblWeight,
                 lblHeight,
                 lblBMI,
                 lblSavedWeight,
                 lblSavedHeight,
-                btnRestore);
+                btnRestore,
+                tbWeight,
+                tbHeight);
         }
 
         private static int ComputeBMI(int w, int h) => (int) Math.Round(w / (h * h / 10000.0));
