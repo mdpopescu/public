@@ -34,6 +34,9 @@ namespace WindowsFormsApp2
                 .OfType<T>()
                 .Select(selector);
 
+        public static IObservable<T> Whenever<T, TGate>(this IObservable<T> observable, IObservable<TGate> gate) =>
+            gate.WithLatestFrom(observable, (_, value) => value);
+
         //
 
         private static IObservable<LabeledValue> Intercept(this Control control, params string[] events) =>
