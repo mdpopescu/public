@@ -41,10 +41,10 @@ namespace WindowsFormsApp2
 
         private static IObservable<LabeledValue> Intercept(this Control control, params string[] events) =>
             events
-                .Select(eventName => InterceptSingle(control, eventName))
+                .Select(control.InterceptSingle)
                 .Merge();
 
-        private static IObservable<LabeledValue> InterceptSingle(Control control, string eventName)
+        private static IObservable<LabeledValue> InterceptSingle(this Control control, string eventName)
         {
             try
             {
