@@ -8,16 +8,7 @@ namespace WindowsFormsApp2.Core
 {
     public class MainLogic
     {
-        public IObservable<LabeledValue> ViewChanges { get; }
-
-        public MainLogic(IObservable<LabeledValue> inputs)
-        {
-            ViewChanges = Process(inputs);
-        }
-
-        //
-
-        private static IObservable<LabeledValue> Process(IObservable<LabeledValue> inputs)
+        public IObservable<LabeledValue> Process(IObservable<LabeledValue> inputs)
         {
             var weights = inputs
                 .Extract<TrackBar, int>("tbWeight", it => it.Value)
@@ -75,6 +66,8 @@ namespace WindowsFormsApp2.Core
                 tbWeight,
                 tbHeight);
         }
+
+        //
 
         private static int ComputeBMI(int w, int h) => (int) Math.Round(w / (h * h / 10000.0));
     }

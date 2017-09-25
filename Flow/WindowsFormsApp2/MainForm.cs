@@ -21,8 +21,6 @@ namespace WindowsFormsApp2
         private readonly EventGetter eventGetter;
         private readonly PropertySetter propertySetter;
 
-        private MainLogic logic;
-
         private Control FindControl(string name) =>
             Controls
                 .Cast<Control>()
@@ -33,8 +31,10 @@ namespace WindowsFormsApp2
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            logic = new MainLogic(eventGetter.Get(this));
-            logic.ViewChanges.Subscribe(propertySetter.Set);
+            var logic = new MainLogic();
+            logic
+                .Process(eventGetter.Get(this))
+                .Subscribe(propertySetter.Set);
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)

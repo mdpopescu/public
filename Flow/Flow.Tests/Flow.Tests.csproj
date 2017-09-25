@@ -61,8 +61,10 @@
     <Reference Include="System.Reactive.PlatformServices, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.PlatformServices.3.1.1\lib\net46\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\MainLogicTests.cs" />
     <Compile Include="Core\SaveRestoreFlowTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -73,6 +75,10 @@
     <ProjectReference Include="..\WindowsFormsApp1\WindowsFormsApp1.csproj">
       <Project>{2b239be9-693a-4580-b4a5-5443fa8d80f4}</Project>
       <Name>WindowsFormsApp1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsFormsApp2\WindowsFormsApp2.csproj">
+      <Project>{41c6de9f-e3a3-4213-af04-42e81794a2a2}</Project>
+      <Name>WindowsFormsApp2</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
