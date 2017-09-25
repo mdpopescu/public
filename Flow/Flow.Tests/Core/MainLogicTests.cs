@@ -46,7 +46,7 @@ namespace Flow.Tests.Core
         [TestMethod]
         public void UpdatesTheWeightLabelTextWhenTheTrackBarChanges()
         {
-            inputs.OnNext(new LabeledValue("tbWeight", "Value", new TrackBar { Maximum = 999, Value = 80 }));
+            inputs.OnNext(new LabeledValue("tbWeight", "Value", CreateTrackBar(80)));
 
             Assert.AreEqual("lblWeight", outputs[4].Id);
             Assert.AreEqual("Text", outputs[4].Label);
@@ -56,7 +56,7 @@ namespace Flow.Tests.Core
         [TestMethod]
         public void UpdatesTheHeightLabelTextWhenTheTrackBarChanges()
         {
-            inputs.OnNext(new LabeledValue("tbHeight", "Value", new TrackBar { Maximum = 999, Value = 180 }));
+            inputs.OnNext(new LabeledValue("tbHeight", "Value", CreateTrackBar(180)));
 
             Assert.AreEqual("lblHeight", outputs[4].Id);
             Assert.AreEqual("Text", outputs[4].Label);
@@ -66,7 +66,7 @@ namespace Flow.Tests.Core
         [TestMethod]
         public void UpdatesTheBMILabelTextWhenTheWeightTrackBarChanges()
         {
-            inputs.OnNext(new LabeledValue("tbWeight", "Value", new TrackBar { Maximum = 999, Value = 50 }));
+            inputs.OnNext(new LabeledValue("tbWeight", "Value", CreateTrackBar(50)));
 
             Assert.AreEqual("lblBMI", outputs[5].Id);
             Assert.AreEqual("Text", outputs[5].Label);
@@ -76,11 +76,15 @@ namespace Flow.Tests.Core
         [TestMethod]
         public void UpdatesTheBMILabelTextWhenTheHeightTrackBarChanges()
         {
-            inputs.OnNext(new LabeledValue("tbHeight", "Value", new TrackBar { Maximum = 999, Value = 180 }));
+            inputs.OnNext(new LabeledValue("tbHeight", "Value", CreateTrackBar(180)));
 
             Assert.AreEqual("lblBMI", outputs[5].Id);
             Assert.AreEqual("Text", outputs[5].Label);
             Assert.AreEqual("BMI:  12", outputs[5].Value);
         }
+
+        //
+
+        private static TrackBar CreateTrackBar(int value) => new TrackBar { Maximum = 999, Value = value };
     }
 }
