@@ -28,20 +28,20 @@ namespace WindowsFormsApp2.Core
             var savedHeights = heights.Whenever(saves);
 
             var lblWeight = weights
-                .Select(w => $"Weight (kg): {w:##0}")
+                .Select(w => $"Weight (kg): {w,3:##0}")
                 .Select(text => new LabeledValue("lblWeight", "Text", text));
             var lblHeight = heights
-                .Select(h => $"Height (cm): {h:##0}")
+                .Select(h => $"Height (cm): {h,3:##0}")
                 .Select(text => new LabeledValue("lblHeight", "Text", text));
             var lblBMI = bmis
-                .Select(bmi => $"BMI: {bmi:##0}")
+                .Select(bmi => $"BMI: {bmi,3:##0}")
                 .Select(text => new LabeledValue("lblBMI", "Text", text));
 
             var lblSavedWeight = savedWeights
-                .Select(w => $"Saved weight: {w:##0}")
+                .Select(w => $"Saved weight: {w,3:##0}")
                 .Select(text => new LabeledValue("lblSavedWeight", "Text", text));
             var lblSavedHeight = savedHeights
-                .Select(h => $"Saved height: {h:##0}")
+                .Select(h => $"Saved height: {h,3:##0}")
                 .Select(text => new LabeledValue("lblSavedHeight", "Text", text));
 
             var btnRestore = saves

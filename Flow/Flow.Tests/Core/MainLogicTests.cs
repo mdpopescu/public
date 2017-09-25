@@ -35,9 +35,9 @@ namespace Flow.Tests.Core
             CollectionAssert.AreEquivalent(
                 new[]
                 {
-                    "lblWeight:Text = [Weight (kg): 40]",
+                    "lblWeight:Text = [Weight (kg):  40]",
                     "lblHeight:Text = [Height (cm): 150]",
-                    "lblBMI:Text = [BMI: 18]",
+                    "lblBMI:Text = [BMI:  18]",
                     "btnRestore:Enabled = [False]",
                 },
                 outputs.Select(it => it.ToString()).ToArray());
@@ -50,7 +50,7 @@ namespace Flow.Tests.Core
 
             Assert.AreEqual("lblWeight", outputs[4].Id);
             Assert.AreEqual("Text", outputs[4].Label);
-            Assert.AreEqual("Weight (kg): 80", outputs[4].Value);
+            Assert.AreEqual("Weight (kg):  80", outputs[4].Value);
         }
 
         [TestMethod]
@@ -70,7 +70,7 @@ namespace Flow.Tests.Core
 
             Assert.AreEqual("lblBMI", outputs[5].Id);
             Assert.AreEqual("Text", outputs[5].Label);
-            Assert.AreEqual("BMI: 22", outputs[5].Value);
+            Assert.AreEqual("BMI:  22", outputs[5].Value);
         }
 
         [TestMethod]
@@ -80,7 +80,7 @@ namespace Flow.Tests.Core
 
             Assert.AreEqual("lblBMI", outputs[5].Id);
             Assert.AreEqual("Text", outputs[5].Label);
-            Assert.AreEqual("BMI: 12", outputs[5].Value);
+            Assert.AreEqual("BMI:  12", outputs[5].Value);
         }
     }
 }
