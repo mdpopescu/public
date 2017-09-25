@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Forms;
 using WindowsFormsApp2.Models;
@@ -17,9 +16,9 @@ namespace WindowsFormsApp2.Core
                 .Extract<TrackBar, int>("tbHeight", it => it.Value)
                 .StartWith(150);
             var saves = inputs
-                .Extract<Button, Unit>("btnSave", _ => Unit.Default);
+                .Extract<Button>("btnSave");
             var restores = inputs
-                .Extract<Button, Unit>("btnRestore", _ => Unit.Default);
+                .Extract<Button>("btnRestore");
 
             // ReSharper disable once InvokeAsExtensionMethod
             var bmis = Observable.CombineLatest(weights, heights, ComputeBMI);

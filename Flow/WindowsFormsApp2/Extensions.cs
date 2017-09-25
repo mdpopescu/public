@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Forms;
 using WindowsFormsApp2.Models;
@@ -33,6 +34,9 @@ namespace WindowsFormsApp2
                 .Select(it => it.Value)
                 .OfType<T>()
                 .Select(selector);
+
+        public static IObservable<Unit> Extract<T>(this IObservable<LabeledValue> inputs, string id) =>
+            Extract<T, Unit>(inputs, id, _ => Unit.Default);
 
         public static IObservable<T> Whenever<T, TGate>(this IObservable<T> observable, IObservable<TGate> gate) =>
             gate.WithLatestFrom(observable, (_, value) => value);
