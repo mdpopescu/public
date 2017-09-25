@@ -9,6 +9,8 @@ namespace WindowsFormsApp2.Core
     {
         public IObservable<LabeledValue> Process(IObservable<LabeledValue> inputs)
         {
+            // extract inputs
+
             var weights = inputs
                 .Extract<TrackBar, int>("tbWeight", it => it.Value)
                 .StartWith(40);
@@ -20,11 +22,14 @@ namespace WindowsFormsApp2.Core
             var restores = inputs
                 .Extract<Button>("btnRestore");
 
-            // ReSharper disable once InvokeAsExtensionMethod
-            var bmis = Observable.CombineLatest(weights, heights, ComputeBMI);
+            // perform computations
+
+            var bmis = weights.CombineLatest(heights, ComputeBMI);
 
             var savedWeights = weights.Whenever(saves);
             var savedHeights = heights.Whenever(saves);
+
+            // generate outputs
 
             var lblWeight = weights
                 .Select(w => $"Weight (kg): {w,3:##0}")
@@ -54,6 +59,8 @@ namespace WindowsFormsApp2.Core
             var tbHeight = savedHeights
                 .Whenever(restores)
                 .Select(h => new LabeledValue("tbHeight", "Value", h));
+
+            // return the merged outputs
 
             return Observable.Merge(
                 lblWeight,
