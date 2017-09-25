@@ -54,7 +54,9 @@ namespace WindowsFormsApp2.Core
                 .Select(text => new LabeledValue("lblSavedHeight", "Text", text));
 
             var btnRestore = saves
-                .Select(_ => new LabeledValue("btnRestore", "Enabled", true));
+                .Select(_ => true)
+                .StartWith(false)
+                .Select(value => new LabeledValue("btnRestore", "Enabled", value));
 
             var tbWeight = savedWeights
                 .Whenever(restores)

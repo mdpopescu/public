@@ -70,7 +70,6 @@
             // 
             // btnRestore
             // 
-            this.btnRestore.Enabled = false;
             this.btnRestore.Location = new System.Drawing.Point(316, 180);
             this.btnRestore.Name = "btnRestore";
             this.btnRestore.Size = new System.Drawing.Size(75, 23);
