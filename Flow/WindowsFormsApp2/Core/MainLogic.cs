@@ -18,9 +18,9 @@ namespace WindowsFormsApp2.Core
                 .Extract<TrackBar, int>("tbHeight", it => it.Value)
                 .StartWith(150);
             var saves = inputs
-                .Extract<Button>("btnSave");
+                .Extract("btnSave");
             var restores = inputs
-                .Extract<Button>("btnRestore");
+                .Extract("btnRestore");
 
             // perform computations
 
