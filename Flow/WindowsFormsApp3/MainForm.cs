@@ -23,11 +23,13 @@ namespace WindowsFormsApp3
             env.AddInput("tbWeight", Observable.FromEventPattern(tbWeight, "ValueChanged"));
             env.AddInput("tbHeight", Observable.FromEventPattern(tbHeight, "ValueChanged"));
 
+            env.AddComponent(new SliderFlow("tbWeight", "weights", "lblWeight:Text", "Weight (kg): {0:##0}", 40));
+            env.AddComponent(new SliderFlow("tbHeight", "heights", "lblHeight:Text", "Height (cm): {0:##0}", 150));
+
             env.AddOutput<string>("lblWeight:Text", value => lblWeight.Text = value);
             env.AddOutput<string>("lblHeight:Text", value => lblHeight.Text = value);
 
-            env.AddComponent(new SliderFlow("tbWeight", "weights", "lblWeight:Text", "Weight (kg): {0:##0}", 40));
-            env.AddComponent(new SliderFlow("tbHeight", "heights", "lblHeight:Text", "Height (cm): {0:##0}", 150));
+            env.Start();
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
