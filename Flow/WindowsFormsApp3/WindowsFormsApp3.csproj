@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\FlowComponent.cs" />
+    <Compile Include="Core\BmiFlow.cs" />
     <Compile Include="Core\FlowEnvironment.cs" />
     <Compile Include="Core\SliderFlow.cs" />
     <Compile Include="Extensions\Extensions.cs" />

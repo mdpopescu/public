@@ -23,19 +23,19 @@ namespace WindowsFormsApp3.Core
         {
             // inputs
 
-            var tbWeightChanges = inputs
+            var tbChanges = inputs
                 .Extract<EventPattern<object>, TrackBar>(tbLabel, it => it.Sender)
                 .Select(tb => tb.Value)
                 .StartWith(initialValue);
 
             // computations
 
-            var text = tbWeightChanges
+            var text = tbChanges
                 .Select(value => string.Format(textFormat, value));
 
             // outputs
 
-            var weights = tbWeightChanges
+            var values = tbChanges
                 .Select(value => new LabeledValue(valueLabel, value));
 
             var labels = text
@@ -43,7 +43,7 @@ namespace WindowsFormsApp3.Core
 
             // ReSharper disable once InvokeAsExtensionMethod
             return Observable.Merge(
-                weights,
+                values,
                 labels);
         }
 

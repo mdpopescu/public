@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using WindowsFormsApp3.Contracts;
+using WindowsFormsApp3.Extensions;
 using WindowsFormsApp3.Models;
 
 namespace WindowsFormsApp3.Core
