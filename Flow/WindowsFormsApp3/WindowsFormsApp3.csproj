@@ -67,6 +67,9 @@
   <ItemGroup>
     <Compile Include="Contracts\FlowComponent.cs" />
     <Compile Include="Core\FlowEnvironment.cs" />
+    <Compile Include="Core\SliderFlow.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Extensions\ObservableExtensions.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,5 +105,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

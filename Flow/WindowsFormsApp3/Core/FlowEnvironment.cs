@@ -16,11 +16,11 @@ namespace WindowsFormsApp3.Core
             .Process(bus)
             .Subscribe(bus.OnNext);
 
-        public void AddOutput<T>(string label, IObserver<T> sink) => bus
+        public void AddOutput<T>(string label, Action<T> sink) => bus
             .Where(lv => string.Equals(label, lv.Label, StringComparison.OrdinalIgnoreCase))
             .Select(lv => lv.Value)
             .OfType<T>()
-            .Subscribe(sink.OnNext);
+            .Subscribe(sink);
 
         //
 
