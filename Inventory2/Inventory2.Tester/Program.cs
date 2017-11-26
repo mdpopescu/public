@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Inventory2.Library.Shell;
 
 namespace Inventory2.Tester
@@ -17,32 +19,36 @@ namespace Inventory2.Tester
         private static void InMemorySpeedTest()
         {
             Console.WriteLine("In-memory");
-            Run(() => new MemoryStream(), true);
-            Run(() => new MemoryStream(), false);
+            Run(() => new MemoryStream(), COUNT * 10, true);
+            Run(() => new MemoryStream(), COUNT * 10, false);
 
             Console.WriteLine("On-disk");
-            Run(() => new FileStream(Path.GetTempFileName(), FileMode.Create), true);
-            Run(() => new FileStream(Path.GetTempFileName(), FileMode.Create), false);
+            Run(() => new FileStream(Path.GetTempFileName(), FileMode.Create), COUNT, true);
+            Run(() => new FileStream(Path.GetTempFileName(), FileMode.Create), COUNT, false);
         }
 
-        private static void Run(Func<Stream> streamFactory, bool autoFlush)
+        private static void Run(Func<Stream> streamFactory, int count, bool autoFlush)
         {
             var buffer = new byte[100];
             using (var ms = streamFactory.Invoke())
             {
                 var stream = new WORMStream(ms) { AutoFlush = autoFlush };
-                var benchmark = Benchmark(stream, it => it.Append(buffer));
+                var timeSpan = Benchmark(stream, count, it => it.Append(buffer));
                 var prefix = autoFlush ? "With" : "Without";
-                WriteResult(benchmark, $"{prefix} auto-flush");
+                Console.WriteLine($"{prefix} auto-flush");
+                WriteResult(timeSpan, "Writing");
+
+                timeSpan = Benchmark(stream, 1, it => DoNothing(it.ReadAll()));
+                WriteResult(timeSpan, "Reading");
             }
         }
 
-        private static TimeSpan Benchmark(WORMStream stream, Action<WORMStream> action)
+        private static TimeSpan Benchmark(WORMStream stream, int count, Action<WORMStream> action)
         {
             var sw = new Stopwatch();
             sw.Start();
 
-            for (var i = 0; i < COUNT; i++)
+            for (var i = 0; i < count; i++)
                 action(stream);
             stream.Flush();
 
@@ -52,8 +58,13 @@ namespace Inventory2.Tester
 
         private static void WriteResult(TimeSpan benchmark, string prefix)
         {
-            var wps = COUNT / benchmark.TotalSeconds;
-            Console.WriteLine(prefix + $": {benchmark} ({wps:N2} writes per second)");
+            var ops = COUNT / benchmark.TotalSeconds;
+            Console.WriteLine($"{prefix}: {benchmark} ({ops:N0} operations per second)");
+        }
+
+        private static void DoNothing(IEnumerable<byte[]> readAll)
+        {
+            Console.WriteLine($"ReadAll returned {readAll.Count():N0} records.");
         }
     }
 }
