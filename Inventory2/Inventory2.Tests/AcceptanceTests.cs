@@ -15,9 +15,10 @@ namespace Inventory2.Tests
         {
             using (var ms = new MemoryStream())
             {
-                var events = new WORMStream(ms);
+                var stream = new WORMStream(ms);
                 var serializer = new EventSerializer();
-                var framework = new Framework<InventoryState>(events, serializer);
+                var store = new WormEventStore(stream, serializer);
+                var framework = new Framework<InventoryState>(store);
 
                 var id1 = framework
                     .Execute(new CreateProduct("test1"))

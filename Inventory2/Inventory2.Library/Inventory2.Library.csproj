@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\BinarySerializer.cs" />
+    <Compile Include="Contracts\EventStore.cs" />
     <Compile Include="Contracts\Serializer.cs" />
     <Compile Include="Core\CommandBase.cs" />
     <Compile Include="Core\EntityBase.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Shell\CompositeState.cs" />
     <Compile Include="Shell\EventSerializer.cs" />
+    <Compile Include="Shell\WormEventStore.cs" />
     <Compile Include="Shell\Framework.cs" />
     <Compile Include="Shell\WORMStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

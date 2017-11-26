@@ -11,10 +11,9 @@ namespace Inventory2.Library.Shell
     {
         public TState State { get; }
 
-        public Framework(WORMStream stream, BinarySerializer<EventBase> serializer)
+        public Framework(EventStore store)
         {
-            this.stream = stream;
-            this.serializer = serializer;
+            this.store = store;
 
             State = new TState();
         }
@@ -22,7 +21,7 @@ namespace Inventory2.Library.Shell
         public void Handle<TEvent>(TEvent ev)
             where TEvent : EventBase
         {
-            stream.Append(serializer.Serialize(ev));
+            store.Add(ev);
 
             // update the state based on the new event
             State.Handle(ev);
@@ -39,7 +38,6 @@ namespace Inventory2.Library.Shell
 
         //
 
-        private readonly WORMStream stream;
-        private readonly BinarySerializer<EventBase> serializer;
+        private readonly EventStore store;
     }
 }
