@@ -2,9 +2,9 @@
 
 namespace Inventory2.Library.Core
 {
-    public abstract class CommandBase
+    public abstract class CommandBase<TState>
+        where TState : StateBase
     {
-        public abstract IEnumerable<EventBase> Execute<TState>(TState state)
-            where TState : StateBase;
+        public abstract IEnumerable<EventBase> Execute(TState state);
     }
 }

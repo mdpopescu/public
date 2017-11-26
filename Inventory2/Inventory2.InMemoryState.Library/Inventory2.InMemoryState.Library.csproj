@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EE17611B-4FAD-411A-BD3E-87EA08BBCDB9}</ProjectGuid>
+    <ProjectGuid>{DAEC7640-651F-4318-8781-09E363DFDCF0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Inventory2.Library</RootNamespace>
-    <AssemblyName>Inventory2.Library</AssemblyName>
+    <RootNamespace>Inventory2.InMemoryState.Library</RootNamespace>
+    <AssemblyName>Inventory2.InMemoryState.Library</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,21 +40,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contracts\BinarySerializer.cs" />
-    <Compile Include="Contracts\Serializer.cs" />
-    <Compile Include="Core\CommandBase.cs" />
-    <Compile Include="Core\EntityBase.cs" />
-    <Compile Include="Core\EventBase.cs" />
-    <Compile Include="Core\StateBase.cs" />
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Shell\CompositeState.cs" />
-    <Compile Include="Shell\EventSerializer.cs" />
-    <Compile Include="Shell\Framework.cs" />
-    <Compile Include="Shell\WORMStream.cs" />
+    <Compile Include="Commands\BuyProduct.cs" />
+    <Compile Include="Commands\CreateProduct.cs" />
+    <Compile Include="Core\InventoryState.cs" />
+    <Compile Include="Events\ProductBought.cs" />
+    <Compile Include="Events\ProductCreated.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="notes.txt" />
+    <ProjectReference Include="..\Inventory2.Domain.Library\Inventory2.Domain.Library.csproj">
+      <Project>{0f3b774b-4880-429c-91fe-3a7ac9571263}</Project>
+      <Name>Inventory2.Domain.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Inventory2.Library\Inventory2.Library.csproj">
+      <Project>{ee17611b-4fad-411a-bd3e-87ea08bbcdb9}</Project>
+      <Name>Inventory2.Library</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

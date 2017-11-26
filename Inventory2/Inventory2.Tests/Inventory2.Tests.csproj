@@ -48,6 +48,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcceptanceTests.cs" />
     <Compile Include="Shell\WORMStreamTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -55,6 +56,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Inventory2.Domain.Library\Inventory2.Domain.Library.csproj">
+      <Project>{0f3b774b-4880-429c-91fe-3a7ac9571263}</Project>
+      <Name>Inventory2.Domain.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Inventory2.InMemoryState.Library\Inventory2.InMemoryState.Library.csproj">
+      <Project>{daec7640-651f-4318-8781-09e363dfdcf0}</Project>
+      <Name>Inventory2.InMemoryState.Library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Inventory2.Library\Inventory2.Library.csproj">
       <Project>{ee17611b-4fad-411a-bd3e-87ea08bbcdb9}</Project>
       <Name>Inventory2.Library</Name>

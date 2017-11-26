@@ -57,6 +57,8 @@ Public repository - CC-by-SA 3.0
 
 * Inventory: (INCOMPLETE) inventory management system - mainly to use SignalR and Knockout.js
 
+* Inventory2: another attempt, this time to test some ideas about event sourcing
+
 * ISBN: Program for converting a product code (12 digits) to an ISBN number (10 digits)
 
 * Logfind: Implements http://projectsthehardway.com/2015/06/16/project-1-logfind-2/
