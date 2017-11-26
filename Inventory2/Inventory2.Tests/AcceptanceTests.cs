@@ -29,8 +29,16 @@ namespace Inventory2.Tests
                     .State
                     .Products
                     .ToList();
-                Assert.AreEqual(1,products.Count);
-                Assert.AreEqual("test1",products[0].Name);
+                Assert.AreEqual(1, products.Count);
+                Assert.AreEqual("test1", products[0].Name);
+                var stocks = framework
+                    .State
+                    .Stock
+                    .ToList();
+                Assert.AreEqual(1, stocks.Count);
+                Assert.AreEqual(products[0], stocks[0].Product);
+                Assert.AreEqual(10m, stocks[0].Quantity);
+                Assert.AreEqual(20m, stocks[0].Price);
             }
         }
     }

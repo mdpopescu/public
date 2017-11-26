@@ -9,11 +9,11 @@ namespace Inventory2.InMemoryState.Library.Commands
 {
     public class BuyProduct : CommandBase<InventoryState>
     {
-        public BuyProduct(Guid entityId, decimal price, decimal quantity)
+        public BuyProduct(Guid entityId, decimal quantity, decimal price)
         {
             this.entityId = entityId;
-            this.price = price;
             this.quantity = quantity;
+            this.price = price;
         }
 
         public override IEnumerable<EventBase> Execute(InventoryState state)
@@ -25,7 +25,7 @@ namespace Inventory2.InMemoryState.Library.Commands
         //
 
         private readonly Guid entityId;
-        private readonly decimal price;
         private readonly decimal quantity;
+        private readonly decimal price;
     }
 }
