@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Text;
-using Inventory2.Library;
+using Inventory2.Library.Shell;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Inventory2.Tests
+namespace Inventory2.Tests.Shell
 {
     [TestClass]
     public class WORMStreamTests

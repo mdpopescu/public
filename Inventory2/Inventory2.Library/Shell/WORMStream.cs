@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Inventory2.Library
+namespace Inventory2.Library.Shell
 {
     /// <summary>
     /// Write-once, read-many stream; limited to 2GB so I can use ints
