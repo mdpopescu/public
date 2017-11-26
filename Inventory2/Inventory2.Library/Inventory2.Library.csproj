@@ -40,8 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\BinarySerializer.cs" />
+    <Compile Include="Contracts\Serializer.cs" />
+    <Compile Include="Core\CommandBase.cs" />
+    <Compile Include="Core\EventBase.cs" />
+    <Compile Include="Core\StateBase.cs" />
+    <Compile Include="Shell\CompositeState.cs" />
+    <Compile Include="Shell\Framework.cs" />
     <Compile Include="Shell\WORMStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="notes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
