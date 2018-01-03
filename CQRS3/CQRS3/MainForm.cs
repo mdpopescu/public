@@ -21,7 +21,7 @@ namespace CQRS3
 
         public void ShowStatus(string status)
         {
-            lblStatus.Text = status ?? "OK";
+            lblStatus.Text = status;
         }
 
         //

@@ -11,31 +11,26 @@ namespace CQRS3.Implementations
         {
             this.ui = ui;
 
-            //var eventStore = new InMemoryEventStore();
             var eventStore = new TextFileEventStore("events.txt");
             state = new Counter();
 
             incrementCommandHandler = new IncrementCommandHandler(eventStore);
             decrementCommandHandler = new DecrementCommandHandler(eventStore, state);
 
-            state.Initialize(eventStore);
+            state.StateChanged += (_, __) => ShowCurrentValue();
 
-            ShowCurrentValue();
+            state.Initialize(eventStore);
         }
 
         public void Increment()
         {
-            var status = incrementCommandHandler.Execute(new Increment()).Match(ex => ex.Message, list => null);
-
-            ShowCurrentValue();
+            var status = incrementCommandHandler.Execute(new Increment()).Match(ex => ex.Message, list => "OK");
             ui.ShowStatus(status);
         }
 
         public void Decrement()
         {
-            var status = decrementCommandHandler.Execute(new Decrement()).Match(ex => ex.Message, list => null);
-
-            ShowCurrentValue();
+            var status = decrementCommandHandler.Execute(new Decrement()).Match(ex => ex.Message, list => "OK");
             ui.ShowStatus(status);
         }
 

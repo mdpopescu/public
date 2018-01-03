@@ -18,6 +18,8 @@ namespace CQRS3.Implementations
                     value--;
                     break;
             }
+
+            base.Play(ev);
         }
 
         public int Handle(GetValueQuery query)
