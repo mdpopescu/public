@@ -11,20 +11,23 @@ namespace CQRS3.Implementations
         {
             this.ui = ui;
 
-            var eventStore = new InMemoryEventStore();
+            //var eventStore = new InMemoryEventStore();
+            var eventStore = new TextFileEventStore("events.txt");
             state = new Counter();
 
             incrementCommandHandler = new IncrementCommandHandler(eventStore);
             decrementCommandHandler = new DecrementCommandHandler(eventStore, state);
 
             state.Initialize(eventStore);
+
+            ShowCurrentValue();
         }
 
         public void Increment()
         {
             var status = incrementCommandHandler.Execute(new Increment()).Match(ex => ex.Message, list => null);
 
-            ui.ShowValue(state.Handle(new GetValueQuery()));
+            ShowCurrentValue();
             ui.ShowStatus(status);
         }
 
@@ -32,7 +35,7 @@ namespace CQRS3.Implementations
         {
             var status = decrementCommandHandler.Execute(new Decrement()).Match(ex => ex.Message, list => null);
 
-            ui.ShowValue(state.Handle(new GetValueQuery()));
+            ShowCurrentValue();
             ui.ShowStatus(status);
         }
 
@@ -43,5 +46,10 @@ namespace CQRS3.Implementations
         private readonly Counter state;
         private readonly IncrementCommandHandler incrementCommandHandler;
         private readonly DecrementCommandHandler decrementCommandHandler;
+
+        private void ShowCurrentValue()
+        {
+            ui.ShowValue(state.Handle(new GetValueQuery()));
+        }
     }
 }

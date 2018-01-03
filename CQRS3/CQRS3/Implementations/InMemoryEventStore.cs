@@ -8,6 +8,8 @@ namespace CQRS3.Implementations
     {
         public override IEnumerable<EventBase> Get() => events.AsEnumerable();
 
+        //
+
         protected override void Save(EventBase ev) => events.Add(ev);
 
         //
