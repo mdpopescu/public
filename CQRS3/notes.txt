@@ -1,0 +1,45 @@
+helper classes
+==============
+
+A. defined in a common area - valid for all purposes
+
+EventStore
+  Add(EventBase)
+  IEnumerable<EventBase> Get() // returns all events, can be filtered with .Where()
+  Subscribe(Action<EventBase>) // callback for future events
+
+EventBase
+  Guid Id { get; }
+  DateTimeOffset TimeStamp { get; } // creation time, informational
+  // child classes include specific fields
+
+B. defined in a specific area - (the non-abstract classes) can be split into areas of interest like inventory management, sales reporting and so on
+
+CommandHandler<TCommand>
+  ctor(EventStore)
+  protected virtual Result<Void> Validate(TCommand) { return Void.Singleton; }
+  protected abstract IEnumerable<EventBase> GenerateEvents(TCommand)
+  Result<IEnumerable<EventBase>> Execute(TCommand)
+    Validate().Match(ex => { Log(ex); return ex; }, _ => GenerateEvents(command).ForEach(eventStore.Add))
+  // a specific command handler MAY receive one or more IQueryHandler<TQuery, TResult> instances in order to be able to Validate()
+
+StateBase
+  // this will implement various IQueryHandler<TQuery, TResult> interfaces
+  Initialize(EventStore)
+    eventStore.Get().ForEach(Play) // replays all events to build up the current state; future optimization: clone the most recent snapshot and replay only the events after the snapshot
+    eventStore.Subscribe(Play) // handles future events
+  Play(EventBase)
+    // updates the internal state according to the given event, IF relevant
+
+
+
+main logic
+==========
+
+create EventStore
+create and initialize StateBase instances, passing EventStore
+create CommandHandler instances, passing EventStore
+
+for every user action:
+  create the appropriate TCommand
+  return commandHandler<>.Execute(command).Match(ex => ex.Message, list => "")

@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS3", "CQRS3\CQRS3.csproj", "{3D4AA033-6A0B-4541-A6C4-ABF267B9F4C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CQRS3.Library", "CQRS3.Library\CQRS3.Library.csproj", "{F33A57AF-E0EB-4F60-A1EC-78C1B577CB77}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A10E3BA-7EF3-4DDD-A9A9-64D7D89B5C96}"
+	ProjectSection(SolutionItems) = preProject
+		notes.txt = notes.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D4AA033-6A0B-4541-A6C4-ABF267B9F4C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D4AA033-6A0B-4541-A6C4-ABF267B9F4C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D4AA033-6A0B-4541-A6C4-ABF267B9F4C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D4AA033-6A0B-4541-A6C4-ABF267B9F4C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F33A57AF-E0EB-4F60-A1EC-78C1B577CB77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F33A57AF-E0EB-4F60-A1EC-78C1B577CB77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F33A57AF-E0EB-4F60-A1EC-78C1B577CB77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F33A57AF-E0EB-4F60-A1EC-78C1B577CB77}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {833DDD6E-AE09-4260-A9BD-4AF2F8ECABD3}
+	EndGlobalSection
+EndGlobal

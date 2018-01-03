@@ -1,8 +1,1 @@
-﻿events:   state -> event -> state
-          (writes each event to the WORM stream)
-commands: state -> IEnumerable<event>
-          (passes each event to the event handler above)
-
-queries:  state -> object
-
-Each state can actually contain multiple representations (e.g., both normalized and denormalized tables)
+﻿TODO: write an acceptance test that runs the events through a state with a FIFO policy and then through another one with a LIFO policy and compare the results
