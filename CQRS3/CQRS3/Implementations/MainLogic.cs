@@ -1,6 +1,8 @@
-﻿using CQRS3.Contracts;
+﻿using System.Linq;
+using CQRS3.Contracts;
 using CQRS3.Implementations.CommandHandlers;
 using CQRS3.Implementations.Commands;
+using CQRS3.Implementations.Events;
 using CQRS3.Implementations.Queries;
 
 namespace CQRS3.Implementations
@@ -30,7 +32,9 @@ namespace CQRS3.Implementations
 
         public void Decrement()
         {
-            var status = decrementCommandHandler.Execute(new Decrement()).Match(ex => ex.Message, list => "OK");
+            var status = decrementCommandHandler
+                         .Execute(new Decrement())
+                         .Match(ex => ex.Message, list => list.First() is Decremented ? "OK" : "Decrement failed");
             ui.ShowStatus(status);
         }
 

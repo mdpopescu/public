@@ -21,7 +21,7 @@ namespace CQRS3.Implementations
 
         protected override void Save(EventBase ev)
         {
-            var serialized = ev is Incremented ? "i" : "d";
+            var serialized = Serialize(ev);
             File.AppendAllText(filename, serialized + Environment.NewLine);
         }
 
@@ -31,6 +31,40 @@ namespace CQRS3.Implementations
 
         private IEnumerable<EventBase> ReadEvents() => File.ReadAllLines(filename).Select(Deserialize).ToList();
 
-        private static EventBase Deserialize(string line) => line == "i" ? (EventBase) new Incremented() : new Decremented();
+        private static string Serialize(EventBase ev)
+        {
+            switch (ev)
+            {
+                case Incremented _:
+                    return "i";
+
+                case Decremented _:
+                    return "d";
+
+                case NotDecremented _:
+                    return "n";
+
+                default:
+                    throw new Exception($"Internal error: unknown type {ev.GetType()}.");
+            }
+        }
+
+        private static EventBase Deserialize(string line)
+        {
+            switch (line)
+            {
+                case "i":
+                    return new Incremented();
+
+                case "d":
+                    return new Decremented();
+
+                case "n":
+                    return new NotDecremented();
+
+                default:
+                    throw new Exception($"Internal error: unknown serialized value {line}.");
+            }
+        }
     }
 }

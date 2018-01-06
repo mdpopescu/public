@@ -53,6 +53,7 @@
     <Compile Include="Implementations\Counter.cs" />
     <Compile Include="Implementations\Events\Decremented.cs" />
     <Compile Include="Implementations\Events\Incremented.cs" />
+    <Compile Include="Implementations\Events\NotDecremented.cs" />
     <Compile Include="Implementations\MainLogic.cs" />
     <Compile Include="Implementations\Queries\GetValueQuery.cs" />
     <Compile Include="Implementations\TextFileEventStore.cs" />

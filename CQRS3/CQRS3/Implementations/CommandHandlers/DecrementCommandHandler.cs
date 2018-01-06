@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CQRS3.Implementations.Commands;
 using CQRS3.Implementations.Events;
 using CQRS3.Implementations.Queries;
 using CQRS3.Library.Contracts;
-using CQRS3.Library.Helpers;
-using Void = CQRS3.Library.Helpers.Void;
 
 namespace CQRS3.Implementations.CommandHandlers
 {
@@ -19,15 +16,10 @@ namespace CQRS3.Implementations.CommandHandlers
 
         //
 
-        protected override Result<Void> Validate(Decrement command)
-        {
-            var value = getValue.Handle(new GetValueQuery());
-            return value > 0 ? Void.Singleton : new Result<Void>(new InvalidOperationException("Cannot decrement below zero."));
-        }
-
         protected override IEnumerable<EventBase> GenerateEvents(Decrement command)
         {
-            yield return new Decremented();
+            var value = getValue.Handle(new GetValueQuery());
+            yield return value > 0 ? (EventBase) new Decremented() : new NotDecremented();
         }
 
         //
