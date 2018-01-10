@@ -2,7 +2,8 @@
 
 namespace CQRS3.Implementations.Events
 {
-    public class NotDecremented : EventBase
+    public class Unchanged : EventBase
     {
+        public string Reason { get; set; }
     }
 }

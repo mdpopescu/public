@@ -16,7 +16,7 @@ namespace CQRS3.Implementations
             var eventStore = new TextFileEventStore("events.txt");
             state = new Counter();
 
-            incrementCommandHandler = new IncrementCommandHandler(eventStore);
+            incrementCommandHandler = new IncrementCommandHandler(eventStore, state);
             decrementCommandHandler = new DecrementCommandHandler(eventStore, state);
 
             state.StateChanged += (_, __) => ShowCurrentValue();
@@ -26,15 +26,17 @@ namespace CQRS3.Implementations
 
         public void Increment()
         {
-            var status = incrementCommandHandler.Execute(new Increment()).Match(ex => ex.Message, list => "OK");
+            var status = incrementCommandHandler
+                .Execute(new Increment())
+                .Match(ex => ex.Message, list => list.First() is Unchanged u ? u.Reason : "OK");
             ui.ShowStatus(status);
         }
 
         public void Decrement()
         {
             var status = decrementCommandHandler
-                         .Execute(new Decrement())
-                         .Match(ex => ex.Message, list => list.First() is Decremented ? "OK" : "Decrement failed");
+                .Execute(new Decrement())
+                .Match(ex => ex.Message, list => list.First() is Unchanged u ? u.Reason : "OK");
             ui.ShowStatus(status);
         }
 

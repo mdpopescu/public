@@ -41,8 +41,8 @@ namespace CQRS3.Implementations
                 case Decremented _:
                     return "d";
 
-                case NotDecremented _:
-                    return "n";
+                case Unchanged u:
+                    return $"n {u.Reason}";
 
                 default:
                     throw new Exception($"Internal error: unknown type {ev.GetType()}.");
@@ -51,16 +51,16 @@ namespace CQRS3.Implementations
 
         private static EventBase Deserialize(string line)
         {
-            switch (line)
+            switch (line[0])
             {
-                case "i":
+                case 'i':
                     return new Incremented();
 
-                case "d":
+                case 'd':
                     return new Decremented();
 
-                case "n":
-                    return new NotDecremented();
+                case 'n':
+                    return new Unchanged { Reason = line.Length > 2 ? line.Substring(2) : "Cannot decrement below 0." };
 
                 default:
                     throw new Exception($"Internal error: unknown serialized value {line}.");

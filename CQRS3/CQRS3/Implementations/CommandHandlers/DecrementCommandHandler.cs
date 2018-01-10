@@ -19,7 +19,7 @@ namespace CQRS3.Implementations.CommandHandlers
         protected override IEnumerable<EventBase> GenerateEvents(Decrement command)
         {
             var value = getValue.Handle(new GetValueQuery());
-            yield return value > 0 ? (EventBase) new Decremented() : new NotDecremented();
+            yield return value > 0 ? (EventBase) new Decremented() : new Unchanged { Reason = "Cannot decrement below 0." };
         }
 
         //
