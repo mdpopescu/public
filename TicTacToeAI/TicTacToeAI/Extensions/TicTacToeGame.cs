@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TicTacToeAI.Contracts;
 
@@ -26,17 +27,13 @@ namespace TicTacToeAI.Extensions
             this.getUserMove = getUserMove;
         }
 
-        public bool HasEnded() => SPECIAL.Any(coords => coords.All(it => it == coords[0]));
+        public bool HasEnded() => IsVictory() || !GetAvailable().Any();
 
         public float[] GetState() => state;
 
         public void Update(float[] values)
         {
-            var available = state
-                .Select((v, index) => new { v, index })
-                .Where(it => AreEqual(it.v, 0.5f))
-                .Select(it => it.index)
-                .ToList();
+            var available = GetAvailable().ToList();
             var move = available
                 .Select(index => new { index, value = values[index] })
                 .OrderByDescending(it => it.value)
@@ -45,6 +42,9 @@ namespace TicTacToeAI.Extensions
 
             state[move] = 1;
             available.Remove(move);
+
+            if (HasEnded())
+                return;
 
             var userMove = getUserMove(available.ToArray());
             state[userMove] = 0;
@@ -71,6 +71,14 @@ namespace TicTacToeAI.Extensions
 
         private readonly Func<int[], int> getUserMove;
 
-        private static bool AreEqual(float a, float b) => Math.Abs(a - b) < 0.001f;
+        private bool IsVictory() => SPECIAL.Any(state.HaveSameValue);
+
+        private IEnumerable<int> GetAvailable()
+        {
+            return state
+                .Select((v, index) => new { v, index })
+                .Where(it => it.v.IsEqualTo(0.5f))
+                .Select(it => it.index);
+        }
     }
 }

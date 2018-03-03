@@ -53,11 +53,12 @@ namespace TicTacToeAI.Implementations
         {
             var game = gameFactory.Invoke();
 
-            while (!game.HasEnded())
+            do
             {
                 var outputs = candidate.Compute(game.GetState());
                 game.Update(outputs);
             }
+            while (!game.HasEnded());
 
             return game.Score.GetValueOrDefault();
         }
