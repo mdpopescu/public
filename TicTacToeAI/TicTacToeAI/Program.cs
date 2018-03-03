@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using TicTacToeAI.Extensions;
 using TicTacToeAI.Implementations;
 
 namespace TicTacToeAI
@@ -8,11 +9,20 @@ namespace TicTacToeAI
     {
         private static void Main()
         {
-            var network = new Network(9, 9, 9, 9);
-            network.Randomize();
+            var solver = new Solver(() => new TicTacToeGame(GetUserMove)) { OnGeneration = i => Console.WriteLine($"Generation {i}.") };
+            solver.Solve(new Network(9, 9, 9, 9), 10);
+        }
 
-            var outputs = network.Compute(0, 0, 0, 0, 1, 0, 0, 0, 0);
-            Console.WriteLine(string.Join(" ", outputs.Select(v => v.ToString("F2"))));
+        private static int GetUserMove(int[] available)
+        {
+            do
+            {
+                Console.Write($"Your move (valid choices: {string.Join(",", available)})? ");
+                var input = Console.ReadLine();
+                if (int.TryParse(input, out var choice) && available.Contains(choice))
+                    return choice;
+            }
+            while (true);
         }
     }
 }

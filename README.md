@@ -111,6 +111,8 @@ Public repository - CC-by-SA 3.0
 
 * TextGeneration: (for now) using Markov chains to generate plausibly-looking texts.
 
+* TicTacToeAI: trying a combination Neural Network / Genetic Algorithm to play TicTacToe
+
 * TransformyClone: library based on the idea from http://www.transformy.io/
 
 * TweetNicer: a WinForms replacement for TweetDeck with some additional features (work in progress)
