@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TicTacToeAI.Contracts;
+using TicTacToeAI.Models;
 
 namespace TicTacToeAI.Implementations
 {
@@ -56,7 +57,15 @@ namespace TicTacToeAI.Implementations
             do
             {
                 var outputs = candidate.Compute(game.GetState());
-                game.Update(outputs);
+                var move = new TicTacToeMove { Index = (int) outputs[0], Value = 1 };
+
+                // if the NN attempts an illegal move it loses immediately
+                if (!game.TryMove(move))
+                    return 0.0f;
+
+                // TODO: get an opponent
+                // TODO: get the opponent to move
+                // TODO: if the opponent makes an illegal move the candidate wins immediately
             }
             while (!game.HasEnded());
 

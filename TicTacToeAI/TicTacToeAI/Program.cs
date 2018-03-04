@@ -9,8 +9,8 @@ namespace TicTacToeAI
     {
         private static void Main()
         {
-            var solver = new Solver(() => new TicTacToeGame(GetUserMove)) { OnGeneration = i => Console.WriteLine($"Generation {i}.") };
-            solver.Solve(new Network(9, 9, 9, 9), 10);
+            var solver = new Solver(() => new TicTacToeGame(1.0f, GetUserMove)) { OnGeneration = i => Console.WriteLine($"Generation {i}.") };
+            solver.Solve(new Network(9, 9, 9, 9, 1), 10);
         }
 
         private static int GetUserMove(int[] available)

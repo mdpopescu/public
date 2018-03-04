@@ -49,6 +49,7 @@
     <Compile Include="Implementations\Neuron.cs" />
     <Compile Include="Implementations\Solver.cs" />
     <Compile Include="Contracts\Game.cs" />
+    <Compile Include="Models\TicTacToeMove.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

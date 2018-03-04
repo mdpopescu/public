@@ -6,6 +6,6 @@
 
         bool HasEnded();
         float[] GetState();
-        void Update(float[] values);
+        bool TryMove(object move);
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TicTacToeAI.Contracts;
+using TicTacToeAI.Models;
 
 namespace TicTacToeAI.Extensions
 {
@@ -11,19 +12,19 @@ namespace TicTacToeAI.Extensions
         {
             get
             {
-                // the computer plays X -- that is, 1
-                var complete = SPECIAL
-                    .Where(coords => coords.All(it => it == coords[0]))
-                    .FirstOrDefault();
-                return complete?[0];
+                if (IsVictory())
+                    return 1.0f;
+                if (IsLoss())
+                    return 0.0f;
+                if (GetAvailable().Any())
+                    return null;
+                return 0.5f;
             }
         }
 
-        public TicTacToeGame(Func<int[], int> getUserMove)
+        public TicTacToeGame(float valueToPlay, Func<int[], int> getUserMove)
         {
-            for (var i = 0; i < 9; i++)
-                state[i] = 0.5f;
-
+            this.valueToPlay = valueToPlay;
             this.getUserMove = getUserMove;
         }
 
@@ -50,6 +51,22 @@ namespace TicTacToeAI.Extensions
             state[userMove] = 0;
         }
 
+        public bool TryMove(object move)
+        {
+            if (!(move is TicTacToeMove tttMove))
+                return false;
+
+            var available = GetAvailable().ToList();
+            if (!available.Contains(tttMove.Index))
+                return false;
+
+            if (!new[] { 0, 1 }.Contains(tttMove.Value))
+                return false;
+
+            state[tttMove.Index] = tttMove.Value;
+            return true;
+        }
+
         //
 
         private static readonly int[][] SPECIAL =
@@ -67,11 +84,13 @@ namespace TicTacToeAI.Extensions
             new[] { 2, 4, 6 },
         };
 
-        private readonly float[] state = new float[9]; // O = 0, X = 1, empty = 0.5
+        private readonly float[] state = { 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f }; // O = 0, X = 1, empty = 0.5
 
+        private readonly float valueToPlay;
         private readonly Func<int[], int> getUserMove;
 
-        private bool IsVictory() => SPECIAL.Any(state.HaveSameValue);
+        private bool IsVictory() => SPECIAL.Any(it => it.AllEqualTo(state, valueToPlay));
+        private bool IsLoss() => SPECIAL.Any(it => it.AllEqualTo(state, 1.0f - valueToPlay));
 
         private IEnumerable<int> GetAvailable()
         {
