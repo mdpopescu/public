@@ -59,9 +59,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Implementations\NotificationGenerator.cs" />
-    <Compile Include="Implementations\ScreenNotifier.cs" />
-    <Compile Include="Implementations\TickGenerator.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Tick.cs" />
     <Compile Include="Program.cs" />
