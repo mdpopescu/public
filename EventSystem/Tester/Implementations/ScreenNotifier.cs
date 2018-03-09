@@ -11,14 +11,13 @@ namespace Tester.Implementations
             Console.Clear();
             Console.CursorVisible = false;
 
-            EventBus.AddListener(DisplayNotification, it => it is Notification);
+            EventBus.Get<Notification>().Subscribe(DisplayNotification);
         }
 
         //
 
-        private static void DisplayNotification(object obj)
+        private static void DisplayNotification(Notification notification)
         {
-            var notification = (Notification) obj;
             Console.SetCursorPosition(notification.Col, notification.Row);
             Console.BackgroundColor = notification.Background;
             Console.ForegroundColor = notification.Foreground;

@@ -8,7 +8,7 @@ namespace Tester.Implementations
     {
         public NotificationGenerator()
         {
-            EventBus.AddListener(_ => GenerateNotification(), it => it is Tick);
+            EventBus.Get<Tick>().Subscribe(_ => GenerateNotification());
         }
 
         //
