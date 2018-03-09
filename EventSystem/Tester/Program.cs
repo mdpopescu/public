@@ -15,7 +15,7 @@ namespace Tester
             Console.CursorVisible = false;
 
             EventBus.AddSource(Observable.Interval(TimeSpan.FromMilliseconds(5)).Select(_ => new Tick()));
-            EventBus.AddTransformation<Tick, Notification>(GenerateNotification);
+            EventBus.AddTransformation<Tick, Notification>(_ => GenerateNotification());
             EventBus.AddSink<Notification>(DisplayNotification);
 
             Console.ReadLine();
@@ -23,7 +23,7 @@ namespace Tester
             Console.CursorVisible = true;
         }
 
-        private static Notification GenerateNotification(Tick _)
+        private static Notification GenerateNotification()
         {
             return new Notification(RNG.Next(22), RNG.Next(70), "*")
             {
