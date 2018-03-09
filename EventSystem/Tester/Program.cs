@@ -14,24 +14,22 @@ namespace Tester
             Console.Clear();
             Console.CursorVisible = false;
 
-            Observable.Interval(TimeSpan.FromMilliseconds(5)).Subscribe(_ => EventBus.Publish(new Tick()));
-
-            EventBus.Get<Tick>().Subscribe(_ => GenerateNotification());
-            EventBus.Get<Notification>().Subscribe(DisplayNotification);
+            EventBus.AddSource(Observable.Interval(TimeSpan.FromMilliseconds(5)).Select(_ => new Tick()));
+            EventBus.AddTransformation<Tick, Notification>(GenerateNotification);
+            EventBus.AddSink<Notification>(DisplayNotification);
 
             Console.ReadLine();
 
             Console.CursorVisible = true;
         }
 
-        private static void GenerateNotification()
+        private static Notification GenerateNotification(Tick _)
         {
-            var notification = new Notification(RNG.Next(22), RNG.Next(70), "*")
+            return new Notification(RNG.Next(22), RNG.Next(70), "*")
             {
                 Background = (ConsoleColor) RNG.Next(16),
                 Foreground = (ConsoleColor) RNG.Next(16),
             };
-            EventBus.Publish(notification);
         }
 
         private static void DisplayNotification(Notification notification)
