@@ -8,6 +8,7 @@ L 1.000 2.000 3.000 4.000 5.000 6.000
 create (as an initial version) a drawing containing the lines defined in the file, split into 4 quadrants, with three of the quadrants containing the XY, XZ and YZ projections of the lines.
 
 Future improvements:
+- Scale the drawing to fit the quadrants
 - Add more commands (like C for Circle and A for Arc)
 - Auto-generate labels with sizes for some of the lines
 - Show an arbitrary projection in the fourth quadrant (allow rotation and zooming with the mouse and/or keyboard)

@@ -11,6 +11,8 @@ Public repository - CC-by-SA 3.0
 
 * AppUpdater: component for updating an application
 
+* Backtracking: a generic solver using the Backtracking algorithm
+
 * BigDataProcessing: utility that processes GB-sized data sources efficiently, using Rx.NET
 
 * BinarySearchTimings: comparing different search algorithms; see article at http://mdpopescu.blogspot.com/2013/05/optimization-implementing-binary-search.html
@@ -68,6 +70,8 @@ Public repository - CC-by-SA 3.0
 * NetMqBenchmark: see how many messages can be sent / received per second, using two processes on the same computer
 
 * PageFaults: project from https://www.freelancer.com/projects/C-Sharp-Programming/FIFO-OPTIMAL-LRU.html (I included the detailed spec in the project); apparently someone else is taking the same exam - https://www.freelancer.com/projects/C-Sharp-Programming/lab-rep-project-repost.4718106.html
+
+* PHO: a program to download the https://parahumans.wordpress.com/ book
 
 * Pomodoro: an alarm clock with a 10 / 20 / 30 minute interval, after which it sounds an alarm
 

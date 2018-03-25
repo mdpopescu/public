@@ -1,0 +1,28 @@
+For "landing on mars", state = tuple(position, speed); position = tuple(x, y); speed = tuple(power, angle)
+
+Backtracking
+============
+
+void Solve():
+    var list = new List<State>();
+    list.Add(tuple(initial position, null speed));
+    return GetSolution(list);
+
+List<State> GetSolution(List<State> list):
+    var current = list.Last();
+    if (IsSolution(current)):
+        return list;
+    if (IsInvalid(current, list)):
+        return Failure;
+    
+    var candidates = GenerateCandidates(current);
+    foreach (var candidate in candidates):
+        list.Add(candidate);
+        var solution = GetSolution(list);
+        if (solution != Failure):
+            return solution;
+        
+        list.RemoveLast();
+    
+    // none of the candidates were good
+    return Failure;
