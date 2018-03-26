@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Backtracking.Library.Contracts;
 
@@ -22,20 +23,29 @@ namespace Backtracking.Library.Services
             if (current.IsInvalid(list))
                 return null;
 
-            var candidates = current.GenerateCandidates();
-            foreach (var candidate in candidates)
-            {
-                list.Add(candidate);
+            Console.Error.Write($"{list.Count:D3} ");
+            return current
+                .GenerateCandidates()
+                //.AsParallel()
+                //.WithDegreeOfParallelism(32)
+                .Select(candidate => GetSolution(list.Concat(new[] { candidate }).ToList()))
+                .Where(it => it != null)
+                .FirstOrDefault();
 
-                var solution = GetSolution(list);
-                if (solution != null)
-                    return solution;
+            //foreach (var candidate in candidates)
+            //{
+            //    list.Add(candidate);
+            //    //Console.Error.WriteLine($"Attempting {candidate}");
 
-                list.Remove(candidate);
-            }
+            //    var solution = GetSolution(list);
+            //    if (solution != null)
+            //        return solution;
 
-            // none of the candidates were good
-            return null;
+            //    list.Remove(candidate);
+            //}
+
+            //// none of the candidates were good
+            //return null;
         }
     }
 }

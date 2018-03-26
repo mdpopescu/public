@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using Backtracking.Library.Contracts;
+using Backtracking.Lander.Models;
 using Backtracking.Library.Services;
 
 namespace Backtracking
@@ -9,6 +9,14 @@ namespace Backtracking
     internal class Program
     {
         private static void Main()
+        {
+            //CoinsProblem();
+            MarsLanderProblem();
+        }
+
+        //
+
+        private static void CoinsProblem()
         {
             var solver = new Solver();
 
@@ -27,36 +35,25 @@ namespace Backtracking
             while (true);
         }
 
-        //
-
-        private class Amounts : IState
+        private static void MarsLanderProblem()
         {
-            public int Current { get; }
+            // ! IDEA: create a "fitness score" that is higher when the ship is within the landing zone (X, Y)
+            // and lower when it's outside (the farther out, the lower)
 
-            public Amounts(int goal, int current)
+            var solver = new Solver();
+
+            var initial = new LanderState(new Position(2500, 2700), new Thrust(0, 3), new Speed(0, 0));
+            var solution = solver.Solve(initial);
+
+            if (solution == null)
+                Console.WriteLine("No solution.");
+            else
             {
-                this.goal = goal;
-                Current = current;
+                var thrusts = solution
+                    .Cast<LanderState>()
+                    .Select(it => it.ToString());
+                File.WriteAllText(@"c:\temp\mars.txt", string.Join(Environment.NewLine, thrusts));
             }
-
-            public bool IsSolution(List<IState> history)
-            {
-                return history.Cast<Amounts>().Select(it => it.Current).Sum() == goal;
-            }
-
-            public bool IsInvalid(List<IState> history)
-            {
-                return history.Cast<Amounts>().Select(it => it.Current).Sum() > goal;
-            }
-
-            public IEnumerable<IState> GenerateCandidates()
-            {
-                return new[] { new Amounts(goal, 3), new Amounts(goal, 5), };
-            }
-
-            //
-
-            private readonly int goal;
         }
     }
 }

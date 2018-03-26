@@ -42,6 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Amounts.cs" />
+    <Compile Include="Lander\Models\LanderState.cs" />
+    <Compile Include="Lander\Models\Position.cs" />
+    <Compile Include="Lander\Models\Speed.cs" />
+    <Compile Include="Lander\Models\Thrust.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

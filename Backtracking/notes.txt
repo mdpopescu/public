@@ -1,11 +1,17 @@
-For "landing on mars", state = tuple(position, speed); position = tuple(x, y); speed = tuple(power, angle)
+For "landing on mars":
+  state = tuple(position, thrust, speed)
+  position = tuple(x, y)
+  thrust = tuple(angle, power)
+  angle = -90 to 90 (step 5)
+  power = 0 to 4
+  speed = tuple(horz, vert)
 
 Backtracking
 ============
 
 void Solve():
     var list = new List<State>();
-    list.Add(tuple(initial position, null speed));
+    list.Add(tuple(initial position, null thrust, null speed));
     return GetSolution(list);
 
 List<State> GetSolution(List<State> list):
