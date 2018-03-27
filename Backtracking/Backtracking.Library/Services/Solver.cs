@@ -15,37 +15,33 @@ namespace Backtracking.Library.Services
 
         //
 
-        private static List<IState> GetSolution(List<IState> list)
+        //private readonly Dictionary<IState, List<IState>> cache = new Dictionary<IState, List<IState>>();
+
+        private List<IState> GetSolution(List<IState> list)
         {
             var current = list.Last();
+
+            //if (cache.ContainsKey(current))
+            //    return cache[current];
+
+            List<IState> result = null;
+
             if (current.IsSolution(list))
-                return list;
-            if (current.IsInvalid(list))
-                return null;
+                result = list;
+            else if (!current.IsInvalid(list))
+            {
+                Console.Error.Write($"{list.Count:D3} ");
+                result = current
+                    .GenerateCandidates()
+                    //.AsParallel()
+                    //.WithDegreeOfParallelism(32)
+                    .Select(candidate => GetSolution(list.Concat(new[] { candidate }).ToList()))
+                    .Where(it => it != null)
+                    .FirstOrDefault();
+            }
 
-            Console.Error.Write($"{list.Count:D3} ");
-            return current
-                .GenerateCandidates()
-                //.AsParallel()
-                //.WithDegreeOfParallelism(32)
-                .Select(candidate => GetSolution(list.Concat(new[] { candidate }).ToList()))
-                .Where(it => it != null)
-                .FirstOrDefault();
-
-            //foreach (var candidate in candidates)
-            //{
-            //    list.Add(candidate);
-            //    //Console.Error.WriteLine($"Attempting {candidate}");
-
-            //    var solution = GetSolution(list);
-            //    if (solution != null)
-            //        return solution;
-
-            //    list.Remove(candidate);
-            //}
-
-            //// none of the candidates were good
-            //return null;
+            //cache[current] = result;
+            return result;
         }
     }
 }

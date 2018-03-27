@@ -22,6 +22,25 @@ namespace Backtracking.Lander.Models
         public override string ToString() =>
             $"Tuple.Create({Thrust.Angle}, {Thrust.Power}), // X={Position.X}, Y={Position.Y}, dH={Speed.HSpeed:F2}, dV={Speed.VSpeed:F2}";
 
+        public override bool Equals(object obj) => obj is LanderState other && Equals(other);
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = 1170092085;
+                hashCode = hashCode * -1521134295 + Position.GetHashCode();
+                hashCode = hashCode * -1521134295 + Thrust.GetHashCode();
+                hashCode = hashCode * -1521134295 + Speed.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(LanderState other) => Position == other.Position && Thrust == other.Thrust && Speed == other.Speed;
+
+        public static bool operator ==(LanderState left, LanderState right) => Equals(left, right);
+        public static bool operator !=(LanderState left, LanderState right) => !Equals(left, right);
+
         public bool IsSolution(List<IState> history)
         {
             var current = (LanderState) history.Last();
@@ -43,6 +62,10 @@ namespace Backtracking.Lander.Models
 
             // going below the landing level is a failure
             if (current.Position.Y < 150)
+                return true;
+
+            // out of bounds?
+            if (current.Position.X < 0 || current.Position.X > 7000)
                 return true;
 
             // if the speed is too high, failure
@@ -123,15 +146,14 @@ namespace Backtracking.Lander.Models
 
         private static int GetScore(LanderState state)
         {
-            // prefer X between 4000 and 5500, Y as close as possible to 150, HSpeed <= 40, VSpeed <= 20
+            // prefer X between 4000 and 5500, HSpeed <= 40, VSpeed <= 20
 
             var lDist = state.Position.X < 4000 ? 4000 - state.Position.X : 0;
             var rDist = state.Position.X > 5500 ? state.Position.X - 5500 : 0;
-            var vDist = state.Position.Y - 150;
             var hsDist = state.Speed.HSpeed > 40 ? state.Speed.HSpeed - 40 : 0;
             var vsDist = state.Speed.VSpeed > 20 ? state.Speed.VSpeed - 20 : 0;
 
-            return (lDist + rDist) * 5 + vDist + (int) Math.Round((hsDist + vsDist) * 2);
+            return (int) Math.Round(lDist + rDist + hsDist + vsDist);
         }
     }
 }
