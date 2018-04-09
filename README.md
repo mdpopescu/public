@@ -69,6 +69,8 @@ Public repository - CC-by-SA 3.0
 
 * NetMqBenchmark: see how many messages can be sent / received per second, using two processes on the same computer
 
+* NoIfsChallenges: programming without IFs, trying to do the exercises from http://programmingwithoutifs.blogspot.ro/2009/07/five-challenges-can-you-pass-acid-test.html
+
 * PageFaults: project from https://www.freelancer.com/projects/C-Sharp-Programming/FIFO-OPTIMAL-LRU.html (I included the detailed spec in the project); apparently someone else is taking the same exam - https://www.freelancer.com/projects/C-Sharp-Programming/lab-rep-project-repost.4718106.html
 
 * PHO: a program to download the https://parahumans.wordpress.com/ book
