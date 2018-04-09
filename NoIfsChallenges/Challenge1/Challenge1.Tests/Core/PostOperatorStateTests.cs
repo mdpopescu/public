@@ -32,5 +32,29 @@ namespace Challenge1.Tests.Core
 
             Assert.AreEqual("55", sut.Display);
         }
+
+        [TestMethod]
+        public void EnteringANewOperatorFollowedByADigitDisplaysTheDigit()
+        {
+            sut = sut.EnterDigit('3');
+            sut = sut.EnterDigit('3');
+            sut = sut.EnterOperator(new PlusOperator());
+            sut = sut.EnterDigit('2');
+
+            Assert.AreEqual("2", sut.Display);
+        }
+
+        [TestMethod]
+        public void FurtherOperatorsExecuteThePreviousCalculation()
+        {
+            sut = sut.EnterDigit('3');
+            sut = sut.EnterDigit('3');
+            sut = sut.EnterOperator(new PlusOperator());
+            sut = sut.EnterDigit('2');
+            sut = sut.EnterDigit('2');
+            sut = sut.EnterEqual();
+
+            Assert.AreEqual("77", sut.Display);
+        }
     }
 }

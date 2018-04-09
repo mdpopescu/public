@@ -18,10 +18,10 @@ namespace Challenge1.Library.Core
             return this;
         }
 
-        public CalculatorState EnterOperator(Operator _)
+        public CalculatorState EnterOperator(Operator newOp)
         {
-            // do nothing
-            return this;
+            Display = op.Execute(previousDisplay, Display);
+            return new PostOperatorState(Display, newOp);
         }
 
         public CalculatorState EnterEqual()

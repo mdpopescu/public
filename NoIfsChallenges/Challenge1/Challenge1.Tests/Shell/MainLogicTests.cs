@@ -83,5 +83,18 @@ namespace Challenge1.Tests.Shell
 
             ui.Verify(it => it.Display("3"));
         }
+
+        [TestMethod]
+        public void CanEnterMultipleOperatorsBeforeEqual()
+        {
+            sut.EnterDigit('2');
+            sut.EnterOperator(new PlusOperator());
+            sut.EnterDigit('3');
+            sut.EnterOperator(new PlusOperator());
+            sut.EnterDigit('5');
+            sut.EnterEqual();
+
+            ui.Verify(it => it.Display("10"));
+        }
     }
 }
