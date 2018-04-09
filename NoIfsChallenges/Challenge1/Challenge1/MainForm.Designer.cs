@@ -45,7 +45,7 @@
             this.btnDigit2.TabIndex = 0;
             this.btnDigit2.Text = "2";
             this.btnDigit2.UseVisualStyleBackColor = true;
-            this.btnDigit2.Click += new System.EventHandler(this.EnterKey);
+            this.btnDigit2.Click += new System.EventHandler(this.EnterDigit);
             // 
             // txtDisplay
             // 
@@ -64,7 +64,7 @@
             this.btnDigit3.TabIndex = 2;
             this.btnDigit3.Text = "3";
             this.btnDigit3.UseVisualStyleBackColor = true;
-            this.btnDigit3.Click += new System.EventHandler(this.EnterKey);
+            this.btnDigit3.Click += new System.EventHandler(this.EnterDigit);
             // 
             // btnDigit5
             // 
@@ -74,7 +74,7 @@
             this.btnDigit5.TabIndex = 3;
             this.btnDigit5.Text = "5";
             this.btnDigit5.UseVisualStyleBackColor = true;
-            this.btnDigit5.Click += new System.EventHandler(this.EnterKey);
+            this.btnDigit5.Click += new System.EventHandler(this.EnterDigit);
             // 
             // btnOpPlus
             // 
@@ -84,7 +84,7 @@
             this.btnOpPlus.TabIndex = 4;
             this.btnOpPlus.Text = "+";
             this.btnOpPlus.UseVisualStyleBackColor = true;
-            this.btnOpPlus.Click += new System.EventHandler(this.EnterKey);
+            this.btnOpPlus.Click += new System.EventHandler(this.EnterOperator);
             // 
             // btnOpMinus
             // 
@@ -94,7 +94,7 @@
             this.btnOpMinus.TabIndex = 5;
             this.btnOpMinus.Text = "-";
             this.btnOpMinus.UseVisualStyleBackColor = true;
-            this.btnOpMinus.Click += new System.EventHandler(this.EnterKey);
+            this.btnOpMinus.Click += new System.EventHandler(this.EnterOperator);
             // 
             // btnResult
             // 
@@ -104,7 +104,7 @@
             this.btnResult.TabIndex = 6;
             this.btnResult.Text = "=";
             this.btnResult.UseVisualStyleBackColor = true;
-            this.btnResult.Click += new System.EventHandler(this.EnterKey);
+            this.btnResult.Click += new System.EventHandler(this.EnterEqual);
             // 
             // MainForm
             // 

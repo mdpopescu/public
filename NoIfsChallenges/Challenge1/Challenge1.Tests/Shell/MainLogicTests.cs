@@ -19,5 +19,22 @@ namespace Challenge1.Tests.Shell
 
             sut = new MainLogic(ui.Object);
         }
+
+        [TestMethod]
+        public void EnteringADigitDisplaysThatDigit()
+        {
+            sut.EnterDigit('2');
+
+            ui.Verify(it => it.Display("2"));
+        }
+
+        [TestMethod]
+        public void EnteringSeveralDigitsDisplaysTheWholeNumber()
+        {
+            sut.EnterDigit('2');
+            sut.EnterDigit('3');
+
+            ui.Verify(it => it.Display("23"));
+        }
     }
 }

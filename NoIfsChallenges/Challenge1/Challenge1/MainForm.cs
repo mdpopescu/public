@@ -26,9 +26,19 @@ namespace Challenge1
             mainLogic = new MainLogic(this);
         }
 
-        private void EnterKey(object sender, EventArgs e)
+        private void EnterDigit(object sender, EventArgs e)
         {
-            mainLogic.Enter(((Button) sender).Text[0]);
+            mainLogic.EnterDigit(((Button) sender).Text[0]);
+        }
+
+        private void EnterOperator(object sender, EventArgs e)
+        {
+            mainLogic.EnterOperator(((Button) sender).Text[0]);
+        }
+
+        private void EnterEqual(object sender, EventArgs e)
+        {
+            mainLogic.EnterEqual();
         }
     }
 }

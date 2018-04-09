@@ -9,13 +9,26 @@ namespace Challenge1.Library.Shell
             this.ui = ui;
         }
 
-        public void Enter(char c)
+        public void EnterDigit(char c)
+        {
+            display += c;
+            ui.Display(display);
+        }
+
+        public void EnterOperator(char c)
+        {
+            //
+        }
+
+        public void EnterEqual()
         {
             //
         }
 
         //
 
-        private MainUI ui;
+        private readonly MainUI ui;
+
+        private string display = "";
     }
 }
