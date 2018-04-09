@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Challenge1.Library.Contracts;
+using Challenge1.Library.Core;
 using Challenge1.Library.Shell;
 
 namespace Challenge1
@@ -31,9 +32,14 @@ namespace Challenge1
             mainLogic.EnterDigit(((Button) sender).Text[0]);
         }
 
-        private void EnterOperator(object sender, EventArgs e)
+        private void EnterPlus(object sender, EventArgs e)
         {
-            mainLogic.EnterOperator(((Button) sender).Text[0]);
+            mainLogic.EnterOperator(new PlusOperator());
+        }
+
+        private void EnterMinus(object sender, EventArgs e)
+        {
+            mainLogic.EnterOperator(new MinusOperator());
         }
 
         private void EnterEqual(object sender, EventArgs e)

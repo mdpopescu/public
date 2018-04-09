@@ -61,6 +61,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\PostOperatorStateTests.cs" />
+    <Compile Include="Core\PreOperatorStateTests.cs" />
     <Compile Include="Shell\MainLogicTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

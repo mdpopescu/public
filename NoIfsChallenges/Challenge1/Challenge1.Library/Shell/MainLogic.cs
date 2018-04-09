@@ -1,4 +1,5 @@
 ﻿using Challenge1.Library.Contracts;
+using Challenge1.Library.Core;
 
 namespace Challenge1.Library.Shell
 {
@@ -11,24 +12,25 @@ namespace Challenge1.Library.Shell
 
         public void EnterDigit(char c)
         {
-            display += c;
-            ui.Display(display);
+            state = state.EnterDigit(c);
+            ui.Display(state.Display);
         }
 
-        public void EnterOperator(char c)
+        public void EnterOperator(Operator op)
         {
-            //
+            state = state.EnterOperator(op);
         }
 
         public void EnterEqual()
         {
-            //
+            state = state.EnterEqual();
+            ui.Display(state.Display);
         }
 
         //
 
         private readonly MainUI ui;
 
-        private string display = "";
+        private CalculatorState state = new PreOperatorState();
     }
 }

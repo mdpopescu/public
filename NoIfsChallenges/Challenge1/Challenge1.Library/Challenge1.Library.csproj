@@ -40,7 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\CalculatorState.cs" />
     <Compile Include="Contracts\MainUI.cs" />
+    <Compile Include="Contracts\Operator.cs" />
+    <Compile Include="Core\MinusOperator.cs" />
+    <Compile Include="Core\PlusOperator.cs" />
+    <Compile Include="Core\PostOperatorState.cs" />
+    <Compile Include="Core\PreOperatorState.cs" />
     <Compile Include="Shell\MainLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
