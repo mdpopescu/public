@@ -71,5 +71,17 @@ namespace Challenge1.Tests.Shell
 
             ui.Verify(it => it.Display("55"));
         }
+
+        [TestMethod]
+        public void EnteringADigitAfterEqualDisplaysTheDigit()
+        {
+            sut.EnterDigit('2');
+            sut.EnterOperator(new PlusOperator());
+            sut.EnterDigit('2');
+            sut.EnterEqual();
+            sut.EnterDigit('3');
+
+            ui.Verify(it => it.Display("3"));
+        }
     }
 }

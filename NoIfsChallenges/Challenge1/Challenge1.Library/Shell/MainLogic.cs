@@ -25,6 +25,7 @@ namespace Challenge1.Library.Shell
         {
             state = state.EnterEqual();
             ui.Display(state.Display);
+            state = new PreOperatorState();
         }
 
         //

@@ -4,7 +4,12 @@ namespace Challenge1.Library.Core
 {
     public class PreOperatorState : CalculatorState
     {
-        public string Display { get; private set; } = "";
+        public string Display { get; private set; }
+
+        public PreOperatorState()
+        {
+            Display = "";
+        }
 
         public CalculatorState EnterDigit(char c)
         {
