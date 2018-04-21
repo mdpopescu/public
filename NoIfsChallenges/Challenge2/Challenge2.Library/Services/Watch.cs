@@ -1,5 +1,6 @@
 ﻿using System;
 using Challenge2.Library.Contracts;
+using Challenge2.Library.Services.WatchStates;
 
 namespace Challenge2.Library.Services
 {
@@ -12,26 +13,25 @@ namespace Challenge2.Library.Services
 
         public void Initialize()
         {
-            ui.StartStopEnabled = true;
-            ui.ResetEnabled = false;
-            ui.HoldEnabled = false;
-
-            ui.Text = "00:00:00";
+            state = new WatchZero(ui);
         }
 
         public void StartStop()
         {
-            ui.StartStopEnabled = true;
-            ui.ResetEnabled = false;
-            ui.HoldEnabled = true;
+            state = state.StartStop();
 
-            ui.Text = "00:00:00";
+            GlobalSettings.Timer.Start(TimeSpan.FromSeconds(1), ts => state.ShowTime(ts));
+        }
 
-            GlobalSettings.Timer.Start(TimeSpan.FromSeconds(1), ts => ui.Text = ts.ToString());
+        public void Hold()
+        {
+            state = state.Hold();
         }
 
         //
 
         private readonly UserInterface ui;
+
+        private WatchState state;
     }
 }

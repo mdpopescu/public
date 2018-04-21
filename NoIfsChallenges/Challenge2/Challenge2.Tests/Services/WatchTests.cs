@@ -44,6 +44,12 @@ namespace Challenge2.Tests.Services
         [TestClass]
         public class StartStop : WatchTests
         {
+            [TestInitialize]
+            public void InnerSetUp()
+            {
+                sut.Initialize();
+            }
+
             [TestMethod]
             public void UpdatesTheUIState()
             {
@@ -52,13 +58,56 @@ namespace Challenge2.Tests.Services
                 ui.VerifySet(it => it.StartStopEnabled = true);
                 ui.VerifySet(it => it.ResetEnabled = false);
                 ui.VerifySet(it => it.HoldEnabled = true);
-                ui.VerifySet(it => it.Text = "00:00:00");
             }
 
             [TestMethod]
             public void UpdatesTheClockWhenASecondPasses()
             {
                 sut.StartStop();
+
+                timer.Advance(1);
+
+                ui.VerifySet(it => it.Text = "00:00:01");
+            }
+
+            [TestMethod]
+            public void UpdatesTheClockEachSecond()
+            {
+                sut.StartStop();
+
+                timer.Advance(3);
+
+                ui.VerifySet(it => it.Text = "00:00:01");
+                ui.VerifySet(it => it.Text = "00:00:02");
+                ui.VerifySet(it => it.Text = "00:00:03");
+            }
+        }
+
+        [TestClass]
+        public class Hold : WatchTests
+        {
+            [TestInitialize]
+            public void InnerSetUp()
+            {
+                sut.Initialize();
+                sut.StartStop();
+            }
+
+            [TestMethod]
+            public void FreezesTheScreenIfNotFrozen()
+            {
+                sut.Hold();
+
+                timer.Advance(1);
+
+                ui.VerifySet(it => it.Text = "00:00:01", Times.Never);
+            }
+
+            [TestMethod]
+            public void ResumesTheScreenIfFrozen()
+            {
+                sut.Hold();
+                sut.Hold();
 
                 timer.Advance(1);
 
