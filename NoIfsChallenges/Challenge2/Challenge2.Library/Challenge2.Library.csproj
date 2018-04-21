@@ -40,7 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\SystemTimer.cs" />
+    <Compile Include="Contracts\UserInterface.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\EmptyDisposable.cs" />
+    <Compile Include="Services\GlobalSettings.cs" />
+    <Compile Include="Services\RealTimer.cs" />
+    <Compile Include="Services\Watch.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
