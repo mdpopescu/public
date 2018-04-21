@@ -10,17 +10,23 @@ namespace Challenge2.Tests.Helpers
         public IDisposable Start(TimeSpan interval, Action<TimeSpan> callback)
         {
             this.callback = callback;
+            currentTime = TimeSpan.Zero;
             return new EmptyDisposable();
         }
 
         public void Advance(int count)
         {
             for (var i = 1; i <= count; i++)
-                callback(TimeSpan.FromSeconds(i));
+            {
+                currentTime = currentTime.Add(TimeSpan.FromSeconds(1));
+                callback(currentTime);
+            }
         }
 
         //
 
         private Action<TimeSpan> callback;
+
+        private TimeSpan currentTime;
     }
 }

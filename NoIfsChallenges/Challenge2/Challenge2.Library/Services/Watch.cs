@@ -20,7 +20,7 @@ namespace Challenge2.Library.Services
         {
             state = state.StartStop();
 
-            GlobalSettings.Timer.Start(TimeSpan.FromSeconds(1), ts => state.ShowTime(ts));
+            GlobalSettings.Timer.Start(TimeSpan.FromSeconds(1), ShowTime);
         }
 
         public void Hold()
@@ -33,5 +33,10 @@ namespace Challenge2.Library.Services
         private readonly UserInterface ui;
 
         private WatchState state;
+
+        private void ShowTime(TimeSpan ts)
+        {
+            state.ShowTime(ts);
+        }
     }
 }

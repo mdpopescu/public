@@ -97,7 +97,6 @@ namespace Challenge2.Tests.Services
             public void FreezesTheScreenIfNotFrozen()
             {
                 sut.Hold();
-
                 timer.Advance(1);
 
                 ui.VerifySet(it => it.Text = "00:00:01", Times.Never);
@@ -108,10 +107,20 @@ namespace Challenge2.Tests.Services
             {
                 sut.Hold();
                 sut.Hold();
-
                 timer.Advance(1);
 
                 ui.VerifySet(it => it.Text = "00:00:01");
+            }
+
+            [TestMethod]
+            public void TheClockContinuesToIncrementEvenWhilePaused()
+            {
+                sut.Hold();
+                timer.Advance(3);
+                sut.Hold();
+                timer.Advance(1);
+
+                ui.VerifySet(it => it.Text = "00:00:04");
             }
         }
     }
