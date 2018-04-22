@@ -63,7 +63,7 @@ namespace Challenge4.Tests.Services
                 sut.CallTo2nd();
 
                 CheckFloor(sut.Info.Floor3, true, false, false, Constants.DOOR_CLOSED);
-                CheckFloor(sut.Info.Floor2, false, true, true, Constants.ELEVATOR_CALLED);
+                CheckFloor(sut.Info.Floor2, false, true, true, Constants.ELEVATOR_CALLED_UP);
                 CheckFloor(sut.Info.Floor1, true, false, false, Constants.DOOR_CLOSED);
             }
 
@@ -72,7 +72,7 @@ namespace Challenge4.Tests.Services
             {
                 sut.CallTo3rd();
 
-                CheckFloor(sut.Info.Floor3, false, true, true, Constants.ELEVATOR_CALLED);
+                CheckFloor(sut.Info.Floor3, false, true, true, Constants.ELEVATOR_CALLED_UP);
                 CheckFloor(sut.Info.Floor2, true, false, false, Constants.DOOR_CLOSED);
                 CheckFloor(sut.Info.Floor1, true, false, false, Constants.DOOR_CLOSED);
             }
@@ -114,7 +114,7 @@ namespace Challenge4.Tests.Services
 
                 CheckFloor(sut.Info.Floor3, true, false, false, Constants.DOOR_CLOSED);
                 CheckFloor(sut.Info.Floor2, true, false, false, Constants.DOOR_CLOSED);
-                CheckFloor(sut.Info.Floor1, false, true, true, Constants.ELEVATOR_CALLED);
+                CheckFloor(sut.Info.Floor1, false, true, true, Constants.ELEVATOR_CALLED_DOWN);
             }
 
             [TestMethod]
@@ -122,7 +122,7 @@ namespace Challenge4.Tests.Services
             {
                 sut.CallTo3rd();
 
-                CheckFloor(sut.Info.Floor3, false, true, true, Constants.ELEVATOR_CALLED);
+                CheckFloor(sut.Info.Floor3, false, true, true, Constants.ELEVATOR_CALLED_UP);
                 CheckFloor(sut.Info.Floor2, true, false, false, Constants.DOOR_CLOSED);
                 CheckFloor(sut.Info.Floor1, true, false, false, Constants.DOOR_CLOSED);
             }
@@ -164,7 +164,7 @@ namespace Challenge4.Tests.Services
 
                 CheckFloor(sut.Info.Floor3, true, false, false, Constants.DOOR_CLOSED);
                 CheckFloor(sut.Info.Floor2, true, false, false, Constants.DOOR_CLOSED);
-                CheckFloor(sut.Info.Floor1, false, true, true, Constants.ELEVATOR_CALLED);
+                CheckFloor(sut.Info.Floor1, false, true, true, Constants.ELEVATOR_CALLED_DOWN);
             }
 
             [TestMethod]
@@ -173,7 +173,7 @@ namespace Challenge4.Tests.Services
                 sut.CallTo2nd();
 
                 CheckFloor(sut.Info.Floor3, true, false, false, Constants.DOOR_CLOSED);
-                CheckFloor(sut.Info.Floor2, false, true, true, Constants.ELEVATOR_CALLED);
+                CheckFloor(sut.Info.Floor2, false, true, true, Constants.ELEVATOR_CALLED_DOWN);
                 CheckFloor(sut.Info.Floor1, true, false, false, Constants.DOOR_CLOSED);
             }
         }

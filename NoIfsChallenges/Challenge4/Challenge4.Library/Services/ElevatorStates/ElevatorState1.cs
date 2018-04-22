@@ -32,7 +32,7 @@ namespace Challenge4.Library.Services.ElevatorStates
         public ElevatorState GoTo3rd() => new ElevatorState3(Constants.ELEVATOR_ARRIVES);
 
         public ElevatorState CallTo1st() => this;
-        public ElevatorState CallTo2nd() => new ElevatorState2(Constants.ELEVATOR_CALLED);
-        public ElevatorState CallTo3rd() => new ElevatorState3(Constants.ELEVATOR_CALLED);
+        public ElevatorState CallTo2nd() => new ElevatorState2(Constants.ELEVATOR_CALLED_UP);
+        public ElevatorState CallTo3rd() => new ElevatorState3(Constants.ELEVATOR_CALLED_UP);
     }
 }

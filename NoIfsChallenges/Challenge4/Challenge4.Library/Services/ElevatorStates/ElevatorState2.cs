@@ -31,8 +31,8 @@ namespace Challenge4.Library.Services.ElevatorStates
         public ElevatorState GoTo2nd() => this;
         public ElevatorState GoTo3rd() => new ElevatorState3(Constants.ELEVATOR_ARRIVES);
 
-        public ElevatorState CallTo1st() => new ElevatorState1(Constants.ELEVATOR_CALLED);
+        public ElevatorState CallTo1st() => new ElevatorState1(Constants.ELEVATOR_CALLED_DOWN);
         public ElevatorState CallTo2nd() => this;
-        public ElevatorState CallTo3rd() => new ElevatorState3(Constants.ELEVATOR_CALLED);
+        public ElevatorState CallTo3rd() => new ElevatorState3(Constants.ELEVATOR_CALLED_UP);
     }
 }
