@@ -32,84 +32,153 @@ namespace Challenge4.Tests.Services
         [TestClass]
         public class Scenario_1stFloor : ElevatorTests
         {
+            [TestInitialize]
+            public void InnerSetUp()
+            {
+                sut.Initialize();
+                // the elevator starts on the 1st floor
+            }
+
             [TestMethod]
             public void GoTo2ndFloor()
             {
-                Assert.Fail();
+                sut.GoTo2nd();
+
+                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor2, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
             }
 
             [TestMethod]
             public void GoTo3rdFloor()
             {
-                Assert.Fail();
+                sut.GoTo3rd();
+
+                CheckFloor(sut.ElevatorInfo.Floor3, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
             }
 
             [TestMethod]
             public void CalledTo2ndFloor()
             {
-                Assert.Fail();
+                sut.CallTo2nd();
+
+                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor2, false, true, true, "Elevator Called Up - Door Opens");
+                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
             }
 
             [TestMethod]
             public void CalledTo3rdFloor()
             {
-                Assert.Fail();
+                sut.CallTo3rd();
+
+                CheckFloor(sut.ElevatorInfo.Floor3, false, true, true, "Elevator Called Up - Door Opens");
+                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
             }
         }
 
         [TestClass]
         public class Scenario_2ndFloor : ElevatorTests
         {
+            [TestInitialize]
+            public void InnerSetUp()
+            {
+                sut.Initialize();
+                sut.CallTo2nd();
+            }
+
             [TestMethod]
             public void GoTo1stFloor()
             {
-                Assert.Fail();
+                sut.GoTo1st();
+
+                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor1, false, true, true, "Elevator Arrives - Door Opens - User Exists");
             }
 
             [TestMethod]
             public void GoTo3rdFloor()
             {
-                Assert.Fail();
+                sut.GoTo3rd();
+
+                CheckFloor(sut.ElevatorInfo.Floor3, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
             }
 
             [TestMethod]
             public void CalledTo1stFloor()
             {
-                Assert.Fail();
+                sut.CallTo1st();
+
+                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor1, false, true, true, "Elevator Called Up - Door Opens");
             }
 
             [TestMethod]
             public void CalledTo3rdFloor()
             {
-                Assert.Fail();
+                sut.CallTo3rd();
+
+                CheckFloor(sut.ElevatorInfo.Floor3, false, true, true, "Elevator Called Up - Door Opens");
+                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
             }
         }
 
         [TestClass]
         public class Scenario_3rdFloor : ElevatorTests
         {
+            [TestInitialize]
+            public void InnerSetUp()
+            {
+                sut.Initialize();
+                sut.CallTo3rd();
+            }
+
             [TestMethod]
             public void GoTo1stFloor()
             {
-                Assert.Fail();
+                sut.GoTo1st();
+
+                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor1, false, true, true, "Elevator Arrives - Door Opens - User Exists");
             }
 
             [TestMethod]
             public void GoTo2ndFloor()
             {
-                Assert.Fail();
+                sut.GoTo2nd();
+
+                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor2, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
             }
 
             [TestMethod]
             public void CalledTo1stFloor()
             {
-                Assert.Fail();
+                sut.CallTo1st();
+
+                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor1, false, true, true, "Elevator Called Up - Door Opens");
             }
 
             [TestMethod]
             public void CalledTo2ndFloor()
             {
-                Assert.Fail();
+                sut.CallTo2nd();
+
+                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor2, false, true, true, "Elevator Called Up - Door Opens");
+                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
             }
         }
 

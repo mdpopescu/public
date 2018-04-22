@@ -28,5 +28,35 @@ namespace Challenge4.Library.Services
             ElevatorInfo.Floor1.Button3Enabled = true;
             ElevatorInfo.Floor1.Screen = "Door Open";
         }
+
+        public void GoTo1st()
+        {
+            //
+        }
+
+        public void GoTo2nd()
+        {
+            //
+        }
+
+        public void GoTo3rd()
+        {
+            //
+        }
+
+        public void CallTo1st()
+        {
+            //
+        }
+
+        public void CallTo2nd()
+        {
+            //
+        }
+
+        public void CallTo3rd()
+        {
+            //
+        }
     }
 }
