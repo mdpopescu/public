@@ -13,38 +13,16 @@ namespace Challenge4.Library.Services
             state = new ElevatorState1();
         }
 
-        public void GoTo1st()
-        {
-            //
-        }
+        public void GoTo1st() => state = state.GoTo1st();
+        public void GoTo2nd() => state = state.GoTo2nd();
+        public void GoTo3rd() => state = state.GoTo3rd();
 
-        public void GoTo2nd()
-        {
-            //
-        }
-
-        public void GoTo3rd()
-        {
-            //
-        }
-
-        public void CallTo1st()
-        {
-            //
-        }
-
-        public void CallTo2nd()
-        {
-            //
-        }
-
-        public void CallTo3rd()
-        {
-            //
-        }
+        public void CallTo1st() => state = state.CallTo1st();
+        public void CallTo2nd() => state = state.CallTo2nd();
+        public void CallTo3rd() => state = state.CallTo3rd();
 
         //
 
-        private readonly ElevatorState state;
+        private ElevatorState state;
     }
 }

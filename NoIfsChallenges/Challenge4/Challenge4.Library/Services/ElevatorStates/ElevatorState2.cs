@@ -7,7 +7,7 @@ namespace Challenge4.Library.Services.ElevatorStates
     {
         public ElevatorInfo Info { get; }
 
-        public ElevatorState2()
+        public ElevatorState2(string screen)
         {
             Info = new ElevatorInfo();
 
@@ -16,15 +16,15 @@ namespace Challenge4.Library.Services.ElevatorStates
             Info.Floor3.Button3Enabled = false;
             Info.Floor3.Screen = "Door Closed";
 
-            Info.Floor2.Button1Enabled = true;
-            Info.Floor2.Button2Enabled = false;
-            Info.Floor2.Button3Enabled = false;
-            Info.Floor2.Screen = "Door Closed";
+            Info.Floor2.Button1Enabled = false;
+            Info.Floor2.Button2Enabled = true;
+            Info.Floor2.Button3Enabled = true;
+            Info.Floor2.Screen = screen;
 
-            Info.Floor1.Button1Enabled = false;
-            Info.Floor1.Button2Enabled = true;
-            Info.Floor1.Button3Enabled = true;
-            Info.Floor1.Screen = "Door Open";
+            Info.Floor1.Button1Enabled = true;
+            Info.Floor1.Button2Enabled = false;
+            Info.Floor1.Button3Enabled = false;
+            Info.Floor1.Screen = "Door Closed";
         }
 
         public ElevatorState GoTo1st()

@@ -42,7 +42,7 @@ namespace Challenge4.Tests.Services
                 sut.GoTo2nd();
 
                 CheckFloor(sut.Info.Floor3, true, false, false, "Door Closed");
-                CheckFloor(sut.Info.Floor2, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.Info.Floor2, false, true, true, "Elevator Arrives - Door Opens - User Exits");
                 CheckFloor(sut.Info.Floor1, true, false, false, "Door Closed");
             }
 
@@ -51,7 +51,7 @@ namespace Challenge4.Tests.Services
             {
                 sut.GoTo3rd();
 
-                CheckFloor(sut.Info.Floor3, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.Info.Floor3, false, true, true, "Elevator Arrives - Door Opens - User Exits");
                 CheckFloor(sut.Info.Floor2, true, false, false, "Door Closed");
                 CheckFloor(sut.Info.Floor1, true, false, false, "Door Closed");
             }
@@ -93,7 +93,7 @@ namespace Challenge4.Tests.Services
 
                 CheckFloor(sut.Info.Floor3, true, false, false, "Door Closed");
                 CheckFloor(sut.Info.Floor2, true, false, false, "Door Closed");
-                CheckFloor(sut.Info.Floor1, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.Info.Floor1, false, true, true, "Elevator Arrives - Door Opens - User Exits");
             }
 
             [TestMethod]
