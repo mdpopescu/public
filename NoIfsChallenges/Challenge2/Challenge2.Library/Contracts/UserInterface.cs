@@ -6,6 +6,6 @@
         bool ResetEnabled { set; }
         bool HoldEnabled { set; }
 
-        string Text { set; }
+        string Display { set; }
     }
 }

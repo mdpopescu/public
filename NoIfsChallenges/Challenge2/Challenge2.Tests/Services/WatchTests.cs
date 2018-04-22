@@ -37,7 +37,7 @@ namespace Challenge2.Tests.Services
                 ui.VerifySet(it => it.StartStopEnabled = true);
                 ui.VerifySet(it => it.ResetEnabled = false);
                 ui.VerifySet(it => it.HoldEnabled = false);
-                ui.VerifySet(it => it.Text = "00:00:00");
+                ui.VerifySet(it => it.Display = "00:00:00");
             }
         }
 
@@ -70,7 +70,7 @@ namespace Challenge2.Tests.Services
 
                     timer.Advance(1);
 
-                    ui.VerifySet(it => it.Text = "00:00:01");
+                    ui.VerifySet(it => it.Display = "00:00:01");
                 }
 
                 [TestMethod]
@@ -80,9 +80,9 @@ namespace Challenge2.Tests.Services
 
                     timer.Advance(3);
 
-                    ui.VerifySet(it => it.Text = "00:00:01");
-                    ui.VerifySet(it => it.Text = "00:00:02");
-                    ui.VerifySet(it => it.Text = "00:00:03");
+                    ui.VerifySet(it => it.Display = "00:00:01");
+                    ui.VerifySet(it => it.Display = "00:00:02");
+                    ui.VerifySet(it => it.Display = "00:00:03");
                 }
             }
 
@@ -115,7 +115,7 @@ namespace Challenge2.Tests.Services
                     sut.StartStop();
                     timer.Advance(3);
 
-                    ui.VerifySet(it => it.Text = "00:00:01", Times.Never);
+                    ui.VerifySet(it => it.Display = "00:00:01", Times.Never);
                 }
             }
         }
@@ -137,7 +137,7 @@ namespace Challenge2.Tests.Services
                 sut.Hold();
                 timer.Advance(1);
 
-                ui.VerifySet(it => it.Text = "00:00:01", Times.Never);
+                ui.VerifySet(it => it.Display = "00:00:01", Times.Never);
             }
 
             [TestMethod]
@@ -149,7 +149,7 @@ namespace Challenge2.Tests.Services
                 sut.Hold();
                 timer.Advance(1);
 
-                ui.VerifySet(it => it.Text = "00:00:01");
+                ui.VerifySet(it => it.Display = "00:00:01");
             }
 
             [TestMethod]
@@ -162,7 +162,7 @@ namespace Challenge2.Tests.Services
                 sut.Hold();
                 timer.Advance(1);
 
-                ui.VerifySet(it => it.Text = "00:00:04");
+                ui.VerifySet(it => it.Display = "00:00:04");
             }
         }
 
@@ -186,7 +186,7 @@ namespace Challenge2.Tests.Services
                 ui.VerifySet(it => it.StartStopEnabled = true);
                 ui.VerifySet(it => it.ResetEnabled = false);
                 ui.VerifySet(it => it.HoldEnabled = false);
-                ui.VerifySet(it => it.Text = "00:00:00");
+                ui.VerifySet(it => it.Display = "00:00:00");
             }
         }
     }

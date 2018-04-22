@@ -38,30 +38,36 @@
             // 
             // btnStartStop
             // 
+            this.btnStartStop.BackColor = System.Drawing.SystemColors.Control;
             this.btnStartStop.Location = new System.Drawing.Point(12, 12);
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(141, 23);
             this.btnStartStop.TabIndex = 0;
             this.btnStartStop.Text = "START/STOP";
-            this.btnStartStop.UseVisualStyleBackColor = true;
+            this.btnStartStop.UseVisualStyleBackColor = false;
+            this.btnStartStop.Click += new System.EventHandler(this.btnStartStop_Click);
             // 
             // btnReset
             // 
+            this.btnReset.BackColor = System.Drawing.SystemColors.Control;
             this.btnReset.Location = new System.Drawing.Point(159, 12);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(75, 23);
             this.btnReset.TabIndex = 1;
             this.btnReset.Text = "RESET";
-            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // btnHold
             // 
+            this.btnHold.BackColor = System.Drawing.SystemColors.Control;
             this.btnHold.Location = new System.Drawing.Point(240, 12);
             this.btnHold.Name = "btnHold";
             this.btnHold.Size = new System.Drawing.Size(69, 23);
             this.btnHold.TabIndex = 3;
             this.btnHold.Text = "HOLD";
-            this.btnHold.UseVisualStyleBackColor = true;
+            this.btnHold.UseVisualStyleBackColor = false;
+            this.btnHold.Click += new System.EventHandler(this.btnHold_Click);
             // 
             // panel1
             // 
@@ -94,6 +100,7 @@
             this.Controls.Add(this.btnStartStop);
             this.Name = "MainForm";
             this.Text = "Stopwatch";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 

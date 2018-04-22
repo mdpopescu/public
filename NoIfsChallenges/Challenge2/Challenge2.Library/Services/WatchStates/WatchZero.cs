@@ -13,7 +13,7 @@ namespace Challenge2.Library.Services.WatchStates
             ui.ResetEnabled = false;
             ui.HoldEnabled = false;
 
-            ui.Text = "00:00:00";
+            ui.Display = "00:00:00";
         }
 
         public void ShowTime(TimeSpan ts)

@@ -17,7 +17,7 @@ namespace Challenge2.Library.Services.WatchStates
 
         public void ShowTime(TimeSpan ts)
         {
-            ui.Text = ts.ToString();
+            ui.Display = ts.ToString();
         }
 
         public WatchState StartStop(Action<TimeSpan> showTime)
