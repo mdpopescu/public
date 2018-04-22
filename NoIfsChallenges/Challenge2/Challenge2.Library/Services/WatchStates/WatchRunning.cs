@@ -21,12 +21,17 @@ namespace Challenge2.Library.Services.WatchStates
 
         public WatchState StartStop()
         {
-            throw new NotImplementedException();
+            return new WatchStopped(ui);
         }
 
         public WatchState Hold()
         {
             return new WatchPaused(ui);
+        }
+
+        public WatchState Reset()
+        {
+            return this;
         }
 
         //

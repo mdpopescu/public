@@ -44,42 +44,79 @@ namespace Challenge2.Tests.Services
         [TestClass]
         public class StartStop : WatchTests
         {
-            [TestInitialize]
-            public void InnerSetUp()
+            [TestClass]
+            public class Starting : StartStop
             {
-                sut.Initialize();
+                [TestInitialize]
+                public void InnerSetUp()
+                {
+                    sut.Initialize();
+                }
+
+                [TestMethod]
+                public void UpdatesTheUIState()
+                {
+                    sut.StartStop();
+
+                    ui.VerifySet(it => it.StartStopEnabled = true);
+                    ui.VerifySet(it => it.ResetEnabled = false);
+                    ui.VerifySet(it => it.HoldEnabled = true);
+                }
+
+                [TestMethod]
+                public void UpdatesTheClockWhenASecondPasses()
+                {
+                    sut.StartStop();
+
+                    timer.Advance(1);
+
+                    ui.VerifySet(it => it.Text = "00:00:01");
+                }
+
+                [TestMethod]
+                public void UpdatesTheClockEachSecond()
+                {
+                    sut.StartStop();
+
+                    timer.Advance(3);
+
+                    ui.VerifySet(it => it.Text = "00:00:01");
+                    ui.VerifySet(it => it.Text = "00:00:02");
+                    ui.VerifySet(it => it.Text = "00:00:03");
+                }
             }
 
-            [TestMethod]
-            public void UpdatesTheUIState()
+            [TestClass]
+            public class Stopping : StartStop
             {
-                sut.StartStop();
+                [TestInitialize]
+                public void InnerSetUp()
+                {
+                    sut.Initialize();
+                }
 
-                ui.VerifySet(it => it.StartStopEnabled = true);
-                ui.VerifySet(it => it.ResetEnabled = false);
-                ui.VerifySet(it => it.HoldEnabled = true);
-            }
+                [TestMethod]
+                public void UpdatesTheUIState()
+                {
+                    sut.StartStop();
 
-            [TestMethod]
-            public void UpdatesTheClockWhenASecondPasses()
-            {
-                sut.StartStop();
+                    sut.StartStop();
 
-                timer.Advance(1);
+                    ui.VerifySet(it => it.StartStopEnabled = false);
+                    ui.VerifySet(it => it.ResetEnabled = true);
+                    ui.VerifySet(it => it.HoldEnabled = false);
+                }
 
-                ui.VerifySet(it => it.Text = "00:00:01");
-            }
+                [TestMethod]
+                public void StopsUpdatingTheClock()
+                {
+                    sut.StartStop();
 
-            [TestMethod]
-            public void UpdatesTheClockEachSecond()
-            {
-                sut.StartStop();
+                    sut.StartStop();
+                    timer.Advance(3);
 
-                timer.Advance(3);
-
-                ui.VerifySet(it => it.Text = "00:00:01");
-                ui.VerifySet(it => it.Text = "00:00:02");
-                ui.VerifySet(it => it.Text = "00:00:03");
+                    ui.VerifySet(it => it.Text = "00:00:01", Times.Never);
+                }
             }
         }
 
@@ -90,12 +127,13 @@ namespace Challenge2.Tests.Services
             public void InnerSetUp()
             {
                 sut.Initialize();
-                sut.StartStop();
             }
 
             [TestMethod]
-            public void FreezesTheScreenIfNotFrozen()
+            public void FreezesTheScreen()
             {
+                sut.StartStop();
+
                 sut.Hold();
                 timer.Advance(1);
 
@@ -103,9 +141,11 @@ namespace Challenge2.Tests.Services
             }
 
             [TestMethod]
-            public void ResumesTheScreenIfFrozen()
+            public void UnfreezesTheScreen()
             {
+                sut.StartStop();
                 sut.Hold();
+
                 sut.Hold();
                 timer.Advance(1);
 
@@ -115,12 +155,38 @@ namespace Challenge2.Tests.Services
             [TestMethod]
             public void TheClockContinuesToIncrementEvenWhilePaused()
             {
+                sut.StartStop();
                 sut.Hold();
                 timer.Advance(3);
+
                 sut.Hold();
                 timer.Advance(1);
 
                 ui.VerifySet(it => it.Text = "00:00:04");
+            }
+        }
+
+        [TestClass]
+        public class Reset : WatchTests
+        {
+            [TestInitialize]
+            public void InnerSetUp()
+            {
+                sut.Initialize();
+            }
+
+            [TestMethod]
+            public void ResetsTheUI()
+            {
+                sut.StartStop();
+                sut.StartStop();
+
+                sut.Reset();
+
+                ui.VerifySet(it => it.StartStopEnabled = true);
+                ui.VerifySet(it => it.ResetEnabled = false);
+                ui.VerifySet(it => it.HoldEnabled = false);
+                ui.VerifySet(it => it.Text = "00:00:00");
             }
         }
     }

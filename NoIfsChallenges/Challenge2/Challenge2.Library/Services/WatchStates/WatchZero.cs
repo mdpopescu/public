@@ -31,6 +31,11 @@ namespace Challenge2.Library.Services.WatchStates
             return this;
         }
 
+        public WatchState Reset()
+        {
+            return this;
+        }
+
         //
 
         private readonly UserInterface ui;

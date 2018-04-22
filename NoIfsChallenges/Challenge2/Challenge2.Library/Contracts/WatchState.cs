@@ -8,5 +8,6 @@ namespace Challenge2.Library.Contracts
 
         WatchState StartStop();
         WatchState Hold();
+        WatchState Reset();
     }
 }

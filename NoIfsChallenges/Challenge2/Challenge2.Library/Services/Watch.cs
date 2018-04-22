@@ -28,6 +28,11 @@ namespace Challenge2.Library.Services
             state = state.Hold();
         }
 
+        public void Reset()
+        {
+            state = state.Reset();
+        }
+
         //
 
         private readonly UserInterface ui;

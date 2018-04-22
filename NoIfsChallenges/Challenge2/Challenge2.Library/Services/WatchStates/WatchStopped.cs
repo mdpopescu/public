@@ -3,11 +3,15 @@ using Challenge2.Library.Contracts;
 
 namespace Challenge2.Library.Services.WatchStates
 {
-    public class WatchPaused : WatchState
+    public class WatchStopped : WatchState
     {
-        public WatchPaused(UserInterface ui)
+        public WatchStopped(UserInterface ui)
         {
             this.ui = ui;
+
+            ui.StartStopEnabled = false;
+            ui.ResetEnabled = true;
+            ui.HoldEnabled = false;
         }
 
         public void ShowTime(TimeSpan ts)
@@ -22,12 +26,12 @@ namespace Challenge2.Library.Services.WatchStates
 
         public WatchState Hold()
         {
-            return new WatchRunning(ui);
+            return this;
         }
 
         public WatchState Reset()
         {
-            return this;
+            return new WatchZero(ui);
         }
 
         //
