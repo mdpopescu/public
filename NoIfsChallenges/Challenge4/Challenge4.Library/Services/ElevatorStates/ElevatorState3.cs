@@ -11,19 +11,13 @@ namespace Challenge4.Library.Services.ElevatorStates
         {
             Info = new ElevatorInfo();
 
-            Info.Floor3.Button1Enabled = false;
-            Info.Floor3.Button2Enabled = true;
-            Info.Floor3.Button3Enabled = true;
+            Info.Floor3.CallEnabled = false;
             Info.Floor3.Screen = screen;
 
-            Info.Floor2.Button1Enabled = true;
-            Info.Floor2.Button2Enabled = false;
-            Info.Floor2.Button3Enabled = false;
+            Info.Floor2.CallEnabled = true;
             Info.Floor2.Screen = Constants.DOOR_CLOSED;
 
-            Info.Floor1.Button1Enabled = true;
-            Info.Floor1.Button2Enabled = false;
-            Info.Floor1.Button3Enabled = false;
+            Info.Floor1.CallEnabled = true;
             Info.Floor1.Screen = Constants.DOOR_CLOSED;
         }
 

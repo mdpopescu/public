@@ -19,19 +19,19 @@ namespace Challenge4
 
         private void UpdateState()
         {
-            btnCallTo3rd.Enabled = elevator.Info.Floor3.Button1Enabled;
-            btnGoFrom3rdTo1st.Enabled = elevator.Info.Floor3.Button2Enabled;
-            btnGoFrom3rdTo2nd.Enabled = elevator.Info.Floor3.Button3Enabled;
+            btnCallTo3rd.Enabled = elevator.Info.Floor3.CallEnabled;
+            btnGoFrom3rdTo1st.Enabled = !elevator.Info.Floor3.CallEnabled;
+            btnGoFrom3rdTo2nd.Enabled = !elevator.Info.Floor3.CallEnabled;
             txt3rdScreen.Text = elevator.Info.Floor3.Screen;
 
-            btnCallTo2nd.Enabled = elevator.Info.Floor2.Button1Enabled;
-            btnGoUp.Enabled = elevator.Info.Floor2.Button2Enabled;
-            btnGoDown.Enabled = elevator.Info.Floor2.Button3Enabled;
+            btnCallTo2nd.Enabled = elevator.Info.Floor2.CallEnabled;
+            btnGoUp.Enabled = !elevator.Info.Floor2.CallEnabled;
+            btnGoDown.Enabled = !elevator.Info.Floor2.CallEnabled;
             txt2ndScreen.Text = elevator.Info.Floor2.Screen;
 
-            btnCallTo1st.Enabled = elevator.Info.Floor1.Button1Enabled;
-            btnGoFrom1stTo3rd.Enabled = elevator.Info.Floor1.Button2Enabled;
-            btnGoFrom1stTo2nd.Enabled = elevator.Info.Floor1.Button3Enabled;
+            btnCallTo1st.Enabled = elevator.Info.Floor1.CallEnabled;
+            btnGoFrom1stTo3rd.Enabled = !elevator.Info.Floor1.CallEnabled;
+            btnGoFrom1stTo2nd.Enabled = !elevator.Info.Floor1.CallEnabled;
             txt1stScreen.Text = elevator.Info.Floor1.Screen;
         }
 
