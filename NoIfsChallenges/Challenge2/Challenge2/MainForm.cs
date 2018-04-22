@@ -9,22 +9,22 @@ namespace Challenge2
     {
         public bool StartStopEnabled
         {
-            set => btnStartStop.Enabled = value;
+            set => this.UIChange(() => btnStartStop.Enabled = value);
         }
 
         public bool ResetEnabled
         {
-            set => btnReset.Enabled = value;
+            set => this.UIChange(() => btnReset.Enabled = value);
         }
 
         public bool HoldEnabled
         {
-            set => btnHold.Enabled = value;
+            set => this.UIChange(() => btnHold.Enabled = value);
         }
 
         public string Display
         {
-            set => lblClock.Text = value;
+            set => this.UIChange(() => lblClock.Text = value);
         }
 
         public MainForm()
