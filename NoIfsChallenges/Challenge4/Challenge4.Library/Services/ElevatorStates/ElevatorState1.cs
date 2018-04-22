@@ -49,12 +49,12 @@ namespace Challenge4.Library.Services.ElevatorStates
 
         public ElevatorState CallTo2nd()
         {
-            return new ElevatorState2("");
+            return new ElevatorState2("Elevator Called Up - Door Opens");
         }
 
         public ElevatorState CallTo3rd()
         {
-            return new ElevatorState3("");
+            return new ElevatorState3("Elevator Called Up - Door Opens");
         }
     }
 }
