@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Challenge2.Library.Contracts;
 using Challenge2.Library.Services;
@@ -9,17 +10,32 @@ namespace Challenge2
     {
         public bool StartStopEnabled
         {
-            set => this.UIChange(() => btnStartStop.Enabled = value);
+            set => this.UIChange(
+                () =>
+                {
+                    btnStartStop.Enabled = value;
+                    btnStartStop.BackColor = GetColor(value);
+                });
         }
 
         public bool ResetEnabled
         {
-            set => this.UIChange(() => btnReset.Enabled = value);
+            set => this.UIChange(
+                () =>
+                {
+                    btnReset.Enabled = value;
+                    btnReset.BackColor = GetColor(value);
+                });
         }
 
         public bool HoldEnabled
         {
-            set => this.UIChange(() => btnHold.Enabled = value);
+            set => this.UIChange(
+                () =>
+                {
+                    btnHold.Enabled = value;
+                    btnHold.BackColor = GetColor(value);
+                });
         }
 
         public string Display
@@ -37,6 +53,8 @@ namespace Challenge2
         //
 
         private readonly Watch watch;
+
+        private static Color GetColor(bool value) => value ? Color.Lime : SystemColors.Control;
 
         //
 
