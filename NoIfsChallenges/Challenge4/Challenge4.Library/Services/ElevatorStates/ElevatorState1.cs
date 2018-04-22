@@ -27,34 +27,34 @@ namespace Challenge4.Library.Services.ElevatorStates
             Info.Floor1.Screen = "Door Open";
         }
 
-        public void GoTo1st()
+        public ElevatorState GoTo1st()
         {
-            //
+            return this;
         }
 
-        public void GoTo2nd()
+        public ElevatorState GoTo2nd()
         {
-            //
+            return this;
         }
 
-        public void GoTo3rd()
+        public ElevatorState GoTo3rd()
         {
-            //
+            return this;
         }
 
-        public void CallTo1st()
+        public ElevatorState CallTo1st()
         {
-            //
+            return this;
         }
 
-        public void CallTo2nd()
+        public ElevatorState CallTo2nd()
         {
-            //
+            return this;
         }
 
-        public void CallTo3rd()
+        public ElevatorState CallTo3rd()
         {
-            //
+            return this;
         }
     }
 }

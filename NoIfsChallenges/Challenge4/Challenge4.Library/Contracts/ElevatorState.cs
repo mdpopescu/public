@@ -6,12 +6,12 @@ namespace Challenge4.Library.Contracts
     {
         ElevatorInfo Info { get; }
 
-        void GoTo1st();
-        void GoTo2nd();
-        void GoTo3rd();
+        ElevatorState GoTo1st();
+        ElevatorState GoTo2nd();
+        ElevatorState GoTo3rd();
 
-        void CallTo1st();
-        void CallTo2nd();
-        void CallTo3rd();
+        ElevatorState CallTo1st();
+        ElevatorState CallTo2nd();
+        ElevatorState CallTo3rd();
     }
 }
