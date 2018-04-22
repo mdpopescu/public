@@ -26,7 +26,7 @@ namespace Challenge2.Library.Services.WatchStates
             return new WatchStopped(ui);
         }
 
-        public WatchState Hold() => new WatchPaused(ui, timer);
+        public WatchState Hold() => new WatchHidden(ui, timer);
 
         public WatchState Reset() => this;
 

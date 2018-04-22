@@ -49,7 +49,7 @@
     <Compile Include="Services\GlobalSettings.cs" />
     <Compile Include="Services\RealTimer.cs" />
     <Compile Include="Services\Watch.cs" />
-    <Compile Include="Services\WatchStates\WatchPaused.cs" />
+    <Compile Include="Services\WatchStates\WatchHidden.cs" />
     <Compile Include="Services\WatchStates\WatchRunning.cs" />
     <Compile Include="Services\WatchStates\WatchStopped.cs" />
     <Compile Include="Services\WatchStates\WatchZero.cs" />

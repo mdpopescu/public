@@ -3,9 +3,9 @@ using Challenge2.Library.Contracts;
 
 namespace Challenge2.Library.Services.WatchStates
 {
-    public class WatchPaused : WatchState
+    public class WatchHidden : WatchState
     {
-        public WatchPaused(UserInterface ui, IDisposable timer)
+        public WatchHidden(UserInterface ui, IDisposable timer)
         {
             this.ui = ui;
             this.timer = timer;
