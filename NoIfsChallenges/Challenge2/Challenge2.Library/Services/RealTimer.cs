@@ -10,10 +10,10 @@ namespace Challenge2.Library.Services
         public IDisposable Start(TimeSpan interval, Action<TimeSpan> callback)
         {
             var sw = new Stopwatch();
-            var timer = new Timer(interval.TotalMilliseconds);
 
             void ElapsedEventHandler(object sender, ElapsedEventArgs e) => callback(sw.Elapsed);
 
+            var timer = new Timer(interval.TotalMilliseconds);
             timer.Elapsed += ElapsedEventHandler;
 
             sw.Start();
