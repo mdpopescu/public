@@ -34,12 +34,12 @@ namespace Challenge4.Library.Services.ElevatorStates
 
         public ElevatorState GoTo2nd()
         {
-            return this;
+            return new ElevatorState2();
         }
 
         public ElevatorState GoTo3rd()
         {
-            return this;
+            return new ElevatorState3();
         }
 
         public ElevatorState CallTo1st()
@@ -49,12 +49,12 @@ namespace Challenge4.Library.Services.ElevatorStates
 
         public ElevatorState CallTo2nd()
         {
-            return this;
+            return new ElevatorState2();
         }
 
         public ElevatorState CallTo3rd()
         {
-            return this;
+            return new ElevatorState3();
         }
     }
 }
