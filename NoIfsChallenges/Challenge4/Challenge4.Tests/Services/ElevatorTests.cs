@@ -16,16 +16,14 @@ namespace Challenge4.Tests.Services
         }
 
         [TestClass]
-        public class Initialize : ElevatorTests
+        public class InitialState : ElevatorTests
         {
             [TestMethod]
             public void ReturnsTheInitialState()
             {
-                sut.Initialize();
-
-                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor1, false, true, true, "Door Open");
+                CheckFloor(sut.Info.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor1, false, true, true, "Door Open");
             }
         }
 
@@ -35,7 +33,6 @@ namespace Challenge4.Tests.Services
             [TestInitialize]
             public void InnerSetUp()
             {
-                sut.Initialize();
                 // the elevator starts on the 1st floor
             }
 
@@ -44,9 +41,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.GoTo2nd();
 
-                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor2, false, true, true, "Elevator Arrives - Door Opens - User Exists");
-                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor2, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.Info.Floor1, true, false, false, "Door Closed");
             }
 
             [TestMethod]
@@ -54,9 +51,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.GoTo3rd();
 
-                CheckFloor(sut.ElevatorInfo.Floor3, false, true, true, "Elevator Arrives - Door Opens - User Exists");
-                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor3, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.Info.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor1, true, false, false, "Door Closed");
             }
 
             [TestMethod]
@@ -64,9 +61,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.CallTo2nd();
 
-                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor2, false, true, true, "Elevator Called Up - Door Opens");
-                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor2, false, true, true, "Elevator Called Up - Door Opens");
+                CheckFloor(sut.Info.Floor1, true, false, false, "Door Closed");
             }
 
             [TestMethod]
@@ -74,9 +71,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.CallTo3rd();
 
-                CheckFloor(sut.ElevatorInfo.Floor3, false, true, true, "Elevator Called Up - Door Opens");
-                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor3, false, true, true, "Elevator Called Up - Door Opens");
+                CheckFloor(sut.Info.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor1, true, false, false, "Door Closed");
             }
         }
 
@@ -86,7 +83,6 @@ namespace Challenge4.Tests.Services
             [TestInitialize]
             public void InnerSetUp()
             {
-                sut.Initialize();
                 sut.CallTo2nd();
             }
 
@@ -95,9 +91,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.GoTo1st();
 
-                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor1, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.Info.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor1, false, true, true, "Elevator Arrives - Door Opens - User Exists");
             }
 
             [TestMethod]
@@ -105,9 +101,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.GoTo3rd();
 
-                CheckFloor(sut.ElevatorInfo.Floor3, false, true, true, "Elevator Arrives - Door Opens - User Exists");
-                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor3, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.Info.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor1, true, false, false, "Door Closed");
             }
 
             [TestMethod]
@@ -115,9 +111,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.CallTo1st();
 
-                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor1, false, true, true, "Elevator Called Up - Door Opens");
+                CheckFloor(sut.Info.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor1, false, true, true, "Elevator Called Up - Door Opens");
             }
 
             [TestMethod]
@@ -125,9 +121,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.CallTo3rd();
 
-                CheckFloor(sut.ElevatorInfo.Floor3, false, true, true, "Elevator Called Up - Door Opens");
-                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor3, false, true, true, "Elevator Called Up - Door Opens");
+                CheckFloor(sut.Info.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor1, true, false, false, "Door Closed");
             }
         }
 
@@ -137,7 +133,6 @@ namespace Challenge4.Tests.Services
             [TestInitialize]
             public void InnerSetUp()
             {
-                sut.Initialize();
                 sut.CallTo3rd();
             }
 
@@ -146,9 +141,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.GoTo1st();
 
-                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor1, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.Info.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor1, false, true, true, "Elevator Arrives - Door Opens - User Exists");
             }
 
             [TestMethod]
@@ -156,9 +151,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.GoTo2nd();
 
-                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor2, false, true, true, "Elevator Arrives - Door Opens - User Exists");
-                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor2, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.Info.Floor1, true, false, false, "Door Closed");
             }
 
             [TestMethod]
@@ -166,9 +161,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.CallTo1st();
 
-                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor1, false, true, true, "Elevator Called Up - Door Opens");
+                CheckFloor(sut.Info.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor1, false, true, true, "Elevator Called Up - Door Opens");
             }
 
             [TestMethod]
@@ -176,9 +171,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.CallTo2nd();
 
-                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
-                CheckFloor(sut.ElevatorInfo.Floor2, false, true, true, "Elevator Called Up - Door Opens");
-                CheckFloor(sut.ElevatorInfo.Floor1, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.Info.Floor2, false, true, true, "Elevator Called Up - Door Opens");
+                CheckFloor(sut.Info.Floor1, true, false, false, "Door Closed");
             }
         }
 

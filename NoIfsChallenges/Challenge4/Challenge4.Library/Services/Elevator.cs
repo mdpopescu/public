@@ -1,32 +1,16 @@
-﻿using Challenge4.Library.Models;
+﻿using Challenge4.Library.Contracts;
+using Challenge4.Library.Models;
+using Challenge4.Library.Services.ElevatorStates;
 
 namespace Challenge4.Library.Services
 {
     public class Elevator
     {
-        public ElevatorInfo ElevatorInfo { get; }
+        public ElevatorInfo Info => state.Info;
 
         public Elevator()
         {
-            ElevatorInfo = new ElevatorInfo();
-        }
-
-        public void Initialize()
-        {
-            ElevatorInfo.Floor3.Button1Enabled = true;
-            ElevatorInfo.Floor3.Button2Enabled = false;
-            ElevatorInfo.Floor3.Button3Enabled = false;
-            ElevatorInfo.Floor3.Screen = "Door Closed";
-
-            ElevatorInfo.Floor2.Button1Enabled = true;
-            ElevatorInfo.Floor2.Button2Enabled = false;
-            ElevatorInfo.Floor2.Button3Enabled = false;
-            ElevatorInfo.Floor2.Screen = "Door Closed";
-
-            ElevatorInfo.Floor1.Button1Enabled = false;
-            ElevatorInfo.Floor1.Button2Enabled = true;
-            ElevatorInfo.Floor1.Button3Enabled = true;
-            ElevatorInfo.Floor1.Screen = "Door Open";
+            state = new ElevatorState1();
         }
 
         public void GoTo1st()
@@ -58,5 +42,9 @@ namespace Challenge4.Library.Services
         {
             //
         }
+
+        //
+
+        private readonly ElevatorState state;
     }
 }

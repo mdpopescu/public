@@ -40,10 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\ElevatorState.cs" />
     <Compile Include="Models\ElevatorInfo.cs" />
     <Compile Include="Models\FloorInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Elevator.cs" />
+    <Compile Include="Services\ElevatorStates\ElevatorState1.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
