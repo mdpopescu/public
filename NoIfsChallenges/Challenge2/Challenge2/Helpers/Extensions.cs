@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Challenge2
+namespace Challenge2.Helpers
 {
     public static class Extensions
     {

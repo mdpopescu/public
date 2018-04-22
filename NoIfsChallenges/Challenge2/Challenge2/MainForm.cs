@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Challenge2.Helpers;
 using Challenge2.Library.Contracts;
 using Challenge2.Library.Services;
+using Challenge2.Services;
 
 namespace Challenge2
 {
@@ -10,44 +12,41 @@ namespace Challenge2
     {
         public bool StartStopEnabled
         {
-            set => this.UIChange(
-                () =>
-                {
-                    btnStartStop.Enabled = value;
-                    btnStartStop.BackColor = GetColor(value);
-                });
+            set
+            {
+                btnStartStop.Enabled = value;
+                btnStartStop.BackColor = GetColor(value);
+            }
         }
 
         public bool ResetEnabled
         {
-            set => this.UIChange(
-                () =>
-                {
-                    btnReset.Enabled = value;
-                    btnReset.BackColor = GetColor(value);
-                });
+            set
+            {
+                btnReset.Enabled = value;
+                btnReset.BackColor = GetColor(value);
+            }
         }
 
         public bool HoldEnabled
         {
-            set => this.UIChange(
-                () =>
-                {
-                    btnHold.Enabled = value;
-                    btnHold.BackColor = GetColor(value);
-                });
+            set
+            {
+                btnHold.Enabled = value;
+                btnHold.BackColor = GetColor(value);
+            }
         }
 
         public string Display
         {
-            set => this.UIChange(() => lblClock.Text = value);
+            set => lblClock.Text = value;
         }
 
         public MainForm()
         {
             InitializeComponent();
 
-            watch = new Watch(this);
+            watch = new Watch(new SafeUI(this, this.UIChange));
         }
 
         //
