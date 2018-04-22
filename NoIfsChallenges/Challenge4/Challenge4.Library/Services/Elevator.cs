@@ -10,7 +10,7 @@ namespace Challenge4.Library.Services
 
         public Elevator()
         {
-            state = new ElevatorState1("Door Open");
+            state = new ElevatorState1(Constants.DOOR_OPEN);
         }
 
         public void GoTo1st() => state = state.GoTo1st();
