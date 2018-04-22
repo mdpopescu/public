@@ -6,7 +6,7 @@ namespace Challenge2.Library.Contracts
     {
         void ShowTime(TimeSpan ts);
 
-        WatchState StartStop();
+        WatchState StartStop(Action<TimeSpan> showTime);
         WatchState Hold();
         WatchState Reset();
     }

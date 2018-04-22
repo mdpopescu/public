@@ -19,7 +19,7 @@ namespace Challenge2.Library.Services.WatchStates
             // do nothing
         }
 
-        public WatchState StartStop()
+        public WatchState StartStop(Action<TimeSpan> showTime)
         {
             return this;
         }

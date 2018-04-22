@@ -18,9 +18,7 @@ namespace Challenge2.Library.Services
 
         public void StartStop()
         {
-            state = state.StartStop();
-
-            GlobalSettings.Timer.Start(TimeSpan.FromSeconds(1), ShowTime);
+            state = state.StartStop(ShowTime);
         }
 
         public void Hold()

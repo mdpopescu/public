@@ -5,9 +5,10 @@ namespace Challenge2.Library.Services.WatchStates
 {
     public class WatchRunning : WatchState
     {
-        public WatchRunning(UserInterface ui)
+        public WatchRunning(UserInterface ui, IDisposable timer)
         {
             this.ui = ui;
+            this.timer = timer;
 
             ui.StartStopEnabled = true;
             ui.ResetEnabled = false;
@@ -19,14 +20,15 @@ namespace Challenge2.Library.Services.WatchStates
             ui.Text = ts.ToString();
         }
 
-        public WatchState StartStop()
+        public WatchState StartStop(Action<TimeSpan> showTime)
         {
+            timer.Dispose();
             return new WatchStopped(ui);
         }
 
         public WatchState Hold()
         {
-            return new WatchPaused(ui);
+            return new WatchPaused(ui, timer);
         }
 
         public WatchState Reset()
@@ -37,5 +39,6 @@ namespace Challenge2.Library.Services.WatchStates
         //
 
         private readonly UserInterface ui;
+        private readonly IDisposable timer;
     }
 }
