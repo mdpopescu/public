@@ -20,22 +20,22 @@ namespace Challenge4.Tests.Services
             [TestMethod]
             public void ReturnsTheInitialState()
             {
-                var result = sut.Initialize();
+                sut.Initialize();
 
-                Assert.IsTrue(result.Floor3.Button1Enabled);
-                Assert.IsFalse(result.Floor3.Button2Enabled);
-                Assert.IsFalse(result.Floor3.Button3Enabled);
-                Assert.AreEqual("Door Closed", result.Floor3.Screen);
+                Assert.IsTrue(sut.ElevatorInfo.Floor3.Button1Enabled);
+                Assert.IsFalse(sut.ElevatorInfo.Floor3.Button2Enabled);
+                Assert.IsFalse(sut.ElevatorInfo.Floor3.Button3Enabled);
+                Assert.AreEqual("Door Closed", sut.ElevatorInfo.Floor3.Screen);
 
-                Assert.IsTrue(result.Floor2.Button1Enabled);
-                Assert.IsFalse(result.Floor2.Button2Enabled);
-                Assert.IsFalse(result.Floor2.Button3Enabled);
-                Assert.AreEqual("Door Closed", result.Floor2.Screen);
+                Assert.IsTrue(sut.ElevatorInfo.Floor2.Button1Enabled);
+                Assert.IsFalse(sut.ElevatorInfo.Floor2.Button2Enabled);
+                Assert.IsFalse(sut.ElevatorInfo.Floor2.Button3Enabled);
+                Assert.AreEqual("Door Closed", sut.ElevatorInfo.Floor2.Screen);
 
-                Assert.IsFalse(result.Floor1.Button1Enabled);
-                Assert.IsTrue(result.Floor1.Button2Enabled);
-                Assert.IsTrue(result.Floor1.Button3Enabled);
-                Assert.AreEqual("Door Open", result.Floor1.Screen);
+                Assert.IsFalse(sut.ElevatorInfo.Floor1.Button1Enabled);
+                Assert.IsTrue(sut.ElevatorInfo.Floor1.Button2Enabled);
+                Assert.IsTrue(sut.ElevatorInfo.Floor1.Button3Enabled);
+                Assert.AreEqual("Door Open", sut.ElevatorInfo.Floor1.Screen);
             }
         }
     }
