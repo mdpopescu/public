@@ -18,7 +18,7 @@ namespace Challenge2.Library.Services.WatchStates
 
         public WatchState StartStop(Action<TimeSpan> showTime)
         {
-            return this;
+            return new WatchStopped(ui);
         }
 
         public WatchState Hold()

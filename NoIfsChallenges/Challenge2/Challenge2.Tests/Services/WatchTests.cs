@@ -164,6 +164,19 @@ namespace Challenge2.Tests.Services
 
                 ui.VerifySet(it => it.Display = "00:00:04");
             }
+
+            [TestMethod]
+            public void StoppingUpdatesTheUIState()
+            {
+                sut.StartStop();
+                sut.Hold();
+
+                sut.StartStop();
+
+                ui.VerifySet(it => it.StartStopEnabled = false);
+                ui.VerifySet(it => it.ResetEnabled = true);
+                ui.VerifySet(it => it.HoldEnabled = false);
+            }
         }
 
         [TestClass]
