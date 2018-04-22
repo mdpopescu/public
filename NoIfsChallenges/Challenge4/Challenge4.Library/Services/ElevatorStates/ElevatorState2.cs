@@ -29,7 +29,7 @@ namespace Challenge4.Library.Services.ElevatorStates
 
         public ElevatorState GoTo1st()
         {
-            return new ElevatorState1();
+            return new ElevatorState1("Elevator Arrives - Door Opens - User Exits");
         }
 
         public ElevatorState GoTo2nd()
@@ -39,12 +39,12 @@ namespace Challenge4.Library.Services.ElevatorStates
 
         public ElevatorState GoTo3rd()
         {
-            return new ElevatorState3("");
+            return new ElevatorState3("Elevator Arrives - Door Opens - User Exits");
         }
 
         public ElevatorState CallTo1st()
         {
-            return new ElevatorState1();
+            return new ElevatorState1("Elevator Called Up - Door Opens");
         }
 
         public ElevatorState CallTo2nd()
@@ -54,7 +54,7 @@ namespace Challenge4.Library.Services.ElevatorStates
 
         public ElevatorState CallTo3rd()
         {
-            return new ElevatorState3("");
+            return new ElevatorState3("Elevator Called Up - Door Opens");
         }
     }
 }

@@ -29,12 +29,12 @@ namespace Challenge4.Library.Services.ElevatorStates
 
         public ElevatorState GoTo1st()
         {
-            return new ElevatorState1();
+            return new ElevatorState1("Elevator Arrives - Door Opens - User Exists");
         }
 
         public ElevatorState GoTo2nd()
         {
-            return new ElevatorState2("");
+            return new ElevatorState2("Elevator Arrives - Door Opens - User Exists");
         }
 
         public ElevatorState GoTo3rd()
@@ -44,12 +44,12 @@ namespace Challenge4.Library.Services.ElevatorStates
 
         public ElevatorState CallTo1st()
         {
-            return new ElevatorState1();
+            return new ElevatorState1("Elevator Called Up - Door Opens");
         }
 
         public ElevatorState CallTo2nd()
         {
-            return new ElevatorState2("");
+            return new ElevatorState2("Elevator Called Up - Door Opens");
         }
 
         public ElevatorState CallTo3rd()

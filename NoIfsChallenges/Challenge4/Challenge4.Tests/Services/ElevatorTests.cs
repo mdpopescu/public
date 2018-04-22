@@ -101,7 +101,7 @@ namespace Challenge4.Tests.Services
             {
                 sut.GoTo3rd();
 
-                CheckFloor(sut.Info.Floor3, false, true, true, "Elevator Arrives - Door Opens - User Exists");
+                CheckFloor(sut.Info.Floor3, false, true, true, "Elevator Arrives - Door Opens - User Exits");
                 CheckFloor(sut.Info.Floor2, true, false, false, "Door Closed");
                 CheckFloor(sut.Info.Floor1, true, false, false, "Door Closed");
             }
