@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants.cs" />
     <Compile Include="Contracts\ElevatorState.cs" />
     <Compile Include="Models\ElevatorInfo.cs" />
     <Compile Include="Models\FloorInfo.cs" />

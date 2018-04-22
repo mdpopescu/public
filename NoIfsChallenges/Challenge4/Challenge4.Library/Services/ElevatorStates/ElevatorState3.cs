@@ -19,22 +19,22 @@ namespace Challenge4.Library.Services.ElevatorStates
             Info.Floor2.Button1Enabled = true;
             Info.Floor2.Button2Enabled = false;
             Info.Floor2.Button3Enabled = false;
-            Info.Floor2.Screen = "Door Closed";
+            Info.Floor2.Screen = Constants.DOOR_CLOSED;
 
             Info.Floor1.Button1Enabled = true;
             Info.Floor1.Button2Enabled = false;
             Info.Floor1.Button3Enabled = false;
-            Info.Floor1.Screen = "Door Closed";
+            Info.Floor1.Screen = Constants.DOOR_CLOSED;
         }
 
         public ElevatorState GoTo1st()
         {
-            return new ElevatorState1("Elevator Arrives - Door Opens - User Exists");
+            return new ElevatorState1(Constants.ELEVATOR_ARRIVES);
         }
 
         public ElevatorState GoTo2nd()
         {
-            return new ElevatorState2("Elevator Arrives - Door Opens - User Exists");
+            return new ElevatorState2(Constants.ELEVATOR_ARRIVES);
         }
 
         public ElevatorState GoTo3rd()
@@ -44,12 +44,12 @@ namespace Challenge4.Library.Services.ElevatorStates
 
         public ElevatorState CallTo1st()
         {
-            return new ElevatorState1("Elevator Called Up - Door Opens");
+            return new ElevatorState1(Constants.ELEVATOR_CALLED);
         }
 
         public ElevatorState CallTo2nd()
         {
-            return new ElevatorState2("Elevator Called Up - Door Opens");
+            return new ElevatorState2(Constants.ELEVATOR_CALLED);
         }
 
         public ElevatorState CallTo3rd()
