@@ -18,18 +18,13 @@ namespace Challenge2.Library.Services.WatchStates
 
         public WatchState StartStop(Action<TimeSpan> showTime)
         {
+            timer.Dispose();
             return new WatchStopped(ui);
         }
 
-        public WatchState Hold()
-        {
-            return new WatchRunning(ui, timer);
-        }
+        public WatchState Hold() => new WatchRunning(ui, timer);
 
-        public WatchState Reset()
-        {
-            return this;
-        }
+        public WatchState Reset() => this;
 
         //
 
