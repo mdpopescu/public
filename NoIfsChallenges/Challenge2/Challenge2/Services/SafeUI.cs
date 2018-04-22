@@ -5,31 +5,22 @@ namespace Challenge2.Services
 {
     public class SafeUI : UserInterface
     {
-        public bool StartStopEnabled
-        {
-            set => safeInvoke(() => ui.StartStopEnabled = value);
-        }
-
-        public bool ResetEnabled
-        {
-            set => safeInvoke(() => ui.ResetEnabled = value);
-        }
-
-        public bool HoldEnabled
-        {
-            set => safeInvoke(() => ui.HoldEnabled = value);
-        }
-
-        public string Display
-        {
-            set => safeInvoke(() => ui.Display = value);
-        }
-
         public SafeUI(UserInterface ui, Action<Action> safeInvoke)
         {
             this.ui = ui;
             this.safeInvoke = safeInvoke;
         }
+
+        public void EnableStartStop() => safeInvoke(() => ui.EnableStartStop());
+        public void DisableStartStop() => safeInvoke(() => ui.DisableStartStop());
+
+        public void EnableReset() => safeInvoke(() => ui.EnableReset());
+        public void DisableReset() => safeInvoke(() => ui.DisableReset());
+
+        public void EnableHold() => safeInvoke(() => ui.EnableHold());
+        public void DisableHold() => safeInvoke(() => ui.DisableHold());
+
+        public void Display(string text) => safeInvoke(() => ui.Display(text));
 
         //
 

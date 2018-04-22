@@ -1,5 +1,4 @@
-﻿using System;
-using Challenge2.Library.Contracts;
+﻿using Challenge2.Library.Contracts;
 using Challenge2.Library.Services.WatchStates;
 
 namespace Challenge2.Library.Services
@@ -11,35 +10,18 @@ namespace Challenge2.Library.Services
             this.ui = ui;
         }
 
-        public void Initialize()
-        {
-            state = new WatchZero(ui);
-        }
+        public void Initialize() => state = new WatchZero(ui);
 
-        public void StartStop()
-        {
-            state = state.StartStop(ShowTime);
-        }
+        public void StartStop() => state = state.StartStop(ts => state.ShowTime(ts));
 
-        public void Hold()
-        {
-            state = state.Hold();
-        }
+        public void Hold() => state = state.Hold();
 
-        public void Reset()
-        {
-            state = state.Reset();
-        }
+        public void Reset() => state = state.Reset();
 
         //
 
         private readonly UserInterface ui;
 
         private WatchState state;
-
-        private void ShowTime(TimeSpan ts)
-        {
-            state.ShowTime(ts);
-        }
     }
 }

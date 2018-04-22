@@ -34,10 +34,10 @@ namespace Challenge2.Tests.Services
             {
                 sut.Initialize();
 
-                ui.VerifySet(it => it.StartStopEnabled = true);
-                ui.VerifySet(it => it.ResetEnabled = false);
-                ui.VerifySet(it => it.HoldEnabled = false);
-                ui.VerifySet(it => it.Display = "00:00:00");
+                ui.Verify(it => it.EnableStartStop());
+                ui.Verify(it => it.DisableReset());
+                ui.Verify(it => it.DisableHold());
+                ui.Verify(it => it.Display("00:00:00"));
             }
         }
 
@@ -58,9 +58,9 @@ namespace Challenge2.Tests.Services
                 {
                     sut.StartStop();
 
-                    ui.VerifySet(it => it.StartStopEnabled = true);
-                    ui.VerifySet(it => it.ResetEnabled = false);
-                    ui.VerifySet(it => it.HoldEnabled = true);
+                    ui.Verify(it => it.EnableStartStop());
+                    ui.Verify(it => it.DisableReset());
+                    ui.Verify(it => it.EnableHold());
                 }
 
                 [TestMethod]
@@ -70,7 +70,7 @@ namespace Challenge2.Tests.Services
 
                     timer.Advance(1);
 
-                    ui.VerifySet(it => it.Display = "00:00:01");
+                    ui.Verify(it => it.Display("00:00:01"));
                 }
 
                 [TestMethod]
@@ -80,9 +80,9 @@ namespace Challenge2.Tests.Services
 
                     timer.Advance(3);
 
-                    ui.VerifySet(it => it.Display = "00:00:01");
-                    ui.VerifySet(it => it.Display = "00:00:02");
-                    ui.VerifySet(it => it.Display = "00:00:03");
+                    ui.Verify(it => it.Display("00:00:01"));
+                    ui.Verify(it => it.Display("00:00:02"));
+                    ui.Verify(it => it.Display("00:00:03"));
                 }
             }
 
@@ -102,9 +102,9 @@ namespace Challenge2.Tests.Services
 
                     sut.StartStop();
 
-                    ui.VerifySet(it => it.StartStopEnabled = false);
-                    ui.VerifySet(it => it.ResetEnabled = true);
-                    ui.VerifySet(it => it.HoldEnabled = false);
+                    ui.Verify(it => it.DisableStartStop());
+                    ui.Verify(it => it.EnableReset());
+                    ui.Verify(it => it.DisableHold());
                 }
 
                 [TestMethod]
@@ -115,7 +115,7 @@ namespace Challenge2.Tests.Services
                     sut.StartStop();
                     timer.Advance(3);
 
-                    ui.VerifySet(it => it.Display = "00:00:01", Times.Never);
+                    ui.Verify(it => it.Display("00:00:01"), Times.Never);
                 }
             }
         }
@@ -137,7 +137,7 @@ namespace Challenge2.Tests.Services
                 sut.Hold();
                 timer.Advance(1);
 
-                ui.VerifySet(it => it.Display = "00:00:01", Times.Never);
+                ui.Verify(it => it.Display("00:00:01"), Times.Never);
             }
 
             [TestMethod]
@@ -149,7 +149,7 @@ namespace Challenge2.Tests.Services
                 sut.Hold();
                 timer.Advance(1);
 
-                ui.VerifySet(it => it.Display = "00:00:01");
+                ui.Verify(it => it.Display("00:00:01"));
             }
 
             [TestMethod]
@@ -162,7 +162,7 @@ namespace Challenge2.Tests.Services
                 sut.Hold();
                 timer.Advance(1);
 
-                ui.VerifySet(it => it.Display = "00:00:04");
+                ui.Verify(it => it.Display("00:00:04"));
             }
 
             [TestMethod]
@@ -173,9 +173,9 @@ namespace Challenge2.Tests.Services
 
                 sut.StartStop();
 
-                ui.VerifySet(it => it.StartStopEnabled = false);
-                ui.VerifySet(it => it.ResetEnabled = true);
-                ui.VerifySet(it => it.HoldEnabled = false);
+                ui.Verify(it => it.DisableStartStop());
+                ui.Verify(it => it.EnableReset());
+                ui.Verify(it => it.DisableHold());
             }
         }
 
@@ -196,10 +196,10 @@ namespace Challenge2.Tests.Services
 
                 sut.Reset();
 
-                ui.VerifySet(it => it.StartStopEnabled = true);
-                ui.VerifySet(it => it.ResetEnabled = false);
-                ui.VerifySet(it => it.HoldEnabled = false);
-                ui.VerifySet(it => it.Display = "00:00:00");
+                ui.Verify(it => it.EnableStartStop());
+                ui.Verify(it => it.DisableReset());
+                ui.Verify(it => it.DisableHold());
+                ui.Verify(it => it.Display("00:00:00"));
             }
         }
     }

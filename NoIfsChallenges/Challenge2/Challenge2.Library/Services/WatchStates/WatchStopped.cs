@@ -9,9 +9,9 @@ namespace Challenge2.Library.Services.WatchStates
         {
             this.ui = ui;
 
-            ui.StartStopEnabled = false;
-            ui.ResetEnabled = true;
-            ui.HoldEnabled = false;
+            ui.DisableStartStop();
+            ui.EnableReset();
+            ui.DisableHold();
         }
 
         public void ShowTime(TimeSpan ts)

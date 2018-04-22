@@ -2,10 +2,15 @@
 {
     public interface UserInterface
     {
-        bool StartStopEnabled { set; }
-        bool ResetEnabled { set; }
-        bool HoldEnabled { set; }
+        void EnableStartStop();
+        void DisableStartStop();
 
-        string Display { set; }
+        void EnableReset();
+        void DisableReset();
+
+        void EnableHold();
+        void DisableHold();
+
+        void Display(string text);
     }
 }

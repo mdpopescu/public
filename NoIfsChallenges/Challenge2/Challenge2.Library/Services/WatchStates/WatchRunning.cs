@@ -10,14 +10,14 @@ namespace Challenge2.Library.Services.WatchStates
             this.ui = ui;
             this.timer = timer;
 
-            ui.StartStopEnabled = true;
-            ui.ResetEnabled = false;
-            ui.HoldEnabled = true;
+            ui.EnableStartStop();
+            ui.DisableReset();
+            ui.EnableHold();
         }
 
         public void ShowTime(TimeSpan ts)
         {
-            ui.Display = ts.ToString(@"hh\:mm\:ss");
+            ui.Display(ts.ToString(@"hh\:mm\:ss"));
         }
 
         public WatchState StartStop(Action<TimeSpan> showTime)

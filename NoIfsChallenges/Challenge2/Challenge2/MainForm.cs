@@ -10,38 +10,6 @@ namespace Challenge2
 {
     public partial class MainForm : Form, UserInterface
     {
-        public bool StartStopEnabled
-        {
-            set
-            {
-                btnStartStop.Enabled = value;
-                btnStartStop.BackColor = GetColor(value);
-            }
-        }
-
-        public bool ResetEnabled
-        {
-            set
-            {
-                btnReset.Enabled = value;
-                btnReset.BackColor = GetColor(value);
-            }
-        }
-
-        public bool HoldEnabled
-        {
-            set
-            {
-                btnHold.Enabled = value;
-                btnHold.BackColor = GetColor(value);
-            }
-        }
-
-        public string Display
-        {
-            set => lblClock.Text = value;
-        }
-
         public MainForm()
         {
             InitializeComponent();
@@ -49,11 +17,32 @@ namespace Challenge2
             watch = new Watch(new SafeUI(this, this.UIChange));
         }
 
+        public void EnableStartStop() => Enable(btnStartStop);
+        public void DisableStartStop() => Disable(btnStartStop);
+
+        public void EnableReset() => Enable(btnReset);
+        public void DisableReset() => Disable(btnReset);
+
+        public void EnableHold() => Enable(btnHold);
+        public void DisableHold() => Disable(btnHold);
+
+        public void Display(string text) => lblClock.Text = text;
+
         //
 
         private readonly Watch watch;
 
-        private static Color GetColor(bool value) => value ? Color.Lime : SystemColors.Control;
+        private static void Enable(Control control)
+        {
+            control.Enabled = true;
+            control.BackColor = Color.Lime;
+        }
+
+        private static void Disable(Control control)
+        {
+            control.Enabled = false;
+            control.BackColor = SystemColors.Control;
+        }
 
         //
 
