@@ -45,6 +45,8 @@
     <Compile Include="Models\FloorInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Elevator.cs" />
+    <Compile Include="Services\ElevatorStates\ElevatorState3.cs" />
+    <Compile Include="Services\ElevatorStates\ElevatorState2.cs" />
     <Compile Include="Services\ElevatorStates\ElevatorState1.cs" />
   </ItemGroup>
   <ItemGroup />
