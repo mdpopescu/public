@@ -27,34 +27,12 @@ namespace Challenge4.Library.Services.ElevatorStates
             Info.Floor1.Screen = Constants.DOOR_CLOSED;
         }
 
-        public ElevatorState GoTo1st()
-        {
-            return new ElevatorState1(Constants.ELEVATOR_ARRIVES);
-        }
+        public ElevatorState GoTo1st() => new ElevatorState1(Constants.ELEVATOR_ARRIVES);
+        public ElevatorState GoTo2nd() => new ElevatorState2(Constants.ELEVATOR_ARRIVES);
+        public ElevatorState GoTo3rd() => this;
 
-        public ElevatorState GoTo2nd()
-        {
-            return new ElevatorState2(Constants.ELEVATOR_ARRIVES);
-        }
-
-        public ElevatorState GoTo3rd()
-        {
-            return this;
-        }
-
-        public ElevatorState CallTo1st()
-        {
-            return new ElevatorState1(Constants.ELEVATOR_CALLED);
-        }
-
-        public ElevatorState CallTo2nd()
-        {
-            return new ElevatorState2(Constants.ELEVATOR_CALLED);
-        }
-
-        public ElevatorState CallTo3rd()
-        {
-            return this;
-        }
+        public ElevatorState CallTo1st() => new ElevatorState1(Constants.ELEVATOR_CALLED);
+        public ElevatorState CallTo2nd() => new ElevatorState2(Constants.ELEVATOR_CALLED);
+        public ElevatorState CallTo3rd() => this;
     }
 }
