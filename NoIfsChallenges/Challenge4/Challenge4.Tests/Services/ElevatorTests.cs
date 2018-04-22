@@ -1,4 +1,5 @@
-﻿using Challenge4.Library.Services;
+﻿using Challenge4.Library.Models;
+using Challenge4.Library.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Challenge4.Tests.Services
@@ -22,20 +23,9 @@ namespace Challenge4.Tests.Services
             {
                 sut.Initialize();
 
-                Assert.IsTrue(sut.ElevatorInfo.Floor3.Button1Enabled);
-                Assert.IsFalse(sut.ElevatorInfo.Floor3.Button2Enabled);
-                Assert.IsFalse(sut.ElevatorInfo.Floor3.Button3Enabled);
-                Assert.AreEqual("Door Closed", sut.ElevatorInfo.Floor3.Screen);
-
-                Assert.IsTrue(sut.ElevatorInfo.Floor2.Button1Enabled);
-                Assert.IsFalse(sut.ElevatorInfo.Floor2.Button2Enabled);
-                Assert.IsFalse(sut.ElevatorInfo.Floor2.Button3Enabled);
-                Assert.AreEqual("Door Closed", sut.ElevatorInfo.Floor2.Screen);
-
-                Assert.IsFalse(sut.ElevatorInfo.Floor1.Button1Enabled);
-                Assert.IsTrue(sut.ElevatorInfo.Floor1.Button2Enabled);
-                Assert.IsTrue(sut.ElevatorInfo.Floor1.Button3Enabled);
-                Assert.AreEqual("Door Open", sut.ElevatorInfo.Floor1.Screen);
+                CheckFloor(sut.ElevatorInfo.Floor3, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor2, true, false, false, "Door Closed");
+                CheckFloor(sut.ElevatorInfo.Floor1, false, true, true, "Door Open");
             }
         }
 
@@ -121,6 +111,16 @@ namespace Challenge4.Tests.Services
             {
                 Assert.Fail();
             }
+        }
+
+        //
+
+        private static void CheckFloor(FloorInfo floorInfo, bool button1, bool button2, bool button3, string screen)
+        {
+            Assert.AreEqual(button1, floorInfo.Button1Enabled);
+            Assert.AreEqual(button2, floorInfo.Button2Enabled);
+            Assert.AreEqual(button3, floorInfo.Button3Enabled);
+            Assert.AreEqual(screen, floorInfo.Screen);
         }
     }
 }
