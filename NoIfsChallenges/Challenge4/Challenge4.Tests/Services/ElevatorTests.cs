@@ -38,5 +38,89 @@ namespace Challenge4.Tests.Services
                 Assert.AreEqual("Door Open", sut.ElevatorInfo.Floor1.Screen);
             }
         }
+
+        [TestClass]
+        public class Scenario_1stFloor : ElevatorTests
+        {
+            [TestMethod]
+            public void GoTo2ndFloor()
+            {
+                Assert.Fail();
+            }
+
+            [TestMethod]
+            public void GoTo3rdFloor()
+            {
+                Assert.Fail();
+            }
+
+            [TestMethod]
+            public void CalledTo2ndFloor()
+            {
+                Assert.Fail();
+            }
+
+            [TestMethod]
+            public void CalledTo3rdFloor()
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestClass]
+        public class Scenario_2ndFloor : ElevatorTests
+        {
+            [TestMethod]
+            public void GoTo1stFloor()
+            {
+                Assert.Fail();
+            }
+
+            [TestMethod]
+            public void GoTo3rdFloor()
+            {
+                Assert.Fail();
+            }
+
+            [TestMethod]
+            public void CalledTo1stFloor()
+            {
+                Assert.Fail();
+            }
+
+            [TestMethod]
+            public void CalledTo3rdFloor()
+            {
+                Assert.Fail();
+            }
+        }
+
+        [TestClass]
+        public class Scenario_3rdFloor : ElevatorTests
+        {
+            [TestMethod]
+            public void GoTo1stFloor()
+            {
+                Assert.Fail();
+            }
+
+            [TestMethod]
+            public void GoTo2ndFloor()
+            {
+                Assert.Fail();
+            }
+
+            [TestMethod]
+            public void CalledTo1stFloor()
+            {
+                Assert.Fail();
+            }
+
+            [TestMethod]
+            public void CalledTo2ndFloor()
+            {
+                Assert.Fail();
+            }
+        }
     }
 }
