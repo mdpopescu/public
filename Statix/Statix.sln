@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2043
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statix", "Statix\Statix.csproj", "{AB698030-56CE-49D2-A371-3363B455F004}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB698030-56CE-49D2-A371-3363B455F004}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB698030-56CE-49D2-A371-3363B455F004}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB698030-56CE-49D2-A371-3363B455F004}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB698030-56CE-49D2-A371-3363B455F004}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7051C547-5E3A-4CCE-9783-D00BC4D1D32A}
+	EndGlobalSection
+EndGlobal
