@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statix", "Statix\Statix.csproj", "{AB698030-56CE-49D2-A371-3363B455F004}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statix.Library", "Statix.Library\Statix.Library.csproj", "{44029A19-E379-4099-BA7E-44E066048136}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statix.Tests", "Statix.Tests\Statix.Tests.csproj", "{1D4E6CFC-E2EF-4A7E-85B2-A80C81FF2580}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{AB698030-56CE-49D2-A371-3363B455F004}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB698030-56CE-49D2-A371-3363B455F004}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB698030-56CE-49D2-A371-3363B455F004}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44029A19-E379-4099-BA7E-44E066048136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44029A19-E379-4099-BA7E-44E066048136}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44029A19-E379-4099-BA7E-44E066048136}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44029A19-E379-4099-BA7E-44E066048136}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D4E6CFC-E2EF-4A7E-85B2-A80C81FF2580}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D4E6CFC-E2EF-4A7E-85B2-A80C81FF2580}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D4E6CFC-E2EF-4A7E-85B2-A80C81FF2580}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D4E6CFC-E2EF-4A7E-85B2-A80C81FF2580}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
