@@ -1,0 +1,11 @@
+- basic language, Markdown or something like it
+- the command-line tool generates the HTML/CSS files, probably based on a template
+- at some point in the future, only files that have been modified should be reprocessed
+
+- features:
+  - for each input file:
+	- read the markdown
+	- transform the markdown content into an HTML content
+	- write the HTML
+	- write any additional files required (like images)
+  - write the common CSS
