@@ -1,0 +1,13 @@
+ETL.Library - library for importing / processing / exporting data
+===========
+
+Generates code (or assembly) for all three steps, based on text (later UI) specifications.
+
+Start with single record type, fixed size, with fixed size fields.
+
+Future: add support for parallel processing.
+
+Error handling - based on option:
+- Throw.
+- Log the record index (and possibly the field index) and the error and skip.
+- Custom processing (call user-specified callback; make the callback return true to retry the operation).

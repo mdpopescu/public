@@ -1,0 +1,54 @@
+Input specification
+===================
+
+A. Single record type, fixed record size, fixed field sizes
+   --------------------------------------------------------
+
+"field name:string",size:int
+
+- Field name:
+  - Quotes are mandatory; any quotes inside the field name must be doubled.
+  - All characters that are not ASCII letters or digits will be replaced by "_".
+  - If the resulting name starts with a digit, a "_" will be prepended.
+  - The maximum length of the resulting name is 100 characters, the rest will be ignored.
+  - If field names are not unique, an exception will be thrown and processing will stop.
+- Size:
+  - Must be between 1 and 2^30 (1,073,741,824).
+- All fields are considered string; any type conversions will be done in phase 2.
+- Spaces around the comma or at the start/end of the specification are ignored.
+- Errors when parsing the specification (e.g., the size being negative) will throw an exception and stop processing.
+
+Example:
+"first name",30
+"last name",20
+"date of birth",8
+
+In C#, this needs to be translated to:
+
+public class Record
+{
+    public static Record Read(TextReader reader)
+    {
+        return new Record
+        {
+            first_name = reader.ReadString(30),
+            last_name = reader.ReadString(20),
+            date_of_birth = reader.ReadString(8),
+        };
+    }
+
+    public string first_name { get; set; }
+    public string last_name { get; set; }
+    public string date_of_birth { get; set; }	
+}
+
+where reader.ReadString is an extension method:
+
+public static string ReadString(this TextReader reader, int length)
+{
+    var buffer = new char[length];
+    reader.Read(buffer, 0, length);
+	return new string(buffer);
+}
+
+Note that spaces are not trimmed; this is something that will also need to be done in phase 2.

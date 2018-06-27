@@ -35,6 +35,8 @@ Public repository - CC-by-SA 3.0
 
 * Elomen: notification service (application that can receive natural-language commands and send notification of future events)
 
+* ETL: a code generator for processing data
+
 * EverythingIsADatabase: trying to play with ideas from http://witheve.com/
 
 * EverythingIsAStream: example of replacing simple variables with streams

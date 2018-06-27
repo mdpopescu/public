@@ -1,0 +1,16 @@
+public class Record
+{
+    public static Record Read(TextReader reader)
+    {
+        return new Record
+        {
+            first_name = reader.ReadString(30),
+            last_name = reader.ReadString(20),
+            date_of_birth = reader.ReadString(8),
+        };
+    }
+
+    public string first_name { get; set; }
+    public string last_name { get; set; }
+    public string date_of_birth { get; set; }	
+}
