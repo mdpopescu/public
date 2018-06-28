@@ -41,8 +41,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\FileSystem.cs" />
-    <Compile Include="Implementations\InputGenerator.cs" />
+    <Compile Include="Phases\Phase1\InputGenerator.cs" />
+    <Compile Include="Phases\Phase1\InputField.cs" />
+    <Compile Include="Phases\Phase1\InputSpec.cs" />
+    <Compile Include="Phases\Phase1\InputSpecParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Implementations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

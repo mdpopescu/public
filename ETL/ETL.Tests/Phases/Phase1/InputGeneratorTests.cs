@@ -1,9 +1,10 @@
-﻿using System.Linq;
-using ETL.Library.Implementations;
+﻿using System.Collections.Generic;
+using System.Linq;
+using ETL.Library.Phases.Phase1;
 using ETL.Tests.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ETL.Tests.Implementations
+namespace ETL.Tests.Phases.Phase1
 {
     [TestClass]
     public class InputGeneratorTests
@@ -19,7 +20,15 @@ namespace ETL.Tests.Implementations
         [TestMethod]
         public void SingleFixedSizeRecordWithFixedSizeFields()
         {
-            const string spec = "\"\"first name\"\",30\r\n\"\"last name\"\",20\r\n\"\"date of birth\"\",8\r\n";
+            var spec = new InputSpec
+            {
+                Fields = new List<InputField>
+                {
+                    new InputField { Name = "first_name", Size = 30 },
+                    new InputField { Name = "last_name", Size = 20 },
+                    new InputField { Name = "date_of_birth", Size = 8 },
+                }
+            };
 
             var results = sut.Process(spec).ToList();
 
