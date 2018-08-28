@@ -43,6 +43,8 @@ Public repository - CC-by-SA 3.0
 
 * ExpressionCompiler: an expression evaluator using a multi-stage process, similar to a compiler
 
+* ExtractLinks: utility to extract links from web pages (so that I can paste them into Calibre and download a bunch of books from SufficientVelocity or SpaceBattles at once)
+
 * Failover: fail-over algorithm; see article at http://mdpopescu.blogspot.com/2013/06/fail-over-algorithm.html
 
 * FindDuplicates: finds the identical / similar images in the given folder
