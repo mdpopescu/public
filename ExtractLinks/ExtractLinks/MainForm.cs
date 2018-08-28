@@ -15,9 +15,14 @@ namespace ExtractLinks
         public MainForm()
         {
             InitializeComponent();
+
+            clbLinks.DisplayMember = "Title";
+            clbLinks.ValueMember = "Url";
         }
 
         //
+
+        private int ttIndex;
 
         private static LinkView ToLinkView(HtmlNode it) =>
             new LinkView(it.InnerText, it.GetAttributeValue("href", ""));
@@ -37,14 +42,22 @@ namespace ExtractLinks
                 .DocumentNode
                 .Descendants("a")
                 .Select(ToLinkView)
+                .Where(it => it.IsAbsolute && !it.IsAnonymous)
                 .ToList();
         }
 
         [SuppressMessage("ReSharper", "CoVariantArrayConversion")]
         private void ShowLinks(IEnumerable<LinkView> links)
         {
-            lbLinks.Items.Clear();
-            lbLinks.Items.AddRange(links.ToArray());
+            clbLinks.Items.Clear();
+            clbLinks.Items.AddRange(links.ToArray());
+        }
+
+        private void ShowToolTip()
+        {
+            ttIndex = clbLinks.IndexFromPoint(clbLinks.PointToClient(MousePosition));
+            if (ttIndex >= 0)
+                toolTip1.SetToolTip(clbLinks, ((LinkView) clbLinks.Items[ttIndex]).Url);
         }
 
         //
@@ -59,6 +72,17 @@ namespace ExtractLinks
         private void btnCopy_Click(object sender, EventArgs e)
         {
             //
+        }
+
+        private void clbLinks_MouseHover(object sender, EventArgs e)
+        {
+            ShowToolTip();
+        }
+
+        private void clbLinks_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (ttIndex != clbLinks.IndexFromPoint(e.Location))
+                ShowToolTip();
         }
     }
 }

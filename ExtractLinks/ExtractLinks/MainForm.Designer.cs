@@ -28,11 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.btnLoad = new System.Windows.Forms.Button();
-            this.lbLinks = new System.Windows.Forms.ListBox();
+            this.clbLinks = new System.Windows.Forms.CheckedListBox();
             this.btnCopy = new System.Windows.Forms.Button();
+            this.chTitle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // label1
@@ -50,13 +53,15 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtUrl.Location = new System.Drawing.Point(157, 12);
             this.txtUrl.Name = "txtUrl";
-            this.txtUrl.Size = new System.Drawing.Size(696, 29);
+            this.txtUrl.Size = new System.Drawing.Size(1432, 29);
             this.txtUrl.TabIndex = 1;
+            this.txtUrl.Text = "https://forums.sufficientvelocity.com/threads/sufficiently-inserted-sv-self-inser" +
+    "t-archive.679/";
             // 
             // btnLoad
             // 
             this.btnLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLoad.Location = new System.Drawing.Point(859, 9);
+            this.btnLoad.Location = new System.Drawing.Point(1595, 9);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(75, 35);
             this.btnLoad.TabIndex = 2;
@@ -64,22 +69,22 @@
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
-            // lbLinks
+            // clbLinks
             // 
-            this.lbLinks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.clbLinks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbLinks.FormattingEnabled = true;
-            this.lbLinks.ItemHeight = 23;
-            this.lbLinks.Location = new System.Drawing.Point(16, 47);
-            this.lbLinks.Name = "lbLinks";
-            this.lbLinks.Size = new System.Drawing.Size(837, 464);
-            this.lbLinks.TabIndex = 3;
+            this.clbLinks.Location = new System.Drawing.Point(16, 47);
+            this.clbLinks.Name = "clbLinks";
+            this.clbLinks.Size = new System.Drawing.Size(1573, 820);
+            this.clbLinks.TabIndex = 3;
+            this.clbLinks.MouseHover += new System.EventHandler(this.clbLinks_MouseHover);
+            this.clbLinks.MouseMove += new System.Windows.Forms.MouseEventHandler(this.clbLinks_MouseMove);
             // 
             // btnCopy
             // 
             this.btnCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCopy.Location = new System.Drawing.Point(859, 50);
+            this.btnCopy.Location = new System.Drawing.Point(1595, 50);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(75, 34);
             this.btnCopy.TabIndex = 4;
@@ -87,13 +92,18 @@
             this.btnCopy.UseVisualStyleBackColor = true;
             this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
             // 
+            // chTitle
+            // 
+            this.chTitle.Text = "Title";
+            this.chTitle.Width = -2;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(946, 523);
+            this.ClientSize = new System.Drawing.Size(1682, 884);
             this.Controls.Add(this.btnCopy);
-            this.Controls.Add(this.lbLinks);
+            this.Controls.Add(this.clbLinks);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.txtUrl);
             this.Controls.Add(this.label1);
@@ -111,8 +121,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtUrl;
         private System.Windows.Forms.Button btnLoad;
-        private System.Windows.Forms.ListBox lbLinks;
+        private System.Windows.Forms.CheckedListBox clbLinks;
         private System.Windows.Forms.Button btnCopy;
+        private System.Windows.Forms.ColumnHeader chTitle;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 
