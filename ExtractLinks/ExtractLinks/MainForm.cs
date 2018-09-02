@@ -11,6 +11,7 @@ namespace ExtractLinks
 {
     public partial class MainForm : Form, MainUI
     {
+        public IEnumerable<LinkView> AllLinks => clbLinks.Items.OfType<LinkView>();
         public IEnumerable<LinkView> SelectedLinks => clbLinks.CheckedItems.OfType<LinkView>();
 
         public MainForm()
@@ -28,6 +29,12 @@ namespace ExtractLinks
         {
             clbLinks.Items.Clear();
             clbLinks.Items.AddRange(links.ToArray());
+        }
+
+        public void SelectLinks(IEnumerable<int> indices)
+        {
+            foreach (var index in indices)
+                clbLinks.SetItemChecked(index, true);
         }
 
         //
@@ -54,6 +61,11 @@ namespace ExtractLinks
         private void btnCopy_Click(object sender, EventArgs e)
         {
             logic.CopySelected();
+        }
+
+        private void btnSelectMatching_Click(object sender, EventArgs e)
+        {
+            logic.SelectMatching(txtSearch.Text);
         }
 
         private void clbLinks_MouseHover(object sender, EventArgs e)

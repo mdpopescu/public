@@ -26,6 +26,17 @@ namespace ExtractLinks.Services
             Clipboard.SetText(string.Join(Environment.NewLine, selected));
         }
 
+        public void SelectMatching(string text)
+        {
+            var indices = ui
+                .AllLinks
+                .Select((link, index) => new { link, index })
+                .Where(it => it.link.Title.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0)
+                .Select(it => it.index)
+                .ToList();
+            ui.SelectLinks(indices);
+        }
+
         //
 
         private readonly MainUI ui;

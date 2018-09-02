@@ -36,6 +36,8 @@
             this.btnCopy = new System.Windows.Forms.Button();
             this.chTitle = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.btnSelectMatching = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -74,9 +76,9 @@
             this.clbLinks.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.clbLinks.Location = new System.Drawing.Point(16, 47);
+            this.clbLinks.Location = new System.Drawing.Point(16, 143);
             this.clbLinks.Name = "clbLinks";
-            this.clbLinks.Size = new System.Drawing.Size(1573, 820);
+            this.clbLinks.Size = new System.Drawing.Size(1654, 724);
             this.clbLinks.TabIndex = 3;
             this.clbLinks.MouseHover += new System.EventHandler(this.clbLinks_MouseHover);
             this.clbLinks.MouseMove += new System.Windows.Forms.MouseEventHandler(this.clbLinks_MouseMove);
@@ -97,11 +99,32 @@
             this.chTitle.Text = "Title";
             this.chTitle.Width = -2;
             // 
+            // txtSearch
+            // 
+            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSearch.Location = new System.Drawing.Point(1072, 106);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(408, 29);
+            this.txtSearch.TabIndex = 5;
+            // 
+            // btnSelectMatching
+            // 
+            this.btnSelectMatching.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSelectMatching.Location = new System.Drawing.Point(1486, 103);
+            this.btnSelectMatching.Name = "btnSelectMatching";
+            this.btnSelectMatching.Size = new System.Drawing.Size(184, 34);
+            this.btnSelectMatching.TabIndex = 6;
+            this.btnSelectMatching.Text = "Select matching";
+            this.btnSelectMatching.UseVisualStyleBackColor = true;
+            this.btnSelectMatching.Click += new System.EventHandler(this.btnSelectMatching_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1682, 884);
+            this.Controls.Add(this.btnSelectMatching);
+            this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.btnCopy);
             this.Controls.Add(this.clbLinks);
             this.Controls.Add(this.btnLoad);
@@ -125,6 +148,8 @@
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.ColumnHeader chTitle;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.TextBox txtSearch;
+        private System.Windows.Forms.Button btnSelectMatching;
     }
 }
 
