@@ -3,50 +3,56 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Forms;
+using ExtractLinks.Contracts;
 using ExtractLinks.Models;
+using ExtractLinks.Services;
 
 namespace ExtractLinks
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, MainUI
     {
+        public IEnumerable<LinkView> SelectedLinks => clbLinks.CheckedItems.OfType<LinkView>();
+
         public MainForm()
         {
             InitializeComponent();
+
+            logic = new MainLogic(this);
 
             clbLinks.DisplayMember = "Title";
             clbLinks.ValueMember = "Url";
         }
 
-        //
-
-        private int ttIndex;
-
         [SuppressMessage("ReSharper", "CoVariantArrayConversion")]
-        private void ShowLinks(IEnumerable<LinkView> links)
+        public void SetLinks(IEnumerable<LinkView> links)
         {
             clbLinks.Items.Clear();
             clbLinks.Items.AddRange(links.ToArray());
         }
 
+        //
+
+        private readonly MainLogic logic;
+
+        private int ttIndex;
+
         private void ShowToolTip()
         {
             ttIndex = clbLinks.IndexFromPoint(clbLinks.PointToClient(MousePosition));
-            if (ttIndex >= 0)
-                toolTip1.SetToolTip(clbLinks, ((LinkView) clbLinks.Items[ttIndex]).Url);
+            var caption = ttIndex >= 0 ? ((LinkView) clbLinks.Items[ttIndex]).Url : "";
+            toolTip1.SetToolTip(clbLinks, caption);
         }
 
         //
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            var page = WebPage.Load(txtUrl.Text);
-            var links = page.GetLinks();
-            ShowLinks(links);
+            logic.LoadLinksFrom(txtUrl.Text);
         }
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            //
+            logic.CopySelected();
         }
 
         private void clbLinks_MouseHover(object sender, EventArgs e)
