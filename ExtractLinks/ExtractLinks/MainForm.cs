@@ -47,7 +47,8 @@ namespace ExtractLinks
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            logic.LoadLinksFrom(txtUrl.Text);
+            using (new BusyGuard())
+                logic.LoadLinksFrom(txtUrl.Text);
         }
 
         private void btnCopy_Click(object sender, EventArgs e)

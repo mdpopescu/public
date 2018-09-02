@@ -17,6 +17,9 @@ namespace ExtractLinks.Models
 
         public IEnumerable<LinkView> GetLinks()
         {
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
             return doc
                 .DocumentNode
                 .Descendants("a")
@@ -27,14 +30,14 @@ namespace ExtractLinks.Models
 
         //
 
-        private readonly HtmlDocument doc = new HtmlDocument();
-
         private static LinkView ToLinkView(HtmlNode it) =>
             new LinkView(it.InnerText, it.GetAttributeValue("href", ""));
 
+        private readonly string html;
+
         private WebPage(string html)
         {
-            doc.LoadHtml(html);
+            this.html = html;
         }
     }
 }
