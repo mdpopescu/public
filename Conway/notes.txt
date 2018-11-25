@@ -14,7 +14,7 @@ Game rules:
 Code rules:
 - a method has at most three lines
 - no ifs; use either type-based polymorphism or lookup tables
-- no primitive inputs or outputs except for constructors; this includes lists, arrays or enumerables
-- no properties
-- no return values; tell, don't ask
+- no primitive arguments except for constructors; this includes lists, arrays or enumerables
+  - no more than three arguments, including to constructors
+  - no return values; tell, don't ask
 - a class that contains a collection cannot contain any other member variables
