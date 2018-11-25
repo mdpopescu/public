@@ -1,0 +1,20 @@
+Conway's Game of Life
+
+Game rules:
+- a board that can either be considered infinite, or limited to a MxN size
+- each cell can be in one of two states: alive or dead
+- on each round, the program computes the next state for each cell:
+  - a live cell with less than two neighbours dies
+  - a live cell with more than three neighbours dies
+  - a dead cell with exactly three neighbours becomes alive
+  - in any other case, the cell stays the same
+  - neighbours are counted diagonally, so a cell in the middle of the board has eight neighbours
+  - for a limited board, cells beyond the edge are considered permanently dead (they cannot become alive even if they have exactly three neighbours)
+
+Code rules:
+- a method has at most three lines
+- no ifs; use either type-based polymorphism or lookup tables
+- no primitive inputs or outputs except for constructors; this includes lists, arrays or enumerables
+- no properties
+- no return values; tell, don't ask
+- a class that contains a collection cannot contain any other member variables

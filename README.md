@@ -25,6 +25,8 @@ Public repository - CC-by-SA 3.0
 
 * CompareExcelFiles2: the same project as above but started from scratch using TDD; article at http://mdpopescu.blogspot.com/2013/06/comparing-excel-files-take-two.html
 
+* Conway: Conway's Game of Life, with restrictions
+
 * CQRS, CQRS2, CQRS3: playing with ideas for implementing the CQRS pattern
 
 * CustomCrypto: a custom encryption / decryption algorithm (NOT recommended, I am not a professional cryptographer!)
