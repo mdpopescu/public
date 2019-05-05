@@ -3,18 +3,22 @@ using Challenge2.Library.Contracts;
 
 namespace Challenge2.Library.Services.WatchStates
 {
-    public class WatchZero : WatchState
+    public sealed class WatchZero : WatchState
     {
-        public WatchZero(UserInterface ui)
+        public static WatchZero Create(UserInterface ui)
         {
-            this.ui = ui;
+            var state = new WatchZero(ui);
 
             ui.EnableStartStop();
             ui.DisableReset();
             ui.DisableHold();
 
             ui.Display("00:00:00");
+
+            return state;
         }
+
+        //
 
         public void ShowTime(TimeSpan ts)
         {
@@ -24,7 +28,7 @@ namespace Challenge2.Library.Services.WatchStates
         public WatchState StartStop(Action<TimeSpan> showTime)
         {
             var timer = GlobalSettings.Timer.Start(TimeSpan.FromSeconds(1), showTime);
-            return new WatchRunning(ui, timer);
+            return WatchRunning.Create(ui, timer);
         }
 
         public WatchState Hold() => this;
@@ -34,5 +38,10 @@ namespace Challenge2.Library.Services.WatchStates
         //
 
         private readonly UserInterface ui;
+
+        private WatchZero(UserInterface ui)
+        {
+            this.ui = ui;
+        }
     }
 }

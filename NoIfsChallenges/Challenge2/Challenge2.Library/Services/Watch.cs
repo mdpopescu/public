@@ -10,7 +10,7 @@ namespace Challenge2.Library.Services
             this.ui = ui;
         }
 
-        public void Initialize() => state = new WatchZero(ui);
+        public void Initialize() => state = WatchZero.Create(ui);
 
         public void StartStop() => state = state.StartStop(ts => state.ShowTime(ts));
 

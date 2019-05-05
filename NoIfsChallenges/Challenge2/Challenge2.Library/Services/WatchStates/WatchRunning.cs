@@ -3,17 +3,20 @@ using Challenge2.Library.Contracts;
 
 namespace Challenge2.Library.Services.WatchStates
 {
-    public class WatchRunning : WatchState
+    public sealed class WatchRunning : WatchState
     {
-        public WatchRunning(UserInterface ui, IDisposable timer)
+        public static WatchRunning Create(UserInterface ui, IDisposable timer)
         {
-            this.ui = ui;
-            this.timer = timer;
+            var state = new WatchRunning(ui, timer);
 
             ui.EnableStartStop();
             ui.DisableReset();
             ui.EnableHold();
+
+            return state;
         }
+
+        //
 
         public void ShowTime(TimeSpan ts)
         {
@@ -23,10 +26,10 @@ namespace Challenge2.Library.Services.WatchStates
         public WatchState StartStop(Action<TimeSpan> showTime)
         {
             timer.Dispose();
-            return new WatchStopped(ui);
+            return WatchStopped.Create(ui);
         }
 
-        public WatchState Hold() => new WatchHidden(ui, timer);
+        public WatchState Hold() => WatchHidden.Create(ui, timer);
 
         public WatchState Reset() => this;
 
@@ -34,5 +37,11 @@ namespace Challenge2.Library.Services.WatchStates
 
         private readonly UserInterface ui;
         private readonly IDisposable timer;
+
+        private WatchRunning(UserInterface ui, IDisposable timer)
+        {
+            this.ui = ui;
+            this.timer = timer;
+        }
     }
 }
