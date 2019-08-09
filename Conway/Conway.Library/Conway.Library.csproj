@@ -42,10 +42,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\Screen.cs" />
+    <Compile Include="Models\CellState.cs" />
+    <Compile Include="Models\Color.cs" />
     <Compile Include="Models\Coordinates.cs" />
+    <Compile Include="Models\CurrentState.cs" />
     <Compile Include="Models\Size.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Board.cs" />
+    <Compile Include="Models\Board.cs" />
+    <Compile Include="Services\Game.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

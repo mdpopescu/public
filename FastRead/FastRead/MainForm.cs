@@ -36,7 +36,7 @@ namespace FastRead
             HideWord();
             SetWord(word);
             ShowWord();
-            Application.DoEvents();
+            UpdateScreen();
         }
 
         //
@@ -59,6 +59,11 @@ namespace FastRead
         {
             lblWord.Text = word;
             lblWord.Location = calculator.GetCenterPosition(Size, lblWord.Size);
+        }
+
+        private static void UpdateScreen()
+        {
+            Application.DoEvents();
         }
 
         //

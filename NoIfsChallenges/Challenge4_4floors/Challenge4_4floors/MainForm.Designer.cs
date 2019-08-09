@@ -144,9 +144,9 @@
             // 
             this.txt4thFloorDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txt4thFloorDisplay.Enabled = false;
             this.txt4thFloorDisplay.Location = new System.Drawing.Point(166, 19);
             this.txt4thFloorDisplay.Name = "txt4thFloorDisplay";
-            this.txt4thFloorDisplay.ReadOnly = true;
             this.txt4thFloorDisplay.Size = new System.Drawing.Size(225, 20);
             this.txt4thFloorDisplay.TabIndex = 4;
             // 
@@ -154,9 +154,9 @@
             // 
             this.txt3rdFloorDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txt3rdFloorDisplay.Enabled = false;
             this.txt3rdFloorDisplay.Location = new System.Drawing.Point(166, 42);
             this.txt3rdFloorDisplay.Name = "txt3rdFloorDisplay";
-            this.txt3rdFloorDisplay.ReadOnly = true;
             this.txt3rdFloorDisplay.Size = new System.Drawing.Size(225, 20);
             this.txt3rdFloorDisplay.TabIndex = 5;
             // 
@@ -164,9 +164,9 @@
             // 
             this.txt2ndFloorDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txt2ndFloorDisplay.Enabled = false;
             this.txt2ndFloorDisplay.Location = new System.Drawing.Point(166, 65);
             this.txt2ndFloorDisplay.Name = "txt2ndFloorDisplay";
-            this.txt2ndFloorDisplay.ReadOnly = true;
             this.txt2ndFloorDisplay.Size = new System.Drawing.Size(225, 20);
             this.txt2ndFloorDisplay.TabIndex = 6;
             // 
@@ -174,9 +174,9 @@
             // 
             this.txt1stFloorDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txt1stFloorDisplay.Enabled = false;
             this.txt1stFloorDisplay.Location = new System.Drawing.Point(166, 88);
             this.txt1stFloorDisplay.Name = "txt1stFloorDisplay";
-            this.txt1stFloorDisplay.ReadOnly = true;
             this.txt1stFloorDisplay.Size = new System.Drawing.Size(225, 20);
             this.txt1stFloorDisplay.TabIndex = 7;
             // 
@@ -274,9 +274,9 @@
             // 
             this.txtElevatorDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtElevatorDisplay.Enabled = false;
             this.txtElevatorDisplay.Location = new System.Drawing.Point(202, 21);
             this.txtElevatorDisplay.Name = "txtElevatorDisplay";
-            this.txtElevatorDisplay.ReadOnly = true;
             this.txtElevatorDisplay.Size = new System.Drawing.Size(189, 20);
             this.txtElevatorDisplay.TabIndex = 4;
             // 

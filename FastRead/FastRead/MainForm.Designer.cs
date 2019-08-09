@@ -34,11 +34,11 @@
             // lblWord
             // 
             this.lblWord.AutoSize = true;
-            this.lblWord.Font = new System.Drawing.Font("Arial Black", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWord.Font = new System.Drawing.Font("Century Gothic", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblWord.ForeColor = System.Drawing.Color.White;
-            this.lblWord.Location = new System.Drawing.Point(176, 155);
+            this.lblWord.Location = new System.Drawing.Point(209, 162);
             this.lblWord.Name = "lblWord";
-            this.lblWord.Size = new System.Drawing.Size(458, 90);
+            this.lblWord.Size = new System.Drawing.Size(390, 77);
             this.lblWord.TabIndex = 0;
             this.lblWord.Text = "Press Home";
             // 
