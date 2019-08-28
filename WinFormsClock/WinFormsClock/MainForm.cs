@@ -16,7 +16,12 @@ namespace WinFormsClock
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //
+            timer.Enabled = true;
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            Refresh();
         }
     }
 }

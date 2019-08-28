@@ -28,15 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.clock1 = new WinFormsClock.Clock();
+            this.timer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // clock1
             // 
-            this.clock1.Location = new System.Drawing.Point(62, 72);
+            this.clock1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.clock1.Location = new System.Drawing.Point(0, 0);
             this.clock1.Name = "clock1";
-            this.clock1.Size = new System.Drawing.Size(327, 310);
+            this.clock1.Size = new System.Drawing.Size(800, 450);
             this.clock1.TabIndex = 0;
+            // 
+            // timer
+            // 
+            this.timer.Interval = 1000;
+            this.timer.Tick += new System.EventHandler(this.Timer_Tick);
             // 
             // MainForm
             // 
@@ -54,6 +62,7 @@
         #endregion
 
         private Clock clock1;
+        private System.Windows.Forms.Timer timer;
     }
 }
 

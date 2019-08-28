@@ -16,6 +16,10 @@ namespace WinFormsClock
 
         //
 
+        private static readonly Color BACKGROUND = Color.LightBlue;
+        private static readonly Color MARKS = Color.Black;
+        private static readonly Color HOURS = Color.Red;
+
         //
 
         private void ClockBackground_Load(object sender, EventArgs e)
@@ -25,13 +29,13 @@ namespace WinFormsClock
 
         private void ClockBackground_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.Clear(Color.LightBlue);
+            e.Graphics.Clear(BACKGROUND);
 
-            // draw the minute marks
             var origin = new Point(e.ClipRectangle.Width / 2, e.ClipRectangle.Height / 2);
             var radius = Math.Min(origin.X, origin.Y);
 
-            using (var pen = new Pen(Color.Black))
+            // draw the minute marks
+            using (var pen = new Pen(MARKS))
             {
                 foreach (var minute in Enumerable.Range(0, 60))
                 {
@@ -41,6 +45,25 @@ namespace WinFormsClock
                     var lineEnd = PolarCoord.Create(degree, radius * 0.95f).CarthesianCoord.Offset(origin);
 
                     e.Graphics.DrawLine(pen, lineStart.X, lineStart.Y, lineEnd.X, lineEnd.Y);
+                }
+            }
+
+            // draw the numbers
+            using (var brush = new SolidBrush(HOURS))
+            {
+                foreach (var hour in Enumerable.Range(1, 12))
+                {
+                    var degree = (hour - 1) * 30;
+
+                    // 12 should be at the top
+                    degree = (degree + 300) % 360;
+
+                    var center = PolarCoord.Create(degree, radius * 0.80f).CarthesianCoord.Offset(origin);
+                    var size = radius * 0.15f;
+
+                    var location = center.Offset(new PointF(-size / 4, -size / 4));
+
+                    e.Graphics.DrawString(hour.ToString(), DefaultFont, brush, new RectangleF(location, new SizeF(size, size)));
                 }
             }
         }
