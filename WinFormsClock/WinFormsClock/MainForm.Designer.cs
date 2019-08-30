@@ -52,6 +52,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.clock1);
+            this.DoubleBuffered = true;
             this.Name = "MainForm";
             this.Text = "WinFormsClock";
             this.Load += new System.EventHandler(this.Form1_Load);

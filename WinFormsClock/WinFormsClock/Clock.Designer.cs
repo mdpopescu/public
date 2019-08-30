@@ -34,6 +34,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.DoubleBuffered = true;
             this.Name = "Clock";
             this.Load += new System.EventHandler(this.Clock_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Clock_Paint);
