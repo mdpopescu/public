@@ -25,23 +25,13 @@ namespace WinFormsClock
         private static readonly Color HOURS = Color.Red;
         private static readonly Color HANDS = Color.BlueViolet;
 
-        //
-
-        private void Clock_Load(object sender, EventArgs e)
+        private static void DrawBackground(Graphics g)
         {
-            //
+            g.Clear(BACKGROUND);
         }
 
-        private void Clock_Paint(object sender, PaintEventArgs e)
+        private static void DrawMinuteMarks(Graphics g, Point origin, int radius)
         {
-            // draw the background
-
-            e.Graphics.Clear(BACKGROUND);
-
-            var origin = new Point(e.ClipRectangle.Width / 2, e.ClipRectangle.Height / 2);
-            var radius = Math.Min(origin.X, origin.Y);
-
-            // draw the minute marks
             using (var pen = new Pen(MARKS))
             {
                 foreach (var minute in Enumerable.Range(0, 60))
@@ -51,37 +41,45 @@ namespace WinFormsClock
                     var lineStart = PolarCoord.Create(degree, radius * 0.90f).CarthesianCoord.Offset(origin);
                     var lineEnd = PolarCoord.Create(degree, radius * 0.95f).CarthesianCoord.Offset(origin);
 
-                    e.Graphics.DrawLine(pen, lineStart.X, lineStart.Y, lineEnd.X, lineEnd.Y);
+                    g.DrawLine(pen, lineStart.X, lineStart.Y, lineEnd.X, lineEnd.Y);
                 }
             }
+        }
 
-            // draw the numbers
+        private static void DrawNumbers(Graphics g, Point origin, int radius)
+        {
             using (var brush = new SolidBrush(HOURS))
             {
-                foreach (var hour in Enumerable.Range(1, 12))
+                foreach (var hour in Enumerable.Range(0, 12))
                 {
-                    var degree = (hour - 1) * 30;
+                    var degree = hour * 30;
 
                     var center = PolarCoord.Create(degree, radius * 0.80f).CarthesianCoord.Offset(origin);
-                    var size = radius * 0.15f;
+                    var size = Math.Max(24.0f, radius * 0.15f); // don't let the numbers get too small
 
-                    var location = center.Offset(new PointF(-size / 4, -size / 4));
+                    var location = center.Offset(new PointF(-size / 2, -size / 2));
 
-                    e.Graphics.DrawString(hour.ToString(), DefaultFont, brush, new RectangleF(location, new SizeF(size, size)));
+                    // hour 0 should be 12
+                    var sHour = hour == 0 ? "12" : hour.ToString();
+                    var format = new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center };
+                    g.DrawString(sHour, DefaultFont, brush, new RectangleF(location, new SizeF(size, size)), format);
                 }
             }
+        }
 
-            // draw the hands
-
+        private static void DrawHandsOrigin(Graphics g, Point origin, int radius)
+        {
             using (var brush = new SolidBrush(HANDS))
             {
                 var size = radius * 0.05f;
                 var rect = new RectangleF(origin.X - size, origin.Y - size, size * 2, size * 2);
 
-                e.Graphics.FillEllipse(brush, rect);
+                g.FillEllipse(brush, rect);
             }
+        }
 
-            // hour
+        private static void DrawHourHand(Graphics g, Point origin, int radius)
+        {
             using (var pen = new Pen(HANDS, HOUR_WIDTH))
             {
                 var time = DateTime.Now.TimeOfDay;
@@ -92,10 +90,12 @@ namespace WinFormsClock
                 var lineStart = PolarCoord.Create(degree, radius * 0.05f).CarthesianCoord.Offset(origin);
                 var lineEnd = PolarCoord.Create(degree, radius * 0.50f).CarthesianCoord.Offset(origin);
 
-                e.Graphics.DrawLine(pen, lineStart.X, lineStart.Y, lineEnd.X, lineEnd.Y);
+                g.DrawLine(pen, lineStart.X, lineStart.Y, lineEnd.X, lineEnd.Y);
             }
+        }
 
-            // minute
+        private static void DrawMinuteHand(Graphics g, Point origin, int radius)
+        {
             using (var pen = new Pen(HANDS, MINUTE_WIDTH))
             {
                 var time = DateTime.Now.TimeOfDay;
@@ -106,10 +106,12 @@ namespace WinFormsClock
                 var lineStart = PolarCoord.Create(degree, radius * 0.05f).CarthesianCoord.Offset(origin);
                 var lineEnd = PolarCoord.Create(degree, radius * 0.70f).CarthesianCoord.Offset(origin);
 
-                e.Graphics.DrawLine(pen, lineStart.X, lineStart.Y, lineEnd.X, lineEnd.Y);
+                g.DrawLine(pen, lineStart.X, lineStart.Y, lineEnd.X, lineEnd.Y);
             }
+        }
 
-            // second
+        private static void DrawSecondHand(Graphics g, Point origin, int radius)
+        {
             using (var pen = new Pen(HANDS, SECOND_WIDTH))
             {
                 var time = DateTime.Now.TimeOfDay;
@@ -120,8 +122,32 @@ namespace WinFormsClock
                 var lineStart = PolarCoord.Create(degree, radius * 0.05f).CarthesianCoord.Offset(origin);
                 var lineEnd = PolarCoord.Create(degree, radius * 0.85f).CarthesianCoord.Offset(origin);
 
-                e.Graphics.DrawLine(pen, lineStart.X, lineStart.Y, lineEnd.X, lineEnd.Y);
+                g.DrawLine(pen, lineStart.X, lineStart.Y, lineEnd.X, lineEnd.Y);
             }
+        }
+
+        //
+
+        private void Clock_Load(object sender, EventArgs e)
+        {
+            //
+        }
+
+        private void Clock_Paint(object sender, PaintEventArgs e)
+        {
+            var origin = new Point(e.ClipRectangle.Width / 2, e.ClipRectangle.Height / 2);
+            var radius = Math.Min(origin.X, origin.Y);
+
+            DrawBackground(e.Graphics);
+            DrawMinuteMarks(e.Graphics, origin, radius);
+            DrawNumbers(e.Graphics, origin, radius);
+
+            // draw the hands
+
+            DrawHandsOrigin(e.Graphics, origin, radius);
+            DrawHourHand(e.Graphics, origin, radius);
+            DrawMinuteHand(e.Graphics, origin, radius);
+            DrawSecondHand(e.Graphics, origin, radius);
         }
     }
 }
