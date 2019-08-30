@@ -22,6 +22,9 @@ namespace WinFormsClock.Models
 
         private PolarCoord(float degree, float radius)
         {
+            // rotate the coordinates so that 0 is straight up
+            degree = (degree + 300) % 360;
+
             Degree = degree;
             Radius = radius;
 
