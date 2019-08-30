@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using WinFormsClock.Contracts;
 using WinFormsClock.Implementations;
@@ -50,6 +51,7 @@ namespace WinFormsClock
             var origin = new Point(e.ClipRectangle.Width / 2, e.ClipRectangle.Height / 2);
             var radius = Math.Min(origin.X, origin.Y);
 
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             foreach (var part in parts)
                 part.Draw(e.Graphics, origin, radius);
         }
