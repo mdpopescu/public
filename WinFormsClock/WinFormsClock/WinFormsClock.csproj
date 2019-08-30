@@ -52,7 +52,15 @@
     <Compile Include="Clock.Designer.cs">
       <DependentUpon>Clock.cs</DependentUpon>
     </Compile>
+    <Compile Include="Contracts\IClockPart.cs" />
     <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Implementations\Background.cs" />
+    <Compile Include="Implementations\HoursHand.cs" />
+    <Compile Include="Implementations\MinutesHand.cs" />
+    <Compile Include="Implementations\Numbers.cs" />
+    <Compile Include="Implementations\HandsOrigin.cs" />
+    <Compile Include="Implementations\MinuteMarks.cs" />
+    <Compile Include="Implementations\SecondsHand.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
