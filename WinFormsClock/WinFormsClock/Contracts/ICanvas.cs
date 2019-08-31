@@ -4,9 +4,6 @@ namespace WinFormsClock.Contracts
 {
     public interface ICanvas
     {
-        PointF Origin { get; }
-        int Size { get; }
-
         PointF Point(float degree, float radius);
         RectangleF Square(PointF center, float side);
 

@@ -8,24 +8,21 @@ namespace WinFormsClock.Implementations
 {
     public class Canvas : ICanvas
     {
-        public PointF Origin { get; }
-        public int Size { get; }
-
         public Canvas(Graphics g, PointF origin, int size)
         {
             this.g = g;
-            Origin = origin;
-            Size = size;
+            this.origin = origin;
+            this.size = size;
         }
 
         public PointF Point(float degree, float radius)
         {
-            return PolarCoord.Create(degree, Size * radius).CarthesianCoord.Offset(Origin);
+            return PolarCoord.Create(degree, size * radius).CarthesianCoord.Offset(origin);
         }
 
         public RectangleF Square(PointF center, float side)
         {
-            var delta = Size * side;
+            var delta = size * side;
             return new RectangleF(center.X - delta / 2, center.Y - delta / 2, delta, delta);
         }
 
@@ -60,6 +57,8 @@ namespace WinFormsClock.Implementations
         //
 
         private readonly Graphics g;
+        private readonly PointF origin;
+        private readonly int size;
 
         private Font GetAdjustedFont(string text, Font font, float width, int maxSize, int minSize)
         {

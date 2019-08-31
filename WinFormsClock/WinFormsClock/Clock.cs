@@ -48,13 +48,12 @@ namespace WinFormsClock
 
         private void Clock_Paint(object sender, PaintEventArgs e)
         {
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
             var origin = new Point(e.ClipRectangle.Width / 2, e.ClipRectangle.Height / 2);
             var size = Math.Min(origin.X, origin.Y);
 
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
             var canvas = new Canvas(e.Graphics, origin, size);
-
             foreach (var part in parts)
                 part.Draw(canvas);
         }
