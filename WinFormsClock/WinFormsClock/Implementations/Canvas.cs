@@ -41,19 +41,19 @@ namespace WinFormsClock.Implementations
 
         public void FillEllipse(Color color, RectangleF rect)
         {
-            var brush = brushes.Get(color, () => new SolidBrush(color));
+            var brush = brushes.Get(color, BrushConstructor(color));
             g.FillEllipse(brush, rect);
         }
 
         public void Line(Color color, float width, PointF startAt, PointF endAt)
         {
-            var pen = pens.Get(Tuple.Create(color, width), () => new Pen(color, width));
+            var pen = pens.Get(Tuple.Create(color, width), PenConstructor(color, width));
             g.DrawLine(pen, startAt, endAt);
         }
 
         public void Text(Color color, RectangleF rect, string text)
         {
-            var brush = brushes.Get(color, () => new SolidBrush(color));
+            var brush = brushes.Get(color, BrushConstructor(color));
             var font = GetFont(rect.Width);
             var format = new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center };
             g.DrawString(text, font, brush, rect, format);
@@ -71,6 +71,13 @@ namespace WinFormsClock.Implementations
         private readonly PointF origin;
         private readonly int size;
 
+        private static Func<Brush> BrushConstructor(Color color) => () => new SolidBrush(color);
+        private static Func<Pen> PenConstructor(Color color, float width) => () => new Pen(color, width);
+        private static Func<Font> FontConstructor(Font font, int emSize) => () => new Font(font.Name, emSize, font.Style);
+
+        private Func<int, Font> GetFontAtSize(Font font) => emSize => fonts.Get(emSize, FontConstructor(font, emSize));
+        private Func<Font, bool> TextFits(float width, string text) => font => g.MeasureString(text, font).Width <= width;
+
         private Font GetFont(float width)
         {
             var tempFont = fonts.Get(36, () => new Font(FONT_NAME, 36));
@@ -82,21 +89,11 @@ namespace WinFormsClock.Implementations
             var candidates = Enumerable
                 .Range(minSize, maxSize - minSize + 1)
                 .Reverse()
-                .Select(emSize => GetFontAtSize(font, emSize))
+                .Select(GetFontAtSize(font))
                 .ToArray();
 
             // return either the first matching or the last (which is minSize)
-            return candidates.Where(testFont => TextFits(testFont, width, text)).FirstOrDefault() ?? candidates.Last();
-        }
-
-        private Font GetFontAtSize(Font font, int emSize)
-        {
-            return fonts.Get(emSize, () => new Font(font.Name, emSize, font.Style));
-        }
-
-        private bool TextFits(Font testFont, float width, string text)
-        {
-            return g.MeasureString(text, testFont).Width <= width;
+            return candidates.Where(TextFits(width, text)).FirstOrDefault() ?? candidates.Last();
         }
     }
 }
