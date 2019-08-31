@@ -53,9 +53,9 @@ namespace WinFormsClock
             var origin = new Point(e.ClipRectangle.Width / 2, e.ClipRectangle.Height / 2);
             var size = Math.Min(origin.X, origin.Y);
 
-            var canvas = new Canvas(e.Graphics, origin, size);
-            foreach (var part in parts)
-                part.Draw(canvas);
+            using (var canvas = new Canvas(e.Graphics, origin, size))
+                foreach (var part in parts)
+                    part.Draw(canvas);
         }
     }
 }

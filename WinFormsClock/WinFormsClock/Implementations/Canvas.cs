@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Linq;
 using WinFormsClock.Contracts;
 using WinFormsClock.Helpers;
@@ -6,13 +7,20 @@ using WinFormsClock.Models;
 
 namespace WinFormsClock.Implementations
 {
-    public class Canvas : ICanvas
+    public class Canvas : ICanvas, IDisposable
     {
         public Canvas(Graphics g, PointF origin, int size)
         {
             this.g = g;
             this.origin = origin;
             this.size = size;
+        }
+
+        public void Dispose()
+        {
+            brushes.Dispose();
+            pens.Dispose();
+            fonts.Dispose();
         }
 
         public PointF Point(float degree, float radius)
@@ -33,28 +41,32 @@ namespace WinFormsClock.Implementations
 
         public void FillEllipse(Color color, RectangleF rect)
         {
-            using (var brush = new SolidBrush(color))
-                g.FillEllipse(brush, rect);
+            var brush = brushes.Get(color, () => new SolidBrush(color));
+            g.FillEllipse(brush, rect);
         }
 
         public void Line(Color color, float width, PointF startAt, PointF endAt)
         {
-            using (var pen = new Pen(color, width))
-                g.DrawLine(pen, startAt, endAt);
+            var pen = pens.Get(Tuple.Create(color, width), () => new Pen(color, width));
+            g.DrawLine(pen, startAt, endAt);
         }
 
         public void Text(Color color, RectangleF rect, string text)
         {
-            using (var brush = new SolidBrush(color))
-            using (var tempFont = new Font("Arial", 36))
-            {
-                var font = GetAdjustedFont("XX", tempFont, rect.Width, 36, 5);
-                var format = new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center };
-                g.DrawString(text, font, brush, rect, format);
-            }
+            var brush = brushes.Get(color, () => new SolidBrush(color));
+            var tempFont = fonts.Get(36, () => new Font(FONT_NAME, 36));
+            var font = GetAdjustedFont("XX", tempFont, rect.Width, 36, 5);
+            var format = new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center };
+            g.DrawString(text, font, brush, rect, format);
         }
 
         //
+
+        private const string FONT_NAME = "Arial";
+
+        private readonly ICache<Brush, Color> brushes = new Cache<Brush, Color>(10);
+        private readonly ICache<Pen, Tuple<Color, float>> pens = new Cache<Pen, Tuple<Color, float>>(10);
+        private readonly ICache<Font, int> fonts = new Cache<Font, int>(50);
 
         private readonly Graphics g;
         private readonly PointF origin;
@@ -74,8 +86,8 @@ namespace WinFormsClock.Implementations
 
         private float GetTextSize(string text, Font font, int emSize)
         {
-            using (var testFont = new Font(font.Name, emSize, font.Style))
-                return g.MeasureString(text, testFont).Width;
+            var testFont = fonts.Get(emSize, () => new Font(font.Name, emSize, font.Style));
+            return g.MeasureString(text, testFont).Width;
         }
     }
 }

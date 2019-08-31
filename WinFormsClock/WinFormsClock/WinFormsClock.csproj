@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="Contracts\ICanvas.cs" />
     <Compile Include="Contracts\IClockPart.cs" />
+    <Compile Include="Contracts\ICache.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Implementations\Background.cs" />
     <Compile Include="Implementations\Canvas.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Implementations\HandsOrigin.cs" />
     <Compile Include="Implementations\MinuteMarks.cs" />
     <Compile Include="Implementations\SecondsHand.cs" />
+    <Compile Include="Implementations\Cache.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
