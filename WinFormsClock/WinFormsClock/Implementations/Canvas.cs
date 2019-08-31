@@ -54,8 +54,7 @@ namespace WinFormsClock.Implementations
         public void Text(Color color, RectangleF rect, string text)
         {
             var brush = brushes.Get(color, () => new SolidBrush(color));
-            var tempFont = fonts.Get(36, () => new Font(FONT_NAME, 36));
-            var font = GetAdjustedFont("XX", tempFont, rect.Width, 36, 5);
+            var font = GetFont(rect.Width);
             var format = new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center };
             g.DrawString(text, font, brush, rect, format);
         }
@@ -72,22 +71,32 @@ namespace WinFormsClock.Implementations
         private readonly PointF origin;
         private readonly int size;
 
-        private Font GetAdjustedFont(string text, Font font, float width, int maxSize, int minSize)
+        private Font GetFont(float width)
         {
-            var goodSize = Enumerable
-                .Range(minSize, maxSize - minSize + 1)
-                .Reverse()
-                .Where(emSize => GetTextSize(text, font, emSize) <= width)
-                .FirstOrDefault();
-            if (goodSize < minSize)
-                goodSize = minSize;
-            return new Font(font.Name, goodSize, font.Style);
+            var tempFont = fonts.Get(36, () => new Font(FONT_NAME, 36));
+            return GetAdjustedFont("XX", tempFont, width, 36, 5);
         }
 
-        private float GetTextSize(string text, Font font, int emSize)
+        private Font GetAdjustedFont(string text, Font font, float width, int maxSize, int minSize)
         {
-            var testFont = fonts.Get(emSize, () => new Font(font.Name, emSize, font.Style));
-            return g.MeasureString(text, testFont).Width;
+            var candidates = Enumerable
+                .Range(minSize, maxSize - minSize + 1)
+                .Reverse()
+                .Select(emSize => GetFontAtSize(font, emSize))
+                .ToArray();
+
+            // return either the first matching or the last (which is minSize)
+            return candidates.Where(testFont => TextFits(testFont, width, text)).FirstOrDefault() ?? candidates.Last();
+        }
+
+        private Font GetFontAtSize(Font font, int emSize)
+        {
+            return fonts.Get(emSize, () => new Font(font.Name, emSize, font.Style));
+        }
+
+        private bool TextFits(Font testFont, float width, string text)
+        {
+            return g.MeasureString(text, testFont).Width <= width;
         }
     }
 }
