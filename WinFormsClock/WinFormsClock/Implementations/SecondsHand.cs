@@ -26,5 +26,10 @@ namespace WinFormsClock.Implementations
                 g.DrawLine(pen, lineStart.X, lineStart.Y, lineEnd.X, lineEnd.Y);
             }
         }
+
+        public void Draw(ICanvas canvas)
+        {
+            //
+        }
     }
 }

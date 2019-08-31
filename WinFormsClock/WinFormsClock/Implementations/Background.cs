@@ -11,5 +11,10 @@ namespace WinFormsClock.Implementations
         {
             g.Clear(Color);
         }
+
+        public void Draw(ICanvas canvas)
+        {
+            canvas.Clear(Color);
+        }
     }
 }

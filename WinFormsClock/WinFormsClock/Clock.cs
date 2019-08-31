@@ -52,8 +52,12 @@ namespace WinFormsClock
             var size = Math.Min(origin.X, origin.Y);
 
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            var canvas = new Canvas(e.Graphics, origin, size);
+
             foreach (var part in parts)
-                part.Draw(e.Graphics, origin, size);
+                part.Draw(canvas);
+                //part.Draw(e.Graphics, origin, size);
         }
     }
 }

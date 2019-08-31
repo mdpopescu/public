@@ -33,6 +33,11 @@ namespace WinFormsClock.Implementations
             }
         }
 
+        public void Draw(ICanvas canvas)
+        {
+            //
+        }
+
         //
 
         private static Font GetAdjustedFont(Graphics g, string text, Font font, float width, int maxSize, int minSize)

@@ -17,5 +17,10 @@ namespace WinFormsClock.Implementations
                 g.FillEllipse(brush, drawingRect);
             }
         }
+
+        public void Draw(ICanvas canvas)
+        {
+            canvas.FillEllipse(Color, canvas.Square(canvas.Point(0.0f, 0.0f), 0.1f));
+        }
     }
 }

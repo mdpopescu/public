@@ -25,5 +25,10 @@ namespace WinFormsClock.Implementations
                 }
             }
         }
+
+        public void Draw(ICanvas canvas)
+        {
+            //
+        }
     }
 }
