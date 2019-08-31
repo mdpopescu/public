@@ -7,14 +7,14 @@ namespace WinFormsClock.Implementations
     {
         public Color Color { get; set; } = Color.BlueViolet;
 
-        public void Draw(Graphics g, Point origin, int radius)
+        public void Draw(Graphics g, Point origin, int size)
         {
             using (var brush = new SolidBrush(Color))
             {
-                var size = radius * 0.05f;
-                var rect = new RectangleF(origin.X - size, origin.Y - size, size * 2, size * 2);
+                var drawingSize = size * 0.05f;
+                var drawingRect = new RectangleF(origin.X - drawingSize, origin.Y - drawingSize, drawingSize * 2, drawingSize * 2);
 
-                g.FillEllipse(brush, rect);
+                g.FillEllipse(brush, drawingRect);
             }
         }
     }

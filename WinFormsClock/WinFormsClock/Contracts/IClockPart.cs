@@ -6,6 +6,6 @@ namespace WinFormsClock.Contracts
     {
         Color Color { get; set; }
 
-        void Draw(Graphics g, Point origin, int radius);
+        void Draw(Graphics g, Point origin, int size);
     }
 }

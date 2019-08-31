@@ -11,7 +11,7 @@ namespace WinFormsClock.Implementations
     {
         public Color Color { get; set; } = Color.Red;
 
-        public void Draw(Graphics g, Point origin, int radius)
+        public void Draw(Graphics g, Point origin, int size)
         {
             using (var brush = new SolidBrush(Color))
             {
@@ -19,16 +19,16 @@ namespace WinFormsClock.Implementations
                 {
                     var degree = hour * 30;
 
-                    var center = PolarCoord.Create(degree, radius * 0.85f).CarthesianCoord.Offset(origin);
-                    var size = Math.Max(24.0f, radius * 0.15f); // don't let the numbers get too small
+                    var center = PolarCoord.Create(degree, size * 0.85f).CarthesianCoord.Offset(origin);
 
-                    var location = center.Offset(new PointF(-size / 2, -size / 2));
+                    var drawingSize = Math.Max(24.0f, size * 0.15f); // don't let the numbers get too small
+                    var drawingRect = new RectangleF(center.X - drawingSize / 2, center.Y - drawingSize / 2, drawingSize, drawingSize);
 
                     // hour 0 should be 12
                     var sHour = hour == 0 ? "12" : hour.ToString();
-                    var font = GetAdjustedFont(g, "12", new Font("Arial", 36), size, 36, 5);
+                    var font = GetAdjustedFont(g, "12", new Font("Arial", 36), drawingSize, 36, 5);
                     var format = new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center };
-                    g.DrawString(sHour, font, brush, new RectangleF(location, new SizeF(size, size)), format);
+                    g.DrawString(sHour, font, brush, drawingRect, format);
                 }
             }
         }

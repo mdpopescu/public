@@ -49,11 +49,11 @@ namespace WinFormsClock
         private void Clock_Paint(object sender, PaintEventArgs e)
         {
             var origin = new Point(e.ClipRectangle.Width / 2, e.ClipRectangle.Height / 2);
-            var radius = Math.Min(origin.X, origin.Y);
+            var size = Math.Min(origin.X, origin.Y);
 
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             foreach (var part in parts)
-                part.Draw(e.Graphics, origin, radius);
+                part.Draw(e.Graphics, origin, size);
         }
     }
 }

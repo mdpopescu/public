@@ -11,7 +11,7 @@ namespace WinFormsClock.Implementations
         public Color Color { get; set; } = Color.BlueViolet;
         public float Width { get; set; } = 1.0f;
 
-        public void Draw(Graphics g, Point origin, int radius)
+        public void Draw(Graphics g, Point origin, int size)
         {
             using (var pen = new Pen(Color, Width))
             {
@@ -20,8 +20,8 @@ namespace WinFormsClock.Implementations
                 var minute = (float) time.TotalMinutes;
                 var degree = minute * 6;
 
-                var lineStart = PolarCoord.Create(degree, radius * 0.05f).CarthesianCoord.Offset(origin);
-                var lineEnd = PolarCoord.Create(degree, radius * 0.70f).CarthesianCoord.Offset(origin);
+                var lineStart = PolarCoord.Create(degree, size * 0.05f).CarthesianCoord.Offset(origin);
+                var lineEnd = PolarCoord.Create(degree, size * 0.70f).CarthesianCoord.Offset(origin);
 
                 g.DrawLine(pen, lineStart.X, lineStart.Y, lineEnd.X, lineEnd.Y);
             }
