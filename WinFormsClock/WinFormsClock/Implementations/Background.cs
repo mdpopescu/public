@@ -7,11 +7,6 @@ namespace WinFormsClock.Implementations
     {
         public Color Color { get; set; } = Color.LightBlue;
 
-        public void Draw(Graphics g, Point origin, int size)
-        {
-            g.Clear(Color);
-        }
-
         public void Draw(ICanvas canvas)
         {
             canvas.Clear(Color);

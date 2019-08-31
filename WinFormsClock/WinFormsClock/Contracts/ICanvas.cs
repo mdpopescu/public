@@ -14,5 +14,7 @@ namespace WinFormsClock.Contracts
 
         void FillEllipse(Color color, RectangleF rect);
         void Line(Color color, float width, PointF startAt, PointF endAt);
+
+        void Text(Color color, RectangleF rect, string text);
     }
 }

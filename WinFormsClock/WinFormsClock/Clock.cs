@@ -57,7 +57,6 @@ namespace WinFormsClock
 
             foreach (var part in parts)
                 part.Draw(canvas);
-                //part.Draw(e.Graphics, origin, size);
         }
     }
 }
