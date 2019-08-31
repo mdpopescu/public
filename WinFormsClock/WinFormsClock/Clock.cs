@@ -37,6 +37,9 @@ namespace WinFormsClock
         private static readonly Color HOURS = Color.Red;
         private static readonly Color HANDS = Color.BlueViolet;
 
+        // TODO: dispose
+        private readonly IGraphicObjects graphicObjects = new GraphicObjects();
+
         private readonly IEnumerable<IClockPart> parts;
 
         //
@@ -53,9 +56,9 @@ namespace WinFormsClock
             var origin = new Point(e.ClipRectangle.Width / 2, e.ClipRectangle.Height / 2);
             var size = Math.Min(origin.X, origin.Y);
 
-            using (var canvas = new Canvas(e.Graphics, origin, size))
-                foreach (var part in parts)
-                    part.Draw(canvas);
+            var canvas = new Canvas(graphicObjects, e.Graphics, origin, size);
+            foreach (var part in parts)
+                part.Draw(canvas);
         }
     }
 }
