@@ -15,7 +15,7 @@ namespace WinFormsClock.Implementations
                 var degree = hour * 30;
                 var sHour = hour == 0 ? "12" : hour.ToString(); // hour 0 should be 12
 
-                canvas.Text(Color, canvas.Square(canvas.Point(degree, 0.85f), 0.15f), sHour);
+                canvas.DrawString(Color, canvas.Square(canvas.Point(degree, 0.85f), 0.15f), sHour);
             }
         }
     }

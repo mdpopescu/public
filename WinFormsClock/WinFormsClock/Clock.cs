@@ -43,6 +43,15 @@ namespace WinFormsClock
 
         private readonly IEnumerable<IClockPart> parts;
 
+        private Canvas CreateCanvas(PaintEventArgs e)
+        {
+            var origin = new Point(e.ClipRectangle.Width / 2, e.ClipRectangle.Height / 2);
+            var size = Math.Min(origin.X, origin.Y);
+
+            var g = new GraphicsAdapter(graphicObjects, e.Graphics);
+            return new Canvas(g, origin, size);
+        }
+
         //
 
         private void Clock_Load(object sender, EventArgs e)
@@ -54,10 +63,7 @@ namespace WinFormsClock
         {
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            var origin = new Point(e.ClipRectangle.Width / 2, e.ClipRectangle.Height / 2);
-            var size = Math.Min(origin.X, origin.Y);
-
-            var canvas = new Canvas(graphicObjects, e.Graphics, origin, size);
+            var canvas = CreateCanvas(e);
             foreach (var part in parts)
                 part.Draw(canvas);
         }

@@ -15,7 +15,7 @@ namespace WinFormsClock.Implementations
             var hour = (float) time.TotalHours % 12;
             var degree = hour * 30.0f;
 
-            canvas.Line(Color, Width, canvas.Point(degree, 0.05f), canvas.Point(degree, 0.50f));
+            canvas.DrawLine(Color, Width, canvas.Point(degree, 0.05f), canvas.Point(degree, 0.50f));
         }
     }
 }

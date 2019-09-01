@@ -55,11 +55,13 @@
     <Compile Include="Contracts\ICanvas.cs" />
     <Compile Include="Contracts\IClockPart.cs" />
     <Compile Include="Contracts\ICache.cs" />
+    <Compile Include="Contracts\IExtendedGraphics.cs" />
     <Compile Include="Contracts\IGraphicObjects.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Implementations\Background.cs" />
     <Compile Include="Implementations\Canvas.cs" />
     <Compile Include="Implementations\GraphicObjects.cs" />
+    <Compile Include="Implementations\GraphicsAdapter.cs" />
     <Compile Include="Implementations\HoursHand.cs" />
     <Compile Include="Implementations\MinutesHand.cs" />
     <Compile Include="Implementations\Numbers.cs" />

@@ -14,7 +14,7 @@ namespace WinFormsClock.Implementations
             {
                 var degree = minute * 6.0f;
 
-                canvas.Line(Color, 1.0f, canvas.Point(degree, 0.90f), canvas.Point(degree, 0.95f));
+                canvas.DrawLine(Color, 1.0f, canvas.Point(degree, 0.90f), canvas.Point(degree, 0.95f));
             }
         }
     }
