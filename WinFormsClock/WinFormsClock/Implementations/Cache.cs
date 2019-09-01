@@ -5,7 +5,7 @@ using WinFormsClock.Contracts;
 
 namespace WinFormsClock.Implementations
 {
-    public class Cache<TItem, TKey> : ICache<TItem, TKey>
+    public class Cache<TKey, TItem> : ICache<TKey, TItem>
         where TItem : IDisposable
     {
         public Cache(int limit)

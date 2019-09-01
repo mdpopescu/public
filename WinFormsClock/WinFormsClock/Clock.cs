@@ -24,6 +24,8 @@ namespace WinFormsClock
                 new MinutesHand { Color = HANDS, Width = MINUTE_WIDTH },
                 new SecondsHand { Color = HANDS, Width = SECOND_WIDTH },
             };
+
+            Disposed += (sender, e) => graphicObjects.Dispose();
         }
 
         //
@@ -37,8 +39,7 @@ namespace WinFormsClock
         private static readonly Color HOURS = Color.Red;
         private static readonly Color HANDS = Color.BlueViolet;
 
-        // TODO: dispose
-        private readonly IGraphicObjects graphicObjects = new GraphicObjects();
+        private readonly GraphicObjects graphicObjects = new GraphicObjects();
 
         private readonly IEnumerable<IClockPart> parts;
 

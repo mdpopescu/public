@@ -3,10 +3,10 @@ using System.Drawing;
 
 namespace WinFormsClock.Contracts
 {
-    public interface IGraphicObjects : IDisposable
+    public interface IGraphicObjects
     {
-        ICache<Brush, Color> Brushes { get; }
-        ICache<Pen, Tuple<Color, float>> Pens { get; }
-        ICache<Font, int> Fonts { get; }
+        ICache<Color, Brush> Brushes { get; }
+        ICache<Tuple<Color, float>, Pen> Pens { get; }
+        ICache<int, Font> Fonts { get; }
     }
 }

@@ -4,11 +4,11 @@ using WinFormsClock.Contracts;
 
 namespace WinFormsClock.Implementations
 {
-    public class GraphicObjects : IGraphicObjects
+    public class GraphicObjects : IGraphicObjects, IDisposable
     {
-        public ICache<Brush, Color> Brushes { get; } = new Cache<Brush, Color>(10);
-        public ICache<Pen, Tuple<Color, float>> Pens { get; } = new Cache<Pen, Tuple<Color, float>>(10);
-        public ICache<Font, int> Fonts { get; } = new Cache<Font, int>(50);
+        public ICache<Color, Brush> Brushes { get; } = new Cache<Color, Brush>(10);
+        public ICache<Tuple<Color, float>, Pen> Pens { get; } = new Cache<Tuple<Color, float>, Pen>(10);
+        public ICache<int, Font> Fonts { get; } = new Cache<int, Font>(50);
 
         public void Dispose()
         {
