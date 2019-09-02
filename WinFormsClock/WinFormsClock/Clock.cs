@@ -31,7 +31,7 @@ namespace WinFormsClock
 
         //
 
-        private const float HOUR_WIDTH = 6.0f;
+        private const float HOUR_WIDTH = 3.0f;
         private const float MINUTE_WIDTH = 3.0f;
         private const float SECOND_WIDTH = 1.0f;
 
