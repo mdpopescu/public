@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipesAndFilters", "PipesAndFilters\PipesAndFilters.csproj", "{AE02A537-67B0-4099-B060-A97B3AF7208E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE02A537-67B0-4099-B060-A97B3AF7208E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE02A537-67B0-4099-B060-A97B3AF7208E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE02A537-67B0-4099-B060-A97B3AF7208E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE02A537-67B0-4099-B060-A97B3AF7208E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E5CA2FF-DE8F-42BB-BA6B-03CFFA973F90}
+	EndGlobalSection
+EndGlobal
