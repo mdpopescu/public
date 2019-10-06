@@ -4,7 +4,7 @@ using PipesAndFilters.Models;
 
 namespace PipesAndFilters.Services
 {
-    public class ConsoleOutput : IFilter<string, Unit>
+    public class ConsoleOutput : ITarget<string>
     {
         public ConsoleOutput(string format)
         {

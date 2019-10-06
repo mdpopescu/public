@@ -4,9 +4,9 @@ using PipesAndFilters.Models;
 
 namespace PipesAndFilters.Services
 {
-    public class AccountBuilder : IFilter<Unit, AccountDTO>
+    public class AccountBuilder : ISource<AccountDTO>
     {
-        public AccountBuilder(params IFilter<Unit, string>[] filters)
+        public AccountBuilder(params ISource<string>[] filters)
         {
             if (filters == null)
                 throw new ArgumentNullException(nameof(filters));
@@ -28,6 +28,6 @@ namespace PipesAndFilters.Services
 
         //
 
-        private readonly IFilter<Unit, string>[] filters;
+        private readonly ISource<string>[] filters;
     }
 }

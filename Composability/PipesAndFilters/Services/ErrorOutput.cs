@@ -4,7 +4,7 @@ using PipesAndFilters.Models;
 
 namespace PipesAndFilters.Services
 {
-    public class ErrorOutput : IFilter<Exception, Unit>
+    public class ErrorOutput : ITarget<Exception>
     {
         public ErrorOutput(string format)
         {
