@@ -3,10 +3,17 @@
 namespace PipesAndFilters.Models
 {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public struct AccountDTO
+    public class AccountDTO
     {
-        public string Email;
-        public string Phone;
-        public string Password;
+        public readonly string Email;
+        public readonly string Phone;
+        public readonly string Password;
+
+        public AccountDTO(string email, string phone, string password)
+        {
+            Email = email;
+            Phone = phone;
+            Password = password;
+        }
     }
 }

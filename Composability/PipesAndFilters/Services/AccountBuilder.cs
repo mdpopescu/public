@@ -18,12 +18,11 @@ namespace PipesAndFilters.Services
 
         public AccountDTO Process(Unit _)
         {
-            return new AccountDTO
-            {
-                Email = filters[0].Process(Unit.INSTANCE),
-                Phone = filters[1].Process(Unit.INSTANCE),
-                Password = filters[2].Process(Unit.INSTANCE),
-            };
+            return new AccountDTO(
+                filters[0].Process(Unit.INSTANCE),
+                filters[1].Process(Unit.INSTANCE),
+                filters[2].Process(Unit.INSTANCE)
+            );
         }
 
         //
