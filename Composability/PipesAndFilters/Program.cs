@@ -10,17 +10,17 @@ namespace PipesAndFilters
         {
             var program = new Composite<Unit, AccountDTO, Unit>(
                 new AccountBuilder(
-                    new ConsoleInput("Email:    "),
-                    new ConsoleInput("Phone:    "),
-                    new ConsoleInput("Password: ")
+                    new ConsoleReader("Email:    "),
+                    new ConsoleReader("Phone:    "),
+                    new ConsoleReader("Password: ")
                 ),
                 new TryFilter<AccountDTO, string>(
                     new Composite<AccountDTO, bool, string>(
                         new LoginChecker(),
                         new SessionGenerator()
                     ),
-                    new ConsoleOutput("Session ID: {0}."),
-                    new ErrorOutput("ERROR: {0}")));
+                    new ConsoleWriter("Session ID: {0}."),
+                    new ConsoleErrorWriter("ERROR: {0}")));
             var _ = program.Process(Unit.INSTANCE);
         }
     }

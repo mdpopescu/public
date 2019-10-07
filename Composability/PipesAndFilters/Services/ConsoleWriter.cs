@@ -4,16 +4,16 @@ using PipesAndFilters.Models;
 
 namespace PipesAndFilters.Services
 {
-    public class ErrorOutput : ITarget<Exception>
+    public class ConsoleWriter : ITarget<string>
     {
-        public ErrorOutput(string format)
+        public ConsoleWriter(string format)
         {
-            this.format = format ?? "?";
+            this.format = format ?? "{0}";
         }
 
-        public Unit Process(Exception ex)
+        public Unit Process(string input)
         {
-            Console.Error.WriteLine(format, ex.Message);
+            Console.WriteLine(format, input);
             return Unit.INSTANCE;
         }
 

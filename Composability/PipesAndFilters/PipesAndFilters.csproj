@@ -52,11 +52,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AccountBuilder.cs" />
     <Compile Include="Infrastructure\Composite.cs" />
-    <Compile Include="Services\ConsoleOutput.cs" />
-    <Compile Include="Services\ErrorOutput.cs" />
+    <Compile Include="Services\ConsoleWriter.cs" />
+    <Compile Include="Services\ConsoleErrorWriter.cs" />
     <Compile Include="Services\LoginChecker.cs" />
     <Compile Include="Services\SessionGenerator.cs" />
-    <Compile Include="Services\ConsoleInput.cs" />
+    <Compile Include="Services\ConsoleReader.cs" />
     <Compile Include="Infrastructure\TryFilter.cs" />
   </ItemGroup>
   <ItemGroup>

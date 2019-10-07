@@ -4,9 +4,9 @@ using PipesAndFilters.Models;
 
 namespace PipesAndFilters.Services
 {
-    public class ConsoleInput : ISource<string>
+    public class ConsoleReader : ISource<string>
     {
-        public ConsoleInput(string prompt)
+        public ConsoleReader(string prompt)
         {
             this.prompt = prompt ?? "?";
         }
