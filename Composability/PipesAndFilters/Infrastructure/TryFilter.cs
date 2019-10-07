@@ -4,9 +4,9 @@ using PipesAndFilters.Models;
 
 namespace PipesAndFilters.Infrastructure
 {
-    public class TryFilter<TIn, TOut> : IFilter<TIn, Unit>
+    public class TryFilter<TIn, TOut> : ITarget<TIn>
     {
-        public TryFilter(IFilter<TIn, TOut> filter, IFilter<TOut, Unit> onSuccess, IFilter<Exception, Unit> onError)
+        public TryFilter(IFilter<TIn, TOut> filter, ITarget<TOut> onSuccess, ITarget<Exception> onError)
         {
             this.filter = filter;
             this.onSuccess = onSuccess;
@@ -29,7 +29,7 @@ namespace PipesAndFilters.Infrastructure
         //
 
         private readonly IFilter<TIn, TOut> filter;
-        private readonly IFilter<TOut, Unit> onSuccess;
-        private readonly IFilter<Exception, Unit> onError;
+        private readonly ITarget<TOut> onSuccess;
+        private readonly ITarget<Exception> onError;
     }
 }

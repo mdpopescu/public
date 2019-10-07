@@ -1,13 +1,28 @@
 ﻿using System;
+using System.IO;
 using PipesAndFilters.Contracts;
+using PipesAndFilters.Models;
 
 namespace PipesAndFilters.Services
 {
-    public class SessionGenerator : IFilter<bool, string>
+    public class SessionGenerator : IFilter<bool, IEffect>
     {
-        public string Process(bool input)
+        public SessionGenerator(TextWriter successWriter, TextWriter errorWriter)
         {
-            return input ? Guid.NewGuid().ToString("N") : throw new Exception("Invalid session.");
+            this.successWriter = successWriter;
+            this.errorWriter = errorWriter;
         }
+
+        public IEffect Process(bool input)
+        {
+            return input
+                ? new TextOutput(successWriter, Guid.NewGuid().ToString("N"))
+                : new TextOutput(errorWriter, "Invalid session.");
+        }
+
+        //
+
+        private readonly TextWriter successWriter;
+        private readonly TextWriter errorWriter;
     }
 }

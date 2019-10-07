@@ -1,4 +1,6 @@
-﻿using PipesAndFilters.Infrastructure;
+﻿using System;
+using PipesAndFilters.Contracts;
+using PipesAndFilters.Infrastructure;
 using PipesAndFilters.Models;
 using PipesAndFilters.Services;
 
@@ -14,13 +16,17 @@ namespace PipesAndFilters
                     new ConsoleReader("Phone:    "),
                     new ConsoleReader("Password: ")
                 ),
-                new TryFilter<AccountDTO, string>(
-                    new Composite<AccountDTO, bool, string>(
+                new Composite<AccountDTO, IEffect, Unit>(
+                    new Composite<AccountDTO, bool, IEffect>(
                         new LoginChecker(),
-                        new SessionGenerator()
+                        new SessionGenerator(
+                            Console.Out,
+                            Console.Error
+                        )
                     ),
-                    new ConsoleWriter("Session ID: {0}."),
-                    new ConsoleErrorWriter("ERROR: {0}")));
+                    new Executor()
+                )
+            );
             var _ = program.Process(Unit.INSTANCE);
         }
     }

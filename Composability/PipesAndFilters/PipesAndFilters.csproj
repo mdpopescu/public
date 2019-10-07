@@ -43,17 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contracts\IEffect.cs" />
     <Compile Include="Contracts\IFilter.cs" />
     <Compile Include="Contracts\ISource.cs" />
     <Compile Include="Contracts\ITarget.cs" />
+    <Compile Include="Infrastructure\Executor.cs" />
     <Compile Include="Models\AccountDTO.cs" />
+    <Compile Include="Models\TextOutput.cs" />
     <Compile Include="Models\Unit.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AccountBuilder.cs" />
     <Compile Include="Infrastructure\Composite.cs" />
-    <Compile Include="Services\ConsoleWriter.cs" />
-    <Compile Include="Services\ConsoleErrorWriter.cs" />
     <Compile Include="Services\LoginChecker.cs" />
     <Compile Include="Services\SessionGenerator.cs" />
     <Compile Include="Services\ConsoleReader.cs" />
