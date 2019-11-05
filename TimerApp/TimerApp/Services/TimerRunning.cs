@@ -13,7 +13,7 @@ namespace TimerApp.Services
 
         public TimerState StartStop()
         {
-            ui.SetButtonText("Reset");
+            ui.ChangeButtonToReset();
 
             return new TimerFrozen(ui);
         }

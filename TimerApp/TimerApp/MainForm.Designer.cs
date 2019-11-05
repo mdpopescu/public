@@ -36,12 +36,13 @@
             // 
             // btnStartStop
             // 
+            this.btnStartStop.BackColor = System.Drawing.Color.Lime;
             this.btnStartStop.Location = new System.Drawing.Point(12, 12);
             this.btnStartStop.Name = "btnStartStop";
             this.btnStartStop.Size = new System.Drawing.Size(132, 49);
             this.btnStartStop.TabIndex = 0;
             this.btnStartStop.Text = "Start";
-            this.btnStartStop.UseVisualStyleBackColor = true;
+            this.btnStartStop.UseVisualStyleBackColor = false;
             this.btnStartStop.Click += new System.EventHandler(this.btnStartStop_Click);
             // 
             // lblElapsedTime

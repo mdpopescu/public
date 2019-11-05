@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using TimerApp.Contracts;
 using TimerApp.Services;
@@ -12,9 +13,22 @@ namespace TimerApp
             InitializeComponent();
         }
 
-        public void SetButtonText(string text)
+        public void ChangeButtonToStart()
         {
-            btnStartStop.Text = text;
+            btnStartStop.Text = "Start";
+            btnStartStop.BackColor = Color.Lime;
+        }
+
+        public void ChangeButtonToStop()
+        {
+            btnStartStop.Text = "Stop";
+            btnStartStop.BackColor = Color.Red;
+        }
+
+        public void ChangeButtonToReset()
+        {
+            btnStartStop.Text = "Reset";
+            btnStartStop.BackColor = Color.Yellow;
         }
 
         public void ShowTime(TimeSpan ts)

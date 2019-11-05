@@ -12,7 +12,7 @@ namespace TimerApp.Services
 
         public TimerState StartStop()
         {
-            ui.SetButtonText("Stop");
+            ui.ChangeButtonToStop();
 
             return new TimerRunning(ui, DateTimeOffset.Now);
         }

@@ -4,7 +4,9 @@ namespace TimerApp.Contracts
 {
     public interface UserInterface
     {
-        void SetButtonText(string text);
+        void ChangeButtonToStart();
+        void ChangeButtonToStop();
+        void ChangeButtonToReset();
 
         void ShowTime(TimeSpan ts);
     }
