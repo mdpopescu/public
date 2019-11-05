@@ -3,18 +3,19 @@ using TimerApp.Contracts;
 
 namespace TimerApp.Services
 {
-    public class TimerStopped : TimerState
+    public class TimerFrozen : TimerState
     {
-        public TimerStopped(UserInterface ui)
+        public TimerFrozen(UserInterface ui)
         {
             this.ui = ui;
         }
 
         public TimerState StartStop()
         {
-            ui.SetButtonText("Stop");
+            ui.SetButtonText("Start");
+            ui.ShowTime(TimeSpan.Zero);
 
-            return new TimerRunning(ui, DateTimeOffset.Now);
+            return new TimerStopped(ui);
         }
 
         public void DisplayTime()

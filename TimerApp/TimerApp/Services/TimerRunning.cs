@@ -13,8 +13,9 @@ namespace TimerApp.Services
 
         public TimerState StartStop()
         {
-            ui.SetButtonText("Start");
-            return new TimerStopped(ui);
+            ui.SetButtonText("Reset");
+
+            return new TimerFrozen(ui);
         }
 
         public void DisplayTime()
