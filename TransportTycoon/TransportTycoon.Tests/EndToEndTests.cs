@@ -12,7 +12,7 @@ namespace TransportTycoon.Tests
         [TestInitialize]
         public void SetUp()
         {
-            app = new App();
+            app = new App(null);
         }
 
         [TestMethod]
