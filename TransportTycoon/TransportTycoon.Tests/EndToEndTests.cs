@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TransportTycoon.Library.Contracts;
 using TransportTycoon.Library.Models;
 using TransportTycoon.Library.Services;
@@ -22,20 +23,27 @@ namespace TransportTycoon.Tests
                 new Endpoint("B"),
             };
 
-            IMap map = new Map();
-            map.AddEndpoints(endpoints);
+            var links = new[]
+            {
+                new Link(endpoints[0], endpoints[1]),
+                new Link(endpoints[0], endpoints[3]),
+                new Link(endpoints[1], endpoints[2]),
+            };
+
+            // I am not sure that the map is useful
+            IMap map = new Map(links);
 
             IVehicle truck = new Vehicle("Truck");
-            truck.AddRoute(endpoints[0], endpoints[1], 1);
-            truck.AddRoute(endpoints[0], endpoints[3], 5);
+            truck.SetCost(links[0], 1);
+            truck.SetCost(links[1], 5);
 
             IVehicle boat = new Vehicle("Boat");
-            boat.AddRoute(endpoints[1], endpoints[2], 4);
+            boat.SetCost(links[2], 4);
 
             app = new App(map);
-            app.AddVehicle(truck, "t1");
-            app.AddVehicle(truck, "t2");
-            app.AddVehicle(boat, "b");
+            app.AddVehicle(truck, "t1", endpoints[0]);
+            app.AddVehicle(truck, "t2", endpoints[0]);
+            app.AddVehicle(boat, "b", endpoints[1]);
         }
 
         [TestClass]
@@ -44,25 +52,31 @@ namespace TransportTycoon.Tests
             [TestMethod]
             public void Test1()
             {
-                Assert.AreEqual(5, app.Run("A"));
+                Assert.AreEqual(5, app.Run("Factory", AsStrings("B")));
             }
 
             [TestMethod]
             public void Test2()
             {
-                Assert.AreEqual(5, app.Run("AB"));
+                Assert.AreEqual(5, app.Run("Factory", AsStrings("A")));
             }
 
             [TestMethod]
             public void Test3()
             {
-                Assert.AreEqual(5, app.Run("BB"));
+                Assert.AreEqual(5, app.Run("Factory", AsStrings("AB")));
             }
 
             [TestMethod]
             public void Test4()
             {
-                Assert.AreEqual(7, app.Run("ABB"));
+                Assert.AreEqual(5, app.Run("Factory", AsStrings("BB")));
+            }
+
+            [TestMethod]
+            public void Test5()
+            {
+                Assert.AreEqual(7, app.Run("Factory", AsStrings("ABB")));
             }
         }
 
@@ -72,8 +86,15 @@ namespace TransportTycoon.Tests
             [TestMethod]
             public void Test1()
             {
-                Assert.AreEqual(0, app.Run("AABABBAB"));
+                Assert.AreEqual(0, app.Run("Factory", AsStrings("AABABBAB")));
             }
+        }
+
+        //
+
+        private static string[] AsStrings(string str)
+        {
+            return str.Select(it => it.ToString()).ToArray();
         }
     }
 }

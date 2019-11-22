@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using TransportTycoon.Library.Contracts;
 using TransportTycoon.Library.Models;
 
@@ -6,9 +7,13 @@ namespace TransportTycoon.Library.Services
 {
     public class Map : IMap
     {
-        public void AddEndpoints(IEnumerable<Endpoint> endpoints)
+        public Map(IEnumerable<Link> links)
         {
-            throw new System.NotImplementedException();
+            this.links = links.ToArray();
         }
+
+        //
+
+        private readonly Link[] links;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using TransportTycoon.Library.Contracts;
+using TransportTycoon.Library.Models;
 
 namespace TransportTycoon.Library.Services
 {
@@ -9,12 +10,12 @@ namespace TransportTycoon.Library.Services
             this.map = map;
         }
 
-        public void AddVehicle(IVehicle vehicle, string id)
+        public void AddVehicle(IVehicle vehicle, string id, Endpoint startingEndpoint)
         {
-            throw new System.NotImplementedException();
+            // 
         }
 
-        public int Run(string containers) => 0;
+        public int Run(string origin, string[] destinations) => 0;
 
         //
 

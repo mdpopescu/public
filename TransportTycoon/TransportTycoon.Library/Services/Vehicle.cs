@@ -12,9 +12,9 @@ namespace TransportTycoon.Library.Services
             Type = type;
         }
 
-        public void AddRoute(Endpoint e1, Endpoint e2, int cost)
+        public void SetCost(Link link, int cost)
         {
-            throw new System.NotImplementedException();
+            //
         }
     }
 }
