@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TransportTycoon.Library.Contracts;
 using TransportTycoon.Library.Models;
@@ -10,12 +11,14 @@ namespace TransportTycoon.Tests
     [TestCategory("End to End")]
     public class EndToEndTests
     {
+        private Endpoint[] endpoints;
+
         private App app;
 
         [TestInitialize]
         public void SetUp()
         {
-            var endpoints = new[]
+            endpoints = new[]
             {
                 new Endpoint("Factory"),
                 new Endpoint("Port"),
@@ -47,7 +50,7 @@ namespace TransportTycoon.Tests
                 boatType.Create("b", endpoints[1]),
             };
 
-            app = new App(map, vehicles);
+            app = new App(map, new VehicleList(vehicles));
         }
 
         [TestClass]
@@ -56,31 +59,31 @@ namespace TransportTycoon.Tests
             [TestMethod]
             public void Test1()
             {
-                Assert.AreEqual(5, app.Run("Factory", AsStrings("B")));
+                Assert.AreEqual(5, app.Run(endpoints[0], GetEndpoints("B")));
             }
 
             [TestMethod]
             public void Test2()
             {
-                Assert.AreEqual(5, app.Run("Factory", AsStrings("A")));
+                Assert.AreEqual(5, app.Run(endpoints[0], GetEndpoints("A")));
             }
 
             [TestMethod]
             public void Test3()
             {
-                Assert.AreEqual(5, app.Run("Factory", AsStrings("AB")));
+                Assert.AreEqual(5, app.Run(endpoints[0], GetEndpoints("AB")));
             }
 
             [TestMethod]
             public void Test4()
             {
-                Assert.AreEqual(5, app.Run("Factory", AsStrings("BB")));
+                Assert.AreEqual(5, app.Run(endpoints[0], GetEndpoints("BB")));
             }
 
             [TestMethod]
             public void Test5()
             {
-                Assert.AreEqual(7, app.Run("Factory", AsStrings("ABB")));
+                Assert.AreEqual(7, app.Run(endpoints[0], GetEndpoints("ABB")));
             }
         }
 
@@ -90,21 +93,24 @@ namespace TransportTycoon.Tests
             [TestMethod]
             public void Test1()
             {
-                Assert.AreEqual(0, app.Run("Factory", AsStrings("AABABBAB")));
+                Assert.AreEqual(0, app.Run(endpoints[0], GetEndpoints("AABABBAB")));
             }
 
             [TestMethod]
             public void Test2()
             {
-                Assert.AreEqual(0, app.Run("Factory", AsStrings("ABBBABAAABBB")));
+                Assert.AreEqual(0, app.Run(endpoints[0], GetEndpoints("ABBBABAAABBB")));
             }
         }
 
         //
 
-        private static string[] AsStrings(string str)
+        private IEnumerable<Endpoint> GetEndpoints(string str)
         {
-            return str.Select(it => it.ToString()).ToArray();
+            return str
+                .Select(it => it.ToString())
+                .Select(name => endpoints.First(it => it.Name == name))
+                .ToArray();
         }
     }
 }
