@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using TransportTycoon.Library.Contracts;
+﻿using TransportTycoon.Library.Contracts;
 
 namespace TransportTycoon.Library.Services
 {
@@ -11,17 +9,12 @@ namespace TransportTycoon.Library.Services
             this.map = map;
         }
 
-        public int Run(string containers)
+        public void AddVehicle(IVehicle vehicle, string id)
         {
-            if (string.IsNullOrEmpty(containers))
-                throw new ArgumentException("At least one destination is required.", nameof(containers));
-
-            var routes = map.Routes.ToArray();
-            if (!routes.Any())
-                throw new InvalidOperationException("At least one route needs to be defined.");
-
-            return 0;
+            throw new System.NotImplementedException();
         }
+
+        public int Run(string containers) => 0;
 
         //
 

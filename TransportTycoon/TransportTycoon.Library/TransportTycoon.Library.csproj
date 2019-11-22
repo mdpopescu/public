@@ -42,9 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\IMap.cs" />
-    <Compile Include="Models\Route.cs" />
+    <Compile Include="Contracts\IVehicle.cs" />
+    <Compile Include="Models\Endpoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\App.cs" />
+    <Compile Include="Services\Map.cs" />
+    <Compile Include="Services\Vehicle.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

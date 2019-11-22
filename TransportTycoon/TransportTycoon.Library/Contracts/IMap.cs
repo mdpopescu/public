@@ -5,6 +5,6 @@ namespace TransportTycoon.Library.Contracts
 {
     public interface IMap
     {
-        IEnumerable<Route> Routes { get; }
+        void AddEndpoints(IEnumerable<Endpoint> endpoints);
     }
 }
