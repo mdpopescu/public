@@ -1,18 +1,16 @@
-﻿using TransportTycoon.Library.Contracts;
+﻿using System.Collections.Generic;
+using System.Linq;
+using TransportTycoon.Library.Contracts;
 using TransportTycoon.Library.Models;
 
 namespace TransportTycoon.Library.Services
 {
     public class App
     {
-        public App(IMap map)
+        public App(IMap map, IEnumerable<Vehicle> vehicles)
         {
             this.map = map;
-        }
-
-        public void AddVehicle(IVehicle vehicle, string id, Endpoint startingEndpoint)
-        {
-            // 
+            this.vehicles = vehicles.ToArray();
         }
 
         public int Run(string origin, string[] destinations) => 0;
@@ -20,5 +18,6 @@ namespace TransportTycoon.Library.Services
         //
 
         private readonly IMap map;
+        private readonly Vehicle[] vehicles;
     }
 }

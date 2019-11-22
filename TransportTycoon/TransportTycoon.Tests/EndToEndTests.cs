@@ -33,17 +33,21 @@ namespace TransportTycoon.Tests
             // I am not sure that the map is useful
             IMap map = new Map(links);
 
-            IVehicle truck = new Vehicle("Truck");
-            truck.SetCost(links[0], 1);
-            truck.SetCost(links[1], 5);
+            var truckType = new VehicleType("Truck");
+            truckType.SetCost(links[0], 1);
+            truckType.SetCost(links[1], 5);
 
-            IVehicle boat = new Vehicle("Boat");
-            boat.SetCost(links[2], 4);
+            var boatType = new VehicleType("Boat");
+            boatType.SetCost(links[2], 4);
 
-            app = new App(map);
-            app.AddVehicle(truck, "t1", endpoints[0]);
-            app.AddVehicle(truck, "t2", endpoints[0]);
-            app.AddVehicle(boat, "b", endpoints[1]);
+            var vehicles = new[]
+            {
+                truckType.Create("t1", endpoints[0]),
+                truckType.Create("t2", endpoints[0]),
+                boatType.Create("b", endpoints[1]),
+            };
+
+            app = new App(map, vehicles);
         }
 
         [TestClass]
@@ -87,6 +91,12 @@ namespace TransportTycoon.Tests
             public void Test1()
             {
                 Assert.AreEqual(0, app.Run("Factory", AsStrings("AABABBAB")));
+            }
+
+            [TestMethod]
+            public void Test2()
+            {
+                Assert.AreEqual(0, app.Run("Factory", AsStrings("ABBBABAAABBB")));
             }
         }
 
