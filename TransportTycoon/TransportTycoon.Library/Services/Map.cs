@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+
 using System.Collections.Generic;
 using System.Linq;
 using TransportTycoon.Library.Contracts;
@@ -21,7 +22,7 @@ namespace TransportTycoon.Library.Services
 
             var q = new List<Endpoint>();
             var dist = new Dictionary<Endpoint, int>();
-            var prev = new Dictionary<Endpoint, Endpoint>();
+            var prev = new Dictionary<Endpoint, Endpoint?>();
 
             foreach (var v in nodes)
             {
@@ -38,7 +39,7 @@ namespace TransportTycoon.Library.Services
                 q.Remove(u);
 
                 if (u == destination)
-                    return FindLinks(BuildPath(prev, origin, destination).Reverse().ToArray());
+                    return FindLinks(BuildPath(prev, origin, destination).ToArray());
 
                 foreach (var link in GetLinks(u, q))
                 {
@@ -73,17 +74,22 @@ namespace TransportTycoon.Library.Services
             return result;
         }
 
-        private static IEnumerable<Endpoint> BuildPath(IReadOnlyDictionary<Endpoint, Endpoint> prev, Endpoint origin, Endpoint destination)
+        private static IEnumerable<Endpoint> BuildPath(IReadOnlyDictionary<Endpoint, Endpoint?> prev, Endpoint origin, Endpoint destination)
         {
             var u = destination;
             if (u != origin && prev[u] == null)
-                yield break;
+                return Enumerable.Empty<Endpoint>();
 
-            while (u != null)
+            var result = new List<Endpoint>();
+
+            Endpoint? uu = u;
+            while (uu != null)
             {
-                yield return u;
-                u = prev[u];
+                result.Add(uu);
+                uu = prev[uu];
             }
+
+            return result;
         }
 
         private IEnumerable<Link> FindLinks(IReadOnlyList<Endpoint> endpoints)

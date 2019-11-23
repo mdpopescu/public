@@ -1,8 +1,10 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 
 namespace TransportTycoon.Library.Models
 {
-    public class Link : IEquatable<Link>
+    public class Link : IEquatable<Link?>
     {
         public Endpoint E1 { get; }
         public Endpoint E2 { get; }
@@ -17,7 +19,7 @@ namespace TransportTycoon.Library.Models
 
         #region equality
 
-        public bool Equals(Link other)
+        public bool Equals(Link? other)
         {
             if (ReferenceEquals(null, other))
                 return false;
@@ -29,7 +31,7 @@ namespace TransportTycoon.Library.Models
             // ReSharper restore ArrangeRedundantParentheses
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj))
                 return false;
@@ -48,8 +50,8 @@ namespace TransportTycoon.Library.Models
             }
         }
 
-        public static bool operator ==(Link left, Link right) => Equals(left, right);
-        public static bool operator !=(Link left, Link right) => !Equals(left, right);
+        public static bool operator ==(Link? left, Link? right) => ReferenceEquals(left, right) || !ReferenceEquals(null, left) && left.Equals(right);
+        public static bool operator !=(Link? left, Link? right) => !(left == right);
 
         #endregion
 

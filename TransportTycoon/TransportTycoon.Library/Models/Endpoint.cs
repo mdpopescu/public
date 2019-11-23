@@ -1,8 +1,10 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 
 namespace TransportTycoon.Library.Models
 {
-    public class Endpoint : IEquatable<Endpoint>
+    public class Endpoint : IEquatable<Endpoint?>
     {
         public string Name { get; }
 
@@ -13,7 +15,7 @@ namespace TransportTycoon.Library.Models
 
         #region equality
 
-        public bool Equals(Endpoint other)
+        public bool Equals(Endpoint? other)
         {
             if (ReferenceEquals(null, other))
                 return false;
@@ -22,7 +24,7 @@ namespace TransportTycoon.Library.Models
             return Name == other.Name;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj))
                 return false;
@@ -35,8 +37,8 @@ namespace TransportTycoon.Library.Models
 
         public override int GetHashCode() => Name.GetHashCode();
 
-        public static bool operator ==(Endpoint left, Endpoint right) => Equals(left, right);
-        public static bool operator !=(Endpoint left, Endpoint right) => !Equals(left, right);
+        public static bool operator ==(Endpoint? left, Endpoint? right) => ReferenceEquals(left, right) || !ReferenceEquals(null, left) && left.Equals(right);
+        public static bool operator !=(Endpoint? left, Endpoint? right) => !(left == right);
 
         #endregion
     }
