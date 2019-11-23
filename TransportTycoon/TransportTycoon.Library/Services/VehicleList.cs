@@ -12,10 +12,7 @@ namespace TransportTycoon.Library.Services
             this.vehicles = vehicles.ToArray();
         }
 
-        public Vehicle FindAvailable(Endpoint location)
-        {
-            return vehicles.First(it => it.Location == location);
-        }
+        public Vehicle FindAvailable(Endpoint location) => vehicles.First(it => it.Location == location);
 
         //
 

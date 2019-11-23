@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using TransportTycoon.Library.Contracts;
 using TransportTycoon.Library.Models;
 
@@ -17,13 +18,17 @@ namespace TransportTycoon.Library.Services
             var total = 0;
             foreach (var destination in destinations)
             {
-                // assume that a vehicle is available at the origin
-                var vehicle = vehicles.FindAvailable(origin);
+                // assume a route exists from origin to destination
+                var route = map.GetRoute(origin, destination).ToArray();
 
-                // assume that a direct link exists from origin to destination
-                total += vehicle.GetCost(destination);
+                foreach (var link in route)
+                {
+                    // assume that a vehicle is available at the start of the link
+                    var vehicle = vehicles.FindAvailable(link.E1);
+                    vehicle.MoveTo(link.E2);
 
-                vehicle.MoveTo(destination);
+                    total += link.Cost;
+                }
             }
 
             return total;

@@ -11,6 +11,8 @@ namespace TransportTycoon.Library.Models
             Name = name;
         }
 
+        #region equality
+
         public bool Equals(Endpoint other)
         {
             if (ReferenceEquals(null, other))
@@ -31,10 +33,11 @@ namespace TransportTycoon.Library.Models
             return Equals((Endpoint) obj);
         }
 
-        public override int GetHashCode() => Name != null ? Name.GetHashCode() : 0;
+        public override int GetHashCode() => Name.GetHashCode();
 
         public static bool operator ==(Endpoint left, Endpoint right) => Equals(left, right);
-
         public static bool operator !=(Endpoint left, Endpoint right) => !Equals(left, right);
+
+        #endregion
     }
 }
