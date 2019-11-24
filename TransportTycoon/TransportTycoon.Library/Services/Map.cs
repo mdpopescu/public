@@ -11,24 +11,23 @@ namespace TransportTycoon.Library.Services
     {
         public Map(IEnumerable<Endpoint> nodes, IEnumerable<Link> links)
         {
-            this.nodes = nodes.ToArray();
             this.links = links.ToArray();
+
+            pathFinder = new PathFinder(nodes, this.links);
         }
 
         public IEnumerable<Link> GetRoute(Endpoint origin, Endpoint destination)
         {
-            var pathFinder = new PathFinder(nodes, links);
             var solution = pathFinder.FindShortestPath(origin, destination);
-
-            //var solution = Dijkstra(nodes, origin, destination);
             var path = BuildPath(solution, origin, destination).ToArray();
             return FindLinks(path);
         }
 
         //
 
-        private readonly Endpoint[] nodes;
         private readonly Link[] links;
+
+        private readonly PathFinder pathFinder;
 
         private static IEnumerable<Endpoint> BuildPath(IReadOnlyDictionary<Endpoint, Endpoint?> prev, Endpoint origin, Endpoint destination)
         {
@@ -49,7 +48,7 @@ namespace TransportTycoon.Library.Services
             return result;
         }
 
-        private IEnumerable<Link> FindLinks(IReadOnlyList<Endpoint> endpoints)
+        private IEnumerable<Link> FindLinks(IReadOnlyCollection<Endpoint> endpoints)
         {
             var origin = endpoints.First();
             foreach (var destination in endpoints.Skip(1))

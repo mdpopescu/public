@@ -22,9 +22,7 @@ namespace TransportTycoon.Library.Services
 
             while (unvisited.Any())
             {
-                var nearest = unvisited.OrderBy(it => dist[it]).First();
-                unvisited.Remove(nearest);
-
+                var nearest = ExtractNearest();
                 if (nearest == destination)
                     return prev;
 
@@ -59,6 +57,13 @@ namespace TransportTycoon.Library.Services
             }
 
             dist[origin] = 0;
+        }
+
+        private Endpoint ExtractNearest()
+        {
+            var nearest = unvisited.OrderBy(it => dist[it]).First();
+            unvisited.Remove(nearest);
+            return nearest;
         }
 
         private void UpdateCosts(Endpoint e)
