@@ -21,7 +21,7 @@ namespace TransportTycoon.Library.Models
 
         public bool Equals(Link? other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
                 return false;
             if (ReferenceEquals(this, other))
                 return true;
@@ -33,13 +33,11 @@ namespace TransportTycoon.Library.Models
 
         public override bool Equals(object? obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
                 return false;
             if (ReferenceEquals(this, obj))
                 return true;
-            if (obj.GetType() != GetType())
-                return false;
-            return Equals((Link) obj);
+            return obj.GetType() == GetType() && Equals((Link) obj);
         }
 
         public override int GetHashCode()
@@ -50,7 +48,7 @@ namespace TransportTycoon.Library.Models
             }
         }
 
-        public static bool operator ==(Link? left, Link? right) => ReferenceEquals(left, right) || !ReferenceEquals(null, left) && left.Equals(right);
+        public static bool operator ==(Link? left, Link? right) => ReferenceEquals(left, right) || !(left is null) && left.Equals(right);
         public static bool operator !=(Link? left, Link? right) => !(left == right);
 
         #endregion

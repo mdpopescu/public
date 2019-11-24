@@ -38,9 +38,9 @@ namespace TransportTycoon.Tests
 
             var vehicles = new[]
             {
-                new Vehicle("t1", endpoints[0]),
-                new Vehicle("t2", endpoints[0]),
-                new Vehicle("b", endpoints[1]),
+                new Vehicle(endpoints[0]),
+                new Vehicle(endpoints[0]),
+                new Vehicle(endpoints[1]),
             };
 
             app = new App(map, new VehicleList(vehicles));

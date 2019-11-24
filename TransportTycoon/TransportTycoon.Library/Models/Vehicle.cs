@@ -4,11 +4,8 @@
     {
         public Endpoint Location { get; private set; }
 
-        public Vehicle(string id, Endpoint home)
+        public Vehicle(Endpoint home)
         {
-            this.id = id;
-            this.home = home;
-
             Location = home;
         }
 
@@ -16,10 +13,5 @@
         {
             Location = destination;
         }
-
-        //
-
-        private readonly string id;
-        private readonly Endpoint home;
     }
 }
