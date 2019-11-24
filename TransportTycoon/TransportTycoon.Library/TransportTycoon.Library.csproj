@@ -48,6 +48,7 @@
     <Compile Include="Models\Endpoint.cs" />
     <Compile Include="Models\Link.cs" />
     <Compile Include="Models\Vehicle.cs" />
+    <Compile Include="Services\PathFinder.cs" />
     <Compile Include="Services\VehicleList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\App.cs" />

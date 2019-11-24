@@ -9,94 +9,26 @@ namespace TransportTycoon.Library.Services
 {
     public class Map : IMap
     {
-        public Map(IEnumerable<Link> links)
+        public Map(IEnumerable<Endpoint> nodes, IEnumerable<Link> links)
         {
+            this.nodes = nodes.ToArray();
             this.links = links.ToArray();
         }
 
         public IEnumerable<Link> GetRoute(Endpoint origin, Endpoint destination)
         {
-            var nodes = GetNodes().ToArray();
-            var solution = Dijkstra(nodes, origin, destination);
+            var pathFinder = new PathFinder(nodes, links);
+            var solution = pathFinder.FindShortestPath(origin, destination);
+
+            //var solution = Dijkstra(nodes, origin, destination);
             var path = BuildPath(solution, origin, destination).ToArray();
             return FindLinks(path);
         }
 
         //
 
+        private readonly Endpoint[] nodes;
         private readonly Link[] links;
-
-        private IEnumerable<Endpoint> GetNodes()
-        {
-            var result = new HashSet<Endpoint>();
-
-            foreach (var link in links)
-            {
-                result.Add(link.E1);
-                result.Add(link.E2);
-            }
-
-            return result;
-        }
-
-        private IReadOnlyDictionary<Endpoint, Endpoint?> Dijkstra(IEnumerable<Endpoint> nodes, Endpoint origin, Endpoint destination)
-        {
-            // Dijkstra's shortest path algorithm -- based on https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
-
-            var unvisited = new List<Endpoint>();
-            var dist = new Dictionary<Endpoint, int>();
-            var prev = new Dictionary<Endpoint, Endpoint?>();
-
-            Initialize();
-
-            while (unvisited.Any())
-            {
-                var nearest = unvisited.OrderBy(it => dist[it]).First();
-                unvisited.Remove(nearest);
-
-                if (nearest == destination)
-                    return prev;
-
-                UpdateCosts(nearest);
-            }
-
-            return new Dictionary<Endpoint, Endpoint?>();
-
-            //
-
-            void Initialize()
-            {
-                foreach (var v in nodes)
-                {
-                    dist[v] = int.MaxValue;
-                    prev[v] = null;
-                    unvisited.Add(v);
-                }
-
-                dist[origin] = 0;
-            }
-
-            void UpdateCosts(Endpoint e)
-            {
-                // all links containing e where the other endpoint is unvisited
-                var unvisitedLinks = links.Where(it => it.Contains(e) && unvisited.Contains(it.GetOther(e)));
-                foreach (var link in unvisitedLinks)
-                    UpdateCost(link, e);
-            }
-
-            void UpdateCost(Link link, Endpoint e)
-            {
-                var v = link.GetOther(e);
-
-                var alt = dist[e] + link.Cost;
-                // ReSharper disable once InvertIf
-                if (alt < dist[v])
-                {
-                    dist[v] = alt;
-                    prev[v] = e;
-                }
-            }
-        }
 
         private static IEnumerable<Endpoint> BuildPath(IReadOnlyDictionary<Endpoint, Endpoint?> prev, Endpoint origin, Endpoint destination)
         {

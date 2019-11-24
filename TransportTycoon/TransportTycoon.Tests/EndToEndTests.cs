@@ -34,7 +34,7 @@ namespace TransportTycoon.Tests
             };
 
             // I am not sure that the map is useful
-            IMap map = new Map(links);
+            IMap map = new Map(endpoints, links);
 
             var vehicles = new[]
             {
