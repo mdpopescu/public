@@ -144,3 +144,5 @@ Public repository - CC-by-SA 3.0
 * WinFormsClock: drawing a clock using WinForms graphics
 
 * YelpSearch: search Yelp for businesses (eg hotels) near a given zip; solution for https://www.odesk.com/jobs/~~d5624935369d26d1 (I didn't get the job so the code is mine)
+
+* Zaruri: dice game
