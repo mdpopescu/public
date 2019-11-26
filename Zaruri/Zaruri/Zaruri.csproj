@@ -44,15 +44,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="HandFactory.cs" />
+    <Compile Include="Contracts\IHandFactory.cs" />
+    <Compile Include="Contracts\IRoller.cs" />
+    <Compile Include="Services\HandFactory.cs" />
     <Compile Include="Hands.cs" />
-    <Compile Include="Index.cs" />
-    <Compile Include="Indices.cs" />
+    <Compile Include="Models\Index.cs" />
+    <Compile Include="Models\Indices.cs" />
+    <Compile Include="Services\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\RandomRoller.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

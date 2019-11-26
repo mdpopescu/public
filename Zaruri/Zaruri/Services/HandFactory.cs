@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Zaruri.Contracts;
 
-namespace Zaruri
+namespace Zaruri.Services
 {
-    public class HandFactory
+    public class HandFactory: IHandFactory
     {
         public Hand Create(int[] roll)
         {

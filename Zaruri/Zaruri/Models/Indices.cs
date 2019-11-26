@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 
-namespace Zaruri
+namespace Zaruri.Models
 {
-    internal class Indices
+    public class Indices
     {
         public static Indices Create(Index[] values) => new Indices(values);
 

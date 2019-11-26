@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Zaruri
+namespace Zaruri.Models
 {
-    internal class Index
+    public class Index
     {
         public static Index Create(int value) => new Index(value);
 
