@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="HandFactory.cs" />
     <Compile Include="Hands.cs" />
     <Compile Include="Index.cs" />
     <Compile Include="Indices.cs" />
