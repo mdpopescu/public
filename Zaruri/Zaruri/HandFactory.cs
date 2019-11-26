@@ -8,10 +8,8 @@ namespace Zaruri
     {
         public Hand Create(int[] roll)
         {
-            roll = roll.OrderBy(it => it).ToArray();
-
-            var groups = roll.GroupBy(it => it).ToArray();
-            var groupCounts = groups.Select(it => it.Count()).OrderByDescending(it => it).ToArray();
+            roll = InAscendingOrder(roll);
+            var groupCounts = GetGroupCounts(roll);
 
             return CreateFromRoll(roll)
                 ?? CreateFromGroupCounts(groupCounts)
@@ -36,8 +34,10 @@ namespace Zaruri
             (new[] { 2, 1, 1, 1 }, typeof(OnePair)),
         };
 
-        private static Hand CreateFromRoll(int[] roll) => CreateFromMap(ROLL_MAP, roll);
+        private static int[] InAscendingOrder(IEnumerable<int> roll) => roll.OrderBy(it => it).ToArray();
+        private static int[] GetGroupCounts(IEnumerable<int> roll) => roll.GroupBy(it => it).Select(it => it.Count()).OrderByDescending(it => it).ToArray();
 
+        private static Hand CreateFromRoll(int[] roll) => CreateFromMap(ROLL_MAP, roll);
         private static Hand CreateFromGroupCounts(int[] groupCounts) => CreateFromMap(GROUP_COUNTS_MAP, groupCounts);
 
         private static Hand CreateFromMap(IEnumerable<(int[], Type)> map, int[] sequence)
