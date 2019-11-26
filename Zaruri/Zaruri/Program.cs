@@ -75,7 +75,7 @@ namespace Zaruri
 
         private static Indices ParseKeep(string line)
         {
-            var values = line.Split(' ').Select(int.Parse).Select(Index.Create).ToArray();
+            var values = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).Select(Index.Create).ToArray();
             return Indices.Create(values);
         }
 
