@@ -44,9 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="Contracts\IHandFactory.cs" />
     <Compile Include="Contracts\IRoller.cs" />
-    <Compile Include="Services\HandFactory.cs" />
     <Compile Include="Hands.cs" />
     <Compile Include="Models\Index.cs" />
     <Compile Include="Models\Indices.cs" />

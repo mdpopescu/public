@@ -7,10 +7,9 @@ namespace Zaruri.Services
 {
     public class Player
     {
-        public Player(IRoller roller, IHandFactory factory, int amount)
+        public Player(IRoller roller, int amount)
         {
             this.roller = roller;
-            this.factory = factory;
 
             this.amount = amount;
         }
@@ -39,15 +38,27 @@ namespace Zaruri.Services
 
         public void ComputeHand()
         {
-            var hand = factory.Create(roll);
+            var hand = HANDS.Where(it => it.IsMatch(roll)).First();
             amount += hand.Score;
             Console.WriteLine($"{hand.Name}: {hand.Score}$ -- amount {amount}$");
         }
 
         //
 
+        private static readonly Hand[] HANDS =
+        {
+            new HighFlush(),
+            new LowFlush(),
+            new FiveOfAKind(),
+            new FourOfAKind(),
+            new FullHouse(),
+            new ThreeOfAKind(),
+            new TwoPairs(),
+            new OnePair(),
+            new Nothing(),
+        };
+
         private readonly IRoller roller;
-        private readonly IHandFactory factory;
 
         private int amount;
         private int[] roll;

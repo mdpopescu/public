@@ -8,9 +8,8 @@ namespace Zaruri
         private static void Main()
         {
             var roller = new RandomRoller();
-            var factory = new HandFactory();
 
-            var player = new Player(roller, factory, 100);
+            var player = new Player(roller, 100);
 
             while (!player.IsBroke())
             {
