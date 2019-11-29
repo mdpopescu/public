@@ -7,9 +7,11 @@ namespace Zaruri.Services
 {
     public class Player : IPlayer
     {
-        public Player(IRoller roller, int amount)
+        public Player(IRoller roller, IReader reader, IWriter writer, int amount)
         {
             this.roller = roller;
+            this.reader = reader;
+            this.writer = writer;
 
             this.amount = amount;
         }
@@ -19,7 +21,7 @@ namespace Zaruri.Services
         public void MakeBet()
         {
             amount -= 1;
-            Console.WriteLine($"1$ bet; current amount: {amount}$");
+            writer.WriteLine($"1$ bet; current amount: {amount}$");
         }
 
         public void InitialRoll()
@@ -40,7 +42,7 @@ namespace Zaruri.Services
         {
             var hand = HANDS.Where(it => it.IsMatch(roll)).First();
             amount += hand.Score;
-            Console.WriteLine($"{hand.Name}: {hand.Score}$ -- amount {amount}$");
+            writer.WriteLine($"{hand.Name}: {hand.Score}$ -- amount {amount}$");
         }
 
         //
@@ -59,20 +61,22 @@ namespace Zaruri.Services
         };
 
         private readonly IRoller roller;
+        private readonly IReader reader;
+        private readonly IWriter writer;
 
         private int amount;
         private int[] roll;
 
-        private void ShowRoll(string prefix) => Console.WriteLine(prefix + $": {string.Join(" ", roll)}");
+        private void ShowRoll(string prefix) => writer.WriteLine(prefix + $": {string.Join(" ", roll)}");
 
-        private static Indices ReadIndices()
+        private Indices ReadIndices()
         {
             while (true)
             {
-                Console.Write("Enter the dice to keep (1 .. 5), separated with spaces: ");
+                writer.Write("Enter the dice to keep (1 .. 5), separated with spaces: ");
                 try
                 {
-                    return Parse(Console.ReadLine());
+                    return Parse(reader.ReadLine());
                 }
                 catch
                 {
