@@ -9,8 +9,8 @@ namespace Zaruri
         private static void Main()
         {
             var roller = new RandomRoller();
-            var reader = new ConsoleReader();
             var writer = new ConsoleWriter();
+            var reader = new IndicesReader(writer, new ConsoleReader());
             var logic = new PlayerLogic();
 
             var player = new Player(roller, reader, writer, logic);
