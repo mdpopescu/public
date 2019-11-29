@@ -10,6 +10,6 @@ namespace Zaruri.Contracts
         OutputWrapper<int> MakeBet(int amount);
         OutputWrapper<int[]> InitialRoll(int[] roll);
         OutputWrapper<int[]> FinalRoll(int[] roll, Indices indices, Func<int> rollDie);
-        OutputWrapper<int> ComputeHand(Hand hand, int amount);
+        OutputWrapper<int> ComputeHand(int[] roll, int amount);
     }
 }

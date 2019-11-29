@@ -37,23 +37,10 @@ namespace Zaruri.Services
 
         public void ComputeHand()
         {
-            amount = logic.ComputeHand(GetHand(), amount).Unwrap(writer);
+            amount = logic.ComputeHand(roll, amount).Unwrap(writer);
         }
 
         //
-
-        private static readonly Hand[] HANDS =
-        {
-            new HighFlush(),
-            new LowFlush(),
-            new FiveOfAKind(),
-            new FourOfAKind(),
-            new FullHouse(),
-            new ThreeOfAKind(),
-            new TwoPairs(),
-            new OnePair(),
-            new Nothing(),
-        };
 
         private readonly IRoller roller;
         private readonly IReader reader;
@@ -83,7 +70,5 @@ namespace Zaruri.Services
             var values = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).Select(Index.Create).ToArray();
             return Indices.Create(values);
         }
-
-        private Hand GetHand() => HANDS.Where(it => it.IsMatch(roll)).First();
     }
 }

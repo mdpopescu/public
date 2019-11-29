@@ -25,13 +25,27 @@ namespace Zaruri.Core
             return newRoll.WithOutput(ShowRoll("Final roll", newRoll));
         }
 
-        public OutputWrapper<int> ComputeHand(Hand hand, int amount)
+        public OutputWrapper<int> ComputeHand(int[] roll, int amount)
         {
+            var hand = HANDS.Where(it => it.IsMatch(roll)).First();
             var newAmount = amount + hand.Score;
             return newAmount.WithOutput($"{hand.Name}: {hand.Score}$ -- amount {newAmount}$");
         }
 
         //
+
+        private static readonly Hand[] HANDS =
+        {
+            new HighFlush(),
+            new LowFlush(),
+            new FiveOfAKind(),
+            new FourOfAKind(),
+            new FullHouse(),
+            new ThreeOfAKind(),
+            new TwoPairs(),
+            new OnePair(),
+            new Nothing(),
+        };
 
         private static string ShowRoll(string prefix, IEnumerable<int> roll) => prefix + $": {string.Join(" ", roll)}";
     }
