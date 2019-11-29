@@ -10,13 +10,11 @@ namespace Zaruri
             var roller = new RandomRoller();
 
             var player = new Player(roller, 100);
+            var game = new Game(player);
 
-            while (!player.IsBroke())
+            while (!game.IsOver())
             {
-                player.MakeBet();
-                player.InitialRoll();
-                player.FinalRoll();
-                player.ComputeHand();
+                game.Round();
 
                 Console.WriteLine();
             }

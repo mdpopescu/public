@@ -48,6 +48,8 @@
     <Compile Include="Hands.cs" />
     <Compile Include="Models\Index.cs" />
     <Compile Include="Models\Indices.cs" />
+    <Compile Include="Contracts\IPlayer.cs" />
+    <Compile Include="Services\Game.cs" />
     <Compile Include="Services\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

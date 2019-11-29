@@ -5,7 +5,7 @@ using Zaruri.Models;
 
 namespace Zaruri.Services
 {
-    public class Player
+    public class Player : IPlayer
     {
         public Player(IRoller roller, int amount)
         {
