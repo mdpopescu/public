@@ -11,7 +11,7 @@ namespace Zaruri
             var reader = new ConsoleReader();
             var writer = new ConsoleWriter();
 
-            var player = new Player(roller, reader, writer, 100);
+            var player = new Player(roller, reader, writer);
             var game = new Game(player);
 
             while (!game.IsOver())

@@ -7,13 +7,13 @@ namespace Zaruri.Services
 {
     public class Player : IPlayer
     {
-        public Player(IRoller roller, IReader reader, IWriter writer, int amount)
+        public Player(IRoller roller, IReader reader, IWriter writer)
         {
             this.roller = roller;
             this.reader = reader;
             this.writer = writer;
 
-            this.amount = amount;
+            amount = Constants.INITIAL_AMOUNT;
         }
 
         public bool IsBroke() => amount <= 0;
