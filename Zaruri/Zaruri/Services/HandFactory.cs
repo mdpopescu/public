@@ -1,53 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Zaruri.Contracts;
 
 namespace Zaruri.Services
 {
-    public class HandFactory: IHandFactory
+    public class HandFactory : IHandFactory
     {
-        public Hand Create(int[] roll)
-        {
-            roll = InAscendingOrder(roll);
-            var groupCounts = GetGroupCounts(roll);
-
-            return CreateFromRoll(roll)
-                ?? CreateFromGroupCounts(groupCounts)
-                ?? new Nothing();
-        }
+        public Hand Create(int[] roll) => HANDS.Where(it => it.IsMatch(roll)).First();
 
         //
 
-        private static readonly List<(int[], Type)> ROLL_MAP = new List<(int[], Type)>
+        private static readonly Hand[] HANDS =
         {
-            (new[] { 2, 3, 4, 5, 6 }, typeof(HighFlush)),
-            (new[] { 1, 2, 3, 4, 5 }, typeof(LowFlush)),
+            new HighFlush(),
+            new LowFlush(),
+            new FiveOfAKind(),
+            new FourOfAKind(),
+            new FullHouse(),
+            new ThreeOfAKind(),
+            new TwoPairs(),
+            new OnePair(),
+            new Nothing(),
         };
-
-        private static readonly List<(int[], Type)> GROUP_COUNTS_MAP = new List<(int[], Type)>
-        {
-            (new[] { 5 }, typeof(FiveOfAKind)),
-            (new[] { 4, 1 }, typeof(FourOfAKind)),
-            (new[] { 3, 2 }, typeof(FullHouse)),
-            (new[] { 3, 1, 1 }, typeof(ThreeOfAKind)),
-            (new[] { 2, 2, 1 }, typeof(TwoPairs)),
-            (new[] { 2, 1, 1, 1 }, typeof(OnePair)),
-        };
-
-        private static int[] InAscendingOrder(IEnumerable<int> roll) => roll.OrderBy(it => it).ToArray();
-        private static int[] GetGroupCounts(IEnumerable<int> roll) => roll.GroupBy(it => it).Select(it => it.Count()).OrderByDescending(it => it).ToArray();
-
-        private static Hand CreateFromRoll(int[] roll) => CreateFromMap(ROLL_MAP, roll);
-        private static Hand CreateFromGroupCounts(int[] groupCounts) => CreateFromMap(GROUP_COUNTS_MAP, groupCounts);
-
-        private static Hand CreateFromMap(IEnumerable<(int[], Type)> map, int[] sequence)
-        {
-            return map
-                .Where(it => it.Item1.SequenceEqual(sequence))
-                .Select(it => it.Item2)
-                .Select(type => (Hand) Activator.CreateInstance(type))
-                .FirstOrDefault();
-        }
     }
 }
