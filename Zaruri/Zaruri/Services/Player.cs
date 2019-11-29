@@ -66,21 +66,20 @@ namespace Zaruri.Services
         private Indices ReadIndices()
         {
             while (true)
-            {
-                writer.Write("Enter the dice to keep (1 .. 5), separated with spaces: ");
                 try
                 {
-                    return Parse(reader.ReadLine());
+                    return InternalReadIndices();
                 }
                 catch
                 {
                     // try again
                 }
-            }
         }
 
-        private static Indices Parse(string line)
+        private Indices InternalReadIndices()
         {
+            writer.Write("Enter the dice to keep (1 .. 5), separated with spaces: ");
+            var line = reader.ReadLine();
             var values = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).Select(Index.Create).ToArray();
             return Indices.Create(values);
         }
