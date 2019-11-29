@@ -21,34 +21,22 @@ namespace Zaruri.Services
 
         public void MakeBet()
         {
-            var result = logic.MakeBet(amount);
-
-            amount = result.Value;
-            writer.WriteLine(result.Output);
+            amount = Unwrap(logic.MakeBet(amount));
         }
 
         public void InitialRoll()
         {
-            var result = logic.InitialRoll(roller.GenerateDice().ToArray());
-
-            roll = result.Value;
-            writer.WriteLine(result.Output);
+            roll = Unwrap(logic.InitialRoll(roller.GenerateDice().ToArray()));
         }
 
         public void FinalRoll()
         {
-            var result = logic.FinalRoll(roll, ReadIndices(), roller.GenerateDie);
-
-            roll = result.Value;
-            writer.WriteLine(result.Output);
+            roll = Unwrap(logic.FinalRoll(roll, ReadIndices(), roller.GenerateDie));
         }
 
         public void ComputeHand()
         {
-            var result = logic.ComputeHand(HANDS.Where(it => it.IsMatch(roll)).First(), amount);
-
-            amount = result.Value;
-            writer.WriteLine(result.Output);
+            amount = Unwrap(logic.ComputeHand(HANDS.Where(it => it.IsMatch(roll)).First(), amount));
         }
 
         //
@@ -73,6 +61,12 @@ namespace Zaruri.Services
 
         private int amount;
         private int[] roll;
+
+        private T Unwrap<T>(OutputWrapper<T> wrappedValue)
+        {
+            writer.WriteLine(wrappedValue.Output);
+            return wrappedValue.Value;
+        }
 
         private Indices ReadIndices()
         {
