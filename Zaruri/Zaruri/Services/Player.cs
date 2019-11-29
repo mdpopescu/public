@@ -21,34 +21,34 @@ namespace Zaruri.Services
 
         public void MakeBet()
         {
-            string line;
-            (line, amount) = logic.MakeBet(amount);
+            var result = logic.MakeBet(amount);
 
-            writer.WriteLine(line);
+            amount = result.Value;
+            writer.WriteLine(result.Output);
         }
 
         public void InitialRoll()
         {
-            string line;
-            (line, roll) = logic.InitialRoll(roller.GenerateDice().ToArray());
+            var result = logic.InitialRoll(roller.GenerateDice().ToArray());
 
-            writer.WriteLine(line);
+            roll = result.Value;
+            writer.WriteLine(result.Output);
         }
 
         public void FinalRoll()
         {
-            string line;
-            (line, roll) = logic.FinalRoll(roll, ReadIndices(), roller.GenerateDie);
+            var result = logic.FinalRoll(roll, ReadIndices(), roller.GenerateDie);
 
-            writer.WriteLine(line);
+            roll = result.Value;
+            writer.WriteLine(result.Output);
         }
 
         public void ComputeHand()
         {
-            string line;
-            (line, amount) = logic.ComputeHand(HANDS.Where(it => it.IsMatch(roll)).First(), amount);
+            var result = logic.ComputeHand(HANDS.Where(it => it.IsMatch(roll)).First(), amount);
 
-            writer.WriteLine(line);
+            amount = result.Value;
+            writer.WriteLine(result.Output);
         }
 
         //

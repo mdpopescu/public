@@ -56,6 +56,7 @@
     <Compile Include="Services\ConsoleReader.cs" />
     <Compile Include="Services\ConsoleWriter.cs" />
     <Compile Include="Services\Game.cs" />
+    <Compile Include="Services\OutputWrapper.cs" />
     <Compile Include="Services\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

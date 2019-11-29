@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Zaruri.Contracts;
 using Zaruri.Models;
+using Zaruri.Services;
 
 namespace Zaruri.Core
 {
@@ -10,27 +11,24 @@ namespace Zaruri.Core
     {
         public bool IsBroke(int amount) => amount <= 0;
 
-        public (string, int) MakeBet(int amount)
+        public OutputWrapper<int> MakeBet(int amount)
         {
             var newAmount = amount - 1;
-            return ($"1$ bet; current amount: {newAmount}$", newAmount);
+            return newAmount.WithOutput($"1$ bet; current amount: {newAmount}$");
         }
 
-        public (string, int[]) InitialRoll(int[] roll)
-        {
-            return (ShowRoll("Initial roll", roll), roll);
-        }
+        public OutputWrapper<int[]> InitialRoll(int[] roll) => roll.WithOutput(ShowRoll("Initial roll", roll));
 
-        public (string, int[]) FinalRoll(int[] roll, Indices indices, Func<int> rollDie)
+        public OutputWrapper<int[]> FinalRoll(int[] roll, Indices indices, Func<int> rollDie)
         {
             var newRoll = roll.Select((value, i) => indices.Contains(i + 1) ? value : rollDie()).ToArray();
-            return (ShowRoll("Final roll", newRoll), newRoll);
+            return newRoll.WithOutput(ShowRoll("Final roll", newRoll));
         }
 
-        public (string, int) ComputeHand(Hand hand, int amount)
+        public OutputWrapper<int> ComputeHand(Hand hand, int amount)
         {
             var newAmount = amount + hand.Score;
-            return ($"{hand.Name}: {hand.Score}$ -- amount {newAmount}$", newAmount);
+            return newAmount.WithOutput($"{hand.Name}: {hand.Score}$ -- amount {newAmount}$");
         }
 
         //
