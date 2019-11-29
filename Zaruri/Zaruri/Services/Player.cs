@@ -7,42 +7,48 @@ namespace Zaruri.Services
 {
     public class Player : IPlayer
     {
-        public Player(IRoller roller, IReader reader, IWriter writer)
+        public Player(IRoller roller, IReader reader, IWriter writer, IPlayerLogic logic)
         {
             this.roller = roller;
             this.reader = reader;
             this.writer = writer;
+            this.logic = logic;
 
             amount = Constants.INITIAL_AMOUNT;
         }
 
-        public bool IsBroke() => amount <= 0;
+        public bool IsBroke() => logic.IsBroke(amount);
 
         public void MakeBet()
         {
-            amount -= 1;
-            writer.WriteLine($"1$ bet; current amount: {amount}$");
+            string line;
+            (line, amount) = logic.MakeBet(amount);
+
+            writer.WriteLine(line);
         }
 
         public void InitialRoll()
         {
-            roll = roller.GenerateDice().ToArray();
-            ShowRoll("Initial roll");
+            string line;
+            (line, roll) = logic.InitialRoll(() => roller.GenerateDice().ToArray());
+
+            writer.WriteLine(line);
         }
 
         public void FinalRoll()
         {
-            var indices = ReadIndices();
+            string line;
+            (line, roll) = logic.FinalRoll(roll, ReadIndices, roller.GenerateDie);
 
-            roll = roll.Select((value, i) => indices.Contains(i + 1) ? value : roller.GenerateDie()).ToArray();
-            ShowRoll("Final roll");
+            writer.WriteLine(line);
         }
 
         public void ComputeHand()
         {
-            var hand = HANDS.Where(it => it.IsMatch(roll)).First();
-            amount += hand.Score;
-            writer.WriteLine($"{hand.Name}: {hand.Score}$ -- amount {amount}$");
+            string line;
+            (line, amount) = logic.ComputeHand(HANDS.Where(it => it.IsMatch(roll)).First(), amount);
+
+            writer.WriteLine(line);
         }
 
         //
@@ -63,11 +69,10 @@ namespace Zaruri.Services
         private readonly IRoller roller;
         private readonly IReader reader;
         private readonly IWriter writer;
+        private readonly IPlayerLogic logic;
 
         private int amount;
         private int[] roll;
-
-        private void ShowRoll(string prefix) => writer.WriteLine(prefix + $": {string.Join(" ", roll)}");
 
         private Indices ReadIndices()
         {

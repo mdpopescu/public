@@ -47,6 +47,8 @@
     <Compile Include="Contracts\IReader.cs" />
     <Compile Include="Contracts\IRoller.cs" />
     <Compile Include="Contracts\IWriter.cs" />
+    <Compile Include="Contracts\IPlayerLogic.cs" />
+    <Compile Include="Core\PlayerLogic.cs" />
     <Compile Include="Hands.cs" />
     <Compile Include="Models\Index.cs" />
     <Compile Include="Models\Indices.cs" />
