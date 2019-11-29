@@ -7,6 +7,7 @@ namespace Zaruri.Services
 {
     public class Player : IPlayer
     {
+        // ReSharper disable once TooManyDependencies
         public Player(IRoller roller, IReader reader, IWriter writer, IPlayerLogic logic)
         {
             this.roller = roller;
@@ -21,22 +22,22 @@ namespace Zaruri.Services
 
         public void MakeBet()
         {
-            amount = Unwrap(logic.MakeBet(amount));
+            amount = logic.MakeBet(amount).Unwrap(writer);
         }
 
         public void InitialRoll()
         {
-            roll = Unwrap(logic.InitialRoll(roller.GenerateDice().ToArray()));
+            roll = logic.InitialRoll(roller.GenerateDice().ToArray()).Unwrap(writer);
         }
 
         public void FinalRoll()
         {
-            roll = Unwrap(logic.FinalRoll(roll, ReadIndices(), roller.GenerateDie));
+            roll = logic.FinalRoll(roll, ReadIndices(), roller.GenerateDie).Unwrap(writer);
         }
 
         public void ComputeHand()
         {
-            amount = Unwrap(logic.ComputeHand(HANDS.Where(it => it.IsMatch(roll)).First(), amount));
+            amount = logic.ComputeHand(GetHand(), amount).Unwrap(writer);
         }
 
         //
@@ -62,12 +63,6 @@ namespace Zaruri.Services
         private int amount;
         private int[] roll;
 
-        private T Unwrap<T>(OutputWrapper<T> wrappedValue)
-        {
-            writer.WriteLine(wrappedValue.Output);
-            return wrappedValue.Value;
-        }
-
         private Indices ReadIndices()
         {
             while (true)
@@ -89,5 +84,7 @@ namespace Zaruri.Services
             var values = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).Select(Index.Create).ToArray();
             return Indices.Create(values);
         }
+
+        private Hand GetHand() => HANDS.Where(it => it.IsMatch(roll)).First();
     }
 }

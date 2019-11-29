@@ -1,15 +1,25 @@
-﻿namespace Zaruri.Services
+﻿using Zaruri.Contracts;
+
+namespace Zaruri.Services
 {
     public class OutputWrapper<T>
     {
-        public T Value { get; }
-        public string Output { get; }
-
         public OutputWrapper(T value, string output)
         {
-            Value = value;
-            Output = output;
+            this.value = value;
+            this.output = output;
         }
+
+        public T Unwrap(IWriter writer)
+        {
+            writer.WriteLine(output);
+            return value;
+        }
+
+        //
+
+        private readonly T value;
+        private readonly string output;
     }
 
     public static class OutputWrapperExtensions
