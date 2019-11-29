@@ -30,7 +30,7 @@ namespace Zaruri.Services
         public void InitialRoll()
         {
             string line;
-            (line, roll) = logic.InitialRoll(() => roller.GenerateDice().ToArray());
+            (line, roll) = logic.InitialRoll(roller.GenerateDice().ToArray());
 
             writer.WriteLine(line);
         }
@@ -38,7 +38,7 @@ namespace Zaruri.Services
         public void FinalRoll()
         {
             string line;
-            (line, roll) = logic.FinalRoll(roll, ReadIndices, roller.GenerateDie);
+            (line, roll) = logic.FinalRoll(roll, ReadIndices(), roller.GenerateDie);
 
             writer.WriteLine(line);
         }

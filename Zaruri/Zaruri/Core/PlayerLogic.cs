@@ -16,15 +16,13 @@ namespace Zaruri.Core
             return ($"1$ bet; current amount: {newAmount}$", newAmount);
         }
 
-        public (string, int[]) InitialRoll(Func<int[]> rollDice)
+        public (string, int[]) InitialRoll(int[] roll)
         {
-            var roll = rollDice();
             return (ShowRoll("Initial roll", roll), roll);
         }
 
-        public (string, int[]) FinalRoll(int[] roll, Func<Indices> getIndices, Func<int> rollDie)
+        public (string, int[]) FinalRoll(int[] roll, Indices indices, Func<int> rollDie)
         {
-            var indices = getIndices();
             var newRoll = roll.Select((value, i) => indices.Contains(i + 1) ? value : rollDie()).ToArray();
             return (ShowRoll("Final roll", newRoll), newRoll);
         }

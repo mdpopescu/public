@@ -7,8 +7,8 @@ namespace Zaruri.Contracts
     {
         bool IsBroke(int amount);
         (string, int) MakeBet(int amount);
-        (string, int[]) InitialRoll(Func<int[]> rollDice);
-        (string, int[]) FinalRoll(int[] roll, Func<Indices> getIndices, Func<int> rollDie);
+        (string, int[]) InitialRoll(int[] roll);
+        (string, int[]) FinalRoll(int[] roll, Indices indices, Func<int> rollDie);
         (string, int) ComputeHand(Hand hand, int amount);
     }
 }
