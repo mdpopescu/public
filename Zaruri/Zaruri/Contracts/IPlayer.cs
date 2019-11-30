@@ -2,7 +2,7 @@
 {
     public interface IPlayer
     {
-        bool IsBroke();
+        bool HasMoney();
         void MakeBet();
         void InitialRoll();
         void FinalRoll();

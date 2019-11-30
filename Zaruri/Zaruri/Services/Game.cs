@@ -9,7 +9,7 @@ namespace Zaruri.Services
             this.player = player;
         }
 
-        public bool IsOver() => player.IsBroke();
+        public bool CanContinue() => player.HasMoney();
 
         public void Round()
         {

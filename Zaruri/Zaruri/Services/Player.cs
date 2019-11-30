@@ -1,51 +1,70 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Zaruri.Contracts;
 
 namespace Zaruri.Services
 {
     public class Player : IPlayer
     {
-        // ReSharper disable once TooManyDependencies
-        public Player(IRoller roller, IIndicesReader reader, IWriter writer, IPlayerLogic logic)
+        public Player(IRoller roller, IIndicesReader reader, IWriter writer)
         {
             this.roller = roller;
             this.reader = reader;
             this.writer = writer;
-            this.logic = logic;
 
             amount = Constants.INITIAL_AMOUNT;
         }
 
-        public bool IsBroke() => logic.IsBroke(amount);
+        public bool HasMoney() => amount > 0;
 
         public void MakeBet()
         {
-            amount = logic.MakeBet(amount).Unwrap(writer);
+            amount -= 1;
+            writer.WriteLine($"1$ bet; current amount: {amount}$");
         }
 
         public void InitialRoll()
         {
-            roll = logic.InitialRoll(roller.GenerateDice().ToArray()).Unwrap(writer);
+            roll = roller.GenerateDice().ToArray();
+            ShowRoll("Initial roll", roll);
         }
 
         public void FinalRoll()
         {
-            roll = logic.FinalRoll(roll, reader.ReadIndices(), roller.GenerateDie).Unwrap(writer);
+            var indices = reader.ReadIndices();
+            roll = roll.Select((value, i) => indices.Contains(i + 1) ? value : roller.GenerateDie()).ToArray();
+            ShowRoll("Final roll", roll);
         }
 
         public void ComputeHand()
         {
-            amount = logic.ComputeHand(roll, amount).Unwrap(writer);
+            var hand = HANDS.Where(it => it.IsMatch(roll)).First();
+            amount += hand.Score;
+            writer.WriteLine($"{hand.Name}: {hand.Score}$ -- amount {amount}$");
         }
 
         //
 
+        private static readonly Hand[] HANDS =
+        {
+            new HighFlush(),
+            new LowFlush(),
+            new FiveOfAKind(),
+            new FourOfAKind(),
+            new FullHouse(),
+            new ThreeOfAKind(),
+            new TwoPairs(),
+            new OnePair(),
+            new Nothing(),
+        };
+
         private readonly IRoller roller;
         private readonly IIndicesReader reader;
         private readonly IWriter writer;
-        private readonly IPlayerLogic logic;
 
         private int amount;
         private int[] roll;
+
+        private void ShowRoll(string prefix, IEnumerable<int> roll) => writer.WriteLine(prefix + $": {string.Join(" ", roll)}");
     }
 }

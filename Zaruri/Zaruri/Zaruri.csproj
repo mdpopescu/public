@@ -48,8 +48,6 @@
     <Compile Include="Contracts\IReader.cs" />
     <Compile Include="Contracts\IRoller.cs" />
     <Compile Include="Contracts\IWriter.cs" />
-    <Compile Include="Contracts\IPlayerLogic.cs" />
-    <Compile Include="Core\PlayerLogic.cs" />
     <Compile Include="Hands.cs" />
     <Compile Include="Models\Index.cs" />
     <Compile Include="Models\Indices.cs" />
@@ -58,7 +56,6 @@
     <Compile Include="Services\ConsoleWriter.cs" />
     <Compile Include="Services\Game.cs" />
     <Compile Include="Services\IndicesReader.cs" />
-    <Compile Include="Services\OutputWrapper.cs" />
     <Compile Include="Services\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

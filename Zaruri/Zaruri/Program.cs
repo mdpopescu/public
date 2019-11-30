@@ -1,5 +1,4 @@
 ﻿using System;
-using Zaruri.Core;
 using Zaruri.Services;
 
 namespace Zaruri
@@ -11,12 +10,11 @@ namespace Zaruri
             var roller = new RandomRoller();
             var writer = new ConsoleWriter();
             var reader = new IndicesReader(writer, new ConsoleReader());
-            var logic = new PlayerLogic();
 
-            var player = new Player(roller, reader, writer, logic);
+            var player = new Player(roller, reader, writer);
             var game = new Game(player);
 
-            while (!game.IsOver())
+            while (game.CanContinue())
             {
                 game.Round();
 
