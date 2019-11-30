@@ -12,11 +12,13 @@ namespace Zaruri
             var reader = new IndicesReader(writer, new ConsoleReader());
 
             var player = new Player(roller, reader, writer);
-            var game = new Game(player);
 
-            while (game.CanContinue())
+            while (player.HasMoney())
             {
-                game.Round();
+                player.MakeBet();
+                player.InitialRoll();
+                player.FinalRoll();
+                player.ComputeHand();
 
                 Console.WriteLine();
             }

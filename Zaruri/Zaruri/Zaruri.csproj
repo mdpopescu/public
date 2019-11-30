@@ -54,7 +54,6 @@
     <Compile Include="Contracts\IPlayer.cs" />
     <Compile Include="Services\ConsoleReader.cs" />
     <Compile Include="Services\ConsoleWriter.cs" />
-    <Compile Include="Services\Game.cs" />
     <Compile Include="Services\IndicesReader.cs" />
     <Compile Include="Services\Player.cs" />
     <Compile Include="Program.cs" />
