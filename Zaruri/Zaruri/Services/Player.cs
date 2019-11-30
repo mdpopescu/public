@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Zaruri.Contracts;
 
 namespace Zaruri.Services
@@ -26,14 +25,14 @@ namespace Zaruri.Services
         public void InitialRoll()
         {
             roll = roller.GenerateDice().ToArray();
-            ShowRoll("Initial roll", roll);
+            ShowRoll("Initial roll");
         }
 
         public void FinalRoll()
         {
             var indices = reader.ReadIndices();
             roll = roll.Select((value, i) => indices.Contains(i + 1) ? value : roller.GenerateDie()).ToArray();
-            ShowRoll("Final roll", roll);
+            ShowRoll("Final roll");
         }
 
         public void ComputeHand()
@@ -65,6 +64,6 @@ namespace Zaruri.Services
         private int amount;
         private int[] roll;
 
-        private void ShowRoll(string prefix, IEnumerable<int> roll) => writer.WriteLine(prefix + $": {string.Join(" ", roll)}");
+        private void ShowRoll(string prefix) => writer.WriteLine(prefix + $": {string.Join(" ", roll)}");
     }
 }

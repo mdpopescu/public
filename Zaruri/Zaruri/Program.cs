@@ -1,4 +1,5 @@
 ﻿using System;
+using Zaruri.Contracts;
 using Zaruri.Services;
 
 namespace Zaruri
@@ -7,11 +8,11 @@ namespace Zaruri
     {
         private static void Main()
         {
-            var roller = new RandomRoller();
-            var writer = new ConsoleWriter();
-            var reader = new IndicesReader(writer, new ConsoleReader());
+            IRoller roller = new RandomRoller();
+            IWriter writer = new ConsoleWriter();
+            IIndicesReader reader = new IndicesReader(writer, new ConsoleReader());
 
-            var player = new Player(roller, reader, writer);
+            IPlayer player = new Player(roller, reader, writer);
 
             while (player.HasMoney())
             {
