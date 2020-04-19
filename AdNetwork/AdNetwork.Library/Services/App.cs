@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdNetwork.Library.Contracts;
@@ -16,7 +15,7 @@ namespace AdNetwork.Library.Services
 
         public async Task<string> Get(Criteria criteria)
         {
-            var tasks = services.Select(it => InvokeWithTimeout(() => it.GetOffer(criteria)));
+            var tasks = services.Select(it => InvokeWithTimeout(it.GetOffer(criteria), Constants.MAX_DELAY));
             var responses = await Task.WhenAll(tasks).ConfigureAwait(false);
             return responses
                 .Where(it => it != null)
@@ -31,10 +30,13 @@ namespace AdNetwork.Library.Services
         private readonly List<IAdService> services = new List<IAdService>();
 
         // based on https://stackoverflow.com/a/11191070/31793
-        private static async Task<T> InvokeWithTimeout<T>(Func<Task<T>> taskFunc)
+        private static async Task<T> InvokeWithTimeout<T>(Task<T> task, int timeout) =>
+            await Task.WhenAny(task, GetDelay<T>(timeout)).Unwrap().ConfigureAwait(false);
+
+        private static async Task<T> GetDelay<T>(int delay)
         {
-            var task = taskFunc.Invoke();
-            return await Task.WhenAny(task, Task.Delay(Constants.MAX_DELAY)).ConfigureAwait(false) == task ? await task.ConfigureAwait(false) : default;
+            await Task.Delay(delay).ConfigureAwait(false);
+            return default;
         }
     }
 }
