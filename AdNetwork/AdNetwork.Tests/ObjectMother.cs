@@ -11,7 +11,7 @@ namespace AdNetwork.Tests
         public static ServiceBuildInfo CreateService() =>
             new ServiceBuildInfo();
 
-        public static ServiceBuildInfo WithDelay(this ServiceBuildInfo info, TimeSpan delay)
+        public static ServiceBuildInfo WithDelay(this ServiceBuildInfo info, int delay)
         {
             info.Delay = delay;
             return info;
@@ -29,7 +29,7 @@ namespace AdNetwork.Tests
             var service = new Mock<IAdService>();
             service
                 .Setup(it => it.GetOffer(It.IsAny<Criteria>()))
-                .ReturnsAsync(new AdResponse { Amount = info.Amount, Html = html }, info.Delay);
+                .ReturnsAsync(new AdResponse { Amount = info.Amount, Html = html }, TimeSpan.FromMilliseconds(info.Delay));
             return service;
         }
 
@@ -37,7 +37,7 @@ namespace AdNetwork.Tests
 
         public class ServiceBuildInfo
         {
-            public TimeSpan Delay { get; set; } = TimeSpan.FromMilliseconds(1);
+            public int Delay { get; set; } = 1;
             public decimal Amount { get; set; } = 0.0001m;
         }
     }

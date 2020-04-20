@@ -49,9 +49,9 @@ namespace AdNetwork.Tests.Services
             {
                 var services = new[]
                 {
-                    ObjectMother.CreateService().WithDelay(TimeSpan.FromMilliseconds(100)).Build(out _),
-                    ObjectMother.CreateService().WithDelay(TimeSpan.FromMilliseconds(110)).Build(out _),
-                    ObjectMother.CreateService().WithDelay(TimeSpan.FromMilliseconds(120)).Build(out _),
+                    ObjectMother.CreateService().WithDelay(100).Build(out _),
+                    ObjectMother.CreateService().WithDelay(110).Build(out _),
+                    ObjectMother.CreateService().WithDelay(120).Build(out _),
                 };
                 RegisterAll(services);
 
@@ -90,9 +90,9 @@ namespace AdNetwork.Tests.Services
             {
                 var services = new[]
                 {
-                    ObjectMother.CreateService().WithAmount(0.0025m).WithDelay(TimeSpan.FromMilliseconds(100)).Build(out _),
-                    ObjectMother.CreateService().WithAmount(0.0010m).WithDelay(TimeSpan.FromMilliseconds(500)).Build(out _),
-                    ObjectMother.CreateService().WithAmount(0.0015m).WithDelay(TimeSpan.FromMilliseconds(120)).Build(out var html),
+                    ObjectMother.CreateService().WithAmount(0.0025m).WithDelay(100).Build(out _),
+                    ObjectMother.CreateService().WithAmount(0.0010m).WithDelay(500).Build(out _),
+                    ObjectMother.CreateService().WithAmount(0.0015m).WithDelay(120).Build(out var html),
                 };
                 RegisterAll(services);
 
