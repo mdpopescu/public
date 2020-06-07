@@ -8,7 +8,7 @@ namespace EverythingIsADatabase.Logic.Contracts
         // reading
 
         /// <summary>
-        /// Returns the matching records.
+        ///     Returns the matching records.
         /// </summary>
         /// <param name="attributes">A list of attributes, optionally with values.</param>
         /// <returns>A list of records matching attribute names; for the attributes with values, the values must also match.</returns>
@@ -16,7 +16,7 @@ namespace EverythingIsADatabase.Logic.Contracts
         IEnumerable<Record> Search(params Attribute[] attributes);
 
         /// <summary>
-        /// Returns the matching records.
+        ///     Returns the matching records.
         /// </summary>
         /// <param name="matches">A list of attribute predicates.</param>
         /// <returns>A list of records matching attribute names; for the attributes with predicates, those must also match.</returns>
@@ -26,7 +26,7 @@ namespace EverythingIsADatabase.Logic.Contracts
         // writing
 
         /// <summary>
-        /// Adds / updates one or more records to the database.
+        ///     Adds / updates one or more records to the database.
         /// </summary>
         /// <param name="records">The list of records to add or update.</param>
         void Commit(params Record[] records);

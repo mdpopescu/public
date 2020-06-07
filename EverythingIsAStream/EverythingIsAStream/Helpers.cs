@@ -6,23 +6,22 @@ namespace EverythingIsAStream
 {
     public static class Helpers
     {
-        public static IObservable<T> ToStream<T>(this Func<T> func, IScheduler scheduler)
-        {
-            return Observable.Create<T>(o =>
-            {
-                return scheduler.Schedule(action =>
-                {
-                    try
+        public static IObservable<T> Run<T>(this IScheduler scheduler, Func<T> func) =>
+            Observable.Create<T>(
+                o => scheduler.Schedule(
+                    action =>
                     {
-                        o.OnNext(func());
-                        action();
+                        try
+                        {
+                            o.OnNext(func());
+                            action();
+                        }
+                        catch (Exception ex)
+                        {
+                            o.OnError(ex);
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        o.OnError(ex);
-                    }
-                });
-            });
-        }
+                )
+            );
     }
 }

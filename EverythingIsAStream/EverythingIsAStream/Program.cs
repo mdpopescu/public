@@ -8,57 +8,61 @@ namespace EverythingIsAStream
     {
         private static void Main()
         {
-            Take3();
+            Take2();
         }
 
         private static void Take1()
         {
-            var nameStream = Helpers.ToStream(() => ReadLine("Your name: "), Scheduler.CurrentThread);
-
-            nameStream
+            SCHEDULER
+                .Run(() => ReadLine("Your name: "))
                 .TakeWhile(name => !string.IsNullOrWhiteSpace(name))
                 .Subscribe(name => Console.WriteLine($"Hello, {name}"));
         }
 
         private static void Take2()
         {
-            var nameStream = Helpers.ToStream(() => ReadLine("Your name: "), Scheduler.CurrentThread);
-            var ageStream = Helpers.ToStream(() => int.Parse(ReadLine("Your age: ")), Scheduler.CurrentThread);
+            bool IsValid(string name, int age) => !string.IsNullOrWhiteSpace(name) && age >= 18 && age < 100;
 
-            var bothStream = nameStream.Zip(ageStream, (name, age) => new { name, age });
+            var nameStream = SCHEDULER.Run(() => ReadLine("Your name: "));
+            var ageStream = SCHEDULER.Run(() => int.Parse(ReadLine("Your age: ")));
+
+            var bothStream = nameStream.Zip(ageStream, (name, age) => (name, age));
 
             bothStream
-                .TakeWhile(both => !string.IsNullOrWhiteSpace(both.name) && both.age >= 18 && both.age < 100)
-                .Subscribe(
-                    both => Console.WriteLine($"Hello, {both.name} who is {both.age} years old!"),
-                    ex => Console.WriteLine($"Error: {ex.Message}"));
+                .TakeWhile(both => IsValid(both.name, both.age))
+                .Subscribe(both => WriteSalutation(both.name, both.age), HandleError);
         }
 
         private static void Take3()
         {
-            var nameStream = Helpers
-                .ToStream(() => ReadLine("Your name: "), Scheduler.CurrentThread)
+            var nameStream = SCHEDULER
+                .Run(() => ReadLine("Your name: "))
                 .TakeWhile(name => !string.IsNullOrWhiteSpace(name));
-            var ageStream = Helpers
-                .ToStream(() => int.Parse(ReadLine("Your age: ")), Scheduler.CurrentThread)
-                .Where(age => age >= 18 && age < 100);
+            var ageStream = SCHEDULER
+                .Run(() => int.Parse(ReadLine("Your age: ")))
+                .TakeWhile(age => age >= 18 && age < 100);
 
             var bothStream = from name in nameStream
                              from age in ageStream
                              select new { name, age };
 
-            bothStream
-                .Subscribe(
-                    both => Console.WriteLine($"Hello, {both.name} who is {both.age} years old!"),
-                    ex => Console.WriteLine($"Error: {ex.Message}"));
+            bothStream.Subscribe(both => WriteSalutation(both.name, both.age), HandleError);
         }
 
         //
+
+        private static readonly IScheduler SCHEDULER = Scheduler.CurrentThread;
 
         private static string ReadLine(string prefix)
         {
             Console.Write(prefix);
             return Console.ReadLine();
         }
+
+        private static void WriteSalutation(string name, int age) =>
+            Console.WriteLine($"Hello, {name} who is {age} years old!");
+
+        private static void HandleError(Exception ex) =>
+            Console.WriteLine($"Error: {ex.Message}");
     }
 }

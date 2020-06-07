@@ -6,7 +6,7 @@ using EverythingIsADatabase.Logic.Models;
 namespace EverythingIsADatabase.Logic.Implementations
 {
     /// <summary>
-    /// This is the default database, used for in-memory operations.
+    ///     This is the default database, used for in-memory operations.
     /// </summary>
     public class SessionDatabase : Database
     {
@@ -15,15 +15,11 @@ namespace EverythingIsADatabase.Logic.Implementations
             list = new List<Record>();
         }
 
-        public IEnumerable<Record> Search(params Attribute[] attributes)
-        {
-            return list.Where(r => AreMatching(r.Attributes.ToList(), attributes));
-        }
+        public IEnumerable<Record> Search(params Attribute[] attributes) =>
+            list.Where(r => AreMatching(r.Attributes.ToList(), attributes));
 
-        public IEnumerable<Record> Search(params AttributeMatch[] matches)
-        {
-            return list.Where(r => AreMatching(r.Attributes.ToList(), matches));
-        }
+        public IEnumerable<Record> Search(params AttributeMatch[] matches) =>
+            list.Where(r => AreMatching(r.Attributes.ToList(), matches));
 
         public void Commit(params Record[] records)
         {
@@ -45,14 +41,10 @@ namespace EverythingIsADatabase.Logic.Implementations
             list.Add(record);
         }
 
-        private static bool AreMatching(IList<Attribute> attributes, IEnumerable<Attribute> toMatch)
-        {
-            return toMatch.All(it => attributes.Any(a => a.Matches(it)));
-        }
+        private static bool AreMatching(IList<Attribute> attributes, IEnumerable<Attribute> toMatch) =>
+            toMatch.All(it => attributes.Any(a => a.Matches(it)));
 
-        private static bool AreMatching(List<Attribute> attributes, IEnumerable<AttributeMatch> toMatch)
-        {
-            return toMatch.All(it => attributes.Any(a => a.Matches(it)));
-        }
+        private static bool AreMatching(List<Attribute> attributes, IEnumerable<AttributeMatch> toMatch) =>
+            toMatch.All(it => attributes.Any(a => a.Matches(it)));
     }
 }
