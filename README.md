@@ -95,6 +95,8 @@ Public repository - CC-by-SA 3.0
 
 * SaveWebsiteCopy: solution for https://www.upwork.com/jobs/~01dea9d9c9418bb4f5 - the description of the project is inside, in the notes.txt file
 
+* Secure: Command-line Encryption / Decryption Utility (using AES) -- run without argument for usage
+
 * SimpleViewEngine: a view engine with only two directives, {{if}} / {{else}} / {{endif}} and {{foreach}} / {{endfor}}. Evaluates expressions with {{name}} and the current item itself in a foreach is {{}}.
 
 * SlotMachine: a slot machine
