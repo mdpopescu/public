@@ -21,8 +21,9 @@ namespace DecoratorGen.Tests
     int GetStuff(bool flag);
 }";
             fs.Setup(it => it.ReadText("ITest.cs")).Returns(CODE);
-            var generator = new Generator();
-            var app = new App(fs.Object, generator);
+            var codeGenerator = new CodeGenerator();
+            var filenameGenerator = new FilenameGenerator();
+            var app = new App(fs.Object, codeGenerator, filenameGenerator);
 
             app.GenerateDecorator("ITest.cs");
 
