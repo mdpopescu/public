@@ -31,6 +31,8 @@ Public repository - CC-by-SA 3.0
 
 * CustomCrypto: a custom encryption / decryption algorithm (NOT recommended, I am not a professional cryptographer!)
 
+* DecoratorGen: an utility to generate decorators around an interface (a class implementing that interface by delegating to another interface of the same type)
+
 * DesktopClock: a simple desktop wallpaper clock - trying to learn WPF
 
 * DINGO: DocumentatIoN GeneratOr - generate HTML documentation from C# code
