@@ -11,7 +11,17 @@ namespace DecoratorGen.Tests
         [TestMethod]
         public void Scenario1()
         {
+            // composition root
             var fs = new Mock<IFileSystem>();
+            var codeGenerator = new CodeGenerator(
+                new Parser(),
+                new MemberGenerator(),
+                new ClassNameGenerator()
+            );
+            var filenameGenerator = new FilenameGenerator();
+            var app = new App(fs.Object, codeGenerator, filenameGenerator);
+
+            // set up the mocks
             const string CODE = @"interface ITest
 {
     int A { get; }
@@ -21,12 +31,11 @@ namespace DecoratorGen.Tests
     int GetStuff(bool flag);
 }";
             fs.Setup(it => it.ReadText("ITest.cs")).Returns(CODE);
-            var codeGenerator = new CodeGenerator();
-            var filenameGenerator = new FilenameGenerator();
-            var app = new App(fs.Object, codeGenerator, filenameGenerator);
 
+            // invoke the generator
             app.GenerateDecorator("ITest.cs");
 
+            // verify the result
             fs.Verify(
                 it => it.WriteText(
                     "TestDecorator.cs",
