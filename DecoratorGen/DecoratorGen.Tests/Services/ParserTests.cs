@@ -1,4 +1,6 @@
-﻿using DecoratorGen.Library.Services;
+﻿using System.Linq;
+using DecoratorGen.Library.Models;
+using DecoratorGen.Library.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DecoratorGen.Tests.Services
@@ -27,7 +29,7 @@ namespace DecoratorGen.Tests.Services
 
 public interface IX
 {
-    public string C { get; set; }
+    string C { get; set; }
 }
 
 internal class D
@@ -43,9 +45,70 @@ public interface IY
                 Assert.AreEqual(
                     @"public interface IX
 {
-    public string C { get; set; }
+    string C { get; set; }
 }",
                     result.Code);
+            }
+        }
+
+        [TestClass]
+        public class ExtractMembers : ParserTests
+        {
+            [TestMethod]
+            public void ExtractsProperties()
+            {
+                const string FRAGMENT = @"public interface IX
+{
+    string C { get; set; }
+}";
+
+                var result = sut.ExtractMembers(FRAGMENT).ToArray();
+
+                Assert.AreEqual(1, result.Length);
+                var propertyMember = result[0] as PropertyMember;
+                Assert.IsNotNull(propertyMember);
+                Assert.AreEqual("string", propertyMember.TypeName);
+                Assert.AreEqual("C", propertyMember.Name);
+                Assert.IsTrue(propertyMember.HasGetter);
+                Assert.IsTrue(propertyMember.HasSetter);
+            }
+
+            [TestMethod]
+            public void ExtractsReadOnlyProperties()
+            {
+                const string FRAGMENT = @"public interface IX
+{
+    string C { get; }
+}";
+
+                var result = sut.ExtractMembers(FRAGMENT).ToArray();
+
+                Assert.AreEqual(1, result.Length);
+                var propertyMember = result[0] as ReadOnlyPropertyMember;
+                Assert.IsNotNull(propertyMember);
+                Assert.AreEqual("string", propertyMember.TypeName);
+                Assert.AreEqual("C", propertyMember.Name);
+                Assert.IsTrue(propertyMember.HasGetter);
+                Assert.IsFalse(propertyMember.HasSetter);
+            }
+
+            [TestMethod]
+            public void ExtractsWriteOnlyProperties()
+            {
+                const string FRAGMENT = @"public interface IX
+{
+    string C { set; }
+}";
+
+                var result = sut.ExtractMembers(FRAGMENT).ToArray();
+
+                Assert.AreEqual(1, result.Length);
+                var propertyMember = result[0] as PropertyMember;
+                Assert.IsNotNull(propertyMember);
+                Assert.AreEqual("string", propertyMember.TypeName);
+                Assert.AreEqual("C", propertyMember.Name);
+                Assert.IsFalse(propertyMember.HasGetter);
+                Assert.IsTrue(propertyMember.HasSetter);
             }
         }
     }

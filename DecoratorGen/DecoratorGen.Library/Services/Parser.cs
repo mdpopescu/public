@@ -45,11 +45,52 @@ namespace DecoratorGen.Library.Services
             return new InterfaceData { Name = name, Code = interfaceCode };
         }
 
-        public IEnumerable<Member> ExtractMembers(string code) => Enumerable.Empty<Member>();
+        public IEnumerable<Member> ExtractMembers(string code) =>
+            code
+                .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(ExtractProperty)
+                .Where(it => it != null);
 
         //
 
         private static readonly Regex RE1 = new Regex("interface\\s+\\w+", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex RE2 = new Regex("interface\\s+(\\w+)\\s*\\{", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        private static readonly Regex RE3_RO = new Regex(
+            "(\\w+)\\s+(\\w+)\\s*\\{\\s*get\\s*;\\s*\\}",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        private static readonly Regex RE3_GENERAL = new Regex(
+            "(\\w+)\\s+(\\w+)\\s*\\{\\s*(get\\s*;)?\\s*(set\\s*;)?\\s*\\}",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        private static PropertyMember ExtractProperty(string line) =>
+            ExtractReadOnlyProperty(line) ?? ExtractGeneralProperty(line);
+
+        private static PropertyMember ExtractReadOnlyProperty(string line)
+        {
+            var match = RE3_RO.Match(line);
+            return match.Success
+                ? new ReadOnlyPropertyMember
+                {
+                    TypeName = match.Groups[1].Value,
+                    Name = match.Groups[2].Value,
+                }
+                : null;
+        }
+
+        private static PropertyMember ExtractGeneralProperty(string line)
+        {
+            var match = RE3_GENERAL.Match(line);
+            return match.Success
+                ? new PropertyMember
+                {
+                    TypeName = match.Groups[1].Value,
+                    Name = match.Groups[2].Value,
+                    HasGetter = match.Groups[3].Value != "",
+                    HasSetter = match.Groups[4].Value != "",
+                }
+                : null;
+        }
     }
 }
