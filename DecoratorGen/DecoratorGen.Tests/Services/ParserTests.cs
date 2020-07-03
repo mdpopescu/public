@@ -116,6 +116,27 @@ public interface IY
                 Assert.IsNotNull(methodMember.Arguments);
                 Assert.AreEqual(0, methodMember.Arguments.Length);
             }
+
+            [TestMethod]
+            public void ExtractsMethodsWithArguments()
+            {
+                const string FRAGMENT = "int Method(string a, int b, Person person)";
+
+                var result = sut.ExtractMembers(FRAGMENT).ToArray();
+                Assert.AreEqual(1, result.Length);
+                var methodMember = result[0] as MethodMember;
+                Assert.IsNotNull(methodMember);
+                Assert.AreEqual("int", methodMember.TypeName);
+                Assert.AreEqual("Method", methodMember.Name);
+                Assert.IsNotNull(methodMember.Arguments);
+                Assert.AreEqual(3, methodMember.Arguments.Length);
+                Assert.AreEqual("string", methodMember.Arguments[0].TypeName);
+                Assert.AreEqual("a", methodMember.Arguments[0].Name);
+                Assert.AreEqual("int", methodMember.Arguments[1].TypeName);
+                Assert.AreEqual("b", methodMember.Arguments[1].Name);
+                Assert.AreEqual("Person", methodMember.Arguments[2].TypeName);
+                Assert.AreEqual("person", methodMember.Arguments[2].Name);
+            }
         }
     }
 }

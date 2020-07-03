@@ -104,7 +104,7 @@ namespace DecoratorGen.Tests.Services
                 Assert.AreEqual(
                     @"public class SomethingDecorator
 {
-    private ISomething decorated;
+    private readonly ISomething decorated;
 
     public SomethingDecorator(ISomething decorated)
     {

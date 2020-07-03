@@ -23,7 +23,7 @@ namespace DecoratorGen.Library.Services
 
             return $@"public class {className}
 {{
-    private {interfaceData.Name} decorated;
+    private readonly {interfaceData.Name} decorated;
 
     public {className}({interfaceData.Name} decorated)
     {{

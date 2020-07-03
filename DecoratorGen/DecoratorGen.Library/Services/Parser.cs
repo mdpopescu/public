@@ -64,7 +64,8 @@ namespace DecoratorGen.Library.Services
             "(\\w+)\\s+(\\w+)\\s*\\{\\s*(get\\s*;)?\\s*(set\\s*;)?\\s*\\}",
             RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        private static readonly Regex RE4 = new Regex("(\\w+)\\s+(\\w+)\\s*\\([^)]*\\)");
+        private static readonly Regex RE4 = new Regex("(\\w+)\\s+(\\w+)\\s*\\(([^)]*)\\)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex RE4_ARGS = new Regex("(\\w+)\\s+(\\w+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         private static Member ExtractPropertyOrMethod(string line) =>
             ExtractProperty(line) ?? ExtractMethod(line);
@@ -102,8 +103,15 @@ namespace DecoratorGen.Library.Services
         {
             var match = RE4.Match(line);
             return match.Success
-                ? new MethodMember { TypeName = match.Groups[1].Value, Name = match.Groups[2].Value, Arguments = new Argument[0] }
+                ? new MethodMember { TypeName = match.Groups[1].Value, Name = match.Groups[2].Value, Arguments = ExtractArguments(match.Groups[3].Value).ToArray() }
                 : null;
         }
+
+        private static IEnumerable<Argument> ExtractArguments(string args) =>
+            args
+                .Split(',')
+                .Select(s => RE4_ARGS.Match(s))
+                .Where(it => it.Success)
+                .Select(match => new Argument { TypeName = match.Groups[1].Value, Name = match.Groups[2].Value });
     }
 }

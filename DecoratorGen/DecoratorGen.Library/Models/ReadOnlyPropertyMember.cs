@@ -13,5 +13,8 @@
             get => false;
             set { }
         }
+
+        public override string ToString() =>
+            $"public {TypeName} {Name} => decorated.{Name};";
     }
 }

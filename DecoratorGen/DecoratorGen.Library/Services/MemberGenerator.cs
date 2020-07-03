@@ -5,6 +5,6 @@ namespace DecoratorGen.Library.Services
 {
     public class MemberGenerator : IMemberGenerator
     {
-        public string Generate(Member member) => "";
+        public string Generate(Member member) => member.ToString();
     }
 }

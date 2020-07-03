@@ -27,6 +27,7 @@ namespace DecoratorGen.Tests
     int A { get; }
     string B { get; set; }
 
+    int Test();
     void SomeMethod(int a, string b);
     int GetStuff(bool flag);
 }";
@@ -41,28 +42,25 @@ namespace DecoratorGen.Tests
                     "TestDecorator.cs",
                     @"public class TestDecorator
 {
+    private readonly ITest decorated;
+
+    public TestDecorator(ITest decorated)
+    {
+        this.decorated = decorated;
+    }
+
     public int A => decorated.A;
     public string B
     {
         get => decorated.B;
         set => decorated.B = value;
     }
-
-    public XWrapper(IX decorated)
-    {
-        this.decorated = decorated;
-    }
-
+    public int Test() =>
+        decorated.Test();
     public void SomeMethod(int a, string b) =>
         decorated.SomeMethod(a, b);
-
-
     public int GetStuff(bool flag) =>
         decorated.GetStuff(flag);
-
-    //
-
-    private IX decorated;
 }"));
         }
     }
