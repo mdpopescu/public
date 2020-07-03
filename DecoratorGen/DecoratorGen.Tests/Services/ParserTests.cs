@@ -57,10 +57,7 @@ public interface IY
             [TestMethod]
             public void ExtractsProperties()
             {
-                const string FRAGMENT = @"public interface IX
-{
-    string C { get; set; }
-}";
+                const string FRAGMENT = @"string C { get; set; }";
 
                 var result = sut.ExtractMembers(FRAGMENT).ToArray();
 
@@ -76,10 +73,7 @@ public interface IY
             [TestMethod]
             public void ExtractsReadOnlyProperties()
             {
-                const string FRAGMENT = @"public interface IX
-{
-    string C { get; }
-}";
+                const string FRAGMENT = @"string C { get; }";
 
                 var result = sut.ExtractMembers(FRAGMENT).ToArray();
 
@@ -95,10 +89,7 @@ public interface IY
             [TestMethod]
             public void ExtractsWriteOnlyProperties()
             {
-                const string FRAGMENT = @"public interface IX
-{
-    string C { set; }
-}";
+                const string FRAGMENT = @"string C { set; }";
 
                 var result = sut.ExtractMembers(FRAGMENT).ToArray();
 
@@ -109,6 +100,21 @@ public interface IY
                 Assert.AreEqual("C", propertyMember.Name);
                 Assert.IsFalse(propertyMember.HasGetter);
                 Assert.IsTrue(propertyMember.HasSetter);
+            }
+
+            [TestMethod]
+            public void ExtractsMethodsWithoutArguments()
+            {
+                const string FRAGMENT = "void Method()";
+
+                var result = sut.ExtractMembers(FRAGMENT).ToArray();
+                Assert.AreEqual(1, result.Length);
+                var methodMember = result[0] as MethodMember;
+                Assert.IsNotNull(methodMember);
+                Assert.AreEqual("void", methodMember.TypeName);
+                Assert.AreEqual("Method", methodMember.Name);
+                Assert.IsNotNull(methodMember.Arguments);
+                Assert.AreEqual(0, methodMember.Arguments.Length);
             }
         }
     }

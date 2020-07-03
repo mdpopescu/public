@@ -48,7 +48,7 @@ namespace DecoratorGen.Library.Services
         public IEnumerable<Member> ExtractMembers(string code) =>
             code
                 .Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(ExtractProperty)
+                .Select(ExtractPropertyOrMethod)
                 .Where(it => it != null);
 
         //
@@ -64,10 +64,15 @@ namespace DecoratorGen.Library.Services
             "(\\w+)\\s+(\\w+)\\s*\\{\\s*(get\\s*;)?\\s*(set\\s*;)?\\s*\\}",
             RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        private static PropertyMember ExtractProperty(string line) =>
+        private static readonly Regex RE4 = new Regex("(\\w+)\\s+(\\w+)\\s*\\([^)]*\\)");
+
+        private static Member ExtractPropertyOrMethod(string line) =>
+            ExtractProperty(line) ?? ExtractMethod(line);
+
+        private static Member ExtractProperty(string line) =>
             ExtractReadOnlyProperty(line) ?? ExtractGeneralProperty(line);
 
-        private static PropertyMember ExtractReadOnlyProperty(string line)
+        private static Member ExtractReadOnlyProperty(string line)
         {
             var match = RE3_RO.Match(line);
             return match.Success
@@ -79,7 +84,7 @@ namespace DecoratorGen.Library.Services
                 : null;
         }
 
-        private static PropertyMember ExtractGeneralProperty(string line)
+        private static Member ExtractGeneralProperty(string line)
         {
             var match = RE3_GENERAL.Match(line);
             return match.Success
@@ -90,6 +95,14 @@ namespace DecoratorGen.Library.Services
                     HasGetter = match.Groups[3].Value != "",
                     HasSetter = match.Groups[4].Value != "",
                 }
+                : null;
+        }
+
+        private static Member ExtractMethod(string line)
+        {
+            var match = RE4.Match(line);
+            return match.Success
+                ? new MethodMember { TypeName = match.Groups[1].Value, Name = match.Groups[2].Value, Arguments = new Argument[0] }
                 : null;
         }
     }
