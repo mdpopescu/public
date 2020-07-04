@@ -137,6 +137,44 @@ public interface IY
                 Assert.AreEqual("Person", methodMember.Arguments[2].TypeName);
                 Assert.AreEqual("person", methodMember.Arguments[2].Name);
             }
+
+            [TestMethod]
+            public void ExtractsMethodsWithGenericReturnTypesAndArguments()
+            {
+                const string FRAGMENT = "IEnumerable<int> Method(int a, IEnumerable<string> b)";
+
+                var result = sut.ExtractMembers(FRAGMENT).ToArray();
+                Assert.AreEqual(1, result.Length);
+                var methodMember = result[0] as MethodMember;
+                Assert.IsNotNull(methodMember);
+                Assert.AreEqual("IEnumerable<int>", methodMember.TypeName);
+                Assert.AreEqual("Method", methodMember.Name);
+                Assert.IsNotNull(methodMember.Arguments);
+                Assert.AreEqual(2, methodMember.Arguments.Length);
+                Assert.AreEqual("int", methodMember.Arguments[0].TypeName);
+                Assert.AreEqual("a", methodMember.Arguments[0].Name);
+                Assert.AreEqual("IEnumerable<string>", methodMember.Arguments[1].TypeName);
+                Assert.AreEqual("b", methodMember.Arguments[1].Name);
+            }
+
+            [TestMethod]
+            public void ExtractsGenericMethods()
+            {
+                const string FRAGMENT = "IEnumerable<T> Method<T>(int a, IEnumerable<T> b)";
+
+                var result = sut.ExtractMembers(FRAGMENT).ToArray();
+                Assert.AreEqual(1, result.Length);
+                var methodMember = result[0] as MethodMember;
+                Assert.IsNotNull(methodMember);
+                Assert.AreEqual("IEnumerable<T>", methodMember.TypeName);
+                Assert.AreEqual("Method<T>", methodMember.Name);
+                Assert.IsNotNull(methodMember.Arguments);
+                Assert.AreEqual(2, methodMember.Arguments.Length);
+                Assert.AreEqual("int", methodMember.Arguments[0].TypeName);
+                Assert.AreEqual("a", methodMember.Arguments[0].Name);
+                Assert.AreEqual("IEnumerable<T>", methodMember.Arguments[1].TypeName);
+                Assert.AreEqual("b", methodMember.Arguments[1].Name);
+            }
         }
     }
 }

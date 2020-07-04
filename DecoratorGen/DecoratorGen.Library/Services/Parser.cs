@@ -64,8 +64,8 @@ namespace DecoratorGen.Library.Services
             "(\\w+)\\s+(\\w+)\\s*\\{\\s*(get\\s*;)?\\s*(set\\s*;)?\\s*\\}",
             RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        private static readonly Regex RE4 = new Regex("(\\w+)\\s+(\\w+)\\s*\\(([^)]*)\\)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private static readonly Regex RE4_ARGS = new Regex("(\\w+)\\s+(\\w+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex RE4 = new Regex("([\\w<>]+)\\s+([\\w<>]+)\\s*\\(([^)]*)\\)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex RE4_ARGS = new Regex("([\\w<>]+)\\s+(\\w+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         private static Member ExtractPropertyOrMethod(string line) =>
             ExtractProperty(line) ?? ExtractMethod(line);
