@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecoratorGen.Library", "Dec
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecoratorGen.Tests", "DecoratorGen.Tests\DecoratorGen.Tests.csproj", "{93994C97-7715-4A4B-AF08-BA2E9B0C1C2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecoratorGen", "DecoratorGen\DecoratorGen.csproj", "{0EE842E5-6209-44AB-A718-65C3467AFFDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{93994C97-7715-4A4B-AF08-BA2E9B0C1C2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93994C97-7715-4A4B-AF08-BA2E9B0C1C2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93994C97-7715-4A4B-AF08-BA2E9B0C1C2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EE842E5-6209-44AB-A718-65C3467AFFDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EE842E5-6209-44AB-A718-65C3467AFFDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EE842E5-6209-44AB-A718-65C3467AFFDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EE842E5-6209-44AB-A718-65C3467AFFDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
