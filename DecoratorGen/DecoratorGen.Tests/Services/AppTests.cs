@@ -11,7 +11,7 @@ namespace DecoratorGen.Tests.Services
     {
         private Mock<IFileSystem> fs;
         private Mock<ICodeGenerator> codeGenerator;
-        private Mock<IFilenameGenerator> filenameGenerator;
+        private Mock<IOutput> output;
 
         private App sut;
 
@@ -20,9 +20,9 @@ namespace DecoratorGen.Tests.Services
         {
             fs = new Mock<IFileSystem>();
             codeGenerator = new Mock<ICodeGenerator>();
-            filenameGenerator = new Mock<IFilenameGenerator>();
+            output = new Mock<IOutput>();
 
-            sut = new App(fs.Object, codeGenerator.Object, filenameGenerator.Object);
+            sut = new App(fs.Object, codeGenerator.Object, output.Object);
         }
 
         [TestClass]
@@ -58,12 +58,10 @@ namespace DecoratorGen.Tests.Services
                 fs.Setup(it => it.ReadText(filename)).Returns(code);
                 var newCode = AutoFaker.Generate<string>();
                 codeGenerator.Setup(it => it.Generate(code)).Returns(newCode);
-                var newFile = AutoFaker.Generate<string>();
-                filenameGenerator.Setup(it => it.Generate(filename)).Returns(newFile);
 
                 sut.GenerateDecorator(filename);
 
-                fs.Verify(it => it.WriteText(newFile, newCode));
+                output.Verify(it => it.WriteCode(newCode));
             }
         }
     }

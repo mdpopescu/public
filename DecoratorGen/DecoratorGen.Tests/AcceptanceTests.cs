@@ -13,13 +13,14 @@ namespace DecoratorGen.Tests
         {
             // composition root
             var fs = new Mock<IFileSystem>();
+            var filenameGenerator = new FilenameGenerator();
+            var output = new FileOutput(filenameGenerator, fs.Object);
             var codeGenerator = new CodeGenerator(
                 new Parser(),
                 new MemberGenerator(),
                 new ClassNameGenerator()
             );
-            var filenameGenerator = new FilenameGenerator();
-            var app = new App(fs.Object, codeGenerator, filenameGenerator);
+            var app = new App(fs.Object, codeGenerator, output);
 
             // set up the mocks
             const string CODE = @"interface ITest
@@ -39,7 +40,7 @@ namespace DecoratorGen.Tests
             // verify the result
             fs.Verify(
                 it => it.WriteText(
-                    "TestDecorator.cs",
+                    @"TestDecorator.cs",
                     @"public class TestDecorator
 {
     private readonly ITest decorated;

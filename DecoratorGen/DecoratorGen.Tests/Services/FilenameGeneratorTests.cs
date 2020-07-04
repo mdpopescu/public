@@ -18,33 +18,13 @@ namespace DecoratorGen.Tests.Services
         public class Generate : FilenameGeneratorTests
         {
             [TestMethod]
-            public void GeneratesTheCorrectNameForFilesStartingWithTheLetterIFollowedByAnotherUppercaseLetter()
+            public void GeneratesTheCorrectNameForAClass()
             {
-                const string FILENAME = @"c:\temp\ISomething.cs";
+                const string CODE = "class SomethingDecorator";
 
-                var result = sut.Generate(FILENAME);
+                var result = sut.Generate(CODE);
 
-                Assert.AreEqual(@"c:\temp\SomethingDecorator.cs", result);
-            }
-
-            [TestMethod]
-            public void GeneratesTheCorrectNameForFilesNotStartingWithTheLetterI()
-            {
-                const string FILENAME = @"c:\temp\Something.cs";
-
-                var result = sut.Generate(FILENAME);
-
-                Assert.AreEqual(@"c:\temp\SomethingDecorator.cs", result);
-            }
-
-            [TestMethod]
-            public void GeneratesTheCorrectNameForFilesStartingWithTheLetterIFollowedByALowercaseLetter()
-            {
-                const string FILENAME = @"c:\temp\Interesting.cs";
-
-                var result = sut.Generate(FILENAME);
-
-                Assert.AreEqual(@"c:\temp\InterestingDecorator.cs", result);
+                Assert.AreEqual("SomethingDecorator.cs", result);
             }
         }
     }

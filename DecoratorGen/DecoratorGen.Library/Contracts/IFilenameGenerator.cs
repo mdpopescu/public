@@ -2,6 +2,6 @@
 {
     public interface IFilenameGenerator
     {
-        string Generate(string filename);
+        string Generate(string code);
     }
 }
