@@ -21,7 +21,7 @@ namespace DecoratorGen.Library.Services
             var membersCode = members.Select(memberGenerator.Generate);
             var membersLines = string.Join(Environment.NewLine, membersCode.Select(it => "    " + it));
 
-            return $@"public class {className}
+            return $@"public class {className} : {interfaceData.Name}
 {{
     private readonly {interfaceData.Name} decorated;
 

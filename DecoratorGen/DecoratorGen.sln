@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecoratorGen.Library", "DecoratorGen.Library\DecoratorGen.Library.csproj", "{1C834FF0-448E-48EE-9FAA-2C61758F9DE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DecoratorGen.Library", "DecoratorGen.Library\DecoratorGen.Library.csproj", "{1C834FF0-448E-48EE-9FAA-2C61758F9DE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecoratorGen.Tests", "DecoratorGen.Tests\DecoratorGen.Tests.csproj", "{93994C97-7715-4A4B-AF08-BA2E9B0C1C2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DecoratorGen.Tests", "DecoratorGen.Tests\DecoratorGen.Tests.csproj", "{93994C97-7715-4A4B-AF08-BA2E9B0C1C2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DecoratorGen", "DecoratorGen\DecoratorGen.csproj", "{0EE842E5-6209-44AB-A718-65C3467AFFDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DecoratorGen", "DecoratorGen\DecoratorGen.csproj", "{0EE842E5-6209-44AB-A718-65C3467AFFDE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

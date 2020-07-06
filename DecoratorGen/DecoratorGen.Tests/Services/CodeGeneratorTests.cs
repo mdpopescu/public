@@ -102,7 +102,7 @@ namespace DecoratorGen.Tests.Services
                 var result = sut.Generate(code);
 
                 Assert.AreEqual(
-                    @"public class SomethingDecorator
+                    @"public class SomethingDecorator : ISomething
 {
     private readonly ISomething decorated;
 

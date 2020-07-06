@@ -41,7 +41,7 @@ namespace DecoratorGen.Tests
             fs.Verify(
                 it => it.WriteText(
                     @"TestDecorator.cs",
-                    @"public class TestDecorator
+                    @"public class TestDecorator : ITest
 {
     private readonly ITest decorated;
 
