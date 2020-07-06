@@ -104,8 +104,6 @@ namespace DecoratorGen.Tests.Services
                 Assert.AreEqual(
                     @"public class SomethingDecorator : ISomething
 {
-    private readonly ISomething decorated;
-
     public SomethingDecorator(ISomething decorated)
     {
         this.decorated = decorated;
@@ -114,6 +112,10 @@ namespace DecoratorGen.Tests.Services
     M0
     M1
     M2
+
+    //
+
+    private readonly ISomething decorated;
 }",
                     result);
             }

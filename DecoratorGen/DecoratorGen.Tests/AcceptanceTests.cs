@@ -43,8 +43,6 @@ namespace DecoratorGen.Tests
                     @"TestDecorator.cs",
                     @"public class TestDecorator : ITest
 {
-    private readonly ITest decorated;
-
     public TestDecorator(ITest decorated)
     {
         this.decorated = decorated;
@@ -62,6 +60,10 @@ namespace DecoratorGen.Tests
         decorated.SomeMethod(a, b);
     public int GetStuff(bool flag) =>
         decorated.GetStuff(flag);
+
+    //
+
+    private readonly ITest decorated;
 }"));
         }
     }

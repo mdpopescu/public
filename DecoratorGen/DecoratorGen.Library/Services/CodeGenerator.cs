@@ -23,14 +23,16 @@ namespace DecoratorGen.Library.Services
 
             return $@"public class {className} : {interfaceData.Name}
 {{
-    private readonly {interfaceData.Name} decorated;
-
     public {className}({interfaceData.Name} decorated)
     {{
         this.decorated = decorated;
     }}
 
 {membersLines}
+
+    //
+
+    private readonly {interfaceData.Name} decorated;
 }}";
         }
 
