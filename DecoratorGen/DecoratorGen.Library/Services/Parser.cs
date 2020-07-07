@@ -53,6 +53,8 @@ namespace DecoratorGen.Library.Services
 
         //
 
+        private const string GENERIC_TYPE_IDENT = "[\\w<>\\[\\], ]+";
+
         private static readonly Regex RE1 = new Regex("interface\\s+\\w+", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex RE2 = new Regex("interface\\s+(\\w+)\\s*\\{", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
@@ -64,8 +66,8 @@ namespace DecoratorGen.Library.Services
             "(\\w+)\\s+(\\w+)\\s*\\{\\s*(get\\s*;)?\\s*(set\\s*;)?\\s*\\}",
             RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-        private static readonly Regex RE4 = new Regex("([\\w<>]+)\\s+([\\w<>]+)\\s*\\(([^)]*)\\)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private static readonly Regex RE4_ARGS = new Regex("([\\w<>]+)\\s+(\\w+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex RE4 = new Regex($"({GENERIC_TYPE_IDENT})\\s+({GENERIC_TYPE_IDENT})\\s*\\(([^)]*)\\)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex RE4_ARGS = new Regex($"({GENERIC_TYPE_IDENT})\\s+(\\w+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         private static Member ExtractPropertyOrMethod(string line) =>
             ExtractProperty(line) ?? ExtractMethod(line);
@@ -103,7 +105,7 @@ namespace DecoratorGen.Library.Services
         {
             var match = RE4.Match(line);
             return match.Success
-                ? new MethodMember { TypeName = match.Groups[1].Value, Name = match.Groups[2].Value, Arguments = ExtractArguments(match.Groups[3].Value).ToArray() }
+                ? new MethodMember { TypeName = match.Groups[1].Value.Trim(), Name = match.Groups[2].Value.Trim(), Arguments = ExtractArguments(match.Groups[3].Value).ToArray() }
                 : null;
         }
 
@@ -112,6 +114,6 @@ namespace DecoratorGen.Library.Services
                 .Split(',')
                 .Select(s => RE4_ARGS.Match(s))
                 .Where(it => it.Success)
-                .Select(match => new Argument { TypeName = match.Groups[1].Value, Name = match.Groups[2].Value });
+                .Select(match => new Argument { TypeName = match.Groups[1].Value.Trim(), Name = match.Groups[2].Value.Trim() });
     }
 }

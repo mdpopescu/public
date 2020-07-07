@@ -139,7 +139,7 @@ public interface IY
             }
 
             [TestMethod]
-            public void ExtractsMethodsWithGenericReturnTypesAndArguments()
+            public void ExtractsMethodsWithGenericReturnTypesAndArguments1()
             {
                 const string FRAGMENT = "IEnumerable<int> Method(int a, IEnumerable<string> b)";
 
@@ -154,6 +154,46 @@ public interface IY
                 Assert.AreEqual("int", methodMember.Arguments[0].TypeName);
                 Assert.AreEqual("a", methodMember.Arguments[0].Name);
                 Assert.AreEqual("IEnumerable<string>", methodMember.Arguments[1].TypeName);
+                Assert.AreEqual("b", methodMember.Arguments[1].Name);
+            }
+
+            [TestMethod]
+            public void ExtractsMethodsWithArrayReturnTypesAndArguments()
+            {
+                const string FRAGMENT = "int[] Method(int a, int[] b)";
+
+                var result = sut.ExtractMembers(FRAGMENT).ToArray();
+                Assert.AreEqual(1, result.Length);
+                var methodMember = result[0] as MethodMember;
+                Assert.IsNotNull(methodMember);
+                Assert.AreEqual("int[]", methodMember.TypeName);
+                Assert.AreEqual("Method", methodMember.Name);
+                Assert.IsNotNull(methodMember.Arguments);
+                Assert.AreEqual(2, methodMember.Arguments.Length);
+                Assert.AreEqual("int", methodMember.Arguments[0].TypeName);
+                Assert.AreEqual("a", methodMember.Arguments[0].Name);
+                Assert.AreEqual("int[]", methodMember.Arguments[1].TypeName);
+                Assert.AreEqual("b", methodMember.Arguments[1].Name);
+            }
+
+            // TODO: this doesn't work because splitting the arguments at the comma ruins the type of b
+            [Ignore]
+            [TestMethod]
+            public void ExtractsMethodsWithGenericReturnTypesAndArguments2()
+            {
+                const string FRAGMENT = "Action<string, byte[]> Method(int a, Action<string, byte[]> b)";
+
+                var result = sut.ExtractMembers(FRAGMENT).ToArray();
+                Assert.AreEqual(1, result.Length);
+                var methodMember = result[0] as MethodMember;
+                Assert.IsNotNull(methodMember);
+                Assert.AreEqual("Action<string, byte[]>", methodMember.TypeName);
+                Assert.AreEqual("Method", methodMember.Name);
+                Assert.IsNotNull(methodMember.Arguments);
+                Assert.AreEqual(2, methodMember.Arguments.Length);
+                Assert.AreEqual("int", methodMember.Arguments[0].TypeName);
+                Assert.AreEqual("a", methodMember.Arguments[0].Name);
+                Assert.AreEqual("Action<string, byte[]>", methodMember.Arguments[1].TypeName);
                 Assert.AreEqual("b", methodMember.Arguments[1].Name);
             }
 
