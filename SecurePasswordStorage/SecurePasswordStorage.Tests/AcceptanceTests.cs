@@ -12,8 +12,9 @@ namespace SecurePasswordStorage.Tests
         public void Test1()
         {
             var crypto = A.Fake<ICrypto>();
+            var securityLogic = new SecurityLogic(crypto);
             var repository = A.Fake<IRepository>();
-            ISecureStorage storage = new SecureStorage(crypto, repository);
+            ISecureStorage storage = new SecureStorage(crypto, securityLogic, repository);
 
             var loginCredentials = ObjectMother.CreateCredentials();
             var foreignCredentials = ObjectMother.CreateCredentials();

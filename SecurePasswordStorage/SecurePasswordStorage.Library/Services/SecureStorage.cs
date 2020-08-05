@@ -5,9 +5,10 @@ namespace SecurePasswordStorage.Library.Services
 {
     public class SecureStorage : ISecureStorage
     {
-        public SecureStorage(ICrypto crypto, IRepository repository)
+        public SecureStorage(ICrypto crypto, ISecurityLogic securityLogic, IRepository repository)
         {
             this.crypto = crypto;
+            this.securityLogic = securityLogic;
             this.repository = repository;
         }
 
@@ -18,16 +19,14 @@ namespace SecurePasswordStorage.Library.Services
             if (user == null)
                 return;
 
-            var largeHash = crypto.GetLargeHash(loginCredentials);
-            var encrypted = crypto.Encrypt(largeHash.PartOne, foreignCredentials);
-            var hashed = crypto.GetSecureHash(largeHash.PartTwo);
-            var encryptedCredentials = new EncryptedCredentials { Encrypted = encrypted, Hashed = hashed };
+            var encryptedCredentials = securityLogic.GetEncryptedCredentials(loginCredentials, foreignCredentials);
             repository.SaveEncryptedCredentials(loginCredentials.Username, encryptedCredentials);
         }
 
         //
 
         private readonly ICrypto crypto;
+        private readonly ISecurityLogic securityLogic;
         private readonly IRepository repository;
     }
 }

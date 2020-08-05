@@ -10,6 +10,7 @@ namespace SecurePasswordStorage.Tests.Services
     public class SecureStorageTests
     {
         private ICrypto crypto;
+        private ISecurityLogic securityLogic;
         private IRepository repository;
 
         private SecureStorage sut;
@@ -18,9 +19,10 @@ namespace SecurePasswordStorage.Tests.Services
         public void SetUp()
         {
             crypto = A.Fake<ICrypto>();
+            securityLogic = A.Fake<ISecurityLogic>();
             repository = A.Fake<IRepository>();
 
-            sut = new SecureStorage(crypto, repository);
+            sut = new SecureStorage(crypto, securityLogic, repository);
         }
 
         [TestClass]
@@ -50,7 +52,7 @@ namespace SecurePasswordStorage.Tests.Services
                 A.CallTo(() => repository.LoadUser(loginCredentials.Username, secureHash)).MustHaveHappened();
             }
 
-            [TestMethod("If the user checks out, hashes the user credentials with the large hash")]
+            [TestMethod("If the user checks out, gets the encrypted credentials")]
             public void Test3()
             {
                 var loginCredentials = ObjectMother.CreateCredentials();
@@ -62,10 +64,10 @@ namespace SecurePasswordStorage.Tests.Services
 
                 sut.Save(loginCredentials, foreignCredentials);
 
-                A.CallTo(() => crypto.GetLargeHash(loginCredentials)).MustHaveHappened();
+                A.CallTo(() => securityLogic.GetEncryptedCredentials(loginCredentials, foreignCredentials)).MustHaveHappened();
             }
 
-            [TestMethod("If the user does not check out, the large hash is not used")]
+            [TestMethod("If the user does not check out, the method does not request the encrypted credentials")]
             public void Test4()
             {
                 var loginCredentials = ObjectMother.CreateCredentials();
@@ -76,41 +78,7 @@ namespace SecurePasswordStorage.Tests.Services
 
                 sut.Save(loginCredentials, foreignCredentials);
 
-                A.CallTo(() => crypto.GetLargeHash(loginCredentials)).MustNotHaveHappened();
-            }
-
-            [TestMethod("Encrypts the foreign credentials using the first part of the large hash as the key")]
-            public void Test5()
-            {
-                var loginCredentials = ObjectMother.CreateCredentials();
-                var secureHash = ObjectMother.CreateSecureHash();
-                A.CallTo(() => crypto.GetSecureHash(loginCredentials)).Returns(secureHash);
-                var user = A.Fake<IUser>();
-                A.CallTo(() => repository.LoadUser(loginCredentials.Username, secureHash)).Returns(user);
-                var largeHash = ObjectMother.CreateLargeHash();
-                A.CallTo(() => crypto.GetLargeHash(loginCredentials)).Returns(largeHash);
-                var foreignCredentials = ObjectMother.CreateCredentials();
-
-                sut.Save(loginCredentials, foreignCredentials);
-
-                A.CallTo(() => crypto.Encrypt(largeHash.PartOne, foreignCredentials)).MustHaveHappened();
-            }
-
-            [TestMethod("Hashes the second part of the large hash (securely)")]
-            public void Test6()
-            {
-                var loginCredentials = ObjectMother.CreateCredentials();
-                var secureHash = ObjectMother.CreateSecureHash();
-                A.CallTo(() => crypto.GetSecureHash(loginCredentials)).Returns(secureHash);
-                var user = A.Fake<IUser>();
-                A.CallTo(() => repository.LoadUser(loginCredentials.Username, secureHash)).Returns(user);
-                var largeHash = ObjectMother.CreateLargeHash();
-                A.CallTo(() => crypto.GetLargeHash(loginCredentials)).Returns(largeHash);
-                var foreignCredentials = ObjectMother.CreateCredentials();
-
-                sut.Save(loginCredentials, foreignCredentials);
-
-                A.CallTo(() => crypto.GetSecureHash(largeHash.PartTwo)).MustHaveHappened();
+                A.CallTo(() => securityLogic.GetEncryptedCredentials(loginCredentials, foreignCredentials)).MustNotHaveHappened();
             }
 
             [TestMethod("Saves the result to the repository")]
@@ -125,8 +93,7 @@ namespace SecurePasswordStorage.Tests.Services
                 A.CallTo(() => crypto.GetLargeHash(loginCredentials)).Returns(largeHash);
                 var foreignCredentials = ObjectMother.CreateCredentials();
                 var encryptedCredentials = ObjectMother.CreateEncryptedCredentials();
-                A.CallTo(() => crypto.Encrypt(largeHash.PartOne, foreignCredentials)).Returns(encryptedCredentials.Encrypted);
-                A.CallTo(() => crypto.GetSecureHash(largeHash.PartTwo)).Returns(encryptedCredentials.Hashed);
+                A.CallTo(() => securityLogic.GetEncryptedCredentials(loginCredentials, foreignCredentials)).Returns(encryptedCredentials);
 
                 sut.Save(loginCredentials, foreignCredentials);
 
@@ -135,7 +102,8 @@ namespace SecurePasswordStorage.Tests.Services
                         () => repository.SaveEncryptedCredentials(
                             loginCredentials.Username,
                             A<EncryptedCredentials>.That.Matches(
-                                it => it.Encrypted == encryptedCredentials.Encrypted && it.Hashed == encryptedCredentials.Hashed
+                                it => it.Encrypted == encryptedCredentials.Encrypted
+                                    && it.Hashed == encryptedCredentials.Hashed
                             )
                         )
                     )
