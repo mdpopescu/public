@@ -1,0 +1,18 @@
+Based on https://security.stackexchange.com/a/22761
+
+Let's suppose that in your app (let's call it App1), the user already has to enter some credentials C1 (name and password) which App1 uses when it connects to your central database.
+Right now, your central database contains C2 as cleartext, to be used when App1 connects to App2.
+
+Let H() be a hash function with a large output, say SHA-512. When the user enters his password (C1) in the interface of App1, App1 computes H(C1) and obtains a 512-bit value,
+which it then splits into two 256-bit halves, Pl and Pr.
+
+The credentials C2 are symmetrically encrypted with a key derived from Pl. This derivation should be slow (like bcrypt or PBKDF2 or something equivalent); I suggest relying on
+an existing, well-audited format for the encryption details and the key derivation, e.g. OpenPGP. Let's call E(C2) the encryption result.
+
+Now let your central database store E(C2) and bcrypt(Pr).
+
+When the user enters C1 in App1, App1 applies H() to obtain Pl and Pr. App1 then contacts the central database and sends Pr (within a SSL tunnel, of course). The central database
+applies bcrypt() on Pr to see if that matches the stored value; if yes, it sends E(C2) back to the client. Then, App1 uses Pl to decrypt the blob and obtain C2.
+
+This way, the central database never obtains the decrypted C2 at all; and C2 are known to App1 only in a transient way (in RAM, not "hidden" in the code). What the central database
+knows is sufficient to test a password for validity, but slow hashing and salting is employed to counteract that issue (as part of E() for Pl, using bcrypt() for Pr).
