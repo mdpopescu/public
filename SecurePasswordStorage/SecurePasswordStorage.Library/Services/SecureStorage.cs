@@ -48,8 +48,9 @@ namespace SecurePasswordStorage.Library.Services
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
 
             var saltedCredentials = credentials.GetSaltedCredentials(user.Salt);
-            var passwordHash = crypto.SecureHash(saltedCredentials);
-            if (!user.PasswordHash.SequenceEqual(passwordHash))
+            //var passwordHash = crypto.SecureHash(saltedCredentials);
+            // passwordHash == user.Salt + hash(saltedCredentials)
+            if (!crypto.VerifyHash(user.PasswordHash, saltedCredentials))
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
 
             crypto.Transform(credentials, out secretKey, out verificationHash);

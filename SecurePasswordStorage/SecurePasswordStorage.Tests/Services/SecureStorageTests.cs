@@ -61,8 +61,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var credentials = ObjectMother.CreateCredentials();
                 var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-                // hashing the password returns another value than the one stored in the user record
-                A.CallTo(() => crypto.SecureHash(credentials.GetSaltedCredentials(user.Salt))).Returns(ObjectMother.CreateBytes());
+                A.CallTo(() => crypto.VerifyHash(A<byte[]>.Ignored, A<byte[]>.Ignored)).Returns(false);
                 var secret = ObjectMother.CreateBytes();
 
                 sut.Save(credentials, secret);
@@ -143,8 +142,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var credentials = ObjectMother.CreateCredentials();
                 var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-                // hashing the password returns another value than the one stored in the user record
-                A.CallTo(() => crypto.SecureHash(credentials.GetSaltedCredentials(user.Salt))).Returns(ObjectMother.CreateBytes());
+                A.CallTo(() => crypto.VerifyHash(A<byte[]>.Ignored, A<byte[]>.Ignored)).Returns(false);
 
                 sut.Load(credentials);
             }
@@ -229,10 +227,13 @@ namespace SecurePasswordStorage.Tests.Services
         {
             var user = ObjectMother.CreateUser(credentials.Key);
             A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-            // hashing the credentials returns the hash stored in the user record
-            A
-                .CallTo(() => crypto.SecureHash(A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(credentials.GetSaltedCredentials(user.Salt)))))
-                .Returns(user.PasswordHash);
+            A.CallTo(
+                    () => crypto.VerifyHash(
+                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(user.PasswordHash)),
+                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(credentials.GetSaltedCredentials(user.Salt)))
+                    )
+                )
+                .Returns(true);
         }
 
         private void SetupValidSecret(Credentials credentials, byte[] secretKey, out byte[] verificationHash)
