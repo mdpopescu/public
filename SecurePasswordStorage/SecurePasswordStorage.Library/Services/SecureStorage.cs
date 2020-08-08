@@ -48,12 +48,18 @@ namespace SecurePasswordStorage.Library.Services
             if (user == null)
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
 
-            var saltedPassword = user.Salt.Concat(Encoding.UTF8.GetBytes(credentials.Password)).ToArray();
-            var passwordHash = crypto.SecureHash(saltedPassword);
+            var saltedCredentials = GetSaltedCredentials(credentials, user);
+            var passwordHash = crypto.SecureHash(saltedCredentials);
             if (!user.PasswordHash.SequenceEqual(passwordHash))
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
 
             crypto.Transform(credentials, out secretKey, out verificationHash);
         }
+
+        private static byte[] GetSaltedCredentials(Credentials credentials, User user) =>
+            user.Salt
+                .Concat(Encoding.UTF8.GetBytes(credentials.Key.Value))
+                .Concat(Encoding.UTF8.GetBytes(credentials.Password))
+                .ToArray();
     }
 }

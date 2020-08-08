@@ -62,7 +62,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
                 // hashing the password returns another value than the one stored in the user record
-                A.CallTo(() => crypto.SecureHash(user.Salt.Concat(Encoding.UTF8.GetBytes(credentials.Password)).ToArray())).Returns(ObjectMother.CreateBytes());
+                A.CallTo(() => crypto.SecureHash(GetSaltedCredentials(user, credentials))).Returns(ObjectMother.CreateBytes());
                 var secret = ObjectMother.CreateBytes();
 
                 sut.Save(credentials, secret);
@@ -144,7 +144,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
                 // hashing the password returns another value than the one stored in the user record
-                A.CallTo(() => crypto.SecureHash(user.Salt.Concat(Encoding.UTF8.GetBytes(credentials.Password)).ToArray())).Returns(ObjectMother.CreateBytes());
+                A.CallTo(() => crypto.SecureHash(GetSaltedCredentials(user, credentials))).Returns(ObjectMother.CreateBytes());
 
                 sut.Load(credentials);
             }
@@ -231,9 +231,7 @@ namespace SecurePasswordStorage.Tests.Services
             A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
             // hashing the credentials returns the hash stored in the user record
             A
-                .CallTo(
-                    () => crypto.SecureHash(
-                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(user.Salt.Concat(Encoding.UTF8.GetBytes(credentials.Password)).ToArray()))))
+                .CallTo(() => crypto.SecureHash(A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(GetSaltedCredentials(user, credentials)))))
                 .Returns(user.PasswordHash);
         }
 
@@ -249,5 +247,11 @@ namespace SecurePasswordStorage.Tests.Services
             var secretData = new SecretData(credentials.Key, encryptedSecret, verificationHash);
             A.CallTo(() => secretRepository.Load(credentials.Key)).Returns(secretData);
         }
+
+        private static byte[] GetSaltedCredentials(User user, Credentials credentials) =>
+            user.Salt
+                .Concat(Encoding.UTF8.GetBytes(credentials.Key.Value))
+                .Concat(Encoding.UTF8.GetBytes(credentials.Password))
+                .ToArray();
     }
 }
