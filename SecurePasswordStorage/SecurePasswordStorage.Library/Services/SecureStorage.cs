@@ -7,7 +7,7 @@ using SecurePasswordStorage.Library.Models;
 
 namespace SecurePasswordStorage.Library.Services
 {
-    public class SecureStorage
+    public class SecureStorage : ISecureStorage
     {
         public SecureStorage(ICryptoFacade crypto, IUserRepository userRepository, ISecretRepository secretRepository)
         {

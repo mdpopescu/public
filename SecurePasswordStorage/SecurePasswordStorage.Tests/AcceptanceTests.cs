@@ -17,7 +17,7 @@ namespace SecurePasswordStorage.Tests
             var crypto = A.Fake<ICryptoFacade>();
             var userRepository = A.Fake<IUserRepository>();
             var secretRepository = A.Fake<ISecretRepository>();
-            var storage = new SecureStorage(crypto, userRepository, secretRepository);
+            ISecureStorage storage = new SecureStorage(crypto, userRepository, secretRepository);
 
             // these are the user's credentials for *our* application
             var credentials = ObjectMother.CreateCredentials();
@@ -60,7 +60,7 @@ namespace SecurePasswordStorage.Tests
             var crypto = A.Fake<ICryptoFacade>();
             var userRepository = A.Fake<IUserRepository>();
             var secretRepository = A.Fake<ISecretRepository>();
-            var storage = new SecureStorage(crypto, userRepository, secretRepository);
+            ISecureStorage storage = new SecureStorage(crypto, userRepository, secretRepository);
 
             // these are the user's credentials for *our* application
             var credentials = ObjectMother.CreateCredentials();
