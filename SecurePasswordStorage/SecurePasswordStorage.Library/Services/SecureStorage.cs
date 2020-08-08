@@ -18,11 +18,7 @@ namespace SecurePasswordStorage.Library.Services
 
         public void Save(Credentials credentials, byte[] secret)
         {
-            var user = userRepository.Load(credentials.Key);
-            var passwordHash = crypto.SecureHash(credentials.Password);
-            if (!IsValid(user, passwordHash))
-                throw new SecurityException(Constants.AUTHENTICATION_ERROR);
-
+            CheckCredentials(credentials);
             crypto.TransformPassword(credentials.Password, out var secretKey, out var verificationHash);
 
             var encryptedSecret = crypto.Encrypt(secretKey, secret);
@@ -32,11 +28,7 @@ namespace SecurePasswordStorage.Library.Services
 
         public byte[] Load(Credentials credentials)
         {
-            var user = userRepository.Load(credentials.Key);
-            var passwordHash = crypto.SecureHash(credentials.Password);
-            if (!IsValid(user, passwordHash))
-                throw new SecurityException(Constants.AUTHENTICATION_ERROR);
-
+            CheckCredentials(credentials);
             crypto.TransformPassword(credentials.Password, out var secretKey, out var verificationHash);
 
             var secretData = secretRepository.Load(credentials.Key);
@@ -51,6 +43,14 @@ namespace SecurePasswordStorage.Library.Services
         private readonly ICryptoFacade crypto;
         private readonly IUserRepository userRepository;
         private readonly ISecretRepository secretRepository;
+
+        private void CheckCredentials(Credentials credentials)
+        {
+            var user = userRepository.Load(credentials.Key);
+            var passwordHash = crypto.SecureHash(credentials.Password);
+            if (!IsValid(user, passwordHash))
+                throw new SecurityException(Constants.AUTHENTICATION_ERROR);
+        }
 
         private static bool IsValid(User user, IEnumerable<byte> passwordHash) =>
             user != null && user.PasswordHash.SequenceEqual(passwordHash);
