@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using SecurePasswordStorage.Library.Contracts;
+using SecurePasswordStorage.Library.Helpers;
 using SecurePasswordStorage.Library.Models;
 
 namespace SecurePasswordStorage.Library.Services
@@ -21,14 +21,29 @@ namespace SecurePasswordStorage.Library.Services
             var user = userRepository.Load(credentials.Key);
             var passwordHash = crypto.SecureHash(credentials.Password);
             if (!IsValid(user, passwordHash))
-                throw new SecurityException("Invalid user credentials.");
+                throw new SecurityException(Constants.AUTHENTICATION_ERROR);
 
-            var (pl, pr) = crypto.LargeHash(credentials.Password);
-            var secureKey = crypto.SecureHash(pl);
-            var encryptedSecret = crypto.Encrypt(secureKey, secret);
-            var verificationHash = crypto.SecureHash(pr);
+            crypto.TransformPassword(credentials.Password, out var secretKey, out var verificationHash);
+
+            var encryptedSecret = crypto.Encrypt(secretKey, secret);
             var secretData = new SecretData(credentials.Key, encryptedSecret, verificationHash);
             secretRepository.Save(secretData);
+        }
+
+        public byte[] Load(Credentials credentials)
+        {
+            var user = userRepository.Load(credentials.Key);
+            var passwordHash = crypto.SecureHash(credentials.Password);
+            if (!IsValid(user, passwordHash))
+                throw new SecurityException(Constants.AUTHENTICATION_ERROR);
+
+            crypto.TransformPassword(credentials.Password, out var secretKey, out var verificationHash);
+
+            var secretData = secretRepository.Load(credentials.Key);
+            if (!secretData.VerificationHash.SequenceEqual(verificationHash))
+                throw new SecurityException(Constants.AUTHENTICATION_ERROR);
+
+            return crypto.Decrypt(secretKey, secretData.EncryptedSecret);
         }
 
         //
