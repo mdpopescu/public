@@ -19,7 +19,7 @@ namespace SecurePasswordStorage.Library.Services
         public void Save(Credentials credentials, byte[] secret)
         {
             CheckCredentials(credentials);
-            crypto.TransformPassword(credentials.Password, out var secretKey, out var verificationHash);
+            crypto.Transform(credentials, out var secretKey, out var verificationHash);
 
             var encryptedSecret = crypto.Encrypt(secretKey, secret);
             var secretData = new SecretData(credentials.Key, encryptedSecret, verificationHash);
@@ -29,7 +29,7 @@ namespace SecurePasswordStorage.Library.Services
         public byte[] Load(Credentials credentials)
         {
             CheckCredentials(credentials);
-            crypto.TransformPassword(credentials.Password, out var secretKey, out var verificationHash);
+            crypto.Transform(credentials, out var secretKey, out var verificationHash);
 
             var secretData = secretRepository.Load(credentials.Key);
             if (!secretData.VerificationHash.SequenceEqual(verificationHash))

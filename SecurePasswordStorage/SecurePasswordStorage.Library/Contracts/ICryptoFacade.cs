@@ -1,8 +1,10 @@
-﻿namespace SecurePasswordStorage.Library.Contracts
+﻿using SecurePasswordStorage.Library.Models;
+
+namespace SecurePasswordStorage.Library.Contracts
 {
     public interface ICryptoFacade
     {
-        void TransformPassword(string password, out byte[] secretKey, out byte[] verificationHash);
+        void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash);
 
         byte[] SecureHash(object value);
 

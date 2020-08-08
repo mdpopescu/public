@@ -33,7 +33,7 @@ namespace SecurePasswordStorage.Tests
             byte[] _1, _2;
             var secretKey = ObjectMother.CreateBytes();
             var verificationHash = ObjectMother.CreateBytes();
-            A.CallTo(() => crypto.TransformPassword(credentials.Password, out _1, out _2)).AssignsOutAndRefParameters(secretKey, verificationHash);
+            A.CallTo(() => crypto.Transform(credentials, out _1, out _2)).AssignsOutAndRefParameters(secretKey, verificationHash);
 
             var encryptedSecret = ObjectMother.CreateBytes();
             A.CallTo(() => crypto.Encrypt(secretKey, secret)).Returns(encryptedSecret);
@@ -78,7 +78,7 @@ namespace SecurePasswordStorage.Tests
             byte[] _1, _2;
             var secretKey = ObjectMother.CreateBytes();
             var verificationHash = ObjectMother.CreateBytes();
-            A.CallTo(() => crypto.TransformPassword(credentials.Password, out _1, out _2)).AssignsOutAndRefParameters(secretKey, verificationHash);
+            A.CallTo(() => crypto.Transform(credentials, out _1, out _2)).AssignsOutAndRefParameters(secretKey, verificationHash);
 
             var encryptedSecret = ObjectMother.CreateBytes();
             A.CallTo(() => crypto.Decrypt(secretKey, encryptedSecret)).Returns(secret);
