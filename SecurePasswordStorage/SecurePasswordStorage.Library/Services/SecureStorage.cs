@@ -18,8 +18,7 @@ namespace SecurePasswordStorage.Library.Services
 
         public void Save(Credentials credentials, byte[] secret)
         {
-            CheckCredentials(credentials);
-            crypto.Transform(credentials, out var secretKey, out var verificationHash);
+            CheckCredentials(credentials, out var secretKey, out var verificationHash);
 
             var encryptedSecret = crypto.Encrypt(secretKey, secret);
             var secretData = new SecretData(credentials.Key, encryptedSecret, verificationHash);
@@ -28,8 +27,7 @@ namespace SecurePasswordStorage.Library.Services
 
         public byte[] Load(Credentials credentials)
         {
-            CheckCredentials(credentials);
-            crypto.Transform(credentials, out var secretKey, out var verificationHash);
+            CheckCredentials(credentials, out var secretKey, out var verificationHash);
 
             var secretData = secretRepository.Load(credentials.Key);
             if (!secretData.VerificationHash.SequenceEqual(verificationHash))
@@ -44,7 +42,7 @@ namespace SecurePasswordStorage.Library.Services
         private readonly IUserRepository userRepository;
         private readonly ISecretRepository secretRepository;
 
-        private void CheckCredentials(Credentials credentials)
+        private void CheckCredentials(Credentials credentials, out byte[] secretKey, out byte[] verificationHash)
         {
             var user = userRepository.Load(credentials.Key);
             if (user == null)
@@ -54,6 +52,8 @@ namespace SecurePasswordStorage.Library.Services
             var passwordHash = crypto.SecureHash(saltedPassword);
             if (!user.PasswordHash.SequenceEqual(passwordHash))
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
+
+            crypto.Transform(credentials, out secretKey, out verificationHash);
         }
     }
 }
