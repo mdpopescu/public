@@ -1,8 +1,13 @@
 ﻿namespace SecurePasswordStorage.Library.Models
 {
-    public class Credentials
+    public class Credentials : Entity<UserKey>
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public string Password { get; }
+
+        public Credentials(UserKey key, string password)
+            : base(key)
+        {
+            Password = password;
+        }
     }
 }

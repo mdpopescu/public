@@ -1,6 +1,9 @@
-﻿using FakeItEasy;
+﻿using System;
+using System.Linq;
+using FakeItEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecurePasswordStorage.Library.Contracts;
+using SecurePasswordStorage.Library.Models;
 using SecurePasswordStorage.Library.Services;
 
 namespace SecurePasswordStorage.Tests
@@ -11,23 +14,51 @@ namespace SecurePasswordStorage.Tests
         [TestMethod("The application stores the 3rd party credentials")]
         public void Test1()
         {
-            var crypto = A.Fake<ICrypto>();
-            var securityLogic = new SecurityLogic(crypto);
-            var repository = A.Fake<IRepository>();
-            ISecureStorage storage = new SecureStorage(crypto, securityLogic, repository);
+            var crypto = A.Fake<ICryptoFacade>();
+            var userRepository = A.Fake<IUserRepository>();
+            var secretRepository = A.Fake<ISecretRepository>();
+            var storage = new SecureStorage(crypto, userRepository, secretRepository);
 
-            var loginCredentials = ObjectMother.CreateCredentials();
-            var foreignCredentials = ObjectMother.CreateCredentials();
-            var encryptedCredentials = ObjectMother.CreateEncryptedCredentials();
+            // these are the user's credentials for *our* application
+            var credentials = ObjectMother.CreateCredentials();
 
-            var secureHash = ObjectMother.CreateSecureHash();
-            A.CallTo(() => crypto.GetSecureHash(loginCredentials)).Returns(secureHash);
-            var largeHash = ObjectMother.CreateLargeHash();
-            A.CallTo(() => crypto.GetLargeHash(loginCredentials)).Returns(largeHash);
+            // this would be the result of serializing the actual secret we want stored securely
+            var secret = ObjectMother.CreateBytes();
 
-            storage.Save(loginCredentials, foreignCredentials);
+            var passwordHash = ObjectMother.CreateBytes();
+            A.CallTo(() => userRepository.Load(credentials.Key)).Returns(new User(credentials.Key, passwordHash));
+            A.CallTo(() => crypto.SecureHash(credentials.Password)).Returns(passwordHash);
 
-            A.CallTo(() => repository.SaveEncryptedCredentials(loginCredentials.Username, encryptedCredentials)).MustHaveHappened();
+            #region Security preparations
+
+            var pl = ObjectMother.CreateBytes();
+            var pr = ObjectMother.CreateBytes();
+            A.CallTo(() => crypto.LargeHash(credentials.Password)).Returns(Tuple.Create(pl, pr));
+
+            var secureKey = ObjectMother.CreateBytes();
+            A.CallTo(() => crypto.SecureHash(pl)).Returns(secureKey);
+
+            var encryptedSecret = ObjectMother.CreateBytes();
+            A.CallTo(() => crypto.Encrypt(secureKey, secret)).Returns(encryptedSecret);
+
+            var verificationHash = ObjectMother.CreateBytes();
+            A.CallTo(() => crypto.SecureHash(pr)).Returns(verificationHash);
+
+            #endregion
+
+            storage.Save(credentials, secret);
+
+            A
+                .CallTo(
+                    () => secretRepository.Save(
+                        A<SecretData>.That.Matches(
+                            data => data.Key == credentials.Key
+                                && data.EncryptedSecret.SequenceEqual(encryptedSecret)
+                                && data.VerificationHash.SequenceEqual(verificationHash)
+                        )
+                    )
+                )
+                .MustHaveHappened();
         }
     }
 }

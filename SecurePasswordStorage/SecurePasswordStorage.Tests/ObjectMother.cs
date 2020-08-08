@@ -30,46 +30,17 @@ namespace SecurePasswordStorage.Tests
         }
 
         public static Credentials CreateCredentials() =>
-            new Credentials
-            {
-                Username = CreateString(10),
-                Password = CreatePassword(10),
-            };
+            new Credentials(new UserKey(CreateString()), CreatePassword());
 
-        public static string CreateString(int length) =>
-            CreateStringFromAlphabet(length, LETTERS_AND_DIGITS);
+        public static string CreateString() =>
+            CreateStringFromAlphabet(LETTERS_AND_DIGITS);
 
-        public static string CreatePassword(int length) =>
-            CreateStringFromAlphabet(length, PRINTABLE);
+        public static string CreatePassword() =>
+            CreateStringFromAlphabet(PRINTABLE);
 
-        public static EncryptedCredentials CreateEncryptedCredentials() =>
-            new EncryptedCredentials
-            {
-                Encrypted = CreateBytes(16),
-                Hashed = CreateSecureHash(),
-            };
-
-        public static SecureHash CreateSecureHash() =>
-            new SecureHash();
-
-        public static LargeHash CreateLargeHash() =>
-            new LargeHash
-            {
-                PartOne = CreateKey(),
-                PartTwo = CreateKey(),
-            };
-
-        public static Key CreateKey() =>
-            new Key { Bytes = CreateBytes(16) };
-
-        public static char[] ToCharArray(this IEnumerable<IEnumerable<int>> enumerables) =>
-            enumerables
-                .SelectMany(i => i)
-                .Select(i => (char) i)
-                .ToArray();
-
-        public static string CreateStringFromAlphabet(int length, IReadOnlyList<char> alphabet)
+        public static string CreateStringFromAlphabet(IReadOnlyList<char> alphabet)
         {
+            var length = RND.Next(10, 16);
             var chars = Enumerable
                 .Range(1, length)
                 .Select(_ => alphabet[RND.Next(alphabet.Count)])
@@ -77,7 +48,15 @@ namespace SecurePasswordStorage.Tests
             return new string(chars);
         }
 
-        public static byte[] CreateBytes(int count) =>
-            Enumerable.Range(1, count).Select(_ => (byte) RND.Next(256)).ToArray();
+        public static byte[] CreateBytes() =>
+            Enumerable.Range(1, RND.Next(16, 32)).Select(_ => (byte) RND.Next(256)).ToArray();
+
+        //
+
+        private static char[] ToCharArray(this IEnumerable<IEnumerable<int>> enumerables) =>
+            enumerables
+                .SelectMany(i => i)
+                .Select(i => (char) i)
+                .ToArray();
     }
 }

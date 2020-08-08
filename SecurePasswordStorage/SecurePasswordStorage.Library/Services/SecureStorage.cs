@@ -1,35 +1,43 @@
-﻿using SecurePasswordStorage.Library.Contracts;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security;
+using SecurePasswordStorage.Library.Contracts;
 using SecurePasswordStorage.Library.Models;
 
 namespace SecurePasswordStorage.Library.Services
 {
-    public class SecureStorage : ISecureStorage
+    public class SecureStorage
     {
-        public SecureStorage(ICrypto crypto, ISecurityLogic securityLogic, IRepository repository)
+        public SecureStorage(ICryptoFacade crypto, IUserRepository userRepository, ISecretRepository secretRepository)
         {
             this.crypto = crypto;
-            this.securityLogic = securityLogic;
-            this.repository = repository;
+            this.userRepository = userRepository;
+            this.secretRepository = secretRepository;
         }
 
-        public void Save(Credentials loginCredentials, Credentials foreignCredentials)
+        public void Save(Credentials credentials, byte[] secret)
         {
-            // TODO: loginCredentials should be of type VerifiedCredentials
-            // TODO: and we should have an Authenticator with a Verify method
+            var user = userRepository.Load(credentials.Key);
+            var passwordHash = crypto.SecureHash(credentials.Password);
+            if (!IsValid(user, passwordHash))
+                throw new SecurityException("Invalid user credentials.");
 
-            var secureHash = crypto.GetSecureHash(loginCredentials);
-            var user = repository.LoadUser(loginCredentials.Username, secureHash);
-            if (user == null)
-                return;
-
-            var encryptedCredentials = securityLogic.GetEncryptedCredentials(loginCredentials, foreignCredentials);
-            repository.SaveEncryptedCredentials(loginCredentials.Username, encryptedCredentials);
+            var (pl, pr) = crypto.LargeHash(credentials.Password);
+            var secureKey = crypto.SecureHash(pl);
+            var encryptedSecret = crypto.Encrypt(secureKey, secret);
+            var verificationHash = crypto.SecureHash(pr);
+            var secretData = new SecretData(credentials.Key, encryptedSecret, verificationHash);
+            secretRepository.Save(secretData);
         }
 
         //
 
-        private readonly ICrypto crypto;
-        private readonly ISecurityLogic securityLogic;
-        private readonly IRepository repository;
+        private readonly ICryptoFacade crypto;
+        private readonly IUserRepository userRepository;
+        private readonly ISecretRepository secretRepository;
+
+        private static bool IsValid(User user, IEnumerable<byte> passwordHash) =>
+            user != null && user.PasswordHash.SequenceEqual(passwordHash);
     }
 }
