@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Security;
-using System.Text;
 using SecurePasswordStorage.Library.Contracts;
 using SecurePasswordStorage.Library.Helpers;
 using SecurePasswordStorage.Library.Models;
@@ -48,18 +47,12 @@ namespace SecurePasswordStorage.Library.Services
             if (user == null)
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
 
-            var saltedCredentials = GetSaltedCredentials(credentials, user);
+            var saltedCredentials = credentials.GetSaltedCredentials(user.Salt);
             var passwordHash = crypto.SecureHash(saltedCredentials);
             if (!user.PasswordHash.SequenceEqual(passwordHash))
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
 
             crypto.Transform(credentials, out secretKey, out verificationHash);
         }
-
-        private static byte[] GetSaltedCredentials(Credentials credentials, User user) =>
-            user.Salt
-                .Concat(Encoding.UTF8.GetBytes(credentials.Key.Value))
-                .Concat(Encoding.UTF8.GetBytes(credentials.Password))
-                .ToArray();
     }
 }

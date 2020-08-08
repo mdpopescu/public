@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using FakeItEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecurePasswordStorage.Library.Contracts;
+using SecurePasswordStorage.Library.Helpers;
 using SecurePasswordStorage.Library.Models;
 using SecurePasswordStorage.Library.Services;
 
@@ -100,14 +99,8 @@ namespace SecurePasswordStorage.Tests
 
             // hashing the credentials returns the hash stored in the user record
             A
-                .CallTo(() => crypto.SecureHash(A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(GetSaltedCredentials(user, credentials)))))
+                .CallTo(() => crypto.SecureHash(A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(credentials.GetSaltedCredentials(user.Salt)))))
                 .Returns(user.PasswordHash);
         }
-
-        private static IEnumerable<byte> GetSaltedCredentials(User user, Credentials credentials) =>
-            user.Salt
-                .Concat(Encoding.UTF8.GetBytes(credentials.Key.Value))
-                .Concat(Encoding.UTF8.GetBytes(credentials.Password))
-                .ToArray();
     }
 }
