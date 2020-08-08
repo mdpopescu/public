@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Security;
+using System.Text;
 using FakeItEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecurePasswordStorage.Library.Contracts;
@@ -58,17 +59,16 @@ namespace SecurePasswordStorage.Tests.Services
             public void Test2B()
             {
                 var credentials = ObjectMother.CreateCredentials();
-                var passwordHash = ObjectMother.CreateBytes();
-                var user = new User(credentials.Key, passwordHash);
+                var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
                 // hashing the password returns another value than the one stored in the user record
-                A.CallTo(() => crypto.SecureHash(credentials.Password)).Returns(ObjectMother.CreateBytes());
+                A.CallTo(() => crypto.SecureHash(user.Salt.Concat(Encoding.UTF8.GetBytes(credentials.Password)).ToArray())).Returns(ObjectMother.CreateBytes());
                 var secret = ObjectMother.CreateBytes();
 
                 sut.Save(credentials, secret);
             }
 
-            [TestMethod("Transforms the password")]
+            [TestMethod("Transforms the credentials")]
             public void Test3()
             {
                 var credentials = ObjectMother.CreateCredentials();
@@ -141,16 +141,15 @@ namespace SecurePasswordStorage.Tests.Services
             public void Test2B()
             {
                 var credentials = ObjectMother.CreateCredentials();
-                var passwordHash = ObjectMother.CreateBytes();
-                var user = new User(credentials.Key, passwordHash);
+                var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
                 // hashing the password returns another value than the one stored in the user record
-                A.CallTo(() => crypto.SecureHash(credentials.Password)).Returns(ObjectMother.CreateBytes());
+                A.CallTo(() => crypto.SecureHash(user.Salt.Concat(Encoding.UTF8.GetBytes(credentials.Password)).ToArray())).Returns(ObjectMother.CreateBytes());
 
                 sut.Load(credentials);
             }
 
-            [TestMethod("Transforms the password")]
+            [TestMethod("Transforms the credentials")]
             public void Test3()
             {
                 var credentials = ObjectMother.CreateCredentials();
@@ -228,11 +227,14 @@ namespace SecurePasswordStorage.Tests.Services
 
         private void SetupValidUser(Credentials credentials)
         {
-            var passwordHash = ObjectMother.CreateBytes();
-            var user = new User(credentials.Key, passwordHash);
+            var user = ObjectMother.CreateUser(credentials.Key);
             A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-            // hashing the password returns the hash stored in the user record
-            A.CallTo(() => crypto.SecureHash(credentials.Password)).Returns(passwordHash);
+            // hashing the credentials returns the hash stored in the user record
+            A
+                .CallTo(
+                    () => crypto.SecureHash(
+                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(user.Salt.Concat(Encoding.UTF8.GetBytes(credentials.Password)).ToArray()))))
+                .Returns(user.PasswordHash);
         }
 
         private void SetupValidSecret(Credentials credentials, byte[] secretKey, out byte[] verificationHash)

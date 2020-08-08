@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Security;
+using System.Text;
 using SecurePasswordStorage.Library.Contracts;
 using SecurePasswordStorage.Library.Helpers;
 using SecurePasswordStorage.Library.Models;
@@ -47,12 +47,12 @@ namespace SecurePasswordStorage.Library.Services
         private void CheckCredentials(Credentials credentials)
         {
             var user = userRepository.Load(credentials.Key);
-            var passwordHash = crypto.SecureHash(credentials.Password);
-            if (!IsValid(user, passwordHash))
+            if (user == null)
+                throw new SecurityException(Constants.AUTHENTICATION_ERROR);
+
+            var passwordHash = crypto.SecureHash(user.Salt.Concat(Encoding.UTF8.GetBytes(credentials.Password)).ToArray());
+            if (!user.PasswordHash.SequenceEqual(passwordHash))
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
         }
-
-        private static bool IsValid(User user, IEnumerable<byte> passwordHash) =>
-            user != null && user.PasswordHash.SequenceEqual(passwordHash);
     }
 }

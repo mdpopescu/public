@@ -6,7 +6,7 @@ namespace SecurePasswordStorage.Library.Contracts
     {
         void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash);
 
-        byte[] SecureHash(object value);
+        byte[] SecureHash(byte[] value);
 
         byte[] Encrypt(byte[] key, byte[] decrypted);
         byte[] Decrypt(byte[] key, byte[] encrypted);

@@ -32,6 +32,9 @@ namespace SecurePasswordStorage.Tests
         public static Credentials CreateCredentials() =>
             new Credentials(new UserKey(CreateString()), CreatePassword());
 
+        public static User CreateUser(UserKey key) =>
+            new User(key, CreateBytes(), CreateBytes());
+
         public static string CreateString() =>
             CreateStringFromAlphabet(LETTERS_AND_DIGITS);
 

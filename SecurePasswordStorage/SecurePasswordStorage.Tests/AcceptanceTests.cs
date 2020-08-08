@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text;
 using FakeItEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecurePasswordStorage.Library.Contracts;
@@ -24,9 +25,7 @@ namespace SecurePasswordStorage.Tests
             // this would be the result of serializing the actual secret we want stored securely
             var secret = ObjectMother.CreateBytes();
 
-            var passwordHash = ObjectMother.CreateBytes();
-            A.CallTo(() => userRepository.Load(credentials.Key)).Returns(new User(credentials.Key, passwordHash));
-            A.CallTo(() => crypto.SecureHash(credentials.Password)).Returns(passwordHash);
+            SetupValidUser(userRepository, crypto, credentials);
 
             #region Security preparations
 
@@ -69,9 +68,7 @@ namespace SecurePasswordStorage.Tests
             // this would be the result of serializing the actual secret we want stored securely
             var secret = ObjectMother.CreateBytes();
 
-            var passwordHash = ObjectMother.CreateBytes();
-            A.CallTo(() => userRepository.Load(credentials.Key)).Returns(new User(credentials.Key, passwordHash));
-            A.CallTo(() => crypto.SecureHash(credentials.Password)).Returns(passwordHash);
+            SetupValidUser(userRepository, crypto, credentials);
 
             #region Security preparations
 
@@ -91,6 +88,21 @@ namespace SecurePasswordStorage.Tests
             var storedSecret = storage.Load(credentials);
 
             CollectionAssert.AreEqual(secret, storedSecret);
+        }
+
+        //
+
+        private static void SetupValidUser(IUserRepository userRepository, ICryptoFacade crypto, Credentials credentials)
+        {
+            var user = ObjectMother.CreateUser(credentials.Key);
+            A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
+
+            // hashing the credentials returns the hash stored in the user record
+            A
+                .CallTo(
+                    () => crypto.SecureHash(
+                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(user.Salt.Concat(Encoding.UTF8.GetBytes(credentials.Password)).ToArray()))))
+                .Returns(user.PasswordHash);
         }
     }
 }
