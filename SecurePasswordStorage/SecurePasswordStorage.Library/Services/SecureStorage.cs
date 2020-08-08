@@ -50,7 +50,8 @@ namespace SecurePasswordStorage.Library.Services
             if (user == null)
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
 
-            var passwordHash = crypto.SecureHash(user.Salt.Concat(Encoding.UTF8.GetBytes(credentials.Password)).ToArray());
+            var saltedPassword = user.Salt.Concat(Encoding.UTF8.GetBytes(credentials.Password)).ToArray();
+            var passwordHash = crypto.SecureHash(saltedPassword);
             if (!user.PasswordHash.SequenceEqual(passwordHash))
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
         }
