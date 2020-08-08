@@ -83,26 +83,8 @@ namespace SecurePasswordStorage.Tests.Services
                 A.CallTo(() => crypto.TransformPassword(credentials.Password, out secureKey, out verificationHash)).MustHaveHappened();
             }
 
-            [TestMethod("Encrypts the secret with the key derived from the first secure hash")]
-            public void Test4()
-            {
-                var credentials = ObjectMother.CreateCredentials();
-                SetupValidUser(credentials);
-                var secret = ObjectMother.CreateBytes();
-                var pl = ObjectMother.CreateBytes();
-                var pr = ObjectMother.CreateBytes();
-                A.CallTo(() => crypto.LargeHash(credentials.Password)).Returns(Tuple.Create(pl, pr));
-                var secureKey = ObjectMother.CreateBytes();
-                byte[] _1, _2;
-                A.CallTo(() => crypto.TransformPassword(credentials.Password, out _1, out _2)).AssignsOutAndRefParameters(secureKey, A.Dummy<byte[]>());
-
-                sut.Save(credentials, secret);
-
-                A.CallTo(() => crypto.Encrypt(secureKey, secret)).MustHaveHappened();
-            }
-
             [TestMethod("Stores the encrypted secret together with the verification hash")]
-            public void Test5()
+            public void Test4()
             {
                 var credentials = ObjectMother.CreateCredentials();
                 SetupValidUser(credentials);
