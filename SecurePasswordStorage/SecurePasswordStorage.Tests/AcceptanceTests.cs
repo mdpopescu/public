@@ -1,8 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using FakeItEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecurePasswordStorage.Library.Contracts;
-using SecurePasswordStorage.Library.Helpers;
 using SecurePasswordStorage.Library.Models;
 using SecurePasswordStorage.Library.Services;
 
@@ -11,98 +11,51 @@ namespace SecurePasswordStorage.Tests
     [TestClass]
     public class AcceptanceTests
     {
-        [TestMethod("The secure storage stores the secret")]
+        [TestMethod("Can store and retrieve a secret")]
         public void Test1()
         {
-            var crypto = A.Fake<ICryptoFacade>();
+            var crypto = new CryptoImpl();
             var userRepository = A.Fake<IUserRepository>();
-            var secretRepository = A.Fake<ISecretRepository>();
+            var secretRepository = new FakeSecretRepository();
             ISecureStorage storage = new SecureStorage(crypto, userRepository, secretRepository);
 
             // these are the user's credentials for *our* application
             var credentials = ObjectMother.CreateCredentials();
 
-            // this would be the result of serializing the actual secret we want stored securely
-            var secret = ObjectMother.CreateBytes();
-
             SetupValidUser(userRepository, crypto, credentials);
 
-            #region Security preparations
-
-            byte[] _1, _2;
-            var secretKey = ObjectMother.CreateBytes();
-            var verificationHash = ObjectMother.CreateBytes();
-            A.CallTo(() => crypto.Transform(credentials, out _1, out _2)).AssignsOutAndRefParameters(secretKey, verificationHash);
-
-            var encryptedSecret = ObjectMother.CreateBytes();
-            A.CallTo(() => crypto.Encrypt(secretKey, secret)).Returns(encryptedSecret);
-
-            #endregion
+            // this would be the result of serializing the actual secret we want stored securely
+            var secret = ObjectMother.CreateBytes();
 
             storage.Save(credentials, secret);
+            var result = storage.Load(credentials);
 
-            A
-                .CallTo(
-                    () => secretRepository.Save(
-                        A<SecretData>.That.Matches(
-                            data => data.Key == credentials.Key
-                                && data.EncryptedSecret.SequenceEqual(encryptedSecret)
-                                && data.VerificationHash.SequenceEqual(verificationHash)
-                        )
-                    )
-                )
-                .MustHaveHappened();
-        }
-
-        [TestMethod("The secure storage retrieves the secret")]
-        public void Test2()
-        {
-            var crypto = A.Fake<ICryptoFacade>();
-            var userRepository = A.Fake<IUserRepository>();
-            var secretRepository = A.Fake<ISecretRepository>();
-            ISecureStorage storage = new SecureStorage(crypto, userRepository, secretRepository);
-
-            // these are the user's credentials for *our* application
-            var credentials = ObjectMother.CreateCredentials();
-
-            // this would be the result of serializing the actual secret we want stored securely
-            var secret = ObjectMother.CreateBytes();
-
-            SetupValidUser(userRepository, crypto, credentials);
-
-            #region Security preparations
-
-            byte[] _1, _2;
-            var secretKey = ObjectMother.CreateBytes();
-            var verificationHash = ObjectMother.CreateBytes();
-            A.CallTo(() => crypto.Transform(credentials, out _1, out _2)).AssignsOutAndRefParameters(secretKey, verificationHash);
-
-            var encryptedSecret = ObjectMother.CreateBytes();
-            A.CallTo(() => crypto.Decrypt(secretKey, encryptedSecret)).Returns(secret);
-
-            var secretData = new SecretData(credentials.Key, encryptedSecret, verificationHash);
-            A.CallTo(() => secretRepository.Load(credentials.Key)).Returns(secretData);
-
-            #endregion
-
-            var storedSecret = storage.Load(credentials);
-
-            CollectionAssert.AreEqual(secret, storedSecret);
+            CollectionAssert.AreEqual(secret, result);
         }
 
         //
 
         private static void SetupValidUser(IUserRepository userRepository, ICryptoFacade crypto, Credentials credentials)
         {
-            var user = ObjectMother.CreateUser(credentials.Key);
+            var salt = crypto.GenerateSalt();
+            var hash = crypto.SecureHash(crypto.GetBytes(credentials), salt);
+            var user = new User(credentials.Key, salt, hash);
             A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-            A.CallTo(
-                    () => crypto.VerifyHash(
-                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(user.PasswordHash)),
-                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(credentials.GetSaltedCredentials(user.Salt)))
-                    )
-                )
-                .Returns(true);
+        }
+
+        //
+
+        private class FakeSecretRepository : ISecretRepository
+        {
+            public SecretData Load(UserKey key) =>
+                secrets.Where(it => it.Key == key).FirstOrDefault();
+
+            public void Save(SecretData entity) =>
+                secrets.Add(entity);
+
+            //
+
+            private readonly List<SecretData> secrets = new List<SecretData>();
         }
     }
 }

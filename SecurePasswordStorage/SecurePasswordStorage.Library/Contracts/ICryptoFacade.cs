@@ -6,9 +6,11 @@ namespace SecurePasswordStorage.Library.Contracts
     {
         byte[] GenerateSalt();
 
-        void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash);
+        byte[] GetBytes(Credentials credentials);
+        byte[] SecureHash(byte[] value, byte[] salt);
 
-        bool VerifyHash(byte[] expected, byte[] actual);
+        void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash);
+        bool VerifyHash(Credentials credentials, byte[] salt, byte[] passwordHash);
 
         byte[] Encrypt(byte[] key, byte[] decrypted);
         byte[] Decrypt(byte[] key, byte[] encrypted);

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -11,36 +10,33 @@ namespace SecurePasswordStorage.Library.Services
 {
     public class CryptoImpl : ICryptoFacade
     {
-        public byte[] GenerateSalt()
-        {
-            var salt = new byte[SALT_LENGTH];
-            RNG.GetBytes(salt);
-            return salt;
-        }
+        public byte[] GenerateSalt() =>
+            GetRandomBytes(SALT_LENGTH);
+
+        public byte[] GetBytes(Credentials credentials) =>
+            Encoding.UTF8.GetBytes(credentials.Key.Value)
+                .Concat(Encoding.UTF8.GetBytes(credentials.Password))
+                .ToArray();
+
+        public byte[] SecureHash(byte[] value, byte[] salt) =>
+            DeriveBytes(value, salt, SECURE_HASH_LENGTH);
 
         public void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash)
         {
-            var bytes = Encoding.UTF8.GetBytes(credentials.Key.Value)
-                .Concat(Encoding.UTF8.GetBytes(credentials.Password))
-                .ToArray();
+            var bytes = GetBytes(credentials);
             var largeHash = LargeHash(bytes);
             var hash1 = largeHash.Take(largeHash.Length / 2).ToArray();
             var hash2 = largeHash.Skip(largeHash.Length / 2).ToArray();
 
-            secretKey = SecureHash(hash1);
-            verificationHash = SecureHash(hash2);
+            var salt = LargeHash(largeHash);
+            secretKey = SecureHash(hash1, salt);
+            verificationHash = SecureHash(hash2, salt);
         }
 
-        public bool VerifyHash(byte[] expected, byte[] actual)
+        public bool VerifyHash(Credentials credentials, byte[] salt, byte[] passwordHash)
         {
-            var expectedSalt = expected.Take(SALT_LENGTH).ToArray();
-            var expectedHash = expected.Skip(SALT_LENGTH).ToArray();
-
-            var actualSalt = actual.Take(SALT_LENGTH).ToArray();
-            var actualValue = actual.Skip(SALT_LENGTH).ToArray();
-
-            return expectedSalt.SequenceEqual(actualSalt)
-                && expectedHash.SequenceEqual(DeriveBytes(actualValue, actualSalt, SECURE_HASH_LENGTH));
+            var bytes = GetBytes(credentials);
+            return SecureHash(bytes, salt).SequenceEqual(passwordHash);
         }
 
         public byte[] Encrypt(byte[] key, byte[] decrypted)
@@ -48,98 +44,70 @@ namespace SecurePasswordStorage.Library.Services
             using var aes = CreateAlgorithm(key);
             using var encryptor = aes.CreateEncryptor();
 
-            var cipher = InternalEncrypt(encryptor, decrypted);
             var iv = aes.IV;
+            var cipher = Apply(encryptor, decrypted);
 
-            var result = new byte[iv.Length + cipher.Length];
-            Buffer.BlockCopy(iv, 0, result, 0, iv.Length);
-            Buffer.BlockCopy(cipher, 0, result, iv.Length, cipher.Length);
-
-            return result;
+            return iv.Concat(cipher).ToArray();
         }
 
         public byte[] Decrypt(byte[] key, byte[] encrypted)
         {
-            var iv = new byte[16];
-            var cipher = new byte[encrypted.Length - iv.Length];
-
-            Buffer.BlockCopy(encrypted, 0, iv, 0, iv.Length);
-            Buffer.BlockCopy(encrypted, iv.Length, cipher, 0, cipher.Length);
+            var iv = encrypted.Take(IV_LENGTH).ToArray();
+            var cipher = encrypted.Skip(IV_LENGTH).ToArray();
 
             using var aes = CreateAlgorithm(key, iv);
             using var decryptor = aes.CreateDecryptor();
 
-            return InternalDecrypt(decryptor, cipher);
+            return Apply(decryptor, cipher);
         }
 
         //
 
-        private const int ITERATIONS = 10000;
-        private const int SALT_LENGTH = 24;
-        private const int SECURE_HASH_LENGTH = 24;
+        private const int ITERATIONS = 100000;
+
+        private const int SALT_LENGTH = 24; // bytes
+        private const int SECURE_HASH_LENGTH = 24; // bytes
+        private const int IV_LENGTH = 16; // bytes
+
+        private const int AES_KEYSIZE = 256; // bits
 
         private static readonly SHA512 LARGE_HASH = SHA512.Create();
         private static readonly RNGCryptoServiceProvider RNG = new RNGCryptoServiceProvider();
 
+        private static byte[] GetRandomBytes(int count)
+        {
+            var bytes = new byte[count];
+            RNG.GetBytes(bytes);
+            return bytes;
+        }
+
         private static byte[] LargeHash(byte[] value) =>
             LARGE_HASH.ComputeHash(value);
 
-        private byte[] SecureHash(byte[] value)
-        {
-            var salt = GenerateSalt();
-            var hash = DeriveBytes(value, salt, SECURE_HASH_LENGTH);
-            return salt.Concat(hash).ToArray();
-        }
+        private static byte[] DeriveBytes(byte[] key, byte[] salt, int byteCount) =>
+            new Rfc2898DeriveBytes(key, salt, ITERATIONS).GetBytes(byteCount);
 
-        private Aes CreateAlgorithm(byte[] key)
+        private static Aes CreateAlgorithm(byte[] key, byte[] iv = null)
         {
             var aes = Aes.Create();
             Debug.Assert(aes != null, nameof(aes) + " != null");
 
-            aes.Key = GetKey(key, aes.KeySize / 8);
-            aes.GenerateIV();
+            aes.Padding = PaddingMode.PKCS7;
+            aes.KeySize = AES_KEYSIZE;
+            aes.Key = key;
+            aes.IV = iv ?? GetRandomBytes(IV_LENGTH);
 
             return aes;
         }
 
-        private Aes CreateAlgorithm(byte[] key, byte[] iv)
+        private static byte[] Apply(ICryptoTransform transform, byte[] value)
         {
-            var aes = Aes.Create();
-            Debug.Assert(aes != null, nameof(aes) + " != null");
+            using var output = new MemoryStream();
 
-            aes.Key = GetKey(key, aes.KeySize / 8);
-            aes.IV = iv;
+            using (var cryptoStream = new CryptoStream(output, transform, CryptoStreamMode.Write))
+                cryptoStream.Write(value, 0, value.Length);
 
-            return aes;
-        }
-
-        private byte[] GetKey(byte[] key, int byteCount)
-        {
-            var salt = GenerateSalt();
-            return DeriveBytes(key, salt, byteCount);
-        }
-
-        private static byte[] DeriveBytes(byte[] key, byte[] salt, int byteCount)
-        {
-            var rfcKey = new Rfc2898DeriveBytes(key, salt, ITERATIONS);
-            return rfcKey.GetBytes(byteCount);
-        }
-
-        private static byte[] InternalEncrypt(ICryptoTransform encryptor, byte[] value)
-        {
-            using var ms = new MemoryStream();
-            using var stream = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
-            stream.Write(value);
-            return ms.ToArray();
-        }
-
-        private static byte[] InternalDecrypt(ICryptoTransform decryptor, byte[] value)
-        {
-            using var ms = new MemoryStream(value);
-            using var stream = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
-            var buffer = new byte[stream.Length];
-            stream.Read(buffer, 0, buffer.Length);
-            return buffer;
+            return output.ToArray();
         }
     }
 }

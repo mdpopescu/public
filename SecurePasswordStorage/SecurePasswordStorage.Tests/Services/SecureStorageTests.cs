@@ -61,7 +61,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var credentials = ObjectMother.CreateCredentials();
                 var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-                A.CallTo(() => crypto.VerifyHash(A<byte[]>.Ignored, A<byte[]>.Ignored)).Returns(false);
+                A.CallTo(() => crypto.VerifyHash(credentials, A<byte[]>.Ignored, A<byte[]>.Ignored)).Returns(false);
                 var secret = ObjectMother.CreateBytes();
 
                 sut.Save(credentials, secret);
@@ -142,7 +142,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var credentials = ObjectMother.CreateCredentials();
                 var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-                A.CallTo(() => crypto.VerifyHash(A<byte[]>.Ignored, A<byte[]>.Ignored)).Returns(false);
+                A.CallTo(() => crypto.VerifyHash(credentials, A<byte[]>.Ignored, A<byte[]>.Ignored)).Returns(false);
 
                 sut.Load(credentials);
             }
@@ -229,8 +229,9 @@ namespace SecurePasswordStorage.Tests.Services
             A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
             A.CallTo(
                     () => crypto.VerifyHash(
-                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(user.PasswordHash)),
-                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(credentials.GetSaltedCredentials(user.Salt)))
+                        credentials,
+                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(user.Salt)),
+                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(user.PasswordHash))
                     )
                 )
                 .Returns(true);
