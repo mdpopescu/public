@@ -1,9 +1,7 @@
-﻿using SecurePasswordStorage.Library.Models;
-
-namespace SecurePasswordStorage.Library.Contracts
+﻿namespace SecurePasswordStorage.Library.Contracts
 {
     public interface IRepository<T, in TKey>
-        where T : Entity<TKey>
+        where T : IEntity<TKey>
     {
         /// <summary>
         ///     Returns the entity with the given key, or <c>null</c> if one was not found.

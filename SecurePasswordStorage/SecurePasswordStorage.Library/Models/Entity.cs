@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using SecurePasswordStorage.Library.Contracts;
 
 namespace SecurePasswordStorage.Library.Models
 {
-    public abstract class Entity<TKey> : IEquatable<Entity<TKey>>
+    public abstract class Entity<TKey> : IEntity<TKey>
     {
         public TKey Key { get; }
 
