@@ -14,6 +14,9 @@ namespace SecurePasswordStorage.Library.Services
 
         public void Save(Credentials loginCredentials, Credentials foreignCredentials)
         {
+            // TODO: loginCredentials should be of type VerifiedCredentials
+            // TODO: and we should have an Authenticator with a Verify method
+
             var secureHash = crypto.GetSecureHash(loginCredentials);
             var user = repository.LoadUser(loginCredentials.Username, secureHash);
             if (user == null)
