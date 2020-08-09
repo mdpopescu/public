@@ -69,11 +69,7 @@ namespace SecurePasswordStorage.Library.Services
 
         private void CheckCredentials(Credentials credentials, out byte[] secretKey, out byte[] verificationHash)
         {
-            var user = userRepository.Load(credentials.Key);
-            if (user == null)
-                throw new SecurityException(Constants.AUTHENTICATION_ERROR);
-
-            if (!crypto.VerifyHash(credentials, user.Salt, user.PasswordHash))
+            if (!CheckUser(credentials))
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
 
             crypto.Transform(credentials, out secretKey, out verificationHash);
