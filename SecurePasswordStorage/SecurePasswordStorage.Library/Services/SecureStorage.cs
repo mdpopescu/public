@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Security;
 using SecurePasswordStorage.Library.Contracts;
 using SecurePasswordStorage.Library.Helpers;
@@ -43,7 +42,7 @@ namespace SecurePasswordStorage.Library.Services
 
         public void SaveSecret(Credentials credentials, byte[] secret)
         {
-            CheckCredentials(credentials, out var secretKey, out var verificationHash);
+            var (secretKey, verificationHash) = CheckCredentials(credentials);
 
             var encryptedSecret = crypto.Encrypt(secretKey, secret);
             var secretData = new SecretData(credentials.Key, encryptedSecret, verificationHash);
@@ -52,7 +51,7 @@ namespace SecurePasswordStorage.Library.Services
 
         public byte[] LoadSecret(Credentials credentials)
         {
-            CheckCredentials(credentials, out var secretKey, out var verificationHash);
+            var (secretKey, verificationHash) = CheckCredentials(credentials);
 
             var secretData = secretRepository.Load(credentials.Key);
             if (!secretData.VerificationHash.SequenceEqual(verificationHash))
@@ -67,12 +66,12 @@ namespace SecurePasswordStorage.Library.Services
         private readonly IUserRepository userRepository;
         private readonly ISecretRepository secretRepository;
 
-        private void CheckCredentials(Credentials credentials, out byte[] secretKey, out byte[] verificationHash)
+        private ByteArrayTuple CheckCredentials(Credentials credentials)
         {
             if (!CheckUser(credentials))
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
 
-            crypto.Transform(credentials, out secretKey, out verificationHash);
+            return crypto.Transform(credentials);
         }
     }
 }

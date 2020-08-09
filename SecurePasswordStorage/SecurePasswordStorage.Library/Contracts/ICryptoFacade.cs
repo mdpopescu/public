@@ -6,7 +6,7 @@ namespace SecurePasswordStorage.Library.Contracts
     {
         ByteArrayTuple GenerateHash(Credentials credentials);
 
-        void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash);
+        ByteArrayTuple Transform(Credentials credentials);
         bool VerifyHash(Credentials credentials, byte[] salt, byte[] passwordHash);
 
         byte[] Encrypt(byte[] key, byte[] decrypted);

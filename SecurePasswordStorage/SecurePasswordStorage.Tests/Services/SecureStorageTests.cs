@@ -202,9 +202,7 @@ namespace SecurePasswordStorage.Tests.Services
 
                 sut.SaveSecret(credentials, secret);
 
-                byte[] secureKey;
-                byte[] verificationHash;
-                A.CallTo(() => crypto.Transform(credentials, out secureKey, out verificationHash)).MustHaveHappened();
+                A.CallTo(() => crypto.Transform(credentials)).MustHaveHappened();
             }
 
             [TestMethod("Stores the encrypted secret together with the verification hash")]
@@ -212,13 +210,19 @@ namespace SecurePasswordStorage.Tests.Services
             {
                 var credentials = ObjectMother.CreateCredentials();
                 SetupValidUser(credentials);
-                var secret = ObjectMother.CreateBytes();
-                var secureKey = ObjectMother.CreateBytes();
-                var encryptedSecret = ObjectMother.CreateBytes();
+                var secretKey = ObjectMother.CreateBytes();
                 var verificationHash = ObjectMother.CreateBytes();
-                byte[] _1, _2;
-                A.CallTo(() => crypto.Transform(credentials, out _1, out _2)).AssignsOutAndRefParameters(secureKey, verificationHash);
-                A.CallTo(() => crypto.Encrypt(secureKey, secret)).Returns(encryptedSecret);
+                A.CallTo(() => crypto.Transform(credentials)).Returns(ByteArrayTuple.Create(secretKey, verificationHash));
+                var secret = ObjectMother.CreateBytes();
+                var encryptedSecret = ObjectMother.CreateBytes();
+                A
+                    .CallTo(
+                        () => crypto.Encrypt(
+                            A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(secretKey)),
+                            A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(secret))
+                        )
+                    )
+                    .Returns(encryptedSecret);
 
                 sut.SaveSecret(credentials, secret);
 
@@ -282,9 +286,7 @@ namespace SecurePasswordStorage.Tests.Services
 
                 sut.LoadSecret(credentials);
 
-                byte[] secureKey;
-                byte[] verificationHash;
-                A.CallTo(() => crypto.Transform(credentials, out secureKey, out verificationHash)).MustHaveHappened();
+                A.CallTo(() => crypto.Transform(credentials)).MustHaveHappened();
             }
 
             [TestMethod("Loads the secret data from the repository")]
@@ -325,7 +327,14 @@ namespace SecurePasswordStorage.Tests.Services
 
                 sut.LoadSecret(credentials);
 
-                A.CallTo(() => crypto.Decrypt(secretKey, encryptedSecret)).MustHaveHappened();
+                A
+                    .CallTo(
+                        () => crypto.Decrypt(
+                            A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(secretKey)),
+                            A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(encryptedSecret))
+                        )
+                    )
+                    .MustHaveHappened();
             }
 
             [TestMethod("Returns the decrypted secret")]
@@ -339,7 +348,14 @@ namespace SecurePasswordStorage.Tests.Services
                 var secretData = new SecretData(credentials.Key, encryptedSecret, verificationHash);
                 A.CallTo(() => secretRepository.Load(credentials.Key)).Returns(secretData);
                 var secret = ObjectMother.CreateBytes();
-                A.CallTo(() => crypto.Decrypt(secretKey, encryptedSecret)).Returns(secret);
+                A
+                    .CallTo(
+                        () => crypto.Decrypt(
+                            A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(secretKey)),
+                            A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(encryptedSecret))
+                        )
+                    )
+                    .Returns(secret);
 
                 var result = sut.LoadSecret(credentials);
 
@@ -365,9 +381,8 @@ namespace SecurePasswordStorage.Tests.Services
 
         private void SetupValidSecret(Credentials credentials, byte[] secretKey, out byte[] verificationHash)
         {
-            byte[] _1, _2;
             verificationHash = ObjectMother.CreateBytes();
-            A.CallTo(() => crypto.Transform(credentials, out _1, out _2)).AssignsOutAndRefParameters(secretKey, verificationHash);
+            A.CallTo(() => crypto.Transform(credentials)).Returns(ByteArrayTuple.Create(secretKey, verificationHash));
             var encryptedSecret = ObjectMother.CreateBytes();
             var secret = ObjectMother.CreateBytes();
             A.CallTo(() => crypto.Encrypt(secretKey, secret)).Returns(encryptedSecret);

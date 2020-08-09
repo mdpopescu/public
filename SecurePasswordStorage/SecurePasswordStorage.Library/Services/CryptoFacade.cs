@@ -17,7 +17,7 @@ namespace SecurePasswordStorage.Library.Services
             return ByteArrayTuple.Create(salt, hash);
         }
 
-        public void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash)
+        public ByteArrayTuple Transform(Credentials credentials)
         {
             var bytes = credentials.GetBytes();
             var largeHash = LargeHash(bytes);
@@ -25,8 +25,9 @@ namespace SecurePasswordStorage.Library.Services
             var hash2 = largeHash.Skip(largeHash.Length / 2).ToArray();
 
             var salt = LargeHash(largeHash);
-            secretKey = SecureHash(hash1, salt);
-            verificationHash = SecureHash(hash2, salt);
+            var secretKey = SecureHash(hash1, salt);
+            var verificationHash = SecureHash(hash2, salt);
+            return ByteArrayTuple.Create(secretKey, verificationHash);
         }
 
         public bool VerifyHash(Credentials credentials, byte[] salt, byte[] passwordHash)
