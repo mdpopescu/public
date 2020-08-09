@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -20,6 +21,13 @@ namespace SecurePasswordStorage.Library.Services
 
         public byte[] SecureHash(byte[] value, byte[] salt) =>
             DeriveBytes(value, salt, SECURE_HASH_LENGTH);
+
+        public Tuple<byte[], byte[]> GenerateHash(Credentials credentials)
+        {
+            var salt = GenerateSalt();
+            var hash = SecureHash(GetBytes(credentials), salt);
+            return Tuple.Create(salt, hash);
+        }
 
         public void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash)
         {

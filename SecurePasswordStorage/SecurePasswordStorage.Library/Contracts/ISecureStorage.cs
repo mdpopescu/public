@@ -4,7 +4,11 @@ namespace SecurePasswordStorage.Library.Contracts
 {
     public interface ISecureStorage
     {
-        void Save(Credentials credentials, byte[] secret);
-        byte[] Load(Credentials credentials);
+        void SaveUser(Credentials credentials);
+        User LoadUser(Credentials credentials);
+        bool CheckUser(Credentials credentials);
+
+        void SaveSecret(Credentials credentials, byte[] secret);
+        byte[] LoadSecret(Credentials credentials);
     }
 }

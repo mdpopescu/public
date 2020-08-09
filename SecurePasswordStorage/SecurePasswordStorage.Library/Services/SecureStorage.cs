@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security;
 using SecurePasswordStorage.Library.Contracts;
 using SecurePasswordStorage.Library.Helpers;
@@ -15,7 +16,32 @@ namespace SecurePasswordStorage.Library.Services
             this.secretRepository = secretRepository;
         }
 
-        public void Save(Credentials credentials, byte[] secret)
+        public void SaveUser(Credentials credentials)
+        {
+            var (salt, hash) = crypto.GenerateHash(credentials);
+            var user = new User(credentials.Key, salt, hash);
+            userRepository.Save(user);
+        }
+
+        public User LoadUser(Credentials credentials)
+        {
+            var user = userRepository.Load(credentials.Key);
+            if (user == null)
+                throw new SecurityException(Constants.AUTHENTICATION_ERROR);
+
+            if (!crypto.VerifyHash(credentials, user.Salt, user.PasswordHash))
+                throw new SecurityException(Constants.AUTHENTICATION_ERROR);
+
+            return user;
+        }
+
+        public bool CheckUser(Credentials credentials)
+        {
+            var user = userRepository.Load(credentials.Key);
+            return user != null && crypto.VerifyHash(credentials, user.Salt, user.PasswordHash);
+        }
+
+        public void SaveSecret(Credentials credentials, byte[] secret)
         {
             CheckCredentials(credentials, out var secretKey, out var verificationHash);
 
@@ -24,7 +50,7 @@ namespace SecurePasswordStorage.Library.Services
             secretRepository.Save(secretData);
         }
 
-        public byte[] Load(Credentials credentials)
+        public byte[] LoadSecret(Credentials credentials)
         {
             CheckCredentials(credentials, out var secretKey, out var verificationHash);
 

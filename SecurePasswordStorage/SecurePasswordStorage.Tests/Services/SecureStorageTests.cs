@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security;
 using FakeItEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecurePasswordStorage.Library.Contracts;
-using SecurePasswordStorage.Library.Helpers;
 using SecurePasswordStorage.Library.Models;
 using SecurePasswordStorage.Library.Services;
 
@@ -29,7 +29,134 @@ namespace SecurePasswordStorage.Tests.Services
         }
 
         [TestClass]
-        public class Save : SecureStorageTests
+        public class SaveUser : SecureStorageTests
+        {
+            [TestMethod("Saves a user object based on the given credentials")]
+            public void Test1()
+            {
+                var credentials = ObjectMother.CreateCredentials();
+                var salt = ObjectMother.CreateBytes();
+                var hash = ObjectMother.CreateBytes();
+                A.CallTo(() => crypto.GenerateHash(credentials)).Returns(Tuple.Create(salt, hash));
+
+                sut.SaveUser(credentials);
+
+                A.CallTo(
+                        () => userRepository.Save(
+                            A<User>.That.Matches(
+                                it => it.Key == credentials.Key
+                                    && it.Salt.SequenceEqual(salt)
+                                    && it.PasswordHash.SequenceEqual(hash)
+                            )
+                        )
+                    )
+                    .MustHaveHappened();
+            }
+        }
+
+        [TestClass]
+        public class LoadUser : SecureStorageTests
+        {
+            [TestMethod("Loads the user with the given key")]
+            public void Test1()
+            {
+                var credentials = ObjectMother.CreateCredentials();
+                SetupValidUser(credentials);
+
+                sut.LoadUser(credentials);
+
+                A.CallTo(() => userRepository.Load(credentials.Key)).MustHaveHappened();
+            }
+
+            [TestMethod("Throws an exception if the user with the given key does not exist")]
+            [ExpectedException(typeof(SecurityException))]
+            public void Test2()
+            {
+                var credentials = ObjectMother.CreateCredentials();
+                A.CallTo(() => userRepository.Load(credentials.Key)).Returns(null);
+
+                sut.LoadUser(credentials);
+            }
+
+            [TestMethod("Throws an exception if the credentials do not match")]
+            [ExpectedException(typeof(SecurityException))]
+            public void Test3()
+            {
+                var credentials = ObjectMother.CreateCredentials();
+                var user = ObjectMother.CreateUser(credentials.Key);
+                A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
+                A.CallTo(() => crypto.VerifyHash(credentials, user.Salt, user.PasswordHash)).Returns(false);
+
+                sut.LoadUser(credentials);
+            }
+
+            [TestMethod("Returns the user")]
+            public void Test4()
+            {
+                var credentials = ObjectMother.CreateCredentials();
+                var user = ObjectMother.CreateUser(credentials.Key);
+                A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
+                A.CallTo(() => crypto.VerifyHash(credentials, user.Salt, user.PasswordHash)).Returns(true);
+
+                var result = sut.LoadUser(credentials);
+
+                Assert.AreEqual(user, result);
+            }
+        }
+
+        [TestClass]
+        public class CheckUser : SecureStorageTests
+        {
+            [TestMethod("Loads the user with the given key")]
+            public void Test1()
+            {
+                var credentials = ObjectMother.CreateCredentials();
+
+                sut.CheckUser(credentials);
+
+                A.CallTo(() => userRepository.Load(credentials.Key)).MustHaveHappened();
+            }
+
+            [TestMethod("Returns false if the user with the given key does not exist")]
+            public void Test2()
+            {
+                var credentials = ObjectMother.CreateCredentials();
+                A.CallTo(() => userRepository.Load(credentials.Key)).Returns(null);
+
+                var result = sut.CheckUser(credentials);
+
+                Assert.IsFalse(result);
+            }
+
+            [TestMethod("Returns false if the credentials do not match")]
+            public void Test3()
+            {
+                var credentials = ObjectMother.CreateCredentials();
+                var user = ObjectMother.CreateUser(credentials.Key);
+                A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
+                A.CallTo(() => crypto.VerifyHash(credentials, user.Salt, user.PasswordHash)).Returns(false);
+
+                var result = sut.CheckUser(credentials);
+
+                Assert.IsFalse(result);
+            }
+
+            [TestMethod("Returns true if the user exists and the credentials match")]
+            public void Test4()
+            {
+                var credentials = ObjectMother.CreateCredentials();
+                var user = ObjectMother.CreateUser(credentials.Key);
+                A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
+                A.CallTo(() => crypto.VerifyHash(credentials, user.Salt, user.PasswordHash)).Returns(true);
+
+                var result = sut.CheckUser(credentials);
+
+                Assert.IsTrue(result);
+            }
+        }
+
+        [TestClass]
+        public class SaveSecret : SecureStorageTests
         {
             [TestMethod("Ensures that the user credentials are first verified in the user repository")]
             public void Test1()
@@ -38,7 +165,7 @@ namespace SecurePasswordStorage.Tests.Services
                 SetupValidUser(credentials);
                 var secret = ObjectMother.CreateBytes();
 
-                sut.Save(credentials, secret);
+                sut.SaveSecret(credentials, secret);
 
                 A.CallTo(() => userRepository.Load(credentials.Key)).MustHaveHappened();
             }
@@ -51,7 +178,7 @@ namespace SecurePasswordStorage.Tests.Services
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(null);
                 var secret = ObjectMother.CreateBytes();
 
-                sut.Save(credentials, secret);
+                sut.SaveSecret(credentials, secret);
             }
 
             [TestMethod("Throws an exception if the user with the given credentials has an incorrect password")]
@@ -64,7 +191,7 @@ namespace SecurePasswordStorage.Tests.Services
                 A.CallTo(() => crypto.VerifyHash(credentials, A<byte[]>.Ignored, A<byte[]>.Ignored)).Returns(false);
                 var secret = ObjectMother.CreateBytes();
 
-                sut.Save(credentials, secret);
+                sut.SaveSecret(credentials, secret);
             }
 
             [TestMethod("Transforms the credentials")]
@@ -74,7 +201,7 @@ namespace SecurePasswordStorage.Tests.Services
                 SetupValidUser(credentials);
                 var secret = ObjectMother.CreateBytes();
 
-                sut.Save(credentials, secret);
+                sut.SaveSecret(credentials, secret);
 
                 byte[] secureKey;
                 byte[] verificationHash;
@@ -94,7 +221,7 @@ namespace SecurePasswordStorage.Tests.Services
                 A.CallTo(() => crypto.Transform(credentials, out _1, out _2)).AssignsOutAndRefParameters(secureKey, verificationHash);
                 A.CallTo(() => crypto.Encrypt(secureKey, secret)).Returns(encryptedSecret);
 
-                sut.Save(credentials, secret);
+                sut.SaveSecret(credentials, secret);
 
                 A
                     .CallTo(
@@ -111,7 +238,7 @@ namespace SecurePasswordStorage.Tests.Services
         }
 
         [TestClass]
-        public class Load : SecureStorageTests
+        public class LoadSecret : SecureStorageTests
         {
             [TestMethod("Ensures that the user credentials are first verified in the user repository")]
             public void Test1()
@@ -120,7 +247,7 @@ namespace SecurePasswordStorage.Tests.Services
                 SetupValidUser(credentials);
                 SetupValidSecret(credentials, A.Dummy<byte[]>(), out _);
 
-                sut.Load(credentials);
+                sut.LoadSecret(credentials);
 
                 A.CallTo(() => userRepository.Load(credentials.Key)).MustHaveHappened();
             }
@@ -132,7 +259,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var credentials = ObjectMother.CreateCredentials();
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(null);
 
-                sut.Load(credentials);
+                sut.LoadSecret(credentials);
             }
 
             [TestMethod("Throws an exception if the user with the given credentials has an incorrect password")]
@@ -144,7 +271,7 @@ namespace SecurePasswordStorage.Tests.Services
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
                 A.CallTo(() => crypto.VerifyHash(credentials, A<byte[]>.Ignored, A<byte[]>.Ignored)).Returns(false);
 
-                sut.Load(credentials);
+                sut.LoadSecret(credentials);
             }
 
             [TestMethod("Transforms the credentials")]
@@ -154,7 +281,7 @@ namespace SecurePasswordStorage.Tests.Services
                 SetupValidUser(credentials);
                 SetupValidSecret(credentials, A.Dummy<byte[]>(), out _);
 
-                sut.Load(credentials);
+                sut.LoadSecret(credentials);
 
                 byte[] secureKey;
                 byte[] verificationHash;
@@ -168,7 +295,7 @@ namespace SecurePasswordStorage.Tests.Services
                 SetupValidUser(credentials);
                 SetupValidSecret(credentials, A.Dummy<byte[]>(), out _);
 
-                sut.Load(credentials);
+                sut.LoadSecret(credentials);
 
                 A.CallTo(() => secretRepository.Load(credentials.Key)).MustHaveHappened();
             }
@@ -183,7 +310,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var secretData = new SecretData(credentials.Key, ObjectMother.CreateBytes(), ObjectMother.CreateBytes());
                 A.CallTo(() => secretRepository.Load(credentials.Key)).Returns(secretData);
 
-                sut.Load(credentials);
+                sut.LoadSecret(credentials);
             }
 
             [TestMethod("Decrypts the secret if the verification hash matches")]
@@ -197,7 +324,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var secretData = new SecretData(credentials.Key, encryptedSecret, verificationHash);
                 A.CallTo(() => secretRepository.Load(credentials.Key)).Returns(secretData);
 
-                sut.Load(credentials);
+                sut.LoadSecret(credentials);
 
                 A.CallTo(() => crypto.Decrypt(secretKey, encryptedSecret)).MustHaveHappened();
             }
@@ -215,7 +342,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var secret = ObjectMother.CreateBytes();
                 A.CallTo(() => crypto.Decrypt(secretKey, encryptedSecret)).Returns(secret);
 
-                var result = sut.Load(credentials);
+                var result = sut.LoadSecret(credentials);
 
                 CollectionAssert.AreEqual(secret, result);
             }

@@ -27,8 +27,8 @@ namespace SecurePasswordStorage.Tests
             // this would be the result of serializing the actual secret we want stored securely
             var secret = ObjectMother.CreateBytes();
 
-            storage.Save(credentials, secret);
-            var result = storage.Load(credentials);
+            storage.SaveSecret(credentials, secret);
+            var result = storage.LoadSecret(credentials);
 
             CollectionAssert.AreEqual(secret, result);
         }

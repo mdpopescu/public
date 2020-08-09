@@ -1,4 +1,5 @@
-﻿using SecurePasswordStorage.Library.Models;
+﻿using System;
+using SecurePasswordStorage.Library.Models;
 
 namespace SecurePasswordStorage.Library.Contracts
 {
@@ -8,6 +9,8 @@ namespace SecurePasswordStorage.Library.Contracts
 
         byte[] GetBytes(Credentials credentials);
         byte[] SecureHash(byte[] value, byte[] salt);
+
+        Tuple<byte[],byte[]> GenerateHash(Credentials credentials);
 
         void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash);
         bool VerifyHash(Credentials credentials, byte[] salt, byte[] passwordHash);
