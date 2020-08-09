@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using FakeItEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecurePasswordStorage.Library.Contracts;
 using SecurePasswordStorage.Library.Models;
@@ -16,14 +14,15 @@ namespace SecurePasswordStorage.Tests
         public void Test1()
         {
             var crypto = new CryptoFacade();
-            var userRepository = A.Fake<IUserRepository>();
+            var userRepository = new FakeUserRepository();
             var secretRepository = new FakeSecretRepository();
             ISecureStorage storage = new SecureStorage(crypto, userRepository, secretRepository);
 
             // these are the user's credentials for *our* application
             var credentials = ObjectMother.CreateCredentials();
 
-            SetupValidUser(userRepository, crypto, credentials);
+            // ensure there is an user matching these credentials
+            storage.SaveUser(credentials);
 
             // this would be the result of serializing the actual secret we want stored securely
             var secret = ObjectMother.CreateBytes();
@@ -36,14 +35,20 @@ namespace SecurePasswordStorage.Tests
 
         //
 
-        private static void SetupValidUser(IUserRepository userRepository, ICryptoFacade crypto, Credentials credentials)
-        {
-            var (salt, hash) = crypto.GenerateHash(credentials);
-            var user = new User(credentials.Key, salt, hash);
-            A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-        }
-
         //
+
+        private class FakeUserRepository : IUserRepository
+        {
+            public User Load(UserKey key) =>
+                users.Where(it => it.Key == key).FirstOrDefault();
+
+            public void Save(User entity) =>
+                users.Add(entity);
+
+            //
+
+            private readonly List<User> users = new List<User>();
+        }
 
         private class FakeSecretRepository : ISecretRepository
         {
