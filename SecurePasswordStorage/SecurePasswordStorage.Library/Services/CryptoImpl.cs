@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using SecurePasswordStorage.Library.Contracts;
+using SecurePasswordStorage.Library.Helpers;
 using SecurePasswordStorage.Library.Models;
 
 namespace SecurePasswordStorage.Library.Services
@@ -14,24 +15,19 @@ namespace SecurePasswordStorage.Library.Services
         public byte[] GenerateSalt() =>
             GetRandomBytes(SALT_LENGTH);
 
-        public byte[] GetBytes(Credentials credentials) =>
-            Encoding.UTF8.GetBytes(credentials.Key.Value)
-                .Concat(Encoding.UTF8.GetBytes(credentials.Password))
-                .ToArray();
-
         public byte[] SecureHash(byte[] value, byte[] salt) =>
             DeriveBytes(value, salt, SECURE_HASH_LENGTH);
 
         public Tuple<byte[], byte[]> GenerateHash(Credentials credentials)
         {
             var salt = GenerateSalt();
-            var hash = SecureHash(GetBytes(credentials), salt);
+            var hash = SecureHash(credentials.GetBytes(), salt);
             return Tuple.Create(salt, hash);
         }
 
         public void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash)
         {
-            var bytes = GetBytes(credentials);
+            var bytes = credentials.GetBytes();
             var largeHash = LargeHash(bytes);
             var hash1 = largeHash.Take(largeHash.Length / 2).ToArray();
             var hash2 = largeHash.Skip(largeHash.Length / 2).ToArray();
@@ -43,7 +39,7 @@ namespace SecurePasswordStorage.Library.Services
 
         public bool VerifyHash(Credentials credentials, byte[] salt, byte[] passwordHash)
         {
-            var bytes = GetBytes(credentials);
+            var bytes = credentials.GetBytes();
             return SecureHash(bytes, salt).SequenceEqual(passwordHash);
         }
 

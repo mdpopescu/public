@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FakeItEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -37,8 +38,7 @@ namespace SecurePasswordStorage.Tests
 
         private static void SetupValidUser(IUserRepository userRepository, ICryptoFacade crypto, Credentials credentials)
         {
-            var salt = crypto.GenerateSalt();
-            var hash = crypto.SecureHash(crypto.GetBytes(credentials), salt);
+            var (salt, hash) = crypto.GenerateHash(credentials);
             var user = new User(credentials.Key, salt, hash);
             A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
         }

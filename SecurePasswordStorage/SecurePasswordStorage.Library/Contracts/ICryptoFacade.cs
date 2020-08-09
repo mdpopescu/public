@@ -7,7 +7,6 @@ namespace SecurePasswordStorage.Library.Contracts
     {
         byte[] GenerateSalt();
 
-        byte[] GetBytes(Credentials credentials);
         byte[] SecureHash(byte[] value, byte[] salt);
 
         Tuple<byte[],byte[]> GenerateHash(Credentials credentials);
