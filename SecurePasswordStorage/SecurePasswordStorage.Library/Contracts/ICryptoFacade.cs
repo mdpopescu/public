@@ -5,11 +5,7 @@ namespace SecurePasswordStorage.Library.Contracts
 {
     public interface ICryptoFacade
     {
-        byte[] GenerateSalt();
-
-        byte[] SecureHash(byte[] value, byte[] salt);
-
-        Tuple<byte[],byte[]> GenerateHash(Credentials credentials);
+        Tuple<byte[], byte[]> GenerateHash(Credentials credentials);
 
         void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash);
         bool VerifyHash(Credentials credentials, byte[] salt, byte[] passwordHash);

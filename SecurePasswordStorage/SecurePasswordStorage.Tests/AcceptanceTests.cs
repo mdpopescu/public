@@ -15,7 +15,7 @@ namespace SecurePasswordStorage.Tests
         [TestMethod("Can store and retrieve a secret")]
         public void Test1()
         {
-            var crypto = new CryptoImpl();
+            var crypto = new CryptoFacade();
             var userRepository = A.Fake<IUserRepository>();
             var secretRepository = new FakeSecretRepository();
             ISecureStorage storage = new SecureStorage(crypto, userRepository, secretRepository);

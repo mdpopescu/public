@@ -3,21 +3,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using SecurePasswordStorage.Library.Contracts;
 using SecurePasswordStorage.Library.Helpers;
 using SecurePasswordStorage.Library.Models;
 
 namespace SecurePasswordStorage.Library.Services
 {
-    public class CryptoImpl : ICryptoFacade
+    public class CryptoFacade : ICryptoFacade
     {
-        public byte[] GenerateSalt() =>
-            GetRandomBytes(SALT_LENGTH);
-
-        public byte[] SecureHash(byte[] value, byte[] salt) =>
-            DeriveBytes(value, salt, SECURE_HASH_LENGTH);
-
         public Tuple<byte[], byte[]> GenerateHash(Credentials credentials)
         {
             var salt = GenerateSalt();
@@ -77,6 +70,12 @@ namespace SecurePasswordStorage.Library.Services
 
         private static readonly SHA512 LARGE_HASH = SHA512.Create();
         private static readonly RNGCryptoServiceProvider RNG = new RNGCryptoServiceProvider();
+
+        private static byte[] GenerateSalt() =>
+            GetRandomBytes(SALT_LENGTH);
+
+        private static byte[] SecureHash(byte[] value, byte[] salt) =>
+            DeriveBytes(value, salt, SECURE_HASH_LENGTH);
 
         private static byte[] GetRandomBytes(int count)
         {
