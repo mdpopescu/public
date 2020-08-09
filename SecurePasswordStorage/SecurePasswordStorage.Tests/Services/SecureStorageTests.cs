@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Security;
 using FakeItEasy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -37,7 +36,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var credentials = ObjectMother.CreateCredentials();
                 var salt = ObjectMother.CreateBytes();
                 var hash = ObjectMother.CreateBytes();
-                A.CallTo(() => crypto.GenerateHash(credentials)).Returns(Tuple.Create(salt, hash));
+                A.CallTo(() => crypto.GenerateHash(credentials)).Returns(ByteArrayTuple.Create(salt, hash));
 
                 sut.SaveUser(credentials);
 

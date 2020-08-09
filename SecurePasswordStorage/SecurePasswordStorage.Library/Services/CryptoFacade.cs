@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -11,11 +10,11 @@ namespace SecurePasswordStorage.Library.Services
 {
     public class CryptoFacade : ICryptoFacade
     {
-        public Tuple<byte[], byte[]> GenerateHash(Credentials credentials)
+        public ByteArrayTuple GenerateHash(Credentials credentials)
         {
             var salt = GenerateSalt();
             var hash = SecureHash(credentials.GetBytes(), salt);
-            return Tuple.Create(salt, hash);
+            return ByteArrayTuple.Create(salt, hash);
         }
 
         public void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash)

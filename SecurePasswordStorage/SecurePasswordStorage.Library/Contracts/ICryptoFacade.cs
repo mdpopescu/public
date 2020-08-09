@@ -1,11 +1,10 @@
-﻿using System;
-using SecurePasswordStorage.Library.Models;
+﻿using SecurePasswordStorage.Library.Models;
 
 namespace SecurePasswordStorage.Library.Contracts
 {
     public interface ICryptoFacade
     {
-        Tuple<byte[], byte[]> GenerateHash(Credentials credentials);
+        ByteArrayTuple GenerateHash(Credentials credentials);
 
         void Transform(Credentials credentials, out byte[] secretKey, out byte[] verificationHash);
         bool VerifyHash(Credentials credentials, byte[] salt, byte[] passwordHash);
