@@ -10,6 +10,17 @@ namespace SecurePasswordStorage.Library.Models
         public static ByteArrayTuple Create(IEnumerable<byte> item1, IEnumerable<byte> item2) =>
             new ByteArrayTuple(item1, item2);
 
+        public static ByteArrayTuple FromArray(byte[] bytes)
+        {
+            var prefix = bytes.Take(4).ToArray();
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(prefix);
+            var count = BitConverter.ToInt32(prefix);
+            var item1 = bytes.Skip(4).Take(count);
+            var item2 = bytes.Skip(4 + count);
+            return Create(item1, item2);
+        }
+
         //
 
         public IEnumerable<byte> Item1 { get; }
@@ -25,6 +36,18 @@ namespace SecurePasswordStorage.Library.Models
         {
             salt = Item1.ToArray();
             hash = Item2.ToArray();
+        }
+
+        public byte[] ToArray()
+        {
+            var prefix = BitConverter.GetBytes(Item1.Count());
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(prefix);
+
+            return prefix
+                .Concat(Item1)
+                .Concat(Item2)
+                .ToArray();
         }
 
         #region IEquatable

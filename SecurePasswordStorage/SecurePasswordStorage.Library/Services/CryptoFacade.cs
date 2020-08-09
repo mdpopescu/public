@@ -40,22 +40,15 @@ namespace SecurePasswordStorage.Library.Services
         {
             using var aes = CreateAlgorithm(key);
             using var encryptor = aes.CreateEncryptor();
-
-            var iv = aes.IV;
-            var cipher = Apply(encryptor, decrypted);
-
-            return iv.Concat(cipher).ToArray();
+            return ByteArrayTuple.Create(aes.IV, Apply(encryptor, decrypted)).ToArray();
         }
 
         public byte[] Decrypt(byte[] key, byte[] encrypted)
         {
-            var iv = encrypted.Take(IV_LENGTH).ToArray();
-            var cipher = encrypted.Skip(IV_LENGTH).ToArray();
-
-            using var aes = CreateAlgorithm(key, iv);
+            var tuple = ByteArrayTuple.FromArray(encrypted);
+            using var aes = CreateAlgorithm(key, tuple.Item1.ToArray());
             using var decryptor = aes.CreateDecryptor();
-
-            return Apply(decryptor, cipher);
+            return Apply(decryptor, tuple.Item2.ToArray());
         }
 
         //
