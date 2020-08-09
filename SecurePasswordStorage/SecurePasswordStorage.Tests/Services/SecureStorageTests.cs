@@ -84,7 +84,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var credentials = ObjectMother.CreateCredentials();
                 var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-                A.CallTo(() => crypto.VerifyHash(credentials, user.Salt, user.PasswordHash)).Returns(false);
+                A.CallTo(() => crypto.VerifyHash(credentials, ByteArrayTuple.Create(user.Salt, user.PasswordHash))).Returns(false);
 
                 sut.LoadUser(credentials);
             }
@@ -95,7 +95,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var credentials = ObjectMother.CreateCredentials();
                 var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-                A.CallTo(() => crypto.VerifyHash(credentials, user.Salt, user.PasswordHash)).Returns(true);
+                A.CallTo(() => crypto.VerifyHash(credentials, ByteArrayTuple.Create(user.Salt, user.PasswordHash))).Returns(true);
 
                 var result = sut.LoadUser(credentials);
 
@@ -133,7 +133,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var credentials = ObjectMother.CreateCredentials();
                 var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-                A.CallTo(() => crypto.VerifyHash(credentials, user.Salt, user.PasswordHash)).Returns(false);
+                A.CallTo(() => crypto.VerifyHash(credentials, ByteArrayTuple.Create(user.Salt, user.PasswordHash))).Returns(false);
 
                 var result = sut.CheckUser(credentials);
 
@@ -146,7 +146,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var credentials = ObjectMother.CreateCredentials();
                 var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-                A.CallTo(() => crypto.VerifyHash(credentials, user.Salt, user.PasswordHash)).Returns(true);
+                A.CallTo(() => crypto.VerifyHash(credentials, ByteArrayTuple.Create(user.Salt, user.PasswordHash))).Returns(true);
 
                 var result = sut.CheckUser(credentials);
 
@@ -187,7 +187,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var credentials = ObjectMother.CreateCredentials();
                 var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-                A.CallTo(() => crypto.VerifyHash(credentials, A<byte[]>.Ignored, A<byte[]>.Ignored)).Returns(false);
+                A.CallTo(() => crypto.VerifyHash(credentials, A<ByteArrayTuple>.Ignored)).Returns(false);
                 var secret = ObjectMother.CreateBytes();
 
                 sut.SaveSecret(credentials, secret);
@@ -272,7 +272,7 @@ namespace SecurePasswordStorage.Tests.Services
                 var credentials = ObjectMother.CreateCredentials();
                 var user = ObjectMother.CreateUser(credentials.Key);
                 A.CallTo(() => userRepository.Load(credentials.Key)).Returns(user);
-                A.CallTo(() => crypto.VerifyHash(credentials, A<byte[]>.Ignored, A<byte[]>.Ignored)).Returns(false);
+                A.CallTo(() => crypto.VerifyHash(credentials, A<ByteArrayTuple>.Ignored)).Returns(false);
 
                 sut.LoadSecret(credentials);
             }
@@ -372,8 +372,7 @@ namespace SecurePasswordStorage.Tests.Services
             A.CallTo(
                     () => crypto.VerifyHash(
                         credentials,
-                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(user.Salt)),
-                        A<byte[]>.That.Matches(bytes => bytes.SequenceEqual(user.PasswordHash))
+                        A<ByteArrayTuple>.That.Matches(tuple => tuple.Item1.SequenceEqual(user.Salt) && tuple.Item2.SequenceEqual(user.PasswordHash))
                     )
                 )
                 .Returns(true);

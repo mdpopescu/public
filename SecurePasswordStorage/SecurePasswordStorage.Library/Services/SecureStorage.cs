@@ -28,7 +28,7 @@ namespace SecurePasswordStorage.Library.Services
             if (user == null)
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
 
-            if (!crypto.VerifyHash(credentials, user.Salt, user.PasswordHash))
+            if (!crypto.VerifyHash(credentials, ByteArrayTuple.Create(user.Salt, user.PasswordHash)))
                 throw new SecurityException(Constants.AUTHENTICATION_ERROR);
 
             return user;
@@ -37,7 +37,7 @@ namespace SecurePasswordStorage.Library.Services
         public bool CheckUser(Credentials credentials)
         {
             var user = userRepository.Load(credentials.Key);
-            return user != null && crypto.VerifyHash(credentials, user.Salt, user.PasswordHash);
+            return user != null && crypto.VerifyHash(credentials, ByteArrayTuple.Create(user.Salt, user.PasswordHash));
         }
 
         public void SaveSecret(Credentials credentials, byte[] secret)

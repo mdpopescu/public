@@ -30,10 +30,10 @@ namespace SecurePasswordStorage.Library.Services
             return ByteArrayTuple.Create(secretKey, verificationHash);
         }
 
-        public bool VerifyHash(Credentials credentials, byte[] salt, byte[] passwordHash)
+        public bool VerifyHash(Credentials credentials, ByteArrayTuple saltedHash)
         {
             var bytes = credentials.GetBytes();
-            return SecureHash(bytes, salt).SequenceEqual(passwordHash);
+            return SecureHash(bytes, saltedHash.Item1.ToArray()).SequenceEqual(saltedHash.Item2.ToArray());
         }
 
         public byte[] Encrypt(byte[] key, byte[] decrypted)
