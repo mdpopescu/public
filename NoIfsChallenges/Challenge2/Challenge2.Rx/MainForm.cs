@@ -12,25 +12,43 @@ namespace Challenge2.Rx
         {
             InitializeComponent();
 
-            StartStopClicked = GetClicks(btnStartStop).AsUnit();
-            ResetClicked = GetClicks(btnReset).AsUnit();
-            HoldClicked = GetClicks(btnHold).AsUnit();
+            startStopClicked = GetClicks(btnStartStop).AsUnit();
+            resetClicked = GetClicks(btnReset).AsUnit();
+            holdClicked = GetClicks(btnHold).AsUnit();
 
-            TimerTicked = GetTimer().AsUnit();
+            timerTicked = GetTimer().AsUnit();
         }
 
         //
 
-        private IObservable<Unit> StartStopClicked { get; }
-        private IObservable<Unit> ResetClicked { get; }
-        private IObservable<Unit> HoldClicked { get; }
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
 
-        private IObservable<Unit> TimerTicked { get; }
+            // right now, this starts a new timer every time the Start/Stop button is clicked
+            startStopClicked
+                .SelectSwitch(_ => GetTimer())
+                .StartWith(0)
+                .Select(it => TimeSpan.FromSeconds(it))
+                .ObserveOn(this)
+                .Subscribe(ts => lblClock.Text = ts.ToString(@"hh\:mm\:ss"));
+        }
+
+        //
+
+        private readonly IObservable<Unit> startStopClicked;
+        private readonly IObservable<Unit> resetClicked;
+        private readonly IObservable<Unit> holdClicked;
+
+        private readonly IObservable<Unit> timerTicked;
 
         private static IObservable<EventPattern<EventArgs>> GetClicks(Control control) =>
             Observable.FromEventPattern<EventHandler, EventArgs>(h => control.Click += h, h => control.Click -= h);
 
         private static IObservable<long> GetTimer() =>
             Observable.Interval(TimeSpan.FromSeconds(1));
+
+        private IObservable<int> CreateStoppedClock(int value) =>
+            Observable.Repeat(value, 1);
     }
 }
