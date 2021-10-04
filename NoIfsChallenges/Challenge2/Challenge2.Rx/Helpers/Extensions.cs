@@ -11,5 +11,14 @@ namespace Challenge2.Rx.Helpers
 
         public static IObservable<U> SelectSwitch<T, U>(this IObservable<T> source, Func<T, IObservable<U>> selector) =>
             source.Select(selector).Switch().Publish().RefCount();
+
+        /// <summary>
+        ///     Inverts the value of a boolean on each incoming event.
+        /// </summary>
+        /// <param name="source">The incoming events.</param>
+        /// <param name="startValue">The starting value for the boolean flag.</param>
+        /// <returns>A stream of T/F/T (or F/T/F) values with the same timing as the incoming events.</returns>
+        public static IObservable<bool> Toggle<T>(this IObservable<T> source, bool startValue) =>
+            source.Scan(startValue, (it, _) => !it).StartWith(startValue);
     }
 }
