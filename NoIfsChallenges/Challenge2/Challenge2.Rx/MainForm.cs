@@ -31,14 +31,32 @@ namespace Challenge2.Rx
         {
             base.OnLoad(e);
 
-            EnableStartStop();
-            DisableReset();
-            DisableHold();
+            //EnableStartStop();
+            //DisableReset();
+            //DisableHold();
             Display("00:00:00");
 
             startStopClicked = btnStartStop.GetClicks();
             resetClicked = btnReset.GetClicks();
             holdClicked = btnHold.GetClicks();
+
+            var ssEnabledFalse = startStopClicked
+                .Every(2)
+                .Select(_ => false);
+            var ssEnabledTrue = resetClicked
+                .Select(_ => true);
+            var ssEnabled = ssEnabledFalse
+                .Merge(ssEnabledTrue)
+                .StartWith(true);
+
+            var resetEnabledTrue = startStopClicked
+                .Every(2)
+                .Select(_ => true);
+            var resetEnabledFalse = resetClicked
+                .Select(_ => false);
+            var resetEnabled = resetEnabledTrue
+                .Merge(resetEnabledFalse)
+                .StartWith(false);
 
             var holdEnabled = startStopClicked
                 .Toggle(false);
@@ -49,6 +67,8 @@ namespace Challenge2.Rx
                 .WhenTrue(StartTimer)
                 .Select(value => value.ToString("hh\\:mm\\:ss"));
 
+            btnStartStop.SetEnabled(ssEnabled);
+            btnReset.SetEnabled(resetEnabled);
             btnHold.SetEnabled(holdEnabled);
 
             lblClock.SetText(timer);

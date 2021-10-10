@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\ControlExtensions.cs" />
-    <Compile Include="Helpers\Extensions.cs" />
+    <Compile Include="Helpers\ObservableExtensions.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -4,7 +4,7 @@ using System.Reactive.Linq;
 
 namespace Challenge2.Rx.Helpers
 {
-    public static class Extensions
+    public static class ObservableExtensions
     {
         public static IObservable<Unit> AsUnit<T>(this IObservable<T> source) =>
             source.Select(_ => Unit.Default);
@@ -19,9 +19,12 @@ namespace Challenge2.Rx.Helpers
         /// <param name="startValue">The starting value for the boolean flag.</param>
         /// <returns>A stream of T/F/T (or F/T/F) values with the same timing as the incoming events.</returns>
         public static IObservable<bool> Toggle<T>(this IObservable<T> source, bool startValue) =>
-            source.Scan(startValue, (it, _) => !it).StartWith(startValue);
+            source.Scan(startValue, (value, _) => !value).StartWith(startValue);
 
         public static IObservable<T> WhenTrue<T>(this IObservable<bool> source, Func<IObservable<T>> newSource) =>
             source.SelectSwitch(flag => flag ? newSource.Invoke() : Observable.Never<T>());
+
+        public static IObservable<Unit> Every<T>(this IObservable<T> source, int count) =>
+            source.Scan(0, (value, _) => value + 1).Where(value => value % count == 0).AsUnit();
     }
 }
