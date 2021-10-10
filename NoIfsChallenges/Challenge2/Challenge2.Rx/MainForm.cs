@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Reactive;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Windows.Forms;
 using Challenge2.Rx.Helpers;
@@ -13,33 +12,18 @@ namespace Challenge2.Rx
         public MainForm()
         {
             InitializeComponent();
-
-            var scheduler = new ControlScheduler(this);
-
-            var startStopClicked = GetClicks(btnStartStop).AsUnit();
-            var resetClicked = GetClicks(btnReset).AsUnit();
-            var holdClicked = GetClicks(btnHold).AsUnit();
-
-            holdEnabled = startStopClicked.Toggle(false);
-
-            var timer = Observable
-                .Interval(TimeSpan.FromSeconds(1))
-                .Publish()
-                .RefCount();
-            var timerValue = startStopClicked
-                .Toggle(false)
-                .Do(enabled => Console.WriteLine($"Enabled: {enabled}"))
-                .Scan(0, (oldValue, enabled) => enabled ? oldValue + 1 : oldValue)
-                .StartWith(0)
-                .Do(value => Console.WriteLine($"Current value: {value}"))
-                .Select(value => TimeSpan.FromSeconds(value).ToString("hh\\:mm\\:ss"));
-            var timerShouldUpdate = holdClicked.Toggle(true);
-            timerDisplay = from _ in timer
-                           from value in timerValue
-                           from active in timerShouldUpdate
-                           where active
-                           select value;
         }
+
+        public void EnableStartStop() => Enable(btnStartStop);
+        public void DisableStartStop() => Disable(btnStartStop);
+
+        public void EnableReset() => Enable(btnReset);
+        public void DisableReset() => Disable(btnReset);
+
+        public void EnableHold() => Enable(btnHold);
+        public void DisableHold() => Disable(btnHold);
+
+        public void Display(string text) => lblClock.Text = text;
 
         //
 
@@ -47,44 +31,43 @@ namespace Challenge2.Rx
         {
             base.OnLoad(e);
 
-            holdEnabled
-                .ObserveOn(this)
-                .Subscribe(value => SetEnabled(btnHold, value));
+            EnableStartStop();
+            DisableReset();
+            DisableHold();
+            Display("00:00:00");
 
-            timerDisplay
-                .ObserveOn(this)
-                .Subscribe(value => lblClock.Text = value);
+            startStopClicked = btnStartStop.GetClicks();
+            resetClicked = btnReset.GetClicks();
+            holdClicked = btnHold.GetClicks();
 
-            //// right now, this starts a new timer every time the Start/Stop button is clicked
-            //startStopClicked
-            //    .SelectSwitch(_ => GetTimer())
-            //    .StartWith(0)
-            //    .Select(it => TimeSpan.FromSeconds(it))
-            //    .ObserveOn(this)
-            //    .Subscribe(ts => lblClock.Text = ts.ToString(@"hh\:mm\:ss"));
+            var btnHoldEnabled = startStopClicked
+                .Toggle(false);
+
+            // timer
+            startStopClicked
+                .Toggle(false)
+                .SelectSwitch(running => running ? Observable.Interval(TimeSpan.FromSeconds(1)) : Observable.Never<long>())
+                .Select(value => TimeSpan.FromSeconds(value + 1))
+                .Select(value => value.ToString("hh\\:mm\\:ss"))
+                .SetText(lblClock);
+
+            btnHoldEnabled.SetEnabled(btnHold);
         }
 
         //
 
-        private readonly IObservable<bool> holdEnabled;
+        private IObservable<Unit> startStopClicked, resetClicked, holdClicked;
 
-        private readonly IObservable<string> timerDisplay;
-
-        private static IObservable<EventPattern<EventArgs>> GetClicks(Control control) =>
-            Observable.FromEventPattern<EventHandler, EventArgs>(h => control.Click += h, h => control.Click -= h);
-
-        private static void SetEnabled(Control btn, bool value)
+        private static void Enable(Control control)
         {
-            if (value)
-            {
-                btn.Enabled = true;
-                btn.BackColor = Color.Lime;
-            }
-            else
-            {
-                btn.Enabled = false;
-                btn.BackColor = SystemColors.Control;
-            }
+            control.Enabled = true;
+            control.BackColor = Color.Lime;
+        }
+
+        private static void Disable(Control control)
+        {
+            control.Enabled = false;
+            control.BackColor = SystemColors.Control;
         }
     }
 }
