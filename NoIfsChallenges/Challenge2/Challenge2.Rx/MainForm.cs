@@ -40,21 +40,23 @@ namespace Challenge2.Rx
             resetClicked = btnReset.GetClicks();
             holdClicked = btnHold.GetClicks();
 
-            var btnHoldEnabled = startStopClicked
+            var holdEnabled = startStopClicked
                 .Toggle(false);
 
             // timer
-            startStopClicked
+            var timer = startStopClicked
                 .Toggle(false)
-                .SelectSwitch(running => running ? Observable.Interval(TimeSpan.FromSeconds(1)) : Observable.Never<long>())
-                .Select(value => TimeSpan.FromSeconds(value + 1))
-                .Select(value => value.ToString("hh\\:mm\\:ss"))
-                .SetText(lblClock);
+                .WhenTrue(StartTimer)
+                .Select(value => value.ToString("hh\\:mm\\:ss"));
 
-            btnHoldEnabled.SetEnabled(btnHold);
+            btnHold.SetEnabled(holdEnabled);
+
+            lblClock.SetText(timer);
         }
 
         //
+
+        private static readonly TimeSpan SECOND = TimeSpan.FromSeconds(1);
 
         private IObservable<Unit> startStopClicked, resetClicked, holdClicked;
 
@@ -69,5 +71,8 @@ namespace Challenge2.Rx
             control.Enabled = false;
             control.BackColor = SystemColors.Control;
         }
+
+        private static IObservable<TimeSpan> StartTimer() =>
+            Observable.Interval(SECOND).Select(value => TimeSpan.FromSeconds(value + 1));
     }
 }
