@@ -23,8 +23,5 @@ namespace Challenge2.Rx.Helpers
 
         public static IObservable<T> WhenTrue<T>(this IObservable<bool> source, Func<IObservable<T>> newSource) =>
             source.SelectSwitch(flag => flag ? newSource.Invoke() : Observable.Never<T>());
-
-        public static IObservable<Unit> Every<T>(this IObservable<T> source, int count) =>
-            source.Scan(0, (value, _) => value + 1).Where(value => value % count == 0).AsUnit();
     }
 }
