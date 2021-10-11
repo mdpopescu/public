@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Forms;
@@ -14,34 +13,18 @@ namespace Challenge2.Rx
             InitializeComponent();
         }
 
-        public void EnableStartStop() => Enable(btnStartStop);
-        public void DisableStartStop() => Disable(btnStartStop);
-
-        public void EnableReset() => Enable(btnReset);
-        public void DisableReset() => Disable(btnReset);
-
-        public void EnableHold() => Enable(btnHold);
-        public void DisableHold() => Disable(btnHold);
-
-        public void Display(string text) => lblClock.Text = text;
-
         //
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-            //EnableStartStop();
-            //DisableReset();
-            //DisableHold();
-            Display("00:00:00");
-
             startStopClicked = btnStartStop.GetClicks();
             resetClicked = btnReset.GetClicks();
             holdClicked = btnHold.GetClicks();
 
             var ssEnabledFalse = startStopClicked
-                .Every(2)
+                .Buffer(2)
                 .Select(_ => false);
             var ssEnabledTrue = resetClicked
                 .Select(_ => true);
@@ -50,7 +33,7 @@ namespace Challenge2.Rx
                 .StartWith(true);
 
             var resetEnabledTrue = startStopClicked
-                .Every(2)
+                .Buffer(2)
                 .Select(_ => true);
             var resetEnabledFalse = resetClicked
                 .Select(_ => false);
@@ -65,7 +48,8 @@ namespace Challenge2.Rx
             var timer = startStopClicked
                 .Toggle(false)
                 .WhenTrue(StartTimer)
-                .Select(value => value.ToString("hh\\:mm\\:ss"));
+                .Select(value => value.ToString("hh\\:mm\\:ss"))
+                .StartWith("00:00:00");
 
             btnStartStop.SetEnabled(ssEnabled);
             btnReset.SetEnabled(resetEnabled);
@@ -79,18 +63,6 @@ namespace Challenge2.Rx
         private static readonly TimeSpan SECOND = TimeSpan.FromSeconds(1);
 
         private IObservable<Unit> startStopClicked, resetClicked, holdClicked;
-
-        private static void Enable(Control control)
-        {
-            control.Enabled = true;
-            control.BackColor = Color.Lime;
-        }
-
-        private static void Disable(Control control)
-        {
-            control.Enabled = false;
-            control.BackColor = SystemColors.Control;
-        }
 
         private static IObservable<TimeSpan> StartTimer() =>
             Observable.Interval(SECOND).Select(value => TimeSpan.FromSeconds(value + 1));
