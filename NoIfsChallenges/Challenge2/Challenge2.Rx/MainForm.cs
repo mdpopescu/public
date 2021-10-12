@@ -19,9 +19,9 @@ namespace Challenge2.Rx
         {
             base.OnLoad(e);
 
-            startStopClicked = btnStartStop.GetClicks();
-            resetClicked = btnReset.GetClicks();
-            holdClicked = btnHold.GetClicks();
+            var startStopClicked = btnStartStop.GetClicks();
+            var resetClicked = btnReset.GetClicks();
+            var holdClicked = btnHold.GetClicks();
 
             var ssEnabledFalse = startStopClicked
                 .Buffer(2)
@@ -44,35 +44,37 @@ namespace Challenge2.Rx
             var holdEnabled = startStopClicked
                 .Toggle(false);
 
-            // TODO: if I hit STOP when HOLD is in effect, HOLD remains "stuck" until clicked again; it needs to restart
-            var shouldDisplay = holdClicked
-                .Toggle(true);
-
-            // timer
             var timer = startStopClicked
                 .Toggle(false)
-                .WhenTrue(StartTimer)
-                .Select(value => value.ToString("hh\\:mm\\:ss"))
-                .StartWith("00:00:00");
+                .WhenTrue(StartTimer);
 
-            var timerDisplay = timer
-                .CombineLatest(shouldDisplay, Tuple.Create)
+            var clearHold = resetClicked
+                .AsUnit()
+                .StartWith(Unit.Default);
+            var shouldDisplay = clearHold
+                .SelectSwitch(_ => holdClicked.Toggle(true));
+
+            var timerUpdate = timer
+                .CombineLatest(shouldDisplay)
                 .Where(it => it.Item2)
                 .Select(it => it.Item1);
+            var timerReset = resetClicked
+                .Select(_ => TimeSpan.Zero);
+            var timerDisplay = timerUpdate
+                .Merge(timerReset)
+                .Select(value => value.ToString("hh\\:mm\\:ss"))
+                .StartWith("00:00:00");
 
             btnStartStop.SetEnabled(ssEnabled);
             btnReset.SetEnabled(resetEnabled);
             btnHold.SetEnabled(holdEnabled);
 
-            // TODO: reset the timer when RESET is clicked
             lblClock.SetText(timerDisplay);
         }
 
         //
 
         private static readonly TimeSpan SECOND = TimeSpan.FromSeconds(1);
-
-        private IObservable<Unit> startStopClicked, resetClicked, holdClicked;
 
         private static IObservable<TimeSpan> StartTimer() =>
             Observable.Interval(SECOND).Select(value => TimeSpan.FromSeconds(value + 1));
