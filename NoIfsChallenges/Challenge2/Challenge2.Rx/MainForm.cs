@@ -44,25 +44,26 @@ namespace Challenge2.Rx
             var holdEnabled = startStopClicked
                 .Toggle(false);
 
+            var timer = startStopClicked
+                .Toggle(false)
+                .WhenTrue(StartTimer);
+
             var clearHold = resetClicked
                 .AsUnit()
                 .StartWith(Unit.Default);
             var shouldDisplay = clearHold
                 .SelectSwitch(_ => holdClicked.Toggle(true));
 
-            var timer = startStopClicked
-                .Toggle(false)
-                .WhenTrue(StartTimer)
+            var timerUpdate = timer
+                .CombineLatest(shouldDisplay)
+                .Where(it => it.Item2)
+                .Select(it => it.Item1);
+            var timerReset = resetClicked
+                .Select(_ => TimeSpan.Zero);
+            var timerDisplay = timerUpdate
+                .Merge(timerReset)
                 .Select(value => value.ToString("hh\\:mm\\:ss"))
                 .StartWith("00:00:00");
-
-            var timerUpdate = timer
-                .CombineLatest(shouldDisplay, (value, enabled) => (value, enabled))
-                .Where(it => it.enabled)
-                .Select(it => it.value);
-            var timerReset = resetClicked
-                .Select(_ => "00:00:00");
-            var timerDisplay = timerUpdate.Merge(timerReset);
 
             btnStartStop.SetEnabled(ssEnabled);
             btnReset.SetEnabled(resetEnabled);
