@@ -19,9 +19,9 @@ namespace Challenge2.Rx
         {
             base.OnLoad(e);
 
-            startStopClicked = btnStartStop.GetClicks();
-            resetClicked = btnReset.GetClicks();
-            holdClicked = btnHold.GetClicks();
+            var startStopClicked = btnStartStop.GetClicks();
+            var resetClicked = btnReset.GetClicks();
+            var holdClicked = btnHold.GetClicks();
 
             var ssEnabledFalse = startStopClicked
                 .Buffer(2)
@@ -44,8 +44,11 @@ namespace Challenge2.Rx
             var holdEnabled = startStopClicked
                 .Toggle(false);
 
-            var shouldDisplay = holdClicked
-                .Toggle(true);
+            var clearHold = resetClicked
+                .AsUnit()
+                .StartWith(Unit.Default);
+            var shouldDisplay = clearHold
+                .SelectSwitch(_ => holdClicked.Toggle(true));
 
             var timer = startStopClicked
                 .Toggle(false)
@@ -54,9 +57,9 @@ namespace Challenge2.Rx
                 .StartWith("00:00:00");
 
             var timerUpdate = timer
-                .CombineLatest(shouldDisplay, Tuple.Create)
-                .Where(it => it.Item2)
-                .Select(it => it.Item1);
+                .CombineLatest(shouldDisplay, (value, enabled) => (value, enabled))
+                .Where(it => it.enabled)
+                .Select(it => it.value);
             var timerReset = resetClicked
                 .Select(_ => "00:00:00");
             var timerDisplay = timerUpdate.Merge(timerReset);
@@ -71,8 +74,6 @@ namespace Challenge2.Rx
         //
 
         private static readonly TimeSpan SECOND = TimeSpan.FromSeconds(1);
-
-        private IObservable<Unit> startStopClicked, resetClicked, holdClicked;
 
         private static IObservable<TimeSpan> StartTimer() =>
             Observable.Interval(SECOND).Select(value => TimeSpan.FromSeconds(value + 1));
