@@ -15,9 +15,9 @@ namespace Messaging.Library.Contracts
         Guid? CategoryId { get; }
 
         /// <summary>
-        ///     Optionally, messages can be replies to other messages.
+        ///     Optionally, messages can be related to other messages.
         /// </summary>
-        Guid? InReplyTo { get; }
+        Guid? RefId { get; }
 
         /// <summary>
         ///     Messages can be versioned.

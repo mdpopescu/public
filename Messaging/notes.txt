@@ -2,4 +2,4 @@ Messaging framework for distributed applications (client-server, peer-to-peer)
 
 Ideas: UDP, NATS, MSMQ, NetMQ, Amazon SQS, Azure Queue Storage
 
-Start by implemented an in-memory (bounded) message queue.
+Start by implementing an in-memory, bounded, thread-safe message queue.
