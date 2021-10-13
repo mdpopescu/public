@@ -2,6 +2,7 @@
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Messaging.Library.Contracts;
+using Messaging.Library.Helpers;
 using Messaging.Library.Models;
 
 namespace Messaging.Library.Services
@@ -43,18 +44,11 @@ namespace Messaging.Library.Services
 
         private IMessage? SafeDeserialize(TTransport serialized)
         {
-            try
-            {
-                var result = serializer.Deserialize(serialized);
-                if (result == null)
-                    AddError(serialized?.ToString());
-                return result;
-            }
-            catch
-            {
+            var result = Safe.Call(() => serializer.Deserialize(serialized));
+            if (result == null)
                 AddError(serialized?.ToString());
-                return null;
-            }
+
+            return result;
         }
 
         private void AddError(string? additionalInfo)
