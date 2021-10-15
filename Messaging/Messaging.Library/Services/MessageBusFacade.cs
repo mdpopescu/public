@@ -9,40 +9,41 @@ namespace Messaging.Library.Services
 {
     public class MessageBusFacade<TTransport> : IMessageBusFacade
     {
+        public IObservable<MessageBase> Messages { get; }
+        public IObservable<ErrorMessage> Errors { get; }
+
         public MessageBusFacade(IMessageSerializer<TTransport> serializer, IPubSub<TTransport> comms)
         {
             this.serializer = serializer;
             this.comms = comms;
 
-            errorsSubject = new Subject<IErrorMessage>();
+            errorsSubject = new Subject<ErrorMessage>();
 
-            IObservable<IMessage> InternalGetMessages() => comms.Messages.Select(SafeDeserialize).Where(it => it != null).Publish().RefCount()!;
-            IObservable<IErrorMessage> InternalGetErrors() => GetMessages().OfType<IErrorMessage>().Merge(errorsSubject.AsObservable());
-
-            messages = new Lazy<IObservable<IMessage>>(InternalGetMessages);
-            errors = new Lazy<IObservable<IErrorMessage>>(InternalGetErrors);
+            Messages = comms
+                .Messages
+                .Select(SafeDeserialize)
+                .Where(it => it != null)
+                .Publish()
+                .RefCount()!;
+            Errors = Messages
+                .OfType<ErrorMessage>()
+                .Merge(errorsSubject.AsObservable());
         }
 
-        public void Publish(IMessage message)
+        public void Publish(MessageBase message)
         {
             var serialized = serializer.Serialize(message);
             comms.Publish(serialized);
         }
-
-        public IObservable<IMessage> GetMessages() => messages.Value;
-        public IObservable<IErrorMessage> GetErrors() => errors.Value;
 
         //
 
         private readonly IMessageSerializer<TTransport> serializer;
         private readonly IPubSub<TTransport> comms;
 
-        private readonly ISubject<IErrorMessage> errorsSubject;
+        private readonly ISubject<ErrorMessage> errorsSubject;
 
-        private readonly Lazy<IObservable<IMessage>> messages;
-        private readonly Lazy<IObservable<IErrorMessage>> errors;
-
-        private IMessage? SafeDeserialize(TTransport serialized)
+        private MessageBase? SafeDeserialize(TTransport serialized)
         {
             var result = Safe.Call(() => serializer.Deserialize(serialized));
             if (result == null)

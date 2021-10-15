@@ -1,29 +1,36 @@
 ﻿using System;
-using Messaging.Library.Contracts;
 
 namespace Messaging.Library.Models
 {
-    public abstract class MessageBase : IMessage
+    public abstract class MessageBase
     {
-        /// <inheritdoc />
+        /// <summary>
+        ///     Id uniquely identifying this message.
+        /// </summary>
         public Guid Id { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Optionally, messages can be grouped into categories.
+        /// </summary>
         public Guid? CategoryId { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Optionally, messages can be related to other messages.
+        /// </summary>
         public Guid? RefId { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Messages can be versioned.
+        /// </summary>
         public int Version { get; }
 
         //
 
-        protected MessageBase(Guid id, Guid? categoryId, Guid? inReplyTo, int version)
+        protected MessageBase(Guid id, Guid? categoryId, Guid? refId, int version)
         {
             Id = id;
             CategoryId = categoryId;
-            RefId = inReplyTo;
+            RefId = refId;
             Version = version;
         }
     }

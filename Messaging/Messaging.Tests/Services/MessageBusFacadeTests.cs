@@ -18,8 +18,12 @@ namespace Messaging.Tests.Services
 
         private readonly MessageBusFacade<string> sut;
 
+        private readonly Subject<string> bus = new();
+
         public MessageBusFacadeTests()
         {
+            comms.Setup(it => it.Messages).Returns(bus);
+
             sut = new MessageBusFacade<string>(serializer.Object, comms.Object);
         }
 
@@ -52,18 +56,12 @@ namespace Messaging.Tests.Services
         [TestClass]
         public class GetMessages : MessageBusFacadeTests
         {
-            private readonly Subject<string> bus = new();
-            private readonly List<IMessage> incoming = new();
-
-            public GetMessages()
-            {
-                comms.Setup(it => it.Messages).Returns(bus);
-            }
+            private readonly List<MessageBase> incoming = new();
 
             [TestMethod("1. Detects incoming messages")]
             public void Test1()
             {
-                using var subscription = sut.GetMessages().Subscribe(incoming.Add);
+                using var subscription = sut.Messages.Subscribe(incoming.Add);
                 var message = new TestMessage(Guid.NewGuid(), null, null, 0);
                 serializer.Setup(it => it.Deserialize(It.IsAny<string>())).Returns(message);
 
@@ -75,7 +73,7 @@ namespace Messaging.Tests.Services
             [TestMethod("2. Deserializes the incoming messages")]
             public void Test2()
             {
-                using var subscription = sut.GetMessages().Subscribe(incoming.Add);
+                using var subscription = sut.Messages.Subscribe(incoming.Add);
                 var serialized = AutoFaker.Generate<string>();
                 var message = new TestMessage(Guid.NewGuid(), null, null, 0);
                 serializer.Setup(it => it.Deserialize(serialized)).Returns(message);
@@ -89,7 +87,7 @@ namespace Messaging.Tests.Services
             [TestMethod("3A. Ignores serialization failures - throwing")]
             public void Test3A()
             {
-                using var subscription = sut.GetMessages().Subscribe(incoming.Add);
+                using var subscription = sut.Messages.Subscribe(incoming.Add);
                 var serialized = AutoFaker.Generate<string>();
                 serializer.Setup(it => it.Deserialize(serialized)).Throws<Exception>();
 
@@ -101,9 +99,9 @@ namespace Messaging.Tests.Services
             [TestMethod("3B. Ignores serialization failures - null")]
             public void Test3B()
             {
-                using var subscription = sut.GetMessages().Subscribe(incoming.Add);
+                using var subscription = sut.Messages.Subscribe(incoming.Add);
                 var serialized = AutoFaker.Generate<string>();
-                serializer.Setup(it => it.Deserialize(serialized)).Returns((IMessage)null!);
+                serializer.Setup(it => it.Deserialize(serialized)).Returns((MessageBase)null!);
 
                 bus.OnNext(serialized);
 
@@ -114,18 +112,12 @@ namespace Messaging.Tests.Services
         [TestClass]
         public class GetErrors : MessageBusFacadeTests
         {
-            private readonly Subject<string> bus = new();
-            private readonly List<IErrorMessage> incoming = new();
-
-            public GetErrors()
-            {
-                comms.Setup(it => it.Messages).Returns(bus);
-            }
+            private readonly List<ErrorMessage> incoming = new();
 
             [TestMethod("1. Returns serialization failures - throwing")]
             public void Test1()
             {
-                using var subscription = sut.GetErrors().Subscribe(incoming.Add);
+                using var subscription = sut.Errors.Subscribe(incoming.Add);
                 var serialized = AutoFaker.Generate<string>();
                 serializer.Setup(it => it.Deserialize(serialized)).Throws<Exception>();
 
@@ -139,9 +131,9 @@ namespace Messaging.Tests.Services
             [TestMethod("2. Returns serialization failures - null")]
             public void Test2()
             {
-                using var subscription = sut.GetErrors().Subscribe(incoming.Add);
+                using var subscription = sut.Errors.Subscribe(incoming.Add);
                 var serialized = AutoFaker.Generate<string>();
-                serializer.Setup(it => it.Deserialize(serialized)).Returns((IMessage)null!);
+                serializer.Setup(it => it.Deserialize(serialized)).Returns((MessageBase)null!);
 
                 bus.OnNext(serialized);
 
@@ -153,7 +145,7 @@ namespace Messaging.Tests.Services
             [TestMethod("3. Returns incoming errors")]
             public void Test3()
             {
-                using var subscription = sut.GetErrors().Subscribe(incoming.Add);
+                using var subscription = sut.Errors.Subscribe(incoming.Add);
                 var serialized = AutoFaker.Generate<string>();
                 var description = AutoFaker.Generate<string>();
                 var additionalInfo = AutoFaker.Generate<string>();
@@ -172,8 +164,8 @@ namespace Messaging.Tests.Services
 
         private class TestMessage : MessageBase
         {
-            public TestMessage(Guid id, Guid? categoryId, Guid? inReplyTo, int version)
-                : base(id, categoryId, inReplyTo, version)
+            public TestMessage(Guid id, Guid? categoryId, Guid? refId, int version)
+                : base(id, categoryId, refId, version)
             {
             }
         }
