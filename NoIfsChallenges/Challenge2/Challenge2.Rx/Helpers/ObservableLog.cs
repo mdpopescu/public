@@ -10,28 +10,8 @@ namespace Challenge2.Rx.Helpers
         public static Action<string> Log { get; } = Console.WriteLine;
         public static int Outstanding { get; private set; }
 
-        public static IObservable<T> Create<T>(string name, Func<IObservable<T>> constructor) => Observable
-            .Create<T>(observer => CreateSubscription(name, observer, constructor.Invoke()));
-
-        private static Action CreateSubscription<T>(string name, IObserver<T> observer, IObservable<T> source)
-        {
-            name = GetActualName(name);
-
-            AddEvent(name, EventType.CREATE);
-            Outstanding++;
-            Log($"{name} subscribed, Outstanding = {Outstanding}.");
-
-            var subscription = source.LogSubscribe(name, observer);
-
-            return () =>
-            {
-                subscription.Dispose();
-
-                AddEvent(name, EventType.RELEASE);
-                Outstanding--;
-                Log($"{name} unsubscribed, Outstanding = {Outstanding}.");
-            };
-        }
+        public static IObservable<T> CreateLog<T>(this IObservable<T> source, string name) => Observable
+            .Create<T>(observer => CreateSubscription(name, observer, source));
 
         public static string[] GetTimeline()
         {
@@ -62,20 +42,38 @@ namespace Challenge2.Rx.Helpers
         private static readonly List<string> SOURCES = new List<string>();
         private static readonly List<Event> EVENTS = new List<Event>();
 
+        private static Action CreateSubscription<T>(string name, IObserver<T> observer, IObservable<T> source)
+        {
+            name = GetActualName(name);
+
+            AddEvent(name, EventType.CREATE);
+            Outstanding++;
+            Log($"{name} subscribed, Outstanding = {Outstanding}.");
+
+            var subscription = source.LogSubscribe(name, observer);
+
+            return () =>
+            {
+                subscription.Dispose();
+
+                AddEvent(name, EventType.RELEASE);
+                Outstanding--;
+                Log($"{name} unsubscribed, Outstanding = {Outstanding}.");
+            };
+        }
+
         private static string GetActualName(string name)
         {
-            var index = SOURCES.Count;
             var suffix = 0;
             var actualName = name;
 
             while (SOURCES.Contains(actualName))
             {
-                index = SOURCES.IndexOf(actualName) + 1;
                 suffix++;
                 actualName = $"{name}-{suffix}";
             }
 
-            SOURCES.Insert(index, actualName);
+            SOURCES.Add(actualName);
             return actualName;
         }
 
