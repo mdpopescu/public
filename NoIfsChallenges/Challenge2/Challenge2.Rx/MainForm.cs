@@ -20,41 +20,40 @@ namespace Challenge2.Rx
         {
             base.OnLoad(e);
 
-            var startStopClicked = btnStartStop.GetClicks();
-            var resetClicked = btnReset.GetClicks();
-            var holdClicked = btnHold.GetClicks();
+            var startStopClicked = ObservableLog.Create("startStopClicked", btnStartStop.GetClicks());
+            var resetClicked = ObservableLog.Create("resetClicked", btnReset.GetClicks());
+            var holdClicked = ObservableLog.Create("holdClicked", btnHold.GetClicks());
 
-            var ssEnabledFalse = startStopClicked.Buffer(2).AsConst(false);
-            var ssEnabledTrue = resetClicked.AsConst(true);
-            var ssEnabled = ssEnabledFalse.Merge(ssEnabledTrue).StartWith(true);
+            var ssEnabledFalse = ObservableLog.Create("ssEnabledFalse", startStopClicked.Buffer(2).AsConst(false));
+            var ssEnabledTrue = ObservableLog.Create("ssEnabledTrue", resetClicked.AsConst(true));
+            var ssEnabled = ObservableLog.Create("ssEnabled", ssEnabledFalse.Merge(ssEnabledTrue).StartWith(true));
 
-            var resetEnabledTrue = startStopClicked.Buffer(2).AsConst(true);
-            var resetEnabledFalse = resetClicked.AsConst(false);
-            var resetEnabled = resetEnabledTrue.Merge(resetEnabledFalse).StartWith(false);
+            var resetEnabledTrue = ObservableLog.Create("resetEnabledTrue", startStopClicked.Buffer(2).AsConst(true));
+            var resetEnabledFalse = ObservableLog.Create("resetEnabledFalse", resetClicked.AsConst(false));
+            var resetEnabled = ObservableLog.Create("resetEnabled", resetEnabledTrue.Merge(resetEnabledFalse).StartWith(false));
 
-            var holdEnabled = startStopClicked.Toggle(false);
+            var holdEnabled = ObservableLog.Create("holdEnabled", startStopClicked.Toggle(false));
+            var clearHold = ObservableLog.Create("clearHold", resetClicked.AsUnit().StartWith(Unit.Default));
+            var shouldDisplay = ObservableLog.Create("shouldDisplay", clearHold.SwitchMap(_ => holdClicked.Toggle(true)).Share());
 
-            var timer = startStopClicked.Toggle(false).WhenTrue(StartTimer);
-
-            var clearHold = resetClicked.AsUnit().StartWith(Unit.Default);
-            var shouldDisplay = clearHold.SwitchMap(_ => holdClicked.Toggle(true)).Share();
-
-            var timerUpdate = timer
-                .CombineLatest(shouldDisplay)
-                .Where(it => it.Item2)
-                .Select(it => it.Item1);
-            var timerReset = resetClicked
-                .Select(_ => TimeSpan.Zero);
-            var timerDisplay = timerUpdate
-                .Merge(timerReset)
-                .Select(value => value.ToString("hh\\:mm\\:ss"))
-                .StartWith("00:00:00");
+            var timer = ObservableLog.Create("timer", startStopClicked.Toggle(false).WhenTrue(StartTimer));
+            var timerUpdate = ObservableLog.Create("timerUpdate", timer.CombineLatest(shouldDisplay).Where(it => it.Item2).Select(it => it.Item1));
+            var timerReset = ObservableLog.Create("timerReset", resetClicked.Select(_ => TimeSpan.Zero));
+            var timerDisplay = ObservableLog.Create("timerDisplay", timerUpdate.Merge(timerReset).Select(value => value.ToString()));
 
             btnStartStop.HandleChanges(ssEnabled, InternalSetEnabled);
             btnReset.HandleChanges(resetEnabled, InternalSetEnabled);
             btnHold.HandleChanges(holdEnabled, InternalSetEnabled);
 
             lblClock.HandleChanges(timerDisplay, InternalSetText);
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            var timeline = string.Join(Environment.NewLine, ObservableLog.GetTimeline());
+            Console.WriteLine(timeline);
+
+            base.OnFormClosed(e);
         }
 
         //
