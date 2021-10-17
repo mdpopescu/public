@@ -10,40 +10,18 @@ namespace Challenge2.Rx.Helpers
         public static Action<string> Log { get; } = Console.WriteLine;
         public static int Outstanding { get; private set; }
 
-        public static IObservable<T> Create<T>(string name, Func<IObservable<T>> constructor)
-        {
-            var actualName = GetActualName(name);
-
-            return Observable
-                .Create<T>(observer => CreateSubscription(actualName, observer, constructor.Invoke()))
-                .Share();
-        }
+        public static IObservable<T> Create<T>(string name, Func<IObservable<T>> constructor) => Observable
+            .Create<T>(observer => CreateSubscription(name, observer, constructor.Invoke()));
 
         private static Action CreateSubscription<T>(string name, IObserver<T> observer, IObservable<T> source)
         {
+            name = GetActualName(name);
+
             AddEvent(name, EventType.CREATE);
             Outstanding++;
             Log($"{name} subscribed, Outstanding = {Outstanding}.");
 
-            var subscription = source.Subscribe(
-                value =>
-                {
-                    AddEvent(name, EventType.REGULAR);
-                    observer.OnNext(value);
-                },
-                ex =>
-                {
-                    AddEvent(name, EventType.ERROR);
-                    Log($"{name} error: {ex.Message}");
-                    observer.OnError(ex);
-                },
-                () =>
-                {
-                    AddEvent(name, EventType.COMPLETE);
-                    Log($"{name} completed.");
-                    observer.OnCompleted();
-                }
-            );
+            var subscription = source.LogSubscribe(name, observer);
 
             return () =>
             {
@@ -100,6 +78,27 @@ namespace Challenge2.Rx.Helpers
             SOURCES.Insert(index, actualName);
             return actualName;
         }
+
+        private static IDisposable LogSubscribe<T>(this IObservable<T> source, string name, IObserver<T> observer) => source
+            .Subscribe(
+                value =>
+                {
+                    AddEvent(name, EventType.REGULAR);
+                    observer.OnNext(value);
+                },
+                ex =>
+                {
+                    Log($"{name} error: {ex.Message}");
+                    AddEvent(name, EventType.ERROR);
+                    observer.OnError(ex);
+                },
+                () =>
+                {
+                    Log($"{name} completed.");
+                    AddEvent(name, EventType.COMPLETE);
+                    observer.OnCompleted();
+                }
+            );
 
         private static void AddEvent(string source, EventType eventType) =>
             EVENTS.Add(new Event(source, eventType));

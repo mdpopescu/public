@@ -17,15 +17,15 @@ namespace Challenge2.Rx.Helpers
 
         // return all events, preserving the order
         public static IObservable<U> ConcatMap<T, U>(this IObservable<T> source, Func<T, IObservable<U>> selector) =>
-            source.Select(selector).Concat().Share();
+            source.Select(selector).Concat();
 
         // return all events without preserving the order
         public static IObservable<U> MergeMap<T, U>(this IObservable<T> source, Func<T, IObservable<U>> selector) =>
-            source.Select(selector).Merge().Share();
+            source.Select(selector).Merge();
 
         // only return the events from the most recent stream
         public static IObservable<U> SwitchMap<T, U>(this IObservable<T> source, Func<T, IObservable<U>> selector) =>
-            source.Select(selector).Switch().Share();
+            source.Select(selector).Switch();
 
         /// <summary>
         ///     Inverts the value of a boolean on each incoming event.
