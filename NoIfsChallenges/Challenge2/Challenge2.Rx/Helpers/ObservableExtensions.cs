@@ -22,7 +22,7 @@ namespace Challenge2.Rx.Helpers
             source.Scan(startValue, (value, _) => !value).StartWith(startValue);
 
         public static IObservable<T> WhenTrue<T>(this IObservable<bool> source, Func<IObservable<T>> newSource) =>
-            source.SelectSwitch(flag => flag ? newSource.Invoke() : Observable.Never<T>());
+            source.SelectSwitch(flag => flag ? newSource.Invoke().Publish().RefCount() : Observable.Never<T>());
 
         public static IObservable<Tuple<T1, T2>> CombineLatest<T1, T2>(this IObservable<T1> source1, IObservable<T2> source2) =>
             source1.CombineLatest(source2, Tuple.Create);
