@@ -10,45 +10,50 @@ namespace Challenge2.Rx.Helpers
         public static Action<string> Log { get; } = Console.WriteLine;
         public static int Outstanding { get; private set; }
 
-        public static IObservable<T> Create<T>(string name, Func<IObservable<T>> constructor) => Observable
-            .Create<T>(
-                observer =>
+        public static IObservable<T> Create<T>(string name, Func<IObservable<T>> constructor)
+        {
+            var actualName = GetActualName(name);
+
+            return Observable
+                .Create<T>(observer => CreateSubscription(actualName, observer, constructor.Invoke()))
+                .Share();
+        }
+
+        private static Action CreateSubscription<T>(string name, IObserver<T> observer, IObservable<T> source)
+        {
+            AddEvent(name, EventType.CREATE);
+            Outstanding++;
+            Log($"{name} subscribed, Outstanding = {Outstanding}.");
+
+            var subscription = source.Subscribe(
+                value =>
                 {
-                    var actualName = GetActualName(name);
-
-                    AddEvent(actualName, EventType.CREATE);
-                    Outstanding++;
-                    Log($"{actualName} subscribed, Outstanding = {Outstanding}.");
-
-                    var source = constructor.Invoke();
-                    var subscription = source.Subscribe(
-                        value =>
-                        {
-                            AddEvent(actualName, EventType.REGULAR);
-                            observer.OnNext(value);
-                        },
-                        ex =>
-                        {
-                            AddEvent(actualName, EventType.ERROR);
-                            Log($"{name} error: {ex.Message}");
-                        },
-                        () =>
-                        {
-                            AddEvent(actualName, EventType.COMPLETE);
-                            Log($"{name} completed.");
-                        }
-                    );
-                    return () =>
-                    {
-                        subscription.Dispose();
-
-                        AddEvent(actualName, EventType.RELEASE);
-                        Outstanding--;
-                        Log($"{actualName} unsubscribed, Outstanding = {Outstanding}.");
-                    };
+                    AddEvent(name, EventType.REGULAR);
+                    observer.OnNext(value);
+                },
+                ex =>
+                {
+                    AddEvent(name, EventType.ERROR);
+                    Log($"{name} error: {ex.Message}");
+                    observer.OnError(ex);
+                },
+                () =>
+                {
+                    AddEvent(name, EventType.COMPLETE);
+                    Log($"{name} completed.");
+                    observer.OnCompleted();
                 }
-            )
-            .Share();
+            );
+
+            return () =>
+            {
+                subscription.Dispose();
+
+                AddEvent(name, EventType.RELEASE);
+                Outstanding--;
+                Log($"{name} unsubscribed, Outstanding = {Outstanding}.");
+            };
+        }
 
         public static string[] GetTimeline()
         {
@@ -107,7 +112,6 @@ namespace Challenge2.Rx.Helpers
         [Flags]
         private enum EventType
         {
-            NONE = 0,
             CREATE = 1,
             RELEASE = 2,
             REGULAR = 4,

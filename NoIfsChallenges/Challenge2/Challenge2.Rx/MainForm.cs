@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Challenge2.Rx.Helpers;
 
