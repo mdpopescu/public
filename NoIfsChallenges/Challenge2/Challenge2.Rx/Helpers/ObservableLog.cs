@@ -10,28 +10,31 @@ namespace Challenge2.Rx.Helpers
         public static Action<string> Log { get; } = Console.WriteLine;
         public static int Outstanding { get; private set; }
 
-        public static IObservable<T> Create<T>(string name, IObservable<T> source) => Observable
+        public static IObservable<T> Create<T>(string name, Func<IObservable<T>> constructor) => Observable
             .Create<T>(
                 observer =>
                 {
-                    AddEvent(name, EventType.CREATE);
-                    Outstanding++;
-                    Log($"{name} subscribed, Outstanding = {Outstanding}.");
+                    var actualName = GetActualName(name);
 
+                    AddEvent(actualName, EventType.CREATE);
+                    Outstanding++;
+                    Log($"{actualName} subscribed, Outstanding = {Outstanding}.");
+
+                    var source = constructor.Invoke();
                     var subscription = source.Subscribe(
                         value =>
                         {
-                            AddEvent(name, EventType.REGULAR);
+                            AddEvent(actualName, EventType.REGULAR);
                             observer.OnNext(value);
                         },
                         ex =>
                         {
-                            AddEvent(name, EventType.ERROR);
+                            AddEvent(actualName, EventType.ERROR);
                             Log($"{name} error: {ex.Message}");
                         },
                         () =>
                         {
-                            AddEvent(name, EventType.COMPLETE);
+                            AddEvent(actualName, EventType.COMPLETE);
                             Log($"{name} completed.");
                         }
                     );
@@ -39,9 +42,9 @@ namespace Challenge2.Rx.Helpers
                     {
                         subscription.Dispose();
 
-                        AddEvent(name, EventType.RELEASE);
+                        AddEvent(actualName, EventType.RELEASE);
                         Outstanding--;
-                        Log($"{name} unsubscribed, Outstanding = {Outstanding}.");
+                        Log($"{actualName} unsubscribed, Outstanding = {Outstanding}.");
                     };
                 }
             )
@@ -55,56 +58,62 @@ namespace Challenge2.Rx.Helpers
             var startAt = moments.First();
             var endAt = moments.Last();
             var intervalCount = (int)Math.Ceiling((endAt - startAt).TotalSeconds / useInterval.TotalSeconds);
-            var sources = EVENTS.Select(it => it.Source).Distinct().ToArray();
-            var matrix = sources.ToDictionary(it => it, _ => CreateArray(intervalCount + 1, '-'));
+            var matrix = SOURCES.ToDictionary(it => it, _ => new int[intervalCount + 1]);
 
             var col = 0;
             for (var time = startAt; time < endAt + useInterval; time += useInterval, col++)
             {
                 var relevant = EVENTS.Where(it => it.Time >= time && it.Time < time + useInterval).ToArray();
                 foreach (var ev in relevant)
-                    matrix[ev.Source][col] = EVENT_TYPE_MAP[ev.EventType];
+                    matrix[ev.Source][col] |= (int)ev.EventType;
             }
 
-            var nameLen = sources.Max(it => it.Length);
-            return sources.Select(name => $"{name.PadRight(nameLen)} {new string(matrix[name])}").ToArray();
+            var nameLen = SOURCES.Max(it => it.Length);
+            return SOURCES.Select(name => $"{name.PadRight(nameLen)} {GetLine(matrix[name])}").ToArray();
         }
 
         //
 
+        private const string MAP = "-^vOX&67|9ABCDEF!HIJKLMNOPQRSTU";
+
+        private static readonly List<string> SOURCES = new List<string>();
         private static readonly List<Event> EVENTS = new List<Event>();
+
+        private static string GetActualName(string name)
+        {
+            var index = SOURCES.Count;
+            var suffix = 0;
+            var actualName = name;
+
+            while (SOURCES.Contains(actualName))
+            {
+                index = SOURCES.IndexOf(actualName) + 1;
+                suffix++;
+                actualName = $"{name}-{suffix}";
+            }
+
+            SOURCES.Insert(index, actualName);
+            return actualName;
+        }
 
         private static void AddEvent(string source, EventType eventType) =>
             EVENTS.Add(new Event(source, eventType));
 
-        private static T[] CreateArray<T>(int count, T value)
-        {
-            var result = new T[count];
-            for (var i = 0; i < count; i++)
-                result[i] = value;
-
-            return result;
-        }
+        private static string GetLine(IEnumerable<int> eventTypes) =>
+            new string(eventTypes.Select(it => MAP[it]).ToArray());
 
         //
 
+        [Flags]
         private enum EventType
         {
-            CREATE,
-            RELEASE,
-            REGULAR,
-            COMPLETE,
-            ERROR,
+            NONE = 0,
+            CREATE = 1,
+            RELEASE = 2,
+            REGULAR = 4,
+            COMPLETE = 8,
+            ERROR = 16,
         }
-
-        private static readonly Dictionary<EventType, char> EVENT_TYPE_MAP = new Dictionary<EventType, char>
-        {
-            { EventType.CREATE, '^' },
-            { EventType.RELEASE, 'v' },
-            { EventType.REGULAR, 'X' },
-            { EventType.COMPLETE, '|' },
-            { EventType.ERROR, '!' },
-        };
 
         private class Event
         {
