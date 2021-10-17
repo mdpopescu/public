@@ -25,22 +25,25 @@ namespace Challenge2.Rx
             var resetClicked = ObservableLog.Create("resetClicked", () => btnReset.GetClicks()).Share();
             var holdClicked = ObservableLog.Create("holdClicked", () => btnHold.GetClicks()).Share();
 
-            var ssEnabledFalse = ObservableLog.Create("ssEnabledFalse", () => startStopClicked.Buffer(2).AsConst(false)).Share();
-            var ssEnabledTrue = ObservableLog.Create("ssEnabledTrue", () => resetClicked.AsConst(true)).Share();
-            var ssEnabled = ObservableLog.Create("ssEnabled", () => ssEnabledFalse.Merge(ssEnabledTrue).StartWith(true)).Share();
+            var stopClicked = ObservableLog.Create("stopClicked", () => startStopClicked.Buffer(2).AsUnit());
 
-            var resetEnabledTrue = ObservableLog.Create("resetEnabledTrue", () => startStopClicked.Buffer(2).AsConst(true)).Share();
-            var resetEnabledFalse = ObservableLog.Create("resetEnabledFalse", () => resetClicked.AsConst(false)).Share();
-            var resetEnabled = ObservableLog.Create("resetEnabled", () => resetEnabledTrue.Merge(resetEnabledFalse).StartWith(false)).Share();
+            var ssEnabledFalse = ObservableLog.Create("ssEnabledFalse", () => stopClicked.AsConst(false));
+            var ssEnabledTrue = ObservableLog.Create("ssEnabledTrue", () => resetClicked.AsConst(true));
+            var ssEnabled = ObservableLog.Create("ssEnabled", () => ssEnabledFalse.Merge(ssEnabledTrue).StartWith(true));
 
-            var holdEnabled = ObservableLog.Create("holdEnabled", () => startStopClicked.Toggle(false)).Share();
-            var clearHold = ObservableLog.Create("clearHold", () => resetClicked.AsUnit().StartWith(Unit.Default)).Share();
-            var shouldDisplay = ObservableLog.Create("shouldDisplay", () => clearHold.SwitchMap(_ => holdClicked.Toggle(true)).Share()).Share();
+            var resetEnabledTrue = ObservableLog.Create("resetEnabledTrue", () => stopClicked.AsConst(true));
+            var resetEnabledFalse = ObservableLog.Create("resetEnabledFalse", () => resetClicked.AsConst(false));
+            var resetEnabled = ObservableLog.Create("resetEnabled", () => resetEnabledTrue.Merge(resetEnabledFalse).StartWith(false));
+
+            var holdEnabled = ObservableLog.Create("holdEnabled", () => startStopClicked.Toggle(false));
+            var clearHold = ObservableLog.Create("clearHold", () => resetClicked.AsUnit().StartWith(Unit.Default));
+            var shouldDisplay = ObservableLog.Create("shouldDisplay", () => clearHold.SwitchMap(_ => holdClicked.Toggle(true)).Share());
 
             var timer = ObservableLog.Create("timer", () => startStopClicked.Toggle(false).WhenTrue(StartTimer)).Share();
-            var timerUpdate = ObservableLog.Create("timerUpdate", () => timer.CombineLatest(shouldDisplay).Where(it => it.Item2).Select(it => it.Item1)).Share();
-            var timerReset = ObservableLog.Create("timerReset", () => resetClicked.Select(_ => TimeSpan.Zero)).Share();
-            var timerDisplay = ObservableLog.Create("timerDisplay", () => timerUpdate.Merge(timerReset).Select(value => value.ToString())).Share();
+
+            var timerUpdate = ObservableLog.Create("timerUpdate", () => timer.CombineLatest(shouldDisplay).Where(it => it.Item2).Select(it => it.Item1));
+            var timerReset = ObservableLog.Create("timerReset", () => resetClicked.Select(_ => TimeSpan.Zero));
+            var timerDisplay = ObservableLog.Create("timerDisplay", () => timerUpdate.Merge(timerReset).Select(value => value.ToString()));
 
             var s1 = btnStartStop.HandleChanges(ssEnabled, InternalSetEnabled);
             var s2 = btnReset.HandleChanges(resetEnabled, InternalSetEnabled);
