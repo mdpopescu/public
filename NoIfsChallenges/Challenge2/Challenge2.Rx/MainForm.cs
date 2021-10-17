@@ -36,20 +36,21 @@ namespace Challenge2.Rx
             var resetEnabled = resetEnabledTrue.Merge(resetEnabledFalse).StartWith(false).CreateLog("resetEnabled");
 
             var holdEnabled = startStopClicked.Toggle(false).CreateLog("holdEnabled");
+
             var clearHold = resetClicked.AsUnit().StartWith(Unit.Default).CreateLog("clearHold");
             var shouldDisplay = clearHold.SwitchMap(_ => holdClicked.Toggle(true)).Share().CreateLog("shouldDisplay");
 
             var timer = startStopClicked.Toggle(false).WhenTrue(() => StartTimer().CreateLog("startTimer").Share()).CreateLog("timer");
 
-            var timerUpdate = timer.CombineLatest(shouldDisplay).Where(it => it.Item2).Select(it => it.Item1).CreateLog("timerUpdate");
+            var timerRunning = timer.CombineLatest(shouldDisplay).Where(it => it.Item2).Select(it => it.Item1).CreateLog("timerRunning");
             var timerReset = resetClicked.Select(_ => TimeSpan.Zero).CreateLog("timerReset");
-            var timerDisplay = timerUpdate.Merge(timerReset).Select(value => value.ToString()).CreateLog("timerDisplay");
+            var displayActive = timerRunning.Merge(timerReset).Select(value => value.ToString()).CreateLog("displayActive");
 
             var s1 = btnStartStop.HandleChanges(ssEnabled, InternalSetEnabled);
             var s2 = btnReset.HandleChanges(resetEnabled, InternalSetEnabled);
             var s3 = btnHold.HandleChanges(holdEnabled, InternalSetEnabled);
 
-            var s4 = lblClock.HandleChanges(timerDisplay, InternalSetText);
+            var s4 = lblClock.HandleChanges(displayActive, InternalSetText);
 
             subscription = new CompositeDisposable(s1, s2, s3, s4);
         }
