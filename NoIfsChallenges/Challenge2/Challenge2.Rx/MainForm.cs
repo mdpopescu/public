@@ -31,6 +31,13 @@ namespace Challenge2.Rx
             var holdClicks = btnHold
                 .GetClicks()
                 .Do(_ => state.Hold());
+            //var ticks = startStopClicks
+            //    .Toggle(false)
+            //    .WhenTrue(() => Observable.Interval(SECOND))
+            //    .AsUnit()
+            //    .Do(_ => state.Tick(SECOND));
+            // this isn't perfect - hitting Start doesn't actually start the timer, so the time
+            // between 00:00:00 and 00:00:01 will usually be less than a second
             var ticks = Observable
                 .Interval(SECOND)
                 .AsUnit()

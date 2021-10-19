@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Linq;
 
 namespace Challenge2.Rx.Models
 {
@@ -9,10 +10,10 @@ namespace Challenge2.Rx.Models
         public bool HoldEnabled { get; private set; }
 
         public TimeSpan TimerValue { get; private set; }
-        public bool IsRunning { get; private set; }
-
         public bool IsFrozen { get; private set; }
         public string TimerDisplay { get; private set; }
+
+        //public IObservable<TimeSpan> TimerValues { get; private set; }
 
         public DisplayState()
         {
@@ -27,23 +28,15 @@ namespace Challenge2.Rx.Models
                 ResetEnabled = true;
                 HoldEnabled = false;
 
-                // TimerValue
-                IsRunning = false;
-
                 IsFrozen = false;
-                // TimerDisplay
             }
             else
             {
-                // StartStopEnabled
-                // ResetEnabled
                 HoldEnabled = true;
 
-                // TimerValue
-                IsRunning = true;
-
                 IsFrozen = false;
-                // TimerDisplay
+
+                //TimerValues = Observable.Interval(TimeSpan.FromSeconds(1)).Select(value => TimeSpan.FromSeconds(value));
             }
         }
 
@@ -54,10 +47,10 @@ namespace Challenge2.Rx.Models
             HoldEnabled = false;
 
             TimerValue = TimeSpan.Zero;
-            IsRunning = false;
-
             IsFrozen = false;
             TimerDisplay = TimerValue.ToString();
+
+            //TimerValues = Observable.Repeat(TimeSpan.Zero, 1).Concat(Observable.Never<TimeSpan>());
         }
 
         public void Hold()
@@ -67,14 +60,13 @@ namespace Challenge2.Rx.Models
 
         public void Tick(TimeSpan interval)
         {
-            // ReSharper disable once InvertIf
-            if (IsRunning)
-            {
-                TimerValue += interval;
+            if (!HoldEnabled)
+                return;
 
-                if (!IsFrozen)
-                    TimerDisplay = TimerValue.ToString();
-            }
+            TimerValue += interval;
+
+            if (!IsFrozen)
+                TimerDisplay = TimerValue.ToString();
         }
     }
 }
