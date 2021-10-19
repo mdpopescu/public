@@ -15,6 +15,9 @@ namespace Challenge2.Rx.Helpers
 
         public static string[] GetTimeline()
         {
+            if (!EVENTS.Any())
+                return Array.Empty<string>();
+
             var ordered = EVENTS.OrderBy(it => it.Time).ToArray();
             var moments = ordered.Select(it => it.Time).ToArray();
             var useInterval = TimeSpan.FromMilliseconds(250);

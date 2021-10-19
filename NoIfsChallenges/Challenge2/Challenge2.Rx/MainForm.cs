@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using System.Reactive;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Windows.Forms;
 using Challenge2.Rx.Helpers;
+using Challenge2.Rx.Models;
 
 namespace Challenge2.Rx
 {
@@ -21,38 +20,29 @@ namespace Challenge2.Rx
         {
             base.OnLoad(e);
 
-            var startStopClicked = btnStartStop.GetClicks().CreateLog("startStopClicked").Share();
-            var resetClicked = btnReset.GetClicks().CreateLog("resetClicked").Share();
-            var holdClicked = btnHold.GetClicks().CreateLog("holdClicked").Share();
+            var state = new DisplayState();
 
-            var stopClicked = startStopClicked.Buffer(2).AsUnit().CreateLog("stopClicked");
+            var startStopClicks = btnStartStop
+                .GetClicks()
+                .Do(_ => state.StartStop());
+            var resetClicks = btnReset
+                .GetClicks()
+                .Do(_ => state.Reset());
+            var holdClicks = btnHold
+                .GetClicks()
+                .Do(_ => state.Hold());
+            var ticks = Observable
+                .Interval(SECOND)
+                .AsUnit()
+                .Do(_ => state.Tick(SECOND));
 
-            var ssEnabledFalse = stopClicked.AsConst(false).CreateLog("ssEnabledFalse");
-            var ssEnabledTrue = resetClicked.AsConst(true).CreateLog("ssEnabledTrue");
-            var ssEnabled = ssEnabledFalse.Merge(ssEnabledTrue).StartWith(true).CreateLog("ssEnabled");
+            var events = Observable.Merge(startStopClicks, resetClicks, holdClicks, ticks);
 
-            var resetEnabledTrue = stopClicked.AsConst(true).CreateLog("resetEnabledTrue");
-            var resetEnabledFalse = resetClicked.AsConst(false).CreateLog("resetEnabledFalse");
-            var resetEnabled = resetEnabledTrue.Merge(resetEnabledFalse).StartWith(false).CreateLog("resetEnabled");
-
-            var holdEnabled = startStopClicked.Toggle(false).CreateLog("holdEnabled");
-
-            var clearHold = resetClicked.AsUnit().StartWith(Unit.Default).CreateLog("clearHold");
-            var shouldDisplay = clearHold.SwitchMap(_ => holdClicked.Toggle(true)).Share().CreateLog("shouldDisplay");
-
-            var timer = startStopClicked.Toggle(false).WhenTrue(() => StartTimer().CreateLog("startTimer").Share()).CreateLog("timer");
-
-            var timerRunning = timer.CombineLatest(shouldDisplay).Where(it => it.Item2).Select(it => it.Item1).CreateLog("timerRunning");
-            var timerReset = resetClicked.Select(_ => TimeSpan.Zero).CreateLog("timerReset");
-            var displayActive = timerRunning.Merge(timerReset).Select(value => value.ToString()).CreateLog("displayActive");
-
-            var s1 = btnStartStop.HandleChanges(ssEnabled, InternalSetEnabled);
-            var s2 = btnReset.HandleChanges(resetEnabled, InternalSetEnabled);
-            var s3 = btnHold.HandleChanges(holdEnabled, InternalSetEnabled);
-
-            var s4 = lblClock.HandleChanges(displayActive, InternalSetText);
-
-            subscription = new CompositeDisposable(s1, s2, s3, s4);
+            subscription = events
+                .Select(_ => state)
+                .StartWith(state)
+                .ObserveOn(this)
+                .Subscribe(UpdateDisplay);
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)
@@ -71,8 +61,14 @@ namespace Challenge2.Rx
 
         private IDisposable subscription;
 
-        private static IObservable<TimeSpan> StartTimer() =>
-            Observable.Interval(SECOND).Select(value => TimeSpan.FromSeconds(value + 1));
+        private void UpdateDisplay(DisplayState state)
+        {
+            InternalSetEnabled(btnStartStop, state.StartStopEnabled);
+            InternalSetEnabled(btnReset, state.ResetEnabled);
+            InternalSetEnabled(btnHold, state.HoldEnabled);
+
+            InternalSetText(lblClock, state.TimerDisplay);
+        }
 
         private static void InternalSetEnabled(Control control, bool value)
         {
