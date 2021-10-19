@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
 namespace Challenge2.Rx.Models
 {
@@ -13,10 +13,13 @@ namespace Challenge2.Rx.Models
         public bool IsFrozen { get; private set; }
         public string TimerDisplay { get; private set; }
 
-        //public IObservable<TimeSpan> TimerValues { get; private set; }
+        //public IObservable<TimeSpan> TimerValues { get; }
 
         public DisplayState()
         {
+            //TimerValues = holdEnabled.SwitchMap(isRunning => isRunning ? CreateTimer() : ResetTimer());
+            //TimerValues.Subscribe(ts => TimerDisplay = ts.ToString());
+
             Reset();
         }
 
@@ -27,16 +30,16 @@ namespace Challenge2.Rx.Models
                 StartStopEnabled = false;
                 ResetEnabled = true;
                 HoldEnabled = false;
+                holdEnabled.OnNext(false);
 
                 IsFrozen = false;
             }
             else
             {
                 HoldEnabled = true;
+                holdEnabled.OnNext(true);
 
                 IsFrozen = false;
-
-                //TimerValues = Observable.Interval(TimeSpan.FromSeconds(1)).Select(value => TimeSpan.FromSeconds(value));
             }
         }
 
@@ -45,12 +48,11 @@ namespace Challenge2.Rx.Models
             StartStopEnabled = true;
             ResetEnabled = false;
             HoldEnabled = false;
+            holdEnabled.OnNext(false);
 
             TimerValue = TimeSpan.Zero;
             IsFrozen = false;
             TimerDisplay = TimerValue.ToString();
-
-            //TimerValues = Observable.Repeat(TimeSpan.Zero, 1).Concat(Observable.Never<TimeSpan>());
         }
 
         public void Hold()
@@ -68,5 +70,12 @@ namespace Challenge2.Rx.Models
             if (!IsFrozen)
                 TimerDisplay = TimerValue.ToString();
         }
+
+        //
+
+        private readonly ISubject<bool> holdEnabled = new Subject<bool>();
+
+        //private static IObservable<TimeSpan> CreateTimer() => Observable.Interval(TimeSpan.FromSeconds(1)).Select(value => TimeSpan.FromSeconds(value));
+        //private static IObservable<TimeSpan> ResetTimer() => Observable.Return(TimeSpan.Zero).Concat(Observable.Never<TimeSpan>());
     }
 }
