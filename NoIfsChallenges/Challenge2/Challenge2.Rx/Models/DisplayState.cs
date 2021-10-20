@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Challenge2.Rx.Helpers;
@@ -17,43 +18,31 @@ namespace Challenge2.Rx.Models
 
         public DisplayState()
         {
-            subscription = holdEnabled
+            var s1 = holdEnabled
                 .SwitchMap(isRunning => isRunning ? CreateTimer() : ResetTimer())
-                .Subscribe(_ => Tick(INCREMENT));
+                .Subscribe(_ => Tick());
+            var s2 = holdEnabled
+                .Subscribe(value => HoldEnabled = value);
+            subscription = new CompositeDisposable(s1, s2);
 
             Reset();
         }
 
-        public void Dispose()
-        {
+        public void Dispose() =>
             subscription.Dispose();
-        }
 
         public void StartStop()
         {
             if (HoldEnabled)
-            {
-                StartStopEnabled = false;
-                ResetEnabled = true;
-                HoldEnabled = false;
-                holdEnabled.OnNext(false);
-
-                IsFrozen = false;
-            }
+                Start();
             else
-            {
-                HoldEnabled = true;
-                holdEnabled.OnNext(true);
-
-                IsFrozen = false;
-            }
+                Stop();
         }
 
         public void Reset()
         {
             StartStopEnabled = true;
             ResetEnabled = false;
-            HoldEnabled = false;
             holdEnabled.OnNext(false);
 
             TimerValue = TimeSpan.Zero;
@@ -66,17 +55,6 @@ namespace Challenge2.Rx.Models
             IsFrozen = !IsFrozen;
         }
 
-        public void Tick(TimeSpan interval)
-        {
-            if (!HoldEnabled)
-                return;
-
-            TimerValue += interval;
-
-            if (!IsFrozen)
-                TimerDisplay = TimerValue.ToString();
-        }
-
         //
 
         private static readonly TimeSpan INCREMENT = TimeSpan.FromSeconds(1);
@@ -85,7 +63,37 @@ namespace Challenge2.Rx.Models
 
         private readonly IDisposable subscription;
 
-        private static IObservable<long> CreateTimer() => Observable.Interval(INCREMENT);
-        private static IObservable<long> ResetTimer() => Observable.Return(0L).Concat(Observable.Never<long>());
+        private static IObservable<long> CreateTimer() =>
+            Observable.Interval(INCREMENT);
+
+        private static IObservable<long> ResetTimer() =>
+            Observable.Return(0L).Concat(Observable.Never<long>());
+
+        private void Start()
+        {
+            StartStopEnabled = false;
+            ResetEnabled = true;
+            holdEnabled.OnNext(false);
+
+            IsFrozen = false;
+        }
+
+        private void Stop()
+        {
+            holdEnabled.OnNext(true);
+
+            IsFrozen = false;
+        }
+
+        private void Tick()
+        {
+            if (!HoldEnabled)
+                return;
+
+            TimerValue += INCREMENT;
+
+            if (!IsFrozen)
+                TimerDisplay = TimerValue.ToString();
+        }
     }
 }
