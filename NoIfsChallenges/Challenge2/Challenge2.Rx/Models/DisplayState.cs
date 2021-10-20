@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Challenge2.Rx.Helpers;
 
 namespace Challenge2.Rx.Models
 {
-    public class DisplayState
+    public class DisplayState : IDisposable
     {
         public bool StartStopEnabled { get; private set; }
         public bool ResetEnabled { get; private set; }
@@ -13,14 +15,18 @@ namespace Challenge2.Rx.Models
         public bool IsFrozen { get; private set; }
         public string TimerDisplay { get; private set; }
 
-        //public IObservable<TimeSpan> TimerValues { get; }
-
         public DisplayState()
         {
-            //TimerValues = holdEnabled.SwitchMap(isRunning => isRunning ? CreateTimer() : ResetTimer());
-            //TimerValues.Subscribe(ts => TimerDisplay = ts.ToString());
+            subscription = holdEnabled
+                .SwitchMap(isRunning => isRunning ? CreateTimer() : ResetTimer())
+                .Subscribe(_ => Tick(INCREMENT));
 
             Reset();
+        }
+
+        public void Dispose()
+        {
+            subscription.Dispose();
         }
 
         public void StartStop()
@@ -73,9 +79,13 @@ namespace Challenge2.Rx.Models
 
         //
 
+        private static readonly TimeSpan INCREMENT = TimeSpan.FromSeconds(1);
+
         private readonly ISubject<bool> holdEnabled = new Subject<bool>();
 
-        //private static IObservable<TimeSpan> CreateTimer() => Observable.Interval(TimeSpan.FromSeconds(1)).Select(value => TimeSpan.FromSeconds(value));
-        //private static IObservable<TimeSpan> ResetTimer() => Observable.Return(TimeSpan.Zero).Concat(Observable.Never<TimeSpan>());
+        private readonly IDisposable subscription;
+
+        private static IObservable<long> CreateTimer() => Observable.Interval(INCREMENT);
+        private static IObservable<long> ResetTimer() => Observable.Return(0L).Concat(Observable.Never<long>());
     }
 }
