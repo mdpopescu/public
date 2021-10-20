@@ -23,7 +23,11 @@ namespace Challenge2.Rx.Models
                 .Subscribe(_ => Tick());
             var s2 = holdEnabled
                 .Subscribe(value => HoldEnabled = value);
-            subscription = new CompositeDisposable(s1, s2);
+            var s3 = holdEnabled
+                .Subscribe(value => startStopHandler = value ? (Action)Start : Stop);
+            subscription = new CompositeDisposable(s1, s2, s3);
+
+            startStopHandler = Start;
 
             Reset();
         }
@@ -31,13 +35,8 @@ namespace Challenge2.Rx.Models
         public void Dispose() =>
             subscription.Dispose();
 
-        public void StartStop()
-        {
-            if (HoldEnabled)
-                Start();
-            else
-                Stop();
-        }
+        public void StartStop() =>
+            startStopHandler.Invoke();
 
         public void Reset()
         {
@@ -62,6 +61,8 @@ namespace Challenge2.Rx.Models
         private readonly ISubject<bool> holdEnabled = new Subject<bool>();
 
         private readonly IDisposable subscription;
+
+        private Action startStopHandler;
 
         private static IObservable<long> CreateTimer() =>
             Observable.Interval(INCREMENT);
