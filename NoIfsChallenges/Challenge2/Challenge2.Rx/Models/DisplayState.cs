@@ -20,14 +20,12 @@ namespace Challenge2.Rx.Models
         {
             var s1 = holdEnabled
                 .SwitchMap(isRunning => isRunning ? CreateTimer() : ResetTimer())
-                .Subscribe(_ => Tick());
+                .Subscribe();
             var s2 = holdEnabled
                 .Subscribe(value => HoldEnabled = value);
             var s3 = holdEnabled
-                .Subscribe(value => startStopHandler = value ? (Action)Start : Stop);
+                .Subscribe(value => startStopHandler = value ? (Action)Stop : Start);
             subscription = new CompositeDisposable(s1, s2, s3);
-
-            startStopHandler = Start;
 
             Reset();
         }
@@ -64,13 +62,20 @@ namespace Challenge2.Rx.Models
 
         private Action startStopHandler;
 
-        private static IObservable<long> CreateTimer() =>
-            Observable.Interval(INCREMENT);
+        private IObservable<long> CreateTimer() =>
+            Observable.Interval(INCREMENT).Do(_ => Tick());
 
         private static IObservable<long> ResetTimer() =>
             Observable.Return(0L).Concat(Observable.Never<long>());
 
         private void Start()
+        {
+            holdEnabled.OnNext(true);
+
+            IsFrozen = false;
+        }
+
+        private void Stop()
         {
             StartStopEnabled = false;
             ResetEnabled = true;
@@ -79,18 +84,8 @@ namespace Challenge2.Rx.Models
             IsFrozen = false;
         }
 
-        private void Stop()
-        {
-            holdEnabled.OnNext(true);
-
-            IsFrozen = false;
-        }
-
         private void Tick()
         {
-            if (!HoldEnabled)
-                return;
-
             TimerValue += INCREMENT;
 
             if (!IsFrozen)
