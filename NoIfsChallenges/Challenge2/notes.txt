@@ -1,3 +1,12 @@
+TODO:
+create the same application in four ways:
+- the usual way, with ifs
+- with the state pattern (what is now in the Challenge2.Library project)
+- with Rx with a mutable state (what is now in the Challenge2.Rx project)
+- with Rx with an immutable state, as declarative as I can make it (preferably fully declarative for the Rx part)
+
+
+
 Rx - marble diagram
 
 S/S Clicked        -------X---------------------X------------------------------------------------------------------------------------
