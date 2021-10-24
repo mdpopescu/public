@@ -1,6 +1,6 @@
 ﻿namespace Challenge2New.Library.Models
 {
-    public enum OperableControl
+    public enum OperableActionName
     {
         START_STOP,
         HOLD,

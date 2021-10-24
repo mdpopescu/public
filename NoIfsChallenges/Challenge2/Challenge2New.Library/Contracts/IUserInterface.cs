@@ -1,10 +1,14 @@
-﻿using Challenge2New.Library.Models;
+﻿using System;
+using Challenge2New.Library.Models;
 
 namespace Challenge2New.Library.Contracts
 {
     public interface IUserInterface
     {
-        void SetEnabled(OperableControl control, bool value);
+        void SetUp(EventHandler onStartStop, EventHandler onHold, EventHandler onReset);
+        void TearDown(EventHandler onStartStop, EventHandler onHold, EventHandler onReset);
+
+        void SetEnabled(OperableActionName actionName, bool value);
         void SetDisplay(string value);
     }
 }
