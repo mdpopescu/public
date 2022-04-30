@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 
 namespace Sierpinski.Models
 {
@@ -9,18 +8,13 @@ namespace Sierpinski.Models
         // the upper vertex comes first, then the leftmost vertex
         public Point[] Points { get; } =
         {
-            new(49, 5),
-            new(5, 95),
-            new(95, 95),
+            new(Extensions.MAX_X / 2, PADDING),
+            new(PADDING, Extensions.MAX_Y - PADDING),
+            new(Extensions.MAX_X - PADDING, Extensions.MAX_Y - PADDING),
         };
 
         public Triangle()
         {
-            xMin = Points.Min(it => it.X) + PADDING;
-            xMax = Points.Max(it => it.X) - PADDING;
-            yMin = Points.Min(it => it.Y) + PADDING;
-            yMax = Points.Max(it => it.Y) - PADDING;
-
             leftSlope = (float)(Points[1].X - Points[0].X) / (Points[1].Y - Points[0].Y);
             Debug.Assert(leftSlope < 0);
             rightSlope = (float)(Points[2].X - Points[0].X) / (Points[2].Y - Points[0].Y);
@@ -28,7 +22,7 @@ namespace Sierpinski.Models
         }
 
         public bool IsInside(Point p) =>
-            p.Y >= yMin && p.Y <= yMax && IsXInside(p);
+            p.Y is >= Y_MIN and <= Y_MAX && IsXInside(p);
 
         public Point GenerateRandomPointInside()
         {
@@ -46,13 +40,17 @@ namespace Sierpinski.Models
 
         private const int PADDING = 5;
 
-        private readonly int xMin, xMax, yMin, yMax;
+        private const int X_MIN = PADDING;
+        private const int X_MAX = Extensions.MAX_X - PADDING;
+        private const int Y_MIN = PADDING;
+        private const int Y_MAX = Extensions.MAX_Y - PADDING;
+
         private readonly float leftSlope, rightSlope;
 
         private bool IsXInside(Point p) =>
-            p.X > (p.Y - yMin) * leftSlope + PADDING && p.X < (p.Y - yMin) * rightSlope - PADDING;
+            p.X > (p.Y - Y_MIN) * leftSlope && p.X < (p.Y - Y_MIN) * rightSlope;
 
-        private Point GenerateRandomPoint() =>
-            new(Extensions.RND.Next(xMin, xMax), Extensions.RND.Next(yMin, yMax));
+        private static Point GenerateRandomPoint() =>
+            new(Extensions.RND.Next(X_MIN, X_MAX), Extensions.RND.Next(Y_MIN, Y_MAX));
     }
 }

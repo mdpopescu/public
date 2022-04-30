@@ -6,4 +6,8 @@
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Sierpinski.csproj.DotSettings" />
+  </ItemGroup>
+
 </Project>
