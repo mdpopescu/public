@@ -103,6 +103,8 @@ Public repository - CC-by-SA 3.0
 
 * SecurePasswordStorage: how to store retrievable passwords in a relatively safe manner -- based on https://security.stackexchange.com/a/22761
 
+* Sierpinski: generate a Sierpinski triangle (a fractal)
+
 * SimpleViewEngine: a view engine with only two directives, {{if}} / {{else}} / {{endif}} and {{foreach}} / {{endfor}}. Evaluates expressions with {{name}} and the current item itself in a foreach is {{}}.
 
 * SlotMachine: a slot machine
