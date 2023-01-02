@@ -1,0 +1,14 @@
+Create a program to:
+- identify the words in a given text file (1)
+- skip the words in a list of "stop words" (2)
+- count the number of occurrences for each (remaining) word
+- sort the words in descending order by the number of occurences
+- print the top ten (most frequent) words
+
+Do this in several ways.
+
+WordCount.1: try to make the code very complicated, with everything in one large method
+
+
+(1) A Connecticut Yankee in King Arthur's Court by Mark Twain -- found at https://www.gutenberg.org/ebooks/86
+(2) Stop words: https://countwordsfree.com/stopwords
