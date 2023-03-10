@@ -47,7 +47,7 @@ async Task C1CommandHandler(C1Command cmd)
 async Task SetResultCommandHandler(ResultCommand cmd)
 {
   results[cmd.Id] = cmd.Result;
-  return Task.Completed;
+  return Task.CompletedTask;
 }
 
 async Task<T?> GetResultAsync<T>(Guid id, TimeSpan timeout)
@@ -63,3 +63,17 @@ async Task<T?> GetResultAsync<T>(Guid id, TimeSpan timeout)
       return default;
   }
 }
+
+---
+
+We will use this structure to write a mini-game, with the player object on a line like this:
+
+---------o---------
+
+The player object can be moved to the left or right with the arrow keys <- / ->
+
+Prizes will be generated and appear for a limited time in a random position:
+
+---X-----o---------
+
+The player should move their object to grab the prize, and if they do that before the prize disappears they will get a point. The score will be updated on the screen.
