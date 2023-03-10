@@ -41,6 +41,8 @@ Public repository - CC-by-SA 3.0
 
 * ETL: a code generator for processing data
 
+* EventSystem: a way to organize an application as a series of async commands
+
 * EverythingIsADatabase: trying to play with ideas from http://witheve.com/
 
 * EverythingIsAStream: example of replacing simple variables with streams

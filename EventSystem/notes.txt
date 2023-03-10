@@ -1,0 +1,65 @@
+Let's say we have a method that has the following shape:
+
+string DoSomethingAndReturnTheResult()
+{
+  MethodA();
+  var x = MethodB();
+  var result = x > 5 ? MethodC1("a") : MethodC2("b", "c");
+  return result;
+}
+
+We want to transform this into a number of event-driven methods that will nevertheless still return a result to the caller, using an async event bus:
+
+async Task<string?> DoSomethingAndReturnTheResultAsync()
+{
+  var id = Guid.NewGuid();
+  await EventBus.PublishAsync(new ACommand(id));
+  var result = await GetResultAsync(id, TIMEOUT);
+  return result;
+}
+
+async Task ACommandHandler(ACommand cmd)
+{
+  //... do something
+  await EventBus.PublishAsync(new BCommand(cmd.Id));
+}
+
+async Task BCommandHandler(BCommand cmd)
+{
+  //... do something that generates a result "x"
+  var nextCmd = x > 5
+    ? new C1Command(cmd.Id, "a")
+    : new C2Command(cmd.Id, "b", "c");
+  await EventBus.PublishAsync(nextCmd);
+}
+
+async Task C1CommandHandler(C1Command cmd)
+{
+  //... do something that generates a result "result"
+  await EventBus.PublishAsync(new SetResultCommand(cmd.Id, result));
+}
+
+// same with C2
+
+// assume the existence of a time-limited object cache
+// that maps a Guid to an object
+// of course, this could be a database instead
+async Task SetResultCommandHandler(ResultCommand cmd)
+{
+  results[cmd.Id] = cmd.Result;
+  return Task.Completed;
+}
+
+async Task<T?> GetResultAsync<T>(Guid id, TimeSpan timeout)
+{
+  var start = TimeProvider.Now;
+  while (true)
+  {
+    if (results.HasKey(id))
+      return results[id] as T?;
+
+    await Task.Delay(WAIT_INTERVAL);
+    if (TimeProvider.Now - start > timeout)
+      return default;
+  }
+}
