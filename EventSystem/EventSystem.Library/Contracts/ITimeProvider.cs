@@ -2,7 +2,7 @@
 
 namespace EventSystem.Library.Contracts;
 
-public interface IMessage
+public interface ITimeProvider
 {
-    Guid Id { get; }
+    DateTimeOffset Now { get; }
 }

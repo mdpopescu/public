@@ -77,3 +77,5 @@ Prizes will be generated and appear for a limited time in a random position:
 ---X-----o---------
 
 The player should move their object to grab the prize, and if they do that before the prize disappears they will get a point. The score will be updated on the screen.
+
+The game ends when the score gets to 10.
