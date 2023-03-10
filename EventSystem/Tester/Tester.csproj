@@ -8,7 +8,4 @@
   <ItemGroup>
     <ProjectReference Include="..\EventSystem.Library\EventSystem.Library.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EventSystem.Library.Implementations;
+using System;
 using System.Threading.Tasks;
 using Tester.Services;
 
@@ -11,11 +12,23 @@ internal class Program
         Console.Clear();
         Console.CursorVisible = false;
 
-        var game = new Game();
-        var score = await game.RunAsync();
+        var events = new EventBus();
 
-        Console.SetCursorPosition(0, 20);
-        Console.WriteLine($"Final score: {score}");
+        var kbd = new KeyboardMapper(events);
+        using (kbd.SetUp())
+        {
+            var game = new Game(
+                events,
+                new ResultsCache(
+                    new TimeProvider(),
+                    events
+                )
+            );
+            var score = await game.RunAsync();
+
+            Console.SetCursorPosition(0, 20);
+            Console.WriteLine($"Final score: {score}");
+        }
 
         Console.CursorVisible = true;
         Console.ReadLine();
