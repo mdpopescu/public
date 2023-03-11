@@ -36,6 +36,7 @@ App_Data/
 connectionStrings*.config
 *.DotSettings
 *.jtconfig
+_output/
 
 # Private settings
 private*.config
@@ -51,4 +52,3 @@ rcf/
 # These should be included #
 !NuGet.exe
 !packages/**/*.targets
-/SocialClone/.vs

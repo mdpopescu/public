@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using CustomDialogs.Contracts;
+using CustomDialogs.Services;
+using System.Diagnostics;
 using System.Windows.Automation;
 
 namespace CustomDialogs;
@@ -7,12 +9,42 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        var hookManager = new HookManager();
+
         // we're going to look for a Notepad window
         var notepadProcess = Process.GetProcessesByName("Notepad").FirstOrDefault();
         if (notepadProcess == null)
         {
             Console.WriteLine("Notepad not found.");
             return;
+        }
+
+        static void SetUpInterceptor(IInterceptor interceptor)
+        {
+            void HandleMessage(nint wParam, nint lParam) =>
+                Console.WriteLine($"wParam={wParam}, lParam={lParam}");
+
+            interceptor.SetHandler(HandleMessage);
+        }
+
+        //using (notepadProcess)
+        //{
+        //    IDisposable? hook = null;
+        //    var loop = new MessageLoop(() => hook = hookManager.InstallHook(notepadProcess, SetUpInterceptor));
+        //    loop.Start();
+
+        //    Console.WriteLine("Hook injected.");
+        //    Console.ReadLine();
+
+        //    hook?.Dispose();
+        //    loop.Stop();
+        //}
+
+        using (notepadProcess)
+        using (hookManager.InstallHook(notepadProcess, SetUpInterceptor))
+        {
+            Console.WriteLine("Hook injected.");
+            Console.ReadLine();
         }
 
         //var notepad = AutomationElement.FromHandle(notepadProcess.MainWindowHandle);
@@ -66,7 +98,7 @@ internal class Program
         //    }
         //);
 
-        Console.ReadLine();
+        //Console.ReadLine();
     }
 
     private static void ListElements(TreeWalker walker, AutomationElement parent, int indent, Action<AutomationElement, int> callback)

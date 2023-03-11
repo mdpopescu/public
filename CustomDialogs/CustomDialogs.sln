@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomDialogs", "CustomDialogs\CustomDialogs.csproj", "{FA553DDC-F289-439A-A2DC-73DD8F7DB906}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomDialogs", "CustomDialogs\CustomDialogs.csproj", "{FA553DDC-F289-439A-A2DC-73DD8F7DB906}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomDialogs.Library_32", "CustomDialogs.Library_32\CustomDialogs.Library_32.csproj", "{F6AE9B96-99CE-4340-BB19-E8CD56E44BBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomDialogs.Library_32", "CustomDialogs.Library_32\CustomDialogs.Library_32.csproj", "{F6AE9B96-99CE-4340-BB19-E8CD56E44BBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomDialogs.Library_64", "CustomDialogs.Library_64\CustomDialogs.Library_64.csproj", "{03F259BE-AEE2-4E53-9A05-07572CAD4981}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomDialogs.Library_Common", "CustomDialogs.Library_Common\CustomDialogs.Library_Common.csproj", "{ABEF4774-242E-4967-8AEB-6AEDC2A81755}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomDialogs.Library_64", "CustomDialogs.Library_64\CustomDialogs.Library_64.csproj", "{03F259BE-AEE2-4E53-9A05-07572CAD4981}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,6 @@ Global
 		{03F259BE-AEE2-4E53-9A05-07572CAD4981}.Debug|Any CPU.Build.0 = Debug|x64
 		{03F259BE-AEE2-4E53-9A05-07572CAD4981}.Release|Any CPU.ActiveCfg = Release|x64
 		{03F259BE-AEE2-4E53-9A05-07572CAD4981}.Release|Any CPU.Build.0 = Release|x64
-		{ABEF4774-242E-4967-8AEB-6AEDC2A81755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ABEF4774-242E-4967-8AEB-6AEDC2A81755}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ABEF4774-242E-4967-8AEB-6AEDC2A81755}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ABEF4774-242E-4967-8AEB-6AEDC2A81755}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
