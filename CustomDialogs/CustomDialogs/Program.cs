@@ -1,6 +1,7 @@
-﻿using CustomDialogs.Contracts;
-using CustomDialogs.Services;
+﻿using CustomDialogs.Services;
+using EasyHook;
 using System.Diagnostics;
+using System.Reflection;
 using System.Windows.Automation;
 
 namespace CustomDialogs;
@@ -19,13 +20,13 @@ internal class Program
             return;
         }
 
-        static void SetUpInterceptor(IInterceptor interceptor)
-        {
-            void HandleMessage(nint wParam, nint lParam) =>
-                Console.WriteLine($"wParam={wParam}, lParam={lParam}");
+        //static void SetUpInterceptor(IInterceptor interceptor)
+        //{
+        //    void HandleMessage(nint wParam, nint lParam) =>
+        //        Console.WriteLine($"wParam={wParam}, lParam={lParam}");
 
-            interceptor.SetHandler(HandleMessage);
-        }
+        //    interceptor.SetHandler(HandleMessage);
+        //}
 
         //using (notepadProcess)
         //{
@@ -41,10 +42,18 @@ internal class Program
         //}
 
         using (notepadProcess)
-        using (hookManager.InstallHook(notepadProcess, SetUpInterceptor))
         {
-            Console.WriteLine("Hook injected.");
-            Console.ReadLine();
+            //using (hookManager.InstallHook(notepadProcess))
+            //{
+            //    Console.WriteLine("Hook injected.");
+            //    Console.ReadLine();
+            //}
+
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("Cannot determine the DLL folder.");
+            var filename = Path.Combine(path, "CustomDialogs.Library.dll");
+
+            Config.Register("CustomDialogs", filename);
+            RemoteHooking.Inject(notepadProcess.Id, InjectionOptions.Default, filename, filename);
         }
 
         //var notepad = AutomationElement.FromHandle(notepadProcess.MainWindowHandle);

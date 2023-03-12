@@ -7,10 +7,10 @@ public class Interceptor : IInterceptor
     public nint IdHook { get; set; } = nint.Zero;
 
     // ReSharper disable once ParameterHidesMember
-    public void SetHandler(Action<nint, nint> handler)
-    {
-        this.handler = handler;
-    }
+    //public void SetHandler(Action<nint, nint> handler)
+    //{
+    //    this.handler = handler;
+    //}
 
     public int HookMethod(int nCode, nint wParam, nint lParam)
     {
@@ -24,10 +24,17 @@ public class Interceptor : IInterceptor
 
         //return 0;
 
-        Console.WriteLine($"nCode={nCode}, wParam={wParam}, lParam={lParam}");
+        using (var stream = new FileStream(@"c:\temp\custom.txt", FileMode.Append, FileAccess.Write, FileShare.Read))
+        using (var writer = new StreamWriter(stream))
+        {
+            writer.WriteLine($"nCode={nCode}, wParam={wParam}, lParam={lParam}");
+            writer.Flush();
+        }
 
-        if (nCode >= Native.HC_ACTION)
-            handler?.Invoke(wParam, lParam);
+        //Console.WriteLine($"nCode={nCode}, wParam={wParam}, lParam={lParam}");
+
+        //if (nCode >= Native.HC_ACTION)
+        //    handler?.Invoke(wParam, lParam);
 
         return Native.CallNextHookEx(IdHook, nCode, wParam, lParam);
     }
