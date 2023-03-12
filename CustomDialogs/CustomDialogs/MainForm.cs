@@ -48,8 +48,14 @@ namespace CustomDialogs
         private void timer_Tick(object sender, EventArgs e)
         {
             var messages = Mailbox.INSTANCE.Get();
-            foreach (var message in messages)
-                rtxtLog.Text += message + Environment.NewLine;
+            if (!messages.Any())
+                return;
+
+            rtxtLog.Text += string.Join(Environment.NewLine, messages) + Environment.NewLine;
+
+            // scroll to the end
+            rtxtLog.SelectionStart = rtxtLog.Text.Length;
+            rtxtLog.ScrollToCaret();
         }
     }
 }

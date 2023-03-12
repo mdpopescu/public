@@ -1,7 +1,6 @@
 ﻿using EasyHook;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -59,7 +58,7 @@ namespace CustomDialogs.Library.Services
             // CreateFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858(v=vs.85).aspx
             var createFileHook = LocalHook.Create(
                 LocalHook.GetProcAddress("kernel32.dll", "CreateFileW"),
-                new CreateFileDelegate(CreateFile_Hook),
+                new CreateFileDelegate(CreateFileHook),
                 this);
 
             // ReadFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365467(v=vs.85).aspx
@@ -125,7 +124,7 @@ namespace CustomDialogs.Library.Services
 
         /// <summary>
         ///     The CreateFile delegate, this is needed to create a delegate of our hook function
-        ///     <see cref="CreateFile_Hook(string, uint, uint, IntPtr, uint, uint, IntPtr)" />.
+        ///     <see cref="InjectionEntryPoint.CreateFileHook" />.
         /// </summary>
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
         private delegate IntPtr CreateFileDelegate(
@@ -140,7 +139,7 @@ namespace CustomDialogs.Library.Services
         /// <summary>
         ///     The CreateFile hook function. This will be called instead of the original CreateFile once hooked.
         /// </summary>
-        private IntPtr CreateFile_Hook(
+        private IntPtr CreateFileHook(
             string filename,
             uint desiredAccess,
             uint shareMode,
