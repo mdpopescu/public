@@ -55,6 +55,13 @@ namespace CustomDialogs.Library.Services
 
             // Install hooks
 
+            // GetMessage https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew
+            var getMessageHook = LocalHook.Create(
+                LocalHook.GetProcAddress("user32.dll", "GetMessageW"),
+                new GetMessageDelegate(GetMessageHook),
+                this
+            );
+
             // CreateFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858(v=vs.85).aspx
             var createFileHook = LocalHook.Create(
                 LocalHook.GetProcAddress("kernel32.dll", "CreateFileW"),
@@ -74,11 +81,12 @@ namespace CustomDialogs.Library.Services
                 this);
 
             // Activate hooks on all threads except the current thread
+            getMessageHook.ThreadACL.SetExclusiveACL(new[] { 0 });
             createFileHook.ThreadACL.SetExclusiveACL(new[] { 0 });
             readFileHook.ThreadACL.SetExclusiveACL(new[] { 0 });
             writeFileHook.ThreadACL.SetExclusiveACL(new[] { 0 });
 
-            server.ReportMessage("CreateFile, ReadFile and WriteFile hooks installed");
+            server.ReportMessage("Hooks installed");
 
             // Wake up the process (required if using RemoteHooking.CreateAndInject)
             RemoteHooking.WakeUpProcess();
@@ -111,6 +119,7 @@ namespace CustomDialogs.Library.Services
             }
 
             // Remove hooks
+            getMessageHook.Dispose();
             createFileHook.Dispose();
             readFileHook.Dispose();
             writeFileHook.Dispose();
@@ -119,6 +128,51 @@ namespace CustomDialogs.Library.Services
             LocalHook.Release();
         }
 
+        #region GetMessage Hook
+
+        /// <summary>
+        ///     The GetMessage delegate, this is needed to create a delegate of our hook function
+        ///     <see cref="InjectionEntryPoint.GetMessageHook" />.
+        /// </summary>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private delegate bool GetMessageDelegate(
+            out Native.MSG lpMsg,
+            IntPtr hWnd,
+            uint wMsgFilterMin,
+            uint wMsgFilterMax);
+
+        /// <summary>
+        ///     The GetMessage hook function. This will be called instead of the original GetMessage once hooked.
+        /// </summary>
+        private bool GetMessageHook(
+            out Native.MSG lpMsg,
+            IntPtr hWnd,
+            uint wMsgFilterMin,
+            uint wMsgFilterMax)
+        {
+            // Call original first so we have a value for lpMsg
+            var result = Native.GetMessageW(out lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+
+            try
+            {
+                lock (messageQueue)
+                {
+                    if (messageQueue.Count < 1000)
+                        // Add message to send to the main program
+                        messageQueue.Enqueue(
+                            $"[{RemoteHooking.GetCurrentProcessId()}:{RemoteHooking.GetCurrentThreadId()}]: GETMESSAGE message={lpMsg.message} wParam={lpMsg.wParam} lParam={lpMsg.lParam}");
+                }
+            }
+            catch
+            {
+                // swallow exceptions so that any issues caused by this code do not crash target process
+            }
+
+            return result;
+        }
+
+        #endregion
 
         #region CreateFileW Hook
 
