@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 
 namespace CustomDialogs.Library.Services
@@ -55,36 +54,35 @@ namespace CustomDialogs.Library.Services
 
             // Install hooks
 
-            // GetMessage https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew
-            var getMessageHook = LocalHook.Create(
-                LocalHook.GetProcAddress("user32.dll", "GetMessageW"),
-                new GetMessageDelegate(GetMessageHook),
+            //var getMessageHook = LocalHook.Create(
+            //    LocalHook.GetProcAddress("user32.dll", "GetMessageW"),
+            //    new GetMessageDelegate(GetMessageHook),
+            //    this
+            //);
+
+            //var createWindowHook = LocalHook.Create(
+            //    LocalHook.GetProcAddress("user32.dll", "CreateWindowW"),
+            //    new CreateWindowDelegate(CreateWindowHook),
+            //    this
+            //);
+
+            //var createWindowExHook = LocalHook.Create(
+            //    LocalHook.GetProcAddress("user32.dll", "CreateWindowEx"),
+            //    new CreateWindowExDelegate(CreateWindowExHook),
+            //    this
+            //);
+
+            var coCreateInstanceExHook = LocalHook.Create(
+                LocalHook.GetProcAddress("ole32.dll", "CoCreateInstanceEx"),
+                new CoCreateInstanceExDelegate(CoCreateInstanceExHook),
                 this
             );
 
-            // CreateFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa363858(v=vs.85).aspx
-            var createFileHook = LocalHook.Create(
-                LocalHook.GetProcAddress("kernel32.dll", "CreateFileW"),
-                new CreateFileDelegate(CreateFileHook),
-                this);
-
-            // ReadFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365467(v=vs.85).aspx
-            var readFileHook = LocalHook.Create(
-                LocalHook.GetProcAddress("kernel32.dll", "ReadFile"),
-                new ReadFileDelegate(ReadFileHook),
-                this);
-
-            // WriteFile https://msdn.microsoft.com/en-us/library/windows/desktop/aa365747(v=vs.85).aspx
-            var writeFileHook = LocalHook.Create(
-                LocalHook.GetProcAddress("kernel32.dll", "WriteFile"),
-                new WriteFileDelegate(WriteFileHook),
-                this);
-
             // Activate hooks on all threads except the current thread
-            getMessageHook.ThreadACL.SetExclusiveACL(new[] { 0 });
-            createFileHook.ThreadACL.SetExclusiveACL(new[] { 0 });
-            readFileHook.ThreadACL.SetExclusiveACL(new[] { 0 });
-            writeFileHook.ThreadACL.SetExclusiveACL(new[] { 0 });
+            //getMessageHook.ThreadACL.SetExclusiveACL(new[] { 0 });
+            //createWindowHook.ThreadACL.SetExclusiveACL(new[] { 0 });
+            //createWindowExHook.ThreadACL.SetExclusiveACL(new[] { 0 });
+            coCreateInstanceExHook.ThreadACL.SetExclusiveACL(new[] { 0 });
 
             server.ReportMessage("Hooks installed");
 
@@ -119,10 +117,10 @@ namespace CustomDialogs.Library.Services
             }
 
             // Remove hooks
-            getMessageHook.Dispose();
-            createFileHook.Dispose();
-            readFileHook.Dispose();
-            writeFileHook.Dispose();
+            //getMessageHook.Dispose();
+            //createWindowHook.Dispose();
+            //createWindowExHook.Dispose();
+            coCreateInstanceExHook.Dispose();
 
             // Finalise cleanup of hooks
             LocalHook.Release();
@@ -152,8 +150,143 @@ namespace CustomDialogs.Library.Services
             uint wMsgFilterMax)
         {
             // Call original first so we have a value for lpMsg
-            var result = Native.GetMessageW(out lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
+            var result = Native.GetMessage(out lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
 
+            Log($"GETMESSAGE message={lpMsg.message} wParam={lpMsg.wParam} lParam={lpMsg.lParam}");
+
+            return result;
+        }
+
+        #endregion
+
+        #region CreateWindow Hook
+
+        /// <summary>
+        ///     The CreateWindow delegate, this is needed to create a delegate of our hook function
+        ///     <see cref="InjectionEntryPoint.CreateWindowHook" />.
+        /// </summary>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
+        private delegate IntPtr CreateWindowDelegate(
+            string lpClassName,
+            string lpWindowName,
+            uint dwStyle,
+            int x,
+            int y,
+            int nWidth,
+            int nHeight,
+            IntPtr hWndParent,
+            IntPtr hMenu,
+            IntPtr hInstance,
+            IntPtr lpParam);
+
+        /// <summary>
+        ///     The CreateWindow hook function. This will be called instead of the original CreateWindow once hooked.
+        /// </summary>
+        private IntPtr CreateWindowHook(
+            string lpClassName,
+            string lpWindowName,
+            uint dwStyle,
+            int x,
+            int y,
+            int nWidth,
+            int nHeight,
+            IntPtr hWndParent,
+            IntPtr hMenu,
+            IntPtr hInstance,
+            IntPtr lpParam)
+        {
+            Log($"CreateWindow class name={lpClassName} window name={lpWindowName}");
+
+            // now call the original
+            return Native.CreateWindow(lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+        }
+
+        #endregion
+
+        #region CreateWindowEx Hook
+
+        /// <summary>
+        ///     The CreateWindowEx delegate, this is needed to create a delegate of our hook function
+        ///     <see cref="InjectionEntryPoint.CreateWindowExHook" />.
+        /// </summary>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
+        private delegate IntPtr CreateWindowExDelegate(
+            uint dwExStyle,
+            string lpClassName,
+            string lpWindowName,
+            uint dwStyle,
+            int x,
+            int y,
+            int nWidth,
+            int nHeight,
+            IntPtr hWndParent,
+            IntPtr hMenu,
+            IntPtr hInstance,
+            IntPtr lpParam);
+
+        /// <summary>
+        ///     The CreateWindowEx hook function. This will be called instead of the original CreateWindowEx once hooked.
+        /// </summary>
+        private IntPtr CreateWindowExHook(
+            uint dwExStyle,
+            string lpClassName,
+            string lpWindowName,
+            uint dwStyle,
+            int x,
+            int y,
+            int nWidth,
+            int nHeight,
+            IntPtr hWndParent,
+            IntPtr hMenu,
+            IntPtr hInstance,
+            IntPtr lpParam)
+        {
+            Log($"CreateWindowEx style={dwExStyle} class name={lpClassName} window name={lpWindowName}");
+
+            // now call the original
+            return Native.CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+        }
+
+        #endregion
+
+        #region CoCreateInstanceEx Hook
+
+        /// <summary>
+        ///     The GetMessage delegate, this is needed to create a delegate of our hook function
+        ///     <see cref="InjectionEntryPoint.CoCreateInstanceExHook" />.
+        /// </summary>
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        private delegate int CoCreateInstanceExDelegate(
+            [In, MarshalAs(UnmanagedType.LPStruct)]
+            Guid rclsid,
+            [MarshalAs(UnmanagedType.IUnknown)] object pUnkOuter,
+            Native.CLSCTX dwClsCtx,
+            IntPtr pServerInfo,
+            uint cmq,
+            [In, Out] Native.MULTI_QI[] pResults);
+
+        /// <summary>
+        ///     The CoCreateInstanceEx hook function. This will be called instead of the original CoCreateInstanceEx once hooked.
+        /// </summary>
+        private int CoCreateInstanceExHook(
+            [In, MarshalAs(UnmanagedType.LPStruct)]
+            Guid rclsid,
+            [MarshalAs(UnmanagedType.IUnknown)] object pUnkOuter,
+            Native.CLSCTX dwClsCtx,
+            IntPtr pServerInfo,
+            uint cmq,
+            [In, Out] Native.MULTI_QI[] pResults)
+        {
+            Log($"CoCreateInstanceEx rclsid={rclsid}");
+
+            // now call the original
+            return Native.CoCreateInstanceEx(rclsid, pUnkOuter, dwClsCtx, pServerInfo, cmq, pResults);
+        }
+
+        #endregion
+
+        private void Log(string message)
+        {
             try
             {
                 lock (messageQueue)
@@ -161,201 +294,18 @@ namespace CustomDialogs.Library.Services
                     if (messageQueue.Count < 1000)
                         // Add message to send to the main program
                         messageQueue.Enqueue(
-                            $"[{RemoteHooking.GetCurrentProcessId()}:{RemoteHooking.GetCurrentThreadId()}]: GETMESSAGE message={lpMsg.message} wParam={lpMsg.wParam} lParam={lpMsg.lParam}");
+                            $"[{RemoteHooking.GetCurrentProcessId()}:{RemoteHooking.GetCurrentThreadId()}]: {message}");
                 }
             }
-            catch
-            {
-                // swallow exceptions so that any issues caused by this code do not crash target process
-            }
-
-            return result;
-        }
-
-        #endregion
-
-        #region CreateFileW Hook
-
-        /// <summary>
-        ///     The CreateFile delegate, this is needed to create a delegate of our hook function
-        ///     <see cref="InjectionEntryPoint.CreateFileHook" />.
-        /// </summary>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
-        private delegate IntPtr CreateFileDelegate(
-            string filename,
-            uint desiredAccess,
-            uint shareMode,
-            IntPtr securityAttributes,
-            uint creationDisposition,
-            uint flagsAndAttributes,
-            IntPtr templateFile);
-
-        /// <summary>
-        ///     The CreateFile hook function. This will be called instead of the original CreateFile once hooked.
-        /// </summary>
-        private IntPtr CreateFileHook(
-            string filename,
-            uint desiredAccess,
-            uint shareMode,
-            IntPtr securityAttributes,
-            uint creationDisposition,
-            uint flagsAndAttributes,
-            IntPtr templateFile)
-        {
-            try
+            catch (Exception ex)
             {
                 lock (messageQueue)
                 {
-                    if (messageQueue.Count < 1000)
-                    {
-                        var mode = string.Empty;
-                        switch (creationDisposition)
-                        {
-                            case 1:
-                                mode = "CREATE_NEW";
-                                break;
-                            case 2:
-                                mode = "CREATE_ALWAYS";
-                                break;
-                            case 3:
-                                mode = "OPEN_ALWAYS";
-                                break;
-                            case 4:
-                                mode = "OPEN_EXISTING";
-                                break;
-                            case 5:
-                                mode = "TRUNCATE_EXISTING";
-                                break;
-                        }
-
-                        // Add message to send to the main program
-                        messageQueue.Enqueue($"[{RemoteHooking.GetCurrentProcessId()}:{RemoteHooking.GetCurrentThreadId()}]: CREATE ({mode}) \"{filename}\"");
-                    }
+                    messageQueue.Enqueue($"*** ERROR *** {ex}");
                 }
-            }
-            catch
-            {
+
                 // swallow exceptions so that any issues caused by this code do not crash target process
             }
-
-            // now call the original API...
-            return Native.CreateFileW(
-                filename,
-                desiredAccess,
-                shareMode,
-                securityAttributes,
-                creationDisposition,
-                flagsAndAttributes,
-                templateFile);
         }
-
-        #endregion
-
-        #region ReadFile Hook
-
-        /// <summary>
-        ///     The ReadFile delegate, this is needed to create a delegate of our hook function
-        ///     <see cref="InjectionEntryPoint.ReadFileHook" />.
-        /// </summary>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
-        private delegate bool ReadFileDelegate(
-            IntPtr hFile,
-            IntPtr lpBuffer,
-            uint nNumberOfBytesToRead,
-            out uint lpNumberOfBytesRead,
-            IntPtr lpOverlapped);
-
-        /// <summary>
-        ///     The ReadFile hook function. This will be called instead of the original ReadFile once hooked.
-        /// </summary>
-        private bool ReadFileHook(
-            IntPtr hFile,
-            IntPtr lpBuffer,
-            uint nNumberOfBytesToRead,
-            out uint lpNumberOfBytesRead,
-            IntPtr lpOverlapped)
-        {
-            lpNumberOfBytesRead = 0;
-
-            // Call original first so we have a value for lpNumberOfBytesRead
-            var result = Native.ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, out lpNumberOfBytesRead, lpOverlapped);
-
-            try
-            {
-                lock (messageQueue)
-                {
-                    if (messageQueue.Count < 1000)
-                    {
-                        // Retrieve filename from the file handle
-                        var filename = new StringBuilder(255);
-                        Native.GetFinalPathNameByHandle(hFile, filename, 255, 0);
-
-                        // Add message to send to the main program
-                        messageQueue.Enqueue($"[{RemoteHooking.GetCurrentProcessId()}:{RemoteHooking.GetCurrentThreadId()}]: READ ({lpNumberOfBytesRead} bytes) \"{filename}\"");
-                    }
-                }
-            }
-            catch
-            {
-                // swallow exceptions so that any issues caused by this code do not crash target process
-            }
-
-            return result;
-        }
-
-        #endregion
-
-        #region WriteFile Hook
-
-        /// <summary>
-        ///     The WriteFile delegate, this is needed to create a delegate of our hook function
-        ///     <see cref="InjectionEntryPoint.WriteFileHook" />.
-        /// </summary>
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private delegate bool WriteFileDelegate(
-            IntPtr hFile,
-            IntPtr lpBuffer,
-            uint nNumberOfBytesToWrite,
-            out uint lpNumberOfBytesWritten,
-            IntPtr lpOverlapped);
-
-        /// <summary>
-        ///     The WriteFile hook function. This will be called instead of the original WriteFile once hooked.
-        /// </summary>
-        private bool WriteFileHook(
-            IntPtr hFile,
-            IntPtr lpBuffer,
-            uint nNumberOfBytesToWrite,
-            out uint lpNumberOfBytesWritten,
-            IntPtr lpOverlapped)
-        {
-            // Call original first so we get lpNumberOfBytesWritten
-            var result = Native.WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, out lpNumberOfBytesWritten, lpOverlapped);
-
-            try
-            {
-                lock (messageQueue)
-                {
-                    if (messageQueue.Count < 1000)
-                    {
-                        // Retrieve filename from the file handle
-                        var filename = new StringBuilder(255);
-                        Native.GetFinalPathNameByHandle(hFile, filename, 255, 0);
-
-                        // Add message to send to the main program
-                        messageQueue.Enqueue($"[{RemoteHooking.GetCurrentProcessId()}:{RemoteHooking.GetCurrentThreadId()}]: WRITE ({lpNumberOfBytesWritten} bytes) \"{filename}\"");
-                    }
-                }
-            }
-            catch
-            {
-                // swallow exceptions so that any issues caused by this code do not crash target process
-            }
-
-            return result;
-        }
-
-        #endregion
     }
 }
