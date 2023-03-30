@@ -133,6 +133,8 @@ Public repository - CC-by-SA 3.0
 
 * TaskSpikes: I need a long-running, cancelable task that might need to interact with the UI
 
+* Turtles: implementation of the "turtle graphics" idea used in Logo -- see for example https://docs.python.org/3/library/turtle.html
+
 * TechnicalDrawing: a program to transform a text stream with 3D start/end coordinates for lines into a technical drawing (3 parts with the XY, XZ and YZ plans and one part with an arbitrary projection)
 
 * TextGeneration: (for now) using Markov chains to generate plausibly-looking texts.
