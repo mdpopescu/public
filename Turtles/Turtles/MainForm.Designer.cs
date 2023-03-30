@@ -29,8 +29,11 @@
         private void InitializeComponent()
         {
             statusStrip1 = new StatusStrip();
+            tsslblPosition = new ToolStripStatusLabel();
+            tsslblDirection = new ToolStripStatusLabel();
             radMenu1 = new Telerik.WinControls.UI.RadMenu();
             radMenuItem1 = new Telerik.WinControls.UI.RadMenuItem();
+            rmiFileNew = new Telerik.WinControls.UI.RadMenuItem();
             rmiFileOpen = new Telerik.WinControls.UI.RadMenuItem();
             rmiFileSave = new Telerik.WinControls.UI.RadMenuItem();
             rmiFileSaveAs = new Telerik.WinControls.UI.RadMenuItem();
@@ -38,27 +41,25 @@
             rmiFileExit = new Telerik.WinControls.UI.RadMenuItem();
             radMenuItem2 = new Telerik.WinControls.UI.RadMenuItem();
             rmiHelpAbout = new Telerik.WinControls.UI.RadMenuItem();
-            tsslblPosition = new ToolStripStatusLabel();
-            tsslblDirection = new ToolStripStatusLabel();
             radSplitContainer1 = new Telerik.WinControls.UI.RadSplitContainer();
             splitPanel1 = new Telerik.WinControls.UI.SplitPanel();
-            splitPanel2 = new Telerik.WinControls.UI.SplitPanel();
-            pbCanvas = new PictureBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             rtxtCommand = new Telerik.WinControls.UI.RadTextBox();
             rrtxtCode = new Telerik.WinControls.UI.RadRichTextEditor();
+            splitPanel2 = new Telerik.WinControls.UI.SplitPanel();
+            pbCanvas = new PictureBox();
             statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)radMenu1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)radSplitContainer1).BeginInit();
             radSplitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitPanel1).BeginInit();
             splitPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)splitPanel2).BeginInit();
-            splitPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pbCanvas).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)rtxtCommand).BeginInit();
             ((System.ComponentModel.ISupportInitialize)rrtxtCode).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)splitPanel2).BeginInit();
+            splitPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pbCanvas).BeginInit();
             ((System.ComponentModel.ISupportInitialize)this).BeginInit();
             SuspendLayout();
             // 
@@ -71,6 +72,18 @@
             statusStrip1.TabIndex = 1;
             statusStrip1.Text = "statusStrip1";
             // 
+            // tsslblPosition
+            // 
+            tsslblPosition.Name = "tsslblPosition";
+            tsslblPosition.Size = new Size(25, 17);
+            tsslblPosition.Text = "Pos: 0, 0";
+            // 
+            // tsslblDirection
+            // 
+            tsslblDirection.Name = "tsslblDirection";
+            tsslblDirection.Size = new Size(13, 17);
+            tsslblDirection.Text = "Dir: 0";
+            // 
             // radMenu1
             // 
             radMenu1.Items.AddRange(new Telerik.WinControls.RadItem[] { radMenuItem1, radMenuItem2 });
@@ -81,9 +94,15 @@
             // 
             // radMenuItem1
             // 
-            radMenuItem1.Items.AddRange(new Telerik.WinControls.RadItem[] { rmiFileOpen, rmiFileSave, rmiFileSaveAs, radMenuSeparatorItem1, rmiFileExit });
+            radMenuItem1.Items.AddRange(new Telerik.WinControls.RadItem[] { rmiFileNew, rmiFileOpen, rmiFileSave, rmiFileSaveAs, radMenuSeparatorItem1, rmiFileExit });
             radMenuItem1.Name = "radMenuItem1";
             radMenuItem1.Text = "&File";
+            // 
+            // rmiFileNew
+            // 
+            rmiFileNew.Name = "rmiFileNew";
+            rmiFileNew.Text = "&New";
+            rmiFileNew.Click += rmiFileNew_Click;
             // 
             // rmiFileOpen
             // 
@@ -93,14 +112,12 @@
             // 
             // rmiFileSave
             // 
-            rmiFileSave.Enabled = false;
             rmiFileSave.Name = "rmiFileSave";
             rmiFileSave.Text = "Save";
             rmiFileSave.Click += rmiFileSave_Click;
             // 
             // rmiFileSaveAs
             // 
-            rmiFileSaveAs.Enabled = false;
             rmiFileSaveAs.Name = "rmiFileSaveAs";
             rmiFileSaveAs.Text = "Save &As...";
             rmiFileSaveAs.Click += rmiFileSaveAs_Click;
@@ -128,18 +145,6 @@
             rmiHelpAbout.Name = "rmiHelpAbout";
             rmiHelpAbout.Text = "&About...";
             rmiHelpAbout.Click += rmiHelpAbout_Click;
-            // 
-            // tsslblPosition
-            // 
-            tsslblPosition.Name = "tsslblPosition";
-            tsslblPosition.Size = new Size(25, 17);
-            tsslblPosition.Text = "0, 0";
-            // 
-            // tsslblDirection
-            // 
-            tsslblDirection.Name = "tsslblDirection";
-            tsslblDirection.Size = new Size(13, 17);
-            tsslblDirection.Text = "0";
             // 
             // radSplitContainer1
             // 
@@ -169,30 +174,6 @@
             splitPanel1.TabIndex = 0;
             splitPanel1.TabStop = false;
             splitPanel1.Text = "splitPanel1";
-            // 
-            // splitPanel2
-            // 
-            splitPanel2.Controls.Add(pbCanvas);
-            splitPanel2.Location = new Point(402, 0);
-            splitPanel2.Name = "splitPanel2";
-            // 
-            // 
-            // 
-            splitPanel2.RootElement.MinSize = new Size(25, 25);
-            splitPanel2.Size = new Size(398, 408);
-            splitPanel2.TabIndex = 1;
-            splitPanel2.TabStop = false;
-            splitPanel2.Text = "splitPanel2";
-            // 
-            // pbCanvas
-            // 
-            pbCanvas.BackColor = Color.LightGray;
-            pbCanvas.Dock = DockStyle.Fill;
-            pbCanvas.Location = new Point(0, 0);
-            pbCanvas.Name = "pbCanvas";
-            pbCanvas.Size = new Size(398, 408);
-            pbCanvas.TabIndex = 3;
-            pbCanvas.TabStop = false;
             // 
             // tableLayoutPanel1
             // 
@@ -227,6 +208,30 @@
             rrtxtCode.Size = new Size(392, 378);
             rrtxtCode.TabIndex = 1;
             // 
+            // splitPanel2
+            // 
+            splitPanel2.Controls.Add(pbCanvas);
+            splitPanel2.Location = new Point(402, 0);
+            splitPanel2.Name = "splitPanel2";
+            // 
+            // 
+            // 
+            splitPanel2.RootElement.MinSize = new Size(25, 25);
+            splitPanel2.Size = new Size(398, 408);
+            splitPanel2.TabIndex = 1;
+            splitPanel2.TabStop = false;
+            splitPanel2.Text = "splitPanel2";
+            // 
+            // pbCanvas
+            // 
+            pbCanvas.BackColor = Color.LightGray;
+            pbCanvas.Dock = DockStyle.Fill;
+            pbCanvas.Location = new Point(0, 0);
+            pbCanvas.Name = "pbCanvas";
+            pbCanvas.Size = new Size(398, 408);
+            pbCanvas.TabIndex = 3;
+            pbCanvas.TabStop = false;
+            // 
             // MainForm
             // 
             AutoScaleBaseSize = new Size(7, 15);
@@ -245,13 +250,13 @@
             radSplitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitPanel1).EndInit();
             splitPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitPanel2).EndInit();
-            splitPanel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pbCanvas).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)rtxtCommand).EndInit();
             ((System.ComponentModel.ISupportInitialize)rrtxtCode).EndInit();
+            ((System.ComponentModel.ISupportInitialize)splitPanel2).EndInit();
+            splitPanel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pbCanvas).EndInit();
             ((System.ComponentModel.ISupportInitialize)this).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -261,6 +266,7 @@
         private StatusStrip statusStrip1;
         private Telerik.WinControls.UI.RadMenu radMenu1;
         private Telerik.WinControls.UI.RadMenuItem radMenuItem1;
+        private Telerik.WinControls.UI.RadMenuItem rmiFileNew;
         private Telerik.WinControls.UI.RadMenuItem rmiFileOpen;
         private Telerik.WinControls.UI.RadMenuItem rmiFileSave;
         private Telerik.WinControls.UI.RadMenuItem rmiFileSaveAs;
