@@ -9,6 +9,11 @@ public class MainLogic
         this.form = form;
     }
 
+    public void Reset()
+    {
+        //
+    }
+
     public void FileNew()
     {
         //

@@ -19,17 +19,12 @@ public partial class MainForm : RadForm, IMainForm
     {
         base.OnLoad(e);
 
-        Reset();
+        app.Reset();
     }
 
     //
 
     private readonly MainLogic app;
-
-    private void Reset()
-    {
-        // TODO
-    }
 
     //
 
