@@ -1,4 +1,6 @@
-﻿using Turtles.Library.Contracts;
+﻿using System.Drawing;
+using Turtles.Library.Contracts;
+using Turtles.Library.Models;
 
 namespace Turtles.Library.Services;
 
@@ -11,7 +13,9 @@ public class MainLogic
 
     public void Reset()
     {
-        //
+        turtle = new Turtle(new PointF(), 0);
+
+        // TODO
     }
 
     public void FileNew()
@@ -47,4 +51,6 @@ public class MainLogic
     //
 
     private readonly IMainForm form;
+
+    private Turtle turtle = new(new PointF(), 0);
 }

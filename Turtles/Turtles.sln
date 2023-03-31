@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Turtles", "Turtles\Turtles.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Turtles.Library", "Turtles.Library\Turtles.Library.csproj", "{17A2A32F-CE68-450C-8137-CA01B35FD25D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Turtles.Tests", "Turtles.Tests\Turtles.Tests.csproj", "{BFA8DFAB-FFF9-4AD3-9693-8118BD111B6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{17A2A32F-CE68-450C-8137-CA01B35FD25D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17A2A32F-CE68-450C-8137-CA01B35FD25D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17A2A32F-CE68-450C-8137-CA01B35FD25D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFA8DFAB-FFF9-4AD3-9693-8118BD111B6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFA8DFAB-FFF9-4AD3-9693-8118BD111B6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFA8DFAB-FFF9-4AD3-9693-8118BD111B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFA8DFAB-FFF9-4AD3-9693-8118BD111B6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
