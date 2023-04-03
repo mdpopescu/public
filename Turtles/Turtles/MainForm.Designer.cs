@@ -75,13 +75,13 @@
             // tsslblPosition
             // 
             tsslblPosition.Name = "tsslblPosition";
-            tsslblPosition.Size = new Size(25, 17);
+            tsslblPosition.Size = new Size(50, 17);
             tsslblPosition.Text = "Pos: 0, 0";
             // 
             // tsslblDirection
             // 
             tsslblDirection.Name = "tsslblDirection";
-            tsslblDirection.Size = new Size(13, 17);
+            tsslblDirection.Size = new Size(34, 17);
             tsslblDirection.Text = "Dir: 0";
             // 
             // radMenu1
@@ -207,6 +207,7 @@
             rrtxtCode.SelectionFill = Color.FromArgb(128, 78, 158, 255);
             rrtxtCode.Size = new Size(392, 378);
             rrtxtCode.TabIndex = 1;
+            rrtxtCode.TextChanged += rrtxtCode_TextChanged;
             // 
             // splitPanel2
             // 

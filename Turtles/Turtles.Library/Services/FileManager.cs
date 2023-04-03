@@ -47,8 +47,8 @@ public class FileManager : IFileManager
     }
 
     public bool Save() => InternalSave(Filename);
-
     public bool SaveAs() => InternalSave(null);
+    public bool SaveIfModified() => !IsModified || Save();
 
     //
 

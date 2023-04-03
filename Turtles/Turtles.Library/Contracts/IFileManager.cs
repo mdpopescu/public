@@ -27,7 +27,7 @@ public interface IFileManager
     /// <returns><c>true</c> if the call was successful.</returns>
     /// <remarks>
     ///     If the current file is unnamed, tries to request the name from the UI; this might fail (the user might
-    ///     cancel).
+    ///     cancel or the save itself might fail).
     /// </remarks>
     bool Save();
 
@@ -36,7 +36,16 @@ public interface IFileManager
     /// </summary>
     /// <returns><c>true</c> if the call was successful.</returns>
     /// <remarks>
-    ///     Tries to request the name from the UI; this might fail (the user might cancel).
+    ///     Requests the name from the UI; this might fail (the user might cancel or the save itself might fail).
     /// </remarks>
     bool SaveAs();
+
+    /// <summary>
+    ///     Tries to save the current file if it's modified.
+    /// </summary>
+    /// <returns><c>true</c> if the call was successful.</returns>
+    /// <remarks>
+    ///     Requests the name from the UI; this might fail (the user might cancel or the save itself might fail).
+    /// </remarks>
+    bool SaveIfModified();
 }

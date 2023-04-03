@@ -18,31 +18,6 @@ public class MainLogic
         // TODO
     }
 
-    public void FileNew()
-    {
-        //
-    }
-
-    public void FileOpen()
-    {
-        //
-    }
-
-    public void FileExit()
-    {
-        //
-    }
-
-    public void FileSave()
-    {
-        //
-    }
-
-    public void FileSaveAs()
-    {
-        //
-    }
-
     public void HelpAbout()
     {
         //

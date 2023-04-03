@@ -128,6 +128,11 @@ public class FileManagerTests
     [TestClass]
     public class Open : FileManagerTests
     {
+        public Open()
+        {
+            throw new Exception("There's an error in the File/Open logic (the current changes are saved without asking if they should be)");
+        }
+
         [TestMethod("Unnamed, unmodified - happy path")]
         public void Test1()
         {
