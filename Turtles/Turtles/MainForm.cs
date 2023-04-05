@@ -1,5 +1,7 @@
+using Telerik.WinControls;
 using Telerik.WinControls.UI;
 using Turtles.Library.Contracts;
+using Turtles.Library.Models;
 using Turtles.Library.Services;
 
 namespace Turtles;
@@ -26,6 +28,17 @@ public partial class MainForm : RadForm, IMainForm, IFileUI
         using var dlg = new SaveFileDialog();
         dlg.Filter = "Logo Files (*.logo)|*.logo|All Files (*.*)|*.*";
         return dlg.ShowDialog() == DialogResult.OK ? dlg.FileName : null;
+    }
+
+    public ConfirmationResponse ConfirmSave()
+    {
+        var result = RadMessageBox.Show("The current file has been modified, do you want to save the changes?", "Confirm Save", MessageBoxButtons.YesNoCancel);
+        return result switch
+        {
+            DialogResult.Yes => ConfirmationResponse.YES,
+            DialogResult.No => ConfirmationResponse.NO,
+            _ => ConfirmationResponse.CANCEL,
+        };
     }
 
     //

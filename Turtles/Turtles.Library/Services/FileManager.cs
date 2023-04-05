@@ -1,4 +1,5 @@
 ﻿using Turtles.Library.Contracts;
+using Turtles.Library.Models;
 
 namespace Turtles.Library.Services;
 
@@ -28,7 +29,7 @@ public class FileManager : IFileManager
 
     public bool New()
     {
-        if (IsModified && !Save())
+        if (IsModified && !SaveConfirmed())
             return false;
 
         Text = "";
@@ -39,7 +40,7 @@ public class FileManager : IFileManager
 
     public bool Open()
     {
-        if (IsModified && !Save())
+        if (IsModified && !SaveConfirmed())
             return false;
 
         var filename = ui.GetFilenameToOpen();
@@ -56,6 +57,14 @@ public class FileManager : IFileManager
     private readonly IFileSystem fs;
 
     private string text = "";
+
+    private bool SaveConfirmed() => ui.ConfirmSave() switch
+    {
+        ConfirmationResponse.YES => Save(),
+        ConfirmationResponse.NO => true,
+        ConfirmationResponse.CANCEL => false,
+        _ => throw new ArgumentOutOfRangeException(),
+    };
 
     private bool InternalSave(string? oldFilename)
     {
