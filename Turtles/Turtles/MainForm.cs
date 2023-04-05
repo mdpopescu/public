@@ -1,5 +1,7 @@
+using Telerik.WinControls;
 using Telerik.WinControls.UI;
 using Turtles.Library.Contracts;
+using Turtles.Library.Models;
 using Turtles.Library.Services;
 
 namespace Turtles;
@@ -28,6 +30,17 @@ public partial class MainForm : RadForm, IMainForm, IFileUI
         return dlg.ShowDialog() == DialogResult.OK ? dlg.FileName : null;
     }
 
+    public ConfirmationResponse ConfirmSave()
+    {
+        var result = RadMessageBox.Show("The current file has been modified, do you want to save the changes?", "Confirm Save", MessageBoxButtons.YesNoCancel);
+        return result switch
+        {
+            DialogResult.Yes => ConfirmationResponse.YES,
+            DialogResult.No => ConfirmationResponse.NO,
+            _ => ConfirmationResponse.CANCEL,
+        };
+    }
+
     //
 
     protected override void OnLoad(EventArgs e)
@@ -46,7 +59,7 @@ public partial class MainForm : RadForm, IMainForm, IFileUI
     {
         rrtxtCode.Text = fileManager.Text;
         var modified = fileManager.IsModified ? "*" : "";
-        Text = $"Turtles -- {modified}{fileManager.Filename}";
+        Text = $"Turtles -- {modified}{fileManager.Filename ?? "Untitled"}";
     }
 
     //

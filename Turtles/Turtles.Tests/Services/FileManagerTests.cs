@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Turtles.Library.Contracts;
+using Turtles.Library.Models;
 using Turtles.Library.Services;
 
 namespace Turtles.Tests.Services;
@@ -57,24 +58,58 @@ public class FileManagerTests
         public void Test3()
         {
             sut.Text = NEW_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
             SetupSave(NEW_FILENAME);
 
             var result = sut.New();
 
+            fs.Verify(it => it.Save(NEW_FILENAME, NEW_TEXT));
             Assert.IsTrue(result);
             Assert.AreEqual(ORIGINAL_FILENAME, sut.Filename);
             Assert.AreEqual(ORIGINAL_TEXT, sut.Text);
             Assert.IsFalse(sut.IsModified);
         }
 
-        [TestMethod("Unnamed, modified - canceled")]
+        [TestMethod("Unnamed, modified - save declined")]
         public void Test4()
         {
             sut.Text = NEW_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.NO);
+
+            var result = sut.New();
+
+            fs.Verify(it => it.Save(NEW_FILENAME, NEW_TEXT), Times.Never);
+            Assert.IsTrue(result);
+            Assert.AreEqual(ORIGINAL_FILENAME, sut.Filename);
+            Assert.AreEqual(ORIGINAL_TEXT, sut.Text);
+            Assert.IsFalse(sut.IsModified);
+        }
+
+        [TestMethod("Unnamed, modified - save canceled (1)")]
+        public void Test5()
+        {
+            sut.Text = NEW_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.CANCEL);
+
+            var result = sut.New();
+
+            fs.Verify(it => it.Save(NEW_FILENAME, NEW_TEXT), Times.Never);
+            Assert.IsFalse(result);
+            Assert.AreEqual(ORIGINAL_FILENAME, sut.Filename);
+            Assert.AreEqual(NEW_TEXT, sut.Text);
+            Assert.IsTrue(sut.IsModified);
+        }
+
+        [TestMethod("Unnamed, modified - save canceled (2)")]
+        public void Test6()
+        {
+            sut.Text = NEW_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
             SetupSaveToCancel();
 
             var result = sut.New();
 
+            fs.Verify(it => it.Save(NEW_FILENAME, NEW_TEXT), Times.Never);
             Assert.IsFalse(result);
             Assert.AreEqual(ORIGINAL_FILENAME, sut.Filename);
             Assert.AreEqual(NEW_TEXT, sut.Text);
@@ -82,9 +117,10 @@ public class FileManagerTests
         }
 
         [TestMethod("Unnamed, modified - save failed")]
-        public void Test5()
+        public void Test7()
         {
             sut.Text = NEW_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
             SetupSaveToFail(NEW_FILENAME);
 
             var result = sut.New();
@@ -96,10 +132,11 @@ public class FileManagerTests
         }
 
         [TestMethod("Named, modified - happy path")]
-        public void Test6()
+        public void Test8()
         {
             SetFilenameAndText(OLD_FILENAME, OLD_TEXT);
             sut.Text = NEW_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
 
             var result = sut.New();
 
@@ -109,12 +146,45 @@ public class FileManagerTests
             Assert.IsFalse(sut.IsModified);
         }
 
-        [TestMethod("Named, modified - save failed")]
-        public void Test7()
+        [TestMethod("Named, modified - save declined")]
+        public void Test9()
         {
             SetFilenameAndText(OLD_FILENAME, OLD_TEXT);
             sut.Text = NEW_TEXT; // set the modified flag to true
-            fs.Setup(it => it.Save(OLD_FILENAME, NEW_TEXT)).Throws<Exception>();
+            SetupConfirmation(ConfirmationResponse.NO);
+
+            var result = sut.New();
+
+            fs.Verify(it => it.Save(OLD_FILENAME, NEW_TEXT), Times.Never);
+            Assert.IsTrue(result);
+            Assert.AreEqual(ORIGINAL_FILENAME, sut.Filename);
+            Assert.AreEqual(ORIGINAL_TEXT, sut.Text);
+            Assert.IsFalse(sut.IsModified);
+        }
+
+        [TestMethod("Named, modified - save canceled")]
+        public void Test10()
+        {
+            SetFilenameAndText(OLD_FILENAME, OLD_TEXT);
+            sut.Text = NEW_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.CANCEL);
+
+            var result = sut.New();
+
+            fs.Verify(it => it.Save(OLD_FILENAME, NEW_TEXT), Times.Never);
+            Assert.IsFalse(result);
+            Assert.AreEqual(OLD_FILENAME, sut.Filename);
+            Assert.AreEqual(NEW_TEXT, sut.Text);
+            Assert.IsTrue(sut.IsModified);
+        }
+
+        [TestMethod("Named, modified - save failed")]
+        public void Test11()
+        {
+            SetFilenameAndText(OLD_FILENAME, OLD_TEXT);
+            sut.Text = NEW_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
+            SetupSaveToFail(OLD_FILENAME);
 
             var result = sut.New();
 
@@ -128,11 +198,6 @@ public class FileManagerTests
     [TestClass]
     public class Open : FileManagerTests
     {
-        public Open()
-        {
-            throw new Exception("There's an error in the File/Open logic (the current changes are saved without asking if they should be)");
-        }
-
         [TestMethod("Unnamed, unmodified - happy path")]
         public void Test1()
         {
@@ -221,6 +286,7 @@ public class FileManagerTests
         public void Test7()
         {
             sut.Text = OLD_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
             SetupSave(OLD_FILENAME);
             SetupOpen(NEW_FILENAME, NEW_TEXT);
 
@@ -233,14 +299,47 @@ public class FileManagerTests
             Assert.IsFalse(sut.IsModified);
         }
 
-        [TestMethod("Unnamed, modified - save canceled")]
+        [TestMethod("Unnamed, modified - save declined")]
         public void Test8()
         {
             sut.Text = OLD_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.NO);
+            SetupOpen(NEW_FILENAME, NEW_TEXT);
+
+            var result = sut.Open();
+
+            fs.Verify(it => it.Save(It.IsAny<string>(), OLD_TEXT), Times.Never);
+            Assert.IsTrue(result);
+            Assert.AreEqual(NEW_FILENAME, sut.Filename);
+            Assert.AreEqual(NEW_TEXT, sut.Text);
+            Assert.IsFalse(sut.IsModified);
+        }
+
+        [TestMethod("Unnamed, modified - save canceled (1)")]
+        public void Test9()
+        {
+            sut.Text = OLD_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.CANCEL);
+
+            var result = sut.Open();
+
+            fs.Verify(it => it.Save(OLD_FILENAME, OLD_TEXT), Times.Never);
+            Assert.IsFalse(result);
+            Assert.AreEqual(ORIGINAL_FILENAME, sut.Filename);
+            Assert.AreEqual(OLD_TEXT, sut.Text);
+            Assert.IsTrue(sut.IsModified);
+        }
+
+        [TestMethod("Unnamed, modified - save canceled (2)")]
+        public void Test10()
+        {
+            sut.Text = OLD_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
             SetupSaveToCancel();
 
             var result = sut.Open();
 
+            fs.Verify(it => it.Save(OLD_FILENAME, OLD_TEXT), Times.Never);
             Assert.IsFalse(result);
             Assert.AreEqual(ORIGINAL_FILENAME, sut.Filename);
             Assert.AreEqual(OLD_TEXT, sut.Text);
@@ -248,9 +347,10 @@ public class FileManagerTests
         }
 
         [TestMethod("Unnamed, modified - save failed")]
-        public void Test9()
+        public void Test11()
         {
             sut.Text = OLD_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
             SetupSaveToFail(OLD_FILENAME);
 
             var result = sut.Open();
@@ -262,9 +362,10 @@ public class FileManagerTests
         }
 
         [TestMethod("Unnamed, modified - load canceled")]
-        public void Test10()
+        public void Test12()
         {
             sut.Text = OLD_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
             SetupSave(OLD_FILENAME);
             SetupOpenToCancel();
 
@@ -278,9 +379,10 @@ public class FileManagerTests
         }
 
         [TestMethod("Unnamed, modified - load failed")]
-        public void Test11()
+        public void Test13()
         {
             sut.Text = OLD_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
             SetupSave(OLD_FILENAME);
             SetupOpenToFail(NEW_FILENAME);
 
@@ -294,10 +396,11 @@ public class FileManagerTests
         }
 
         [TestMethod("Named, modified - happy path")]
-        public void Test12()
+        public void Test14()
         {
             SetFilenameAndText(OLD_FILENAME, OLD_TEXT);
             sut.Text = "123"; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
             SetupOpen(NEW_FILENAME, NEW_TEXT);
 
             var result = sut.Open();
@@ -309,26 +412,61 @@ public class FileManagerTests
             Assert.IsFalse(sut.IsModified);
         }
 
-        [TestMethod("Named, modified - save failed")]
-        public void Test13()
+        [TestMethod("Named, modified - save declined")]
+        public void Test15()
         {
             SetFilenameAndText(OLD_FILENAME, OLD_TEXT);
             sut.Text = "123"; // set the modified flag to true
-            fs.Setup(it => it.Save(OLD_FILENAME, "123")).Throws<Exception>();
+            SetupConfirmation(ConfirmationResponse.NO);
+            SetupOpen(NEW_FILENAME, NEW_TEXT);
 
             var result = sut.Open();
 
+            fs.Verify(it => it.Save(OLD_FILENAME, "123"), Times.Never);
+            Assert.IsTrue(result);
+            Assert.AreEqual(NEW_FILENAME, sut.Filename);
+            Assert.AreEqual(NEW_TEXT, sut.Text);
+            Assert.IsFalse(sut.IsModified);
+        }
+
+        [TestMethod("Named, modified - save canceled")]
+        public void Test16()
+        {
+            SetFilenameAndText(OLD_FILENAME, OLD_TEXT);
+            sut.Text = "123"; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.CANCEL);
+
+            var result = sut.Open();
+
+            fs.Verify(it => it.Save(OLD_FILENAME, "123"), Times.Never);
             Assert.IsFalse(result);
             Assert.AreEqual(OLD_FILENAME, sut.Filename);
             Assert.AreEqual("123", sut.Text);
             Assert.IsTrue(sut.IsModified);
         }
 
+        [TestMethod("Named, modified - save failed")]
+        public void Test17()
+        {
+            SetFilenameAndText(OLD_FILENAME, OLD_TEXT);
+            sut.Text = NEW_TEXT; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
+            SetupSaveToFail(OLD_FILENAME);
+
+            var result = sut.Open();
+
+            Assert.IsFalse(result);
+            Assert.AreEqual(OLD_FILENAME, sut.Filename);
+            Assert.AreEqual(NEW_TEXT, sut.Text);
+            Assert.IsTrue(sut.IsModified);
+        }
+
         [TestMethod("Named, modified - load canceled")]
-        public void Test14()
+        public void Test18()
         {
             SetFilenameAndText(OLD_FILENAME, OLD_TEXT);
             sut.Text = "123"; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
             SetupOpenToCancel();
 
             var result = sut.Open();
@@ -340,10 +478,11 @@ public class FileManagerTests
         }
 
         [TestMethod("Named, modified - load failed")]
-        public void Test15()
+        public void Test19()
         {
             SetFilenameAndText(OLD_FILENAME, OLD_TEXT);
             sut.Text = "123"; // set the modified flag to true
+            SetupConfirmation(ConfirmationResponse.YES);
             SetupOpenToFail(NEW_FILENAME);
 
             var result = sut.Open();
@@ -706,4 +845,7 @@ public class FileManagerTests
 
     private void SetFilenameToSave(string? filename) =>
         ui.Setup(it => it.GetFilenameToSave()).Returns(filename);
+
+    private void SetupConfirmation(ConfirmationResponse confirmation) =>
+        ui.Setup(it => it.ConfirmSave()).Returns(confirmation);
 }
