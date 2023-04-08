@@ -19,20 +19,20 @@ public partial class MainForm : RadForm, IMainForm, IFileUI
     public string? GetFilenameToOpen()
     {
         using var dlg = new OpenFileDialog();
-        dlg.Filter = "Logo Files (*.logo)|*.logo|All Files (*.*)|*.*";
+        dlg.Filter = Constants.FILTER;
         return dlg.ShowDialog() == DialogResult.OK ? dlg.FileName : null;
     }
 
     public string? GetFilenameToSave()
     {
         using var dlg = new SaveFileDialog();
-        dlg.Filter = "Logo Files (*.logo)|*.logo|All Files (*.*)|*.*";
+        dlg.Filter = Constants.FILTER;
         return dlg.ShowDialog() == DialogResult.OK ? dlg.FileName : null;
     }
 
     public ConfirmationResponse ConfirmSave()
     {
-        var result = RadMessageBox.Show("The current file has been modified, do you want to save the changes?", "Confirm Save", MessageBoxButtons.YesNoCancel);
+        var result = RadMessageBox.Show(Constants.SAVE_PROMPT, Constants.SAVE_CAPTION, MessageBoxButtons.YesNoCancel);
         return result switch
         {
             DialogResult.Yes => ConfirmationResponse.YES,
@@ -55,37 +55,39 @@ public partial class MainForm : RadForm, IMainForm, IFileUI
     private readonly MainLogic app;
     private readonly IFileManager fileManager;
 
+    private string Prefix => fileManager.IsModified ? Constants.MODIFIED_PREFIX : Constants.UNMODIFIED_PREFIX;
+    private string Title => $"{Constants.APP_NAME} -- {Prefix}{fileManager.Filename ?? Constants.UNNAMED}";
+
     private void UpdateUI()
     {
         rrtxtCode.Text = fileManager.Text;
-        var modified = fileManager.IsModified ? "*" : "";
-        Text = $"Turtles -- {modified}{fileManager.Filename ?? "Untitled"}";
+        Text = Title;
     }
 
     //
 
     private void rmiFileNew_Click(object sender, EventArgs e)
     {
-        if (fileManager.New())
-            UpdateUI();
+        fileManager.New();
+        UpdateUI();
     }
 
     private void rmiFileOpen_Click(object sender, EventArgs e)
     {
-        if (fileManager.Open())
-            UpdateUI();
+        fileManager.Open();
+        UpdateUI();
     }
 
     private void rmiFileSave_Click(object sender, EventArgs e)
     {
-        if (fileManager.Save())
-            UpdateUI();
+        fileManager.Save();
+        UpdateUI();
     }
 
     private void rmiFileSaveAs_Click(object sender, EventArgs e)
     {
-        if (fileManager.SaveAs())
-            UpdateUI();
+        fileManager.SaveAs();
+        UpdateUI();
     }
 
     private void rmiFileExit_Click(object sender, EventArgs e)
