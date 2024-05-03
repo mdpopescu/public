@@ -19,17 +19,25 @@ public class DiamondBuilderTests
     {
         private readonly TextWriter writer = Substitute.For<TextWriter>();
 
-        [TestMethod("Out of range or multiple characters do not write anything to the output")]
         [DataRow("0")]
         [DataRow("!")]
         [DataRow("~")]
         [DataRow("\\u1F600")]
         [DataRow("ABC")]
-        public void Test1(string arg)
+        [TestMethod("Out of range or multiple characters do not write anything to the output")]
+        public void NoOutput(string arg)
         {
             sut.Build([arg], writer);
 
             writer.DidNotReceive().WriteLine(Arg.Any<string>());
+        }
+
+        [TestMethod("Single line")]
+        public void Test2()
+        {
+            sut.Build(["A"], writer);
+
+            writer.Received().WriteLine("A");
         }
     }
 }
