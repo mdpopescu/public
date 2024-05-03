@@ -71,5 +71,20 @@ public class DiamondBuilderTests
             Assert.AreEqual(" B B ", result[3]);
             Assert.AreEqual("  A  ", result[4]);
         }
+
+        [TestMethod("Seven lines")]
+        public void Test5()
+        {
+            sut.Build(["D"], writer);
+
+            Assert.AreEqual(7, result.Count);
+            Assert.AreEqual("   A   ", result[0]);
+            Assert.AreEqual("  B B  ", result[1]);
+            Assert.AreEqual(" C   C ", result[2]);
+            Assert.AreEqual("D     D", result[3]);
+            Assert.AreEqual(" C   C ", result[4]);
+            Assert.AreEqual("  B B  ", result[5]);
+            Assert.AreEqual("   A   ", result[6]);
+        }
     }
 }
