@@ -17,8 +17,7 @@ public class DiamondBuilder
 
         // taking spaces into account, the result will be a square
         // the length of the square would be N*2-1, with N being
-        // equal to ch-'A'+1
-        // if the current line is I, with I starting at 0,
+        // equal to CH-'A'+1
 
         var n = ch - 'A' + 1;
         var len = n * 2 - 1;
@@ -29,7 +28,27 @@ public class DiamondBuilder
             .Select(_ => Enumerable.Range(1, len).Select(_ => ' ').ToArray())
             .ToArray();
 
-        // TODO: fill out the correct letters
+        // 'A' must be on rows 0 and LEN-1 -- current-'A' and LEN-(current-'A')-1
+        // 'B' must be on rows 1 and LEN-2 -- current-'A' and LEN-(current-'A')-1
+        // ...
+        // CH  must be on row N-1 which is equal to LEN/2
+
+        // 'A' must be on column N-1          -- N-(current-'A')-1 and N+(current-'A')-1
+        // 'B' must be on columns N-2 and N   -- N-(current-'A')-1 and N+(current-'A')-1
+        // 'C' must be on columns N-3 and N+1 -- N-(current-'A')-1 and N+(current-'A')-1
+        // ...
+
+        // the zero-indexing makes formulas more complicated than they should be
+
+        for (var current = 'A'; current <= ch; current++)
+        {
+            var diff = current - 'A';
+
+            result[diff][n - diff - 1] = current;
+            result[diff][n + diff - 1] = current;
+            result[len - diff - 1][n - diff - 1] = current;
+            result[len - diff - 1][n + diff - 1] = current;
+        }
 
         foreach (var row in result)
             writer.WriteLine(new string(row));
