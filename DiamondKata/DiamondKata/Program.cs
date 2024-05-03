@@ -1,2 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using DiamondKata.Library.Services;
+
+var builder = new DiamondBuilder();
+builder.Build(args, Console.Out);
