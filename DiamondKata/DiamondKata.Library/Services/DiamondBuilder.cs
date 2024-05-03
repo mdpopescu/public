@@ -15,16 +15,23 @@ public class DiamondBuilder
         if (ch is < 'A' or > 'Z')
             return;
 
-        // do the simplest thing that works
-        if (ch == 'A')
-        {
-            writer.WriteLine("A");
-        }
-        else
-        {
-            writer.WriteLine(" A ");
-            writer.WriteLine("B B");
-            writer.WriteLine(" A ");
-        }
+        // taking spaces into account, the result will be a square
+        // the length of the square would be N*2-1, with N being
+        // equal to ch-'A'+1
+        // if the current line is I, with I starting at 0,
+
+        var n = ch - 'A' + 1;
+        var len = n * 2 - 1;
+
+        // the result is a matrix of len x len characters, initialized to spaces
+        var result = Enumerable
+            .Range(1, len)
+            .Select(_ => Enumerable.Range(1, len).Select(_ => ' ').ToArray())
+            .ToArray();
+
+        // TODO: fill out the correct letters
+
+        foreach (var row in result)
+            writer.WriteLine(new string(row));
     }
 }
