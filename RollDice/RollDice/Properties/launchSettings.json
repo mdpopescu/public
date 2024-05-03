@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RollDice": {
+      "commandName": "Project",
+      "commandLineArgs": "1d6 3d8 5d12 4d6+3"
+    }
+  }
+}
