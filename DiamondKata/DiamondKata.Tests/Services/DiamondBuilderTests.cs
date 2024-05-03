@@ -19,6 +19,13 @@ public class DiamondBuilderTests
     {
         private readonly TextWriter writer = Substitute.For<TextWriter>();
 
+        private readonly List<string> result = new();
+
+        public Build()
+        {
+            writer.When(it => it.WriteLine(Arg.Any<string>())).Do(ci => result.Add((string)ci[0]));
+        }
+
         [DataRow("0")]
         [DataRow("!")]
         [DataRow("~")]
@@ -29,7 +36,7 @@ public class DiamondBuilderTests
         {
             sut.Build([arg], writer);
 
-            writer.DidNotReceive().WriteLine(Arg.Any<string>());
+            Assert.AreEqual(0, result.Count);
         }
 
         [TestMethod("Single line")]
@@ -37,32 +44,32 @@ public class DiamondBuilderTests
         {
             sut.Build(["A"], writer);
 
-            writer.Received().WriteLine("A");
-
-            // I am tempted to replace the several tests with a complex LINQ expression in the refactoring step
-            // after the second test passes but I think it might be harder to read.
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("A", result[0]);
         }
 
-        [TestMethod("Two lines")]
+        [TestMethod("Three lines")]
         public void Test3()
         {
             sut.Build(["B"], writer);
 
-            writer.Received().WriteLine(" A ");
-            writer.Received().WriteLine("B B");
-            writer.Received().WriteLine(" A ");
+            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual(" A ", result[0]);
+            Assert.AreEqual("B B", result[1]);
+            Assert.AreEqual(" A ", result[2]);
         }
 
-        [TestMethod("Three lines")]
+        [TestMethod("Five lines")]
         public void Test4()
         {
             sut.Build(["C"], writer);
 
-            writer.Received().WriteLine("  A  ");
-            writer.Received().WriteLine(" B B ");
-            writer.Received().WriteLine(" B B ");
-            writer.Received().WriteLine("  A  ");
-            writer.Received().WriteLine("C   C");
+            Assert.AreEqual(5, result.Count);
+            Assert.AreEqual("  A  ", result[0]);
+            Assert.AreEqual(" B B ", result[1]);
+            Assert.AreEqual("C   C", result[2]);
+            Assert.AreEqual(" B B ", result[3]);
+            Assert.AreEqual("  A  ", result[4]);
         }
     }
 }
