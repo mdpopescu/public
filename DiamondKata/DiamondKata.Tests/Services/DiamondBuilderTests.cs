@@ -38,6 +38,19 @@ public class DiamondBuilderTests
             sut.Build(["A"], writer);
 
             writer.Received().WriteLine("A");
+
+            // I am tempted to replace the several tests with a complex LINQ expression in the refactoring step
+            // after the second test passes but I think it might be harder to read.
+        }
+
+        [TestMethod("Two lines")]
+        public void Test3()
+        {
+            sut.Build(["B"], writer);
+
+            writer.Received().WriteLine(" A ");
+            writer.Received().WriteLine("B B");
+            writer.Received().WriteLine(" A ");
         }
     }
 }

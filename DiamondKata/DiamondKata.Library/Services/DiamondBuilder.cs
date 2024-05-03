@@ -15,6 +15,16 @@ public class DiamondBuilder
         if (ch is < 'A' or > 'Z')
             return;
 
-        writer.WriteLine(ch.ToString());
+        // do the simplest thing that works
+        if (ch == 'A')
+        {
+            writer.WriteLine("A");
+        }
+        else
+        {
+            writer.WriteLine(" A ");
+            writer.WriteLine("B B");
+            writer.WriteLine(" A ");
+        }
     }
 }
