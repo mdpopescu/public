@@ -60,9 +60,9 @@ public class DiamondBuilderTests
 
             writer.Received().WriteLine("  A  ");
             writer.Received().WriteLine(" B B ");
-            writer.Received().WriteLine("C   C");
             writer.Received().WriteLine(" B B ");
             writer.Received().WriteLine("  A  ");
+            writer.Received().WriteLine("C   C");
         }
     }
 }
