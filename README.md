@@ -21,6 +21,8 @@ Public repository - CC-by-SA 3.0
 
 * CachingAlgorithms: comparing several caching algorithms (least recently used, most recently used and so on)
 
+* CommandLineRouter: a library for adding handlers to various command-line options, similar to the routing in a web application
+
 * CompareExcelFiles: compares two Excel files with the same structure, based on the indicated columns; shows for each file what records are present in that one but not the other
 
 * CompareExcelFiles2: the same project as above but started from scratch using TDD; article at http://mdpopescu.blogspot.com/2013/06/comparing-excel-files-take-two.html

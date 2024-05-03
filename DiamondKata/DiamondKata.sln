@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiamondKata", "DiamondKata\DiamondKata.csproj", "{AE64E622-1F8A-4E47-A997-6BBDE38CB912}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DD3DCBE7-2E37-4B1D-A687-65E357A8F43F}"
+	ProjectSection(SolutionItems) = preProject
+		specs.txt = specs.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiamondKata.Library", "DiamondKata.Library\DiamondKata.Library.csproj", "{96F7AA16-5726-4BB8-92F6-3ADF3F4472A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiamondKata.Tests", "DiamondKata.Tests\DiamondKata.Tests.csproj", "{EE503B08-0479-431A-8A54-C693296C67CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE64E622-1F8A-4E47-A997-6BBDE38CB912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE64E622-1F8A-4E47-A997-6BBDE38CB912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE64E622-1F8A-4E47-A997-6BBDE38CB912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE64E622-1F8A-4E47-A997-6BBDE38CB912}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96F7AA16-5726-4BB8-92F6-3ADF3F4472A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96F7AA16-5726-4BB8-92F6-3ADF3F4472A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96F7AA16-5726-4BB8-92F6-3ADF3F4472A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96F7AA16-5726-4BB8-92F6-3ADF3F4472A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE503B08-0479-431A-8A54-C693296C67CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE503B08-0479-431A-8A54-C693296C67CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE503B08-0479-431A-8A54-C693296C67CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE503B08-0479-431A-8A54-C693296C67CA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {62D02CBD-CC83-4F62-824D-659C1B52E8D0}
+	EndGlobalSection
+EndGlobal
