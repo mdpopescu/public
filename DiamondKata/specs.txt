@@ -35,3 +35,4 @@ It may be helpful visualise the whitespace in your rendering like this:
 - the letter will be coverted to its uppercase equivalent
 - only ASCII letters will be considered (no diacritics, emoji or anything else)
 - anything outside of the A to Z interval will be ignored
+- multiple characters will also be ignored
