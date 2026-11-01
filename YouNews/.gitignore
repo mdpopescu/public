@@ -11,6 +11,7 @@
 # Build output and machine-specific settings
 bin/
 obj/
+publish/
 _ReSharper.Caches/
 *.user
 .vs/

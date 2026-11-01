@@ -47,13 +47,13 @@ All settings and their defaults are in `src/YouNews.Infrastructure/YouNewsOption
 
 ## Windows service
 
-As a service it refreshes daily at `YouNews:Refresh:DailyAt` (06:00 local time), and catches up on start if it missed today's run. Use absolute tool paths, because a service does not get your PATH, and run it under an account that can read the SSH key:
+As a service it refreshes daily at `YouNews:Refresh:DailyAt` (06:00 local time), and catches up on start if it missed today's run. Use absolute tool paths, because a service does not get your PATH.
 
 ```
-dotnet publish src\YouNews.Web -c Release -o C:\Apps\YouNews
-sc.exe create YouNews binPath= "C:\Apps\YouNews\YouNews.Web.exe" start= auto obj= ".\YourUser" password= "..."
-sc.exe start YouNews
+scripts\Install-Service.ps1
 ```
+
+This needs PowerShell 7. It publishes to the git-ignored `publish` folder (`-InstallDirectory` changes that) and installs the service under LocalSystem, asking for elevation but no password. The service gets your `APPDATA` and `LOCALAPPDATA`, so it finds tools installed there. Run it again to deploy a new build, or after editing `appsettings.Local.json`, because the service uses the published copy.
 
 ## Videos without captions
 

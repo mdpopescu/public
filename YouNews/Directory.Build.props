@@ -8,6 +8,7 @@
     <SelfContained>false</SelfContained>
     <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
     <RunSettingsFilePath>$(MSBuildThisFileDirectory)default.runsettings</RunSettingsFilePath>
+    <Copyright>Copyright © 2026 Renfield Software</Copyright>
   </PropertyGroup>
 
 </Project>
