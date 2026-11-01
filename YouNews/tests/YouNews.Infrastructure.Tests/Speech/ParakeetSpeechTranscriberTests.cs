@@ -29,7 +29,7 @@ public sealed class ParakeetSpeechTranscriberTests
 
         var transcript = await sut.TranscribeAsync("zhnJo7s91ls", CancellationToken.None);
 
-        Assert.AreEqual(2, transcript.Segments.Count);
+        Assert.HasCount(2, transcript.Segments);
         Assert.AreEqual(TimeSpan.FromSeconds(1.5), transcript.Segments[0].Start);
         Assert.AreEqual("Hello and welcome.", transcript.Segments[0].Text);
         Assert.AreEqual(TimeSpan.FromSeconds(62), transcript.Segments[1].Start);
@@ -131,7 +131,7 @@ public sealed class ParakeetSpeechTranscriberTests
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.TranscribeAsync("zhnJo7s91ls", CancellationToken.None));
 
-        Assert.AreEqual(0, ffmpeg.Invocations.Count);
+        Assert.IsEmpty(ffmpeg.Invocations);
         Assert.AreEqual(0, recognizer.Calls);
     }
 
@@ -150,7 +150,7 @@ public sealed class ParakeetSpeechTranscriberTests
     }
 
     private void AssertWorkDirectoryEmpty() =>
-        Assert.AreEqual(0, environment.WorkFiles().Length, "left behind: " + string.Join(", ", environment.WorkFiles()));
+        Assert.IsEmpty(environment.WorkFiles(), "left behind: " + string.Join(", ", environment.WorkFiles()));
 
     private sealed class FakeDownloader(string workDirectory) : IAudioDownloader
     {

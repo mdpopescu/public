@@ -30,7 +30,7 @@ public sealed class ToolHealthTests
 
         var problems = await sut.FindProblemsAsync(CancellationToken.None);
 
-        Assert.AreEqual(0, problems.Count, string.Join(" | ", problems));
+        Assert.IsEmpty(problems, string.Join(" | ", problems));
     }
 
     [TestMethod]
@@ -68,7 +68,7 @@ public sealed class ToolHealthTests
 
         var problems = await sut.FindProblemsAsync(CancellationToken.None);
 
-        Assert.AreEqual(2, problems.Count, string.Join(" | ", problems));
+        Assert.HasCount(2, problems, string.Join(" | ", problems));
         StringAssert.Contains(problems[0], "ffmpeg");
         StringAssert.Contains(problems[1], "node");
     }

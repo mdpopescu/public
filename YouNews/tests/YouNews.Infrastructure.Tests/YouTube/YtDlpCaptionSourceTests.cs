@@ -25,7 +25,7 @@ public sealed class YtDlpCaptionSourceTests
         var transcript = await sut.GetCaptionsAsync("zhnJo7s91ls", CancellationToken.None);
 
         Assert.AreEqual("from en", transcript?.Segments.Single().Text);
-        Assert.AreEqual(0, environment.WorkFiles().Length, string.Join(", ", environment.WorkFiles()));
+        Assert.IsEmpty(environment.WorkFiles(), string.Join(", ", environment.WorkFiles()));
     }
 
     [TestMethod]
@@ -79,7 +79,7 @@ public sealed class YtDlpCaptionSourceTests
         var transcript = await sut.GetCaptionsAsync("zhnJo7s91ls", CancellationToken.None);
 
         Assert.IsNull(transcript);
-        Assert.AreEqual(0, environment.WorkFiles().Length, string.Join(", ", environment.WorkFiles()));
+        Assert.IsEmpty(environment.WorkFiles(), string.Join(", ", environment.WorkFiles()));
     }
 
     [TestMethod]
@@ -89,7 +89,7 @@ public sealed class YtDlpCaptionSourceTests
 
         await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => sut.GetCaptionsAsync("zhnJo7s91ls", CancellationToken.None));
 
-        Assert.AreEqual(0, environment.WorkFiles().Length, string.Join(", ", environment.WorkFiles()));
+        Assert.IsEmpty(environment.WorkFiles(), string.Join(", ", environment.WorkFiles()));
     }
 
     [TestMethod]

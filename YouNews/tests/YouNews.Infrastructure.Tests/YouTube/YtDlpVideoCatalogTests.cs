@@ -89,7 +89,7 @@ public sealed class YtDlpVideoCatalogTests
     {
         await Assert.ThrowsExactlyAsync<ArgumentException>(() => sut.GetDetailsAsync(@"..\..\evil", CancellationToken.None));
 
-        Assert.AreEqual(0, runner.Invocations.Count);
+        Assert.IsEmpty(runner.Invocations);
     }
 
     [TestMethod]
@@ -115,8 +115,8 @@ public sealed class YtDlpVideoCatalogTests
 
         var feeds = await sut.ListVideoFeedsAsync(Channel("https://www.youtube.com/@x"), CancellationToken.None);
 
-        Assert.AreEqual(1, feeds[0].Count);
-        Assert.AreEqual(0, feeds[1].Count);
+        Assert.HasCount(1, feeds[0]);
+        Assert.IsEmpty(feeds[1]);
     }
 
     [TestMethod]
@@ -145,7 +145,7 @@ public sealed class YtDlpVideoCatalogTests
         var details = await sut.ResolveChannelAsync("https://example.com/@someone", CancellationToken.None);
 
         Assert.IsNull(details);
-        Assert.AreEqual(0, runner.Invocations.Count);
+        Assert.IsEmpty(runner.Invocations);
     }
 
     [TestMethod]

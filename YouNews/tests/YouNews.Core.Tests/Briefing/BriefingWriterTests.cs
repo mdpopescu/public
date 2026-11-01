@@ -94,7 +94,7 @@ public sealed class BriefingWriterTests
         CollectionAssert.AreEqual(new[] { TimeSpan.FromSeconds(12.5), TimeSpan.FromSeconds(30) }, result.FrameTimes.ToList());
         CollectionAssert.AreEqual(new[] { 7L }, result.RelatedEntryIds.ToList());
         CollectionAssert.AreEqual(new[] { "Halcyon-14B independent benchmark" }, result.SearchQueries.ToList());
-        Assert.AreEqual(1, model.Calls.Count, "Good JSON needs no retry.");
+        Assert.HasCount(1, model.Calls, "Good JSON needs no retry.");
         Assert.IsFalse(model.Calls[0].Thinking, "Analysis runs with thinking off.");
     }
 
@@ -107,7 +107,7 @@ public sealed class BriefingWriterTests
         var result = await sut.AnalyzeAsync("A title", "A channel", TranscriptBuilder.WithWords(100), [], CancellationToken.None);
 
         Assert.AreEqual("Recovered", result.Headline);
-        Assert.AreEqual(2, model.Calls.Count);
+        Assert.HasCount(2, model.Calls);
         StringAssert.Contains(model.Calls[1].User, "only the JSON object");
     }
 
@@ -120,7 +120,7 @@ public sealed class BriefingWriterTests
         var exception = await Assert.ThrowsAsync<FormatException>(() => sut.AnalyzeAsync("A title", "A channel", TranscriptBuilder.WithWords(100), [], CancellationToken.None));
 
         StringAssert.Contains(exception.Message, "still not json");
-        Assert.AreEqual(2, model.Calls.Count);
+        Assert.HasCount(2, model.Calls);
     }
 
     [TestMethod]
@@ -207,7 +207,7 @@ public sealed class BriefingWriterTests
 
         var user = model.Calls.Single().User;
         StringAssert.Contains(user, "42 | 2026-10-03 | research, industry | Old headline | First sentence v1.5 here.");
-        Assert.IsFalse(user.Contains("Second sentence"), user);
+        Assert.DoesNotContain("Second sentence", user, user);
     }
 
     [TestMethod]
@@ -302,7 +302,7 @@ public sealed class BriefingWriterTests
         var result = await sut.WriteOpinionAsync(FullRequest(), CancellationToken.None);
 
         Assert.AreEqual(THREE_PARAGRAPHS, result);
-        Assert.AreEqual(2, model.Calls.Count);
+        Assert.HasCount(2, model.Calls);
         Assert.IsTrue(model.Calls[1].Thinking);
         StringAssert.Contains(model.Calls[1].User, "too short");
     }
@@ -316,7 +316,7 @@ public sealed class BriefingWriterTests
         var result = await sut.WriteOpinionAsync(FullRequest(), CancellationToken.None);
 
         Assert.AreEqual("Still short.\n\nBut useful.", result);
-        Assert.AreEqual(2, model.Calls.Count);
+        Assert.HasCount(2, model.Calls);
     }
 
     [TestMethod]
@@ -339,7 +339,7 @@ public sealed class BriefingWriterTests
 
         await sut.SummarizeAsync("A video", transcript, CancellationToken.None);
 
-        Assert.AreEqual(1, model.Calls.Count, "No chunk notes at the limit.");
+        Assert.HasCount(1, model.Calls, "No chunk notes at the limit.");
         StringAssert.Contains(model.Calls[0].User, "w29999");
     }
 
@@ -353,14 +353,14 @@ public sealed class BriefingWriterTests
 
         await sut.SummarizeAsync("A video", transcript, CancellationToken.None);
 
-        Assert.AreEqual(chunkCount + 1, model.Calls.Count);
+        Assert.HasCount(chunkCount + 1, model.Calls);
         Assert.IsTrue(model.Calls.Take(chunkCount).All(call => !call.Thinking), "Notes are taken with thinking off.");
         StringAssert.Contains(model.Calls[0].User, "[00:00] w0");
         StringAssert.Contains(model.Calls[0].User, $"part 1 of {chunkCount}");
         var summaryCall = model.Calls[^1];
         StringAssert.Contains(summaryCall.User, "[00:42] note 1");
         StringAssert.Contains(summaryCall.User, $"[00:42] note {chunkCount}");
-        Assert.IsFalse(summaryCall.User.Contains("w29999"), "The raw transcript must not be in the final prompt.");
+        Assert.DoesNotContain("w29999", summaryCall.User, "The raw transcript must not be in the final prompt.");
     }
 
     [TestMethod]
@@ -376,11 +376,11 @@ public sealed class BriefingWriterTests
         await sut.SummarizeAsync("A title", transcript, CancellationToken.None);
         await sut.WriteOpinionAsync(FullRequest() with { Transcript = transcript }, CancellationToken.None);
 
-        Assert.AreEqual(chunkCount + 3, model.Calls.Count, "Notes must be made only once.");
+        Assert.HasCount(chunkCount + 3, model.Calls, "Notes must be made only once.");
         foreach (var call in model.Calls.Skip(chunkCount))
         {
             StringAssert.Contains(call.User, "[00:42] note 1");
-            Assert.IsFalse(call.User.Contains("w49999"), "The raw transcript must not be sent again.");
+            Assert.DoesNotContain("w49999", call.User, "The raw transcript must not be sent again.");
         }
     }
 
@@ -398,7 +398,7 @@ public sealed class BriefingWriterTests
         gate.SetResult();
         await Task.WhenAll(first, second);
 
-        Assert.AreEqual(chunkCount + 2, model.Calls.Count, "The second caller must wait for the first caller's notes.");
+        Assert.HasCount(chunkCount + 2, model.Calls, "The second caller must wait for the first caller's notes.");
     }
 
     [TestMethod]
@@ -413,7 +413,7 @@ public sealed class BriefingWriterTests
         await sut.SummarizeAsync("A title", first, CancellationToken.None);
         await sut.SummarizeAsync("A title", second, CancellationToken.None);
 
-        Assert.AreEqual(2 * (chunkCount + 1), model.Calls.Count);
+        Assert.HasCount(2 * (chunkCount + 1), model.Calls);
     }
 
     [TestMethod]
@@ -428,7 +428,7 @@ public sealed class BriefingWriterTests
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.SummarizeAsync("A title", transcript, CancellationToken.None));
         await sut.SummarizeAsync("A title", transcript, CancellationToken.None);
 
-        Assert.AreEqual(1 + chunkCount + 1, model.Calls.Count, "The second attempt must take the notes again.");
+        Assert.HasCount(1 + chunkCount + 1, model.Calls, "The second attempt must take the notes again.");
     }
 
     [TestMethod]

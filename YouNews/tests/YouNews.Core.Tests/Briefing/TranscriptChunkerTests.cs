@@ -14,7 +14,7 @@ public sealed class TranscriptChunkerTests
 
         var chunks = sut.Split(transcript);
 
-        Assert.AreEqual(1, chunks.Count);
+        Assert.HasCount(1, chunks);
         Assert.AreEqual(TranscriptChunker.CHUNK_WORDS, chunks[0].WordCount);
     }
 
@@ -26,7 +26,7 @@ public sealed class TranscriptChunkerTests
 
         var chunks = sut.Split(transcript);
 
-        Assert.AreEqual(2, chunks.Count);
+        Assert.HasCount(2, chunks);
         Assert.AreEqual(TranscriptChunker.CHUNK_WORDS, chunks[0].WordCount);
         Assert.AreEqual(TranscriptChunker.OVERLAP_WORDS + 1, chunks[1].WordCount);
     }
@@ -65,7 +65,7 @@ public sealed class TranscriptChunkerTests
         Assert.IsTrue(chunks.All(chunk => chunk.WordCount <= TranscriptChunker.CHUNK_WORDS));
         Assert.IsTrue(chunks.SelectMany(chunk => chunk.Segments).All(segment => segment.Start == start), "The pieces keep the original start time.");
         var seen = chunks.SelectMany(chunk => chunk.Segments).SelectMany(segment => segment.Text.Split(' ')).ToHashSet();
-        Assert.AreEqual(30000, seen.Count, "Every word must appear in some chunk.");
+        Assert.HasCount(30000, seen, "Every word must appear in some chunk.");
         Assert.IsNotEmpty(chunks[0].Segments.Intersect(chunks[1].Segments).ToList(), "Neighbouring chunks must overlap.");
     }
 

@@ -46,8 +46,8 @@ public sealed class YouTubeLiveTests
 
         var feeds = await catalog.ListVideoFeedsAsync(channel, CancellationToken.None);
 
-        Assert.AreEqual(2, feeds.Count);
-        Assert.IsTrue(feeds[0].Count > 10, $"videos feed had {feeds[0].Count} items");
+        Assert.HasCount(2, feeds);
+        Assert.IsGreaterThan(10, feeds[0].Count, $"videos feed had {feeds[0].Count} items");
         Assert.IsTrue(feeds[0].All(id => id.Length == 11), string.Join(",", feeds[0].Take(5)));
     }
 
@@ -78,8 +78,8 @@ public sealed class YouTubeLiveTests
         var transcript = await sut.GetCaptionsAsync("zhnJo7s91ls", CancellationToken.None);
 
         Assert.IsNotNull(transcript);
-        Assert.IsTrue(transcript.WordCount > 100, $"only {transcript.WordCount} words");
-        Assert.AreEqual(0, environment.WorkFiles().Length, string.Join(", ", environment.WorkFiles()));
+        Assert.IsGreaterThan(100, transcript.WordCount, $"only {transcript.WordCount} words");
+        Assert.IsEmpty(environment.WorkFiles(), string.Join(", ", environment.WorkFiles()));
     }
 
     [TestMethod]
@@ -89,7 +89,7 @@ public sealed class YouTubeLiveTests
 
         var problems = await sut.FindProblemsAsync(CancellationToken.None);
 
-        Assert.AreEqual(0, problems.Count, string.Join(" | ", problems));
+        Assert.IsEmpty(problems, string.Join(" | ", problems));
     }
 
     [TestMethod]
@@ -100,10 +100,10 @@ public sealed class YouTubeLiveTests
 
         var images = await sut.CaptureAsync("zhnJo7s91ls", [TimeSpan.FromSeconds(30)], CancellationToken.None);
 
-        Assert.AreEqual(2, images.Count, string.Join(", ", images.Select(image => image.RelativePath)));
+        Assert.HasCount(2, images, string.Join(", ", images.Select(image => image.RelativePath)));
         foreach (var image in images)
-            Assert.IsTrue(new FileInfo(Path.Combine(environment.Options.ImagesDirectory, image.RelativePath)).Length > 1000, image.RelativePath);
-        Assert.AreEqual(0, environment.WorkFiles().Length, string.Join(", ", environment.WorkFiles()));
+            Assert.IsGreaterThan(1000, new FileInfo(Path.Combine(environment.Options.ImagesDirectory, image.RelativePath)).Length, image.RelativePath);
+        Assert.IsEmpty(environment.WorkFiles(), string.Join(", ", environment.WorkFiles()));
     }
 
     //

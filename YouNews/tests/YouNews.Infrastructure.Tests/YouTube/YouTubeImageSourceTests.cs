@@ -29,7 +29,7 @@ public sealed class YouTubeImageSourceTests
 
         Assert.AreEqual(new EntryImage("zhnJo7s91ls/thumbnail.jpg", ImageKind.Thumbnail), images.Single());
         CollectionAssert.AreEqual(new byte[] { 1, 2, 3 }, File.ReadAllBytes(Path.Combine(environment.Options.ImagesDirectory, "zhnJo7s91ls", "thumbnail.jpg")));
-        Assert.AreEqual(0, runner.Invocations.Count, "no frames requested, so no tool must run");
+        Assert.IsEmpty(runner.Invocations, "no frames requested, so no tool must run");
     }
 
     [TestMethod]
@@ -39,7 +39,7 @@ public sealed class YouTubeImageSourceTests
 
         var images = await sut.CaptureAsync("zhnJo7s91ls", [], CancellationToken.None);
 
-        Assert.AreEqual(1, images.Count);
+        Assert.HasCount(1, images);
         CollectionAssert.AreEqual(
             new[] { "https://i.ytimg.com/vi/zhnJo7s91ls/maxresdefault.jpg", "https://i.ytimg.com/vi/zhnJo7s91ls/hqdefault.jpg" },
             handler.Requested.Select(uri => uri.AbsoluteUri).ToArray());
@@ -52,7 +52,7 @@ public sealed class YouTubeImageSourceTests
 
         var images = await sut.CaptureAsync("zhnJo7s91ls", [], CancellationToken.None);
 
-        Assert.AreEqual(0, images.Count);
+        Assert.IsEmpty(images);
     }
 
     [TestMethod]
@@ -62,7 +62,7 @@ public sealed class YouTubeImageSourceTests
 
         var images = await sut.CaptureAsync("zhnJo7s91ls", [], CancellationToken.None);
 
-        Assert.AreEqual(0, images.Count);
+        Assert.IsEmpty(images);
     }
 
     [TestMethod]
@@ -77,7 +77,7 @@ public sealed class YouTubeImageSourceTests
             images.Select(image => image.RelativePath).ToArray());
         Assert.AreEqual(ImageKind.Frame, images[1].Kind);
         Assert.IsTrue(File.Exists(Path.Combine(environment.Options.ImagesDirectory, "zhnJo7s91ls", "frame-75.jpg")));
-        Assert.AreEqual(0, environment.WorkFiles().Length, "video left behind: " + string.Join(", ", environment.WorkFiles()));
+        Assert.IsEmpty(environment.WorkFiles(), "video left behind: " + string.Join(", ", environment.WorkFiles()));
         var download = runner.Invocations.First(call => call.FileName == "yt-dlp");
         Assert.AreEqual("bv*[height<=480][ext=mp4]/b[height<=480]", download.ValueAfter("-f"), download.ToString());
     }
@@ -100,9 +100,9 @@ public sealed class YouTubeImageSourceTests
 
         var images = await sut.CaptureAsync("zhnJo7s91ls", [TimeSpan.FromSeconds(60)], CancellationToken.None);
 
-        Assert.AreEqual(1, images.Count);
+        Assert.HasCount(1, images);
         Assert.AreEqual(ImageKind.Thumbnail, images[0].Kind);
-        Assert.AreEqual(1, runner.Invocations.Count, "ffmpeg must not run without a video");
+        Assert.HasCount(1, runner.Invocations, "ffmpeg must not run without a video");
     }
 
     [TestMethod]
@@ -112,8 +112,8 @@ public sealed class YouTubeImageSourceTests
 
         var images = await sut.CaptureAsync("zhnJo7s91ls", [TimeSpan.FromSeconds(60)], CancellationToken.None);
 
-        Assert.AreEqual(1, images.Count);
-        Assert.AreEqual(0, environment.WorkFiles().Length, "video left behind: " + string.Join(", ", environment.WorkFiles()));
+        Assert.HasCount(1, images);
+        Assert.IsEmpty(environment.WorkFiles(), "video left behind: " + string.Join(", ", environment.WorkFiles()));
     }
 
     [TestMethod]

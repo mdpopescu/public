@@ -76,7 +76,7 @@ public sealed class OpenAiCompatibleLanguageModelTests
 
         StringAssert.Contains(exception.Message, "finish_reason length");
         StringAssert.Contains(exception.Message, "budget ran out");
-        Assert.AreEqual(1, handler.Urls.Count, "An exhausted budget would just run out again, so it must not be retried.");
+        Assert.HasCount(1, handler.Urls, "An exhausted budget would just run out again, so it must not be retried.");
     }
 
     [TestMethod]
@@ -97,7 +97,7 @@ public sealed class OpenAiCompatibleLanguageModelTests
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => sut.CompleteAsync("s", "u", true, CancellationToken.None));
 
         StringAssert.Contains(exception.Message, "finish_reason content_filter");
-        Assert.IsFalse(exception.Message.Contains("budget"), exception.Message);
+        Assert.DoesNotContain("budget", exception.Message, exception.Message);
     }
 
     [TestMethod]
@@ -131,7 +131,7 @@ public sealed class OpenAiCompatibleLanguageModelTests
         StringAssert.Contains(exception.Message, "400");
         StringAssert.Contains(exception.Message, "bad model");
         Assert.IsLessThan(600, exception.Message.Length, "The body in the message must be shortened: " + exception.Message.Length);
-        Assert.AreEqual(1, handler.Urls.Count);
+        Assert.HasCount(1, handler.Urls);
         Assert.IsEmpty(timeProvider.Delays);
     }
 
@@ -144,8 +144,8 @@ public sealed class OpenAiCompatibleLanguageModelTests
         var result = await sut.CompleteAsync("s", "u", false, CancellationToken.None);
 
         Assert.AreEqual("after the swap", result);
-        Assert.AreEqual(2, handler.Urls.Count);
-        Assert.AreEqual(1, timeProvider.Delays.Count);
+        Assert.HasCount(2, handler.Urls);
+        Assert.HasCount(1, timeProvider.Delays);
         Assert.IsGreaterThan(TimeSpan.Zero, timeProvider.Delays[0]);
         Assert.AreEqual(handler.RawBodies[0], handler.RawBodies[1], "The retry must send the same request.");
     }
@@ -161,7 +161,7 @@ public sealed class OpenAiCompatibleLanguageModelTests
 
         StringAssert.Contains(exception.Message, "503");
         StringAssert.Contains(exception.Message, "still down");
-        Assert.AreEqual(2, handler.Urls.Count);
+        Assert.HasCount(2, handler.Urls);
     }
 
     [TestMethod]
@@ -173,7 +173,7 @@ public sealed class OpenAiCompatibleLanguageModelTests
         var result = await sut.CompleteAsync("s", "u", true, CancellationToken.None);
 
         Assert.AreEqual("back", result);
-        Assert.AreEqual(1, timeProvider.Delays.Count);
+        Assert.HasCount(1, timeProvider.Delays);
     }
 
     [TestMethod]
@@ -189,7 +189,7 @@ public sealed class OpenAiCompatibleLanguageModelTests
 
         await Assert.ThrowsAsync<OperationCanceledException>(() => sut.CompleteAsync("s", "u", true, cancellation.Token));
 
-        Assert.AreEqual(1, handler.Urls.Count);
+        Assert.HasCount(1, handler.Urls);
         Assert.IsEmpty(timeProvider.Delays);
     }
 
@@ -206,7 +206,7 @@ public sealed class OpenAiCompatibleLanguageModelTests
 
         await Assert.ThrowsAsync<OperationCanceledException>(() => sut.CompleteAsync("s", "u", true, cancellation.Token));
 
-        Assert.AreEqual(1, handler.Urls.Count);
+        Assert.HasCount(1, handler.Urls);
     }
 
     [TestMethod]
@@ -218,7 +218,7 @@ public sealed class OpenAiCompatibleLanguageModelTests
         var exception = await Assert.ThrowsAsync<TimeoutException>(() => sut.CompleteAsync("s", "u", true, CancellationToken.None));
 
         StringAssert.Contains(exception.Message, "30 minutes");
-        Assert.AreEqual(1, handler.Urls.Count);
+        Assert.HasCount(1, handler.Urls);
     }
 
     [TestMethod]

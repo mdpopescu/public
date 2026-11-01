@@ -83,7 +83,7 @@ public sealed class YouTubeAudioDownloaderTests
 
         Assert.Contains("zhnJo7s91ls", exception.Message);
         Assert.Contains("Sign in to confirm you are not a bot", exception.Message);
-        Assert.AreEqual(0, environment.WorkFiles().Length, string.Join(", ", environment.WorkFiles()));
+        Assert.IsEmpty(environment.WorkFiles(), string.Join(", ", environment.WorkFiles()));
     }
 
     [TestMethod]
@@ -99,7 +99,7 @@ public sealed class YouTubeAudioDownloaderTests
     {
         await Assert.ThrowsAsync<ArgumentException>(() => sut.DownloadAudioAsync("../evil", CancellationToken.None));
 
-        Assert.AreEqual(0, runner.Invocations.Count, "no tool may run for a bad identifier");
+        Assert.IsEmpty(runner.Invocations, "no tool may run for a bad identifier");
     }
 
     //

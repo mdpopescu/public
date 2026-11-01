@@ -33,7 +33,7 @@ public sealed class SpeechLiveTests
         TestContext.WriteLine($"Peak working set {Process.GetCurrentProcess().PeakWorkingSet64 / 1024 / 1024} MB");
         TestContext.WriteLine("Text: " + text);
         Assert.IsGreaterThan(20, transcript.WordCount, text);
-        Assert.AreEqual(0, Directory.GetFiles(options.Value.WorkDirectory).Length, "the work directory must be left clean");
+        Assert.IsEmpty(Directory.GetFiles(options.Value.WorkDirectory), "the work directory must be left clean");
     }
 
     //

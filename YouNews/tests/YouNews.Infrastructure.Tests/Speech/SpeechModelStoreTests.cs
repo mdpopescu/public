@@ -29,7 +29,7 @@ public sealed class SpeechModelStoreTests
 
         AssertAllExist(files);
         Assert.AreEqual(Path.Combine(environment.Options.SpeechModelsDirectory, "parakeet-test", "encoder.int8.onnx"), files.Encoder);
-        Assert.AreEqual(2, httpHandler.Requests.Count, string.Join(", ", httpHandler.Requests));
+        Assert.HasCount(2, httpHandler.Requests, string.Join(", ", httpHandler.Requests));
         var invocation = tar.Invocations.Single();
         Assert.AreEqual("tar.exe", invocation.FileName);
         Assert.AreEqual("-xf", invocation.Arguments[0], invocation.ToString());
@@ -54,8 +54,8 @@ public sealed class SpeechModelStoreTests
         var files = await sut.EnsureModelsAsync(CancellationToken.None);
 
         AssertAllExist(files);
-        Assert.AreEqual(0, httpHandler.Requests.Count, string.Join(", ", httpHandler.Requests));
-        Assert.AreEqual(0, tar.Invocations.Count, "nothing may be unpacked again");
+        Assert.IsEmpty(httpHandler.Requests, string.Join(", ", httpHandler.Requests));
+        Assert.IsEmpty(tar.Invocations, "nothing may be unpacked again");
     }
 
     [TestMethod]
@@ -73,7 +73,7 @@ public sealed class SpeechModelStoreTests
 
         Assert.Contains("Unexpected EOF", exception.Message);
         Assert.IsFalse(Directory.Exists(Path.Combine(environment.Options.SpeechModelsDirectory, "parakeet-test")), "a half-unpacked model must not look complete");
-        Assert.AreEqual(0, Directory.GetDirectories(environment.Options.SpeechModelsDirectory).Length);
+        Assert.IsEmpty(Directory.GetDirectories(environment.Options.SpeechModelsDirectory));
 
         tar.Behavior = Unpack;
         AssertAllExist(await sut.EnsureModelsAsync(CancellationToken.None));
@@ -89,7 +89,7 @@ public sealed class SpeechModelStoreTests
         var files = await sut.EnsureModelsAsync(CancellationToken.None);
 
         AssertAllExist(files);
-        Assert.AreEqual(2, httpHandler.Requests.Count, "the model must be downloaded again");
+        Assert.HasCount(2, httpHandler.Requests, "the model must be downloaded again");
         Assert.IsFalse(Directory.Exists(Path.Combine(environment.Options.SpeechModelsDirectory, "incoming-abc")), "stale leftovers must be removed");
     }
 
@@ -102,8 +102,8 @@ public sealed class SpeechModelStoreTests
 
         Assert.Contains("https://example.test/models/parakeet-test.tar.bz2", exception.Message);
         Assert.Contains("404", exception.Message);
-        Assert.AreEqual(0, tar.Invocations.Count, "nothing may be unpacked after a failed download");
-        Assert.AreEqual(0, Directory.GetFileSystemEntries(environment.Options.SpeechModelsDirectory).Length);
+        Assert.IsEmpty(tar.Invocations, "nothing may be unpacked after a failed download");
+        Assert.IsEmpty(Directory.GetFileSystemEntries(environment.Options.SpeechModelsDirectory));
     }
 
     [TestMethod]

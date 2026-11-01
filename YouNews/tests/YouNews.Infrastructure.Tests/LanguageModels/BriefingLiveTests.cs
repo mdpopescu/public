@@ -45,7 +45,7 @@ public sealed class BriefingLiveTests
         var words = result.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Length;
         Console.WriteLine($"SUMMARY ({words} words, transcript {transcript.WordCount} words):\n{result}");
         Assert.IsInRange(40, 160, words, "The target is 80 words: " + result);
-        Assert.IsFalse(result.Contains("**"), result);
+        Assert.DoesNotContain("**", result, result);
     }
 
     [TestMethod]

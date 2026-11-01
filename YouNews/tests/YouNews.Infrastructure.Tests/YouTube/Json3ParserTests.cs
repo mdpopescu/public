@@ -40,6 +40,6 @@ public sealed class Json3ParserTests
 
         var segments = sut.Parse("""{"wireMagic":"pb3"}""");
 
-        Assert.AreEqual(0, segments.Count);
+        Assert.IsEmpty(segments);
     }
 }
