@@ -2,6 +2,7 @@ using Microsoft.Extensions.Time.Testing;
 using YouNews.Core.Model;
 using YouNews.Core.Refresh;
 using YouNews.Core.Setup;
+using YouNews.Core.Tests.Fakes;
 
 namespace YouNews.Core.Tests.Refresh;
 

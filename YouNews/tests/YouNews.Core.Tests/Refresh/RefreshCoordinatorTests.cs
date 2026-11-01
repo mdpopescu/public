@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Time.Testing;
 using YouNews.Core.Model;
 using YouNews.Core.Refresh;
+using YouNews.Core.Tests.Fakes;
 
 namespace YouNews.Core.Tests.Refresh;
 
@@ -92,9 +93,7 @@ public sealed class RefreshCoordinatorTests
     {
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
         while (sut.Current is not null)
-        {
             await Task.Delay(5, timeout.Token);
-        }
     }
 
     private sealed class ControlledRun : IRefreshRun
@@ -126,9 +125,7 @@ public sealed class RefreshCoordinatorTests
 
             finish = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
             if (Exception is not null)
-            {
                 throw Exception;
-            }
         }
 
         private readonly TaskCompletionSource started = new(TaskCreationOptions.RunContinuationsAsynchronously);

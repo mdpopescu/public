@@ -2,6 +2,7 @@ using Microsoft.Extensions.Time.Testing;
 using YouNews.Core.Model;
 using YouNews.Core.Ports;
 using YouNews.Core.Refresh;
+using YouNews.Core.Tests.Fakes;
 
 namespace YouNews.Core.Tests.Refresh;
 
@@ -16,8 +17,14 @@ public sealed class RefreshRunTests
         channels = new FakeChannelStore();
         channels.Channels.Add(new Channel(1, "https://youtube.com/@one", "Channel One"));
         videos = new FakeVideoStore();
-        catalog = new FakeCatalog { UnknownVideosHaveNoDate = true };
-        catalog.Feeds[1] = [[]];
+        catalog = new FakeCatalog
+        {
+            UnknownVideosHaveNoDate = true,
+            Feeds =
+            {
+                [1] = [[]],
+            },
+        };
         log = new FakeRefreshLog();
         setupMonitor = new FakeSetupMonitor();
         captions = new FakeCaptionSource();
@@ -25,8 +32,10 @@ public sealed class RefreshRunTests
         writer = new FakeBriefingWriter();
         search = new FakeWebSearch();
         images = new FakeImageSource();
-        entries = new FakeEntryStore();
-        entries.OnAdded = videoId => videos.SetStateAsync(videoId, VideoState.Done, null, CancellationToken.None);
+        entries = new FakeEntryStore
+        {
+            OnAdded = videoId => videos.SetStateAsync(videoId, VideoState.Done, null, CancellationToken.None),
+        };
         sut = CreateSut(limit: null);
     }
 
@@ -65,6 +74,7 @@ public sealed class RefreshRunTests
         Assert.AreSame(setup, request.Setup);
         CollectionAssert.AreEqual(new[] { "local models" }, request.Interests.ToArray());
         Assert.AreEqual(relatedDigest, request.RelatedEntries.Single());
+        CollectionAssert.AreEqual(new[] { "query one" }, search.Queries, "The search must use the queries from the analysis.");
         Assert.AreEqual("A source", request.SearchResults.Single().Title);
         CollectionAssert.AreEqual(new long[] { 7 }, entries.Added[0].RelatedEntryIds.ToArray());
         Assert.AreEqual("https://example.com/a", entries.Added[0].WebSources.Single().Url);
@@ -237,9 +247,7 @@ public sealed class RefreshRunTests
         {
             videos.SetStateAsync(videoId, VideoState.Done, null, CancellationToken.None);
             if (entries.Added.Count == 1)
-            {
                 videos.AddAsync(new NewVideo(1, "late", "Title of late", VideoState.Pending, null, time.GetUtcNow()), CancellationToken.None);
-            }
         };
 
         await RunAsync();

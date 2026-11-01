@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Time.Testing;
 using YouNews.Core.Model;
 using YouNews.Core.Refresh;
+using YouNews.Core.Tests.Fakes;
 
 namespace YouNews.Core.Tests.Refresh;
 
@@ -245,7 +246,7 @@ public sealed class VideoDiscoveryTests
     private FakeChannelStore channels = null!;
     private FakeVideoStore videos = null!;
     private FakeCatalog catalog = null!;
-    private FakeDiscoveryListener listener = new();
+    private readonly FakeDiscoveryListener listener = new();
     private VideoDiscovery sut = null!;
 
     private static FeedVideo Listed(string id, DateOnly publishedOn) =>
