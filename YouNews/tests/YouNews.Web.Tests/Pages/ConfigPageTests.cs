@@ -24,7 +24,7 @@ public sealed class ConfigPageTests
     [TestMethod]
     public async Task Config_ListsChannelsInterestsAndSetup()
     {
-        sut.Channels.Channels.Add(new Channel(7, "UC9", "https://www.youtube.com/@nine", "Channel Nine"));
+        sut.Channels.Channels.Add(new Channel(7, "https://www.youtube.com/@nine", "Channel Nine"));
         sut.Interests.Interests.AddRange(["New local models", "RAM and GPU market"]);
         sut.Setup.Snapshot = new SetupSnapshot(["gemma4-26b", "qwen3-30b"], "RTX 5060 Ti, 62 GB RAM", DateTimeOffset.UtcNow, "Last check failed");
 
@@ -80,7 +80,7 @@ public sealed class ConfigPageTests
     [TestMethod]
     public async Task Add_ChannelAlreadyFollowed_SaysSo()
     {
-        sut.Channels.Channels.Add(new Channel(1, "UC123", "https://www.youtube.com/@matthew_berman", "Matthew Berman"));
+        sut.Channels.Channels.Add(new Channel(1, "https://www.youtube.com/@matthew_berman", "Matthew Berman"));
 
         var response = await sut.SubmitAsync(browser, "/config", "/config?handler=Add", ("address", "@matthew_berman"));
         var html = await response.Content.ReadAsStringAsync();
@@ -104,8 +104,8 @@ public sealed class ConfigPageTests
     [TestMethod]
     public async Task Remove_StopsFollowingTheChannel()
     {
-        sut.Channels.Channels.Add(new Channel(7, "UC9", "https://www.youtube.com/@nine", "Channel Nine"));
-        sut.Channels.Channels.Add(new Channel(8, "UC10", "https://www.youtube.com/@ten", "Channel Ten"));
+        sut.Channels.Channels.Add(new Channel(7, "https://www.youtube.com/@nine", "Channel Nine"));
+        sut.Channels.Channels.Add(new Channel(8, "https://www.youtube.com/@ten", "Channel Ten"));
 
         var response = await sut.SubmitAsync(browser, "/config", "/config?handler=Remove&id=7");
 

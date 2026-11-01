@@ -42,7 +42,7 @@ public sealed class YouTubeLiveTests
     [TestMethod]
     public async Task ListsVideoFeeds()
     {
-        var channel = new Channel(1, "UCawZsQWqfGSbCI5yjkdVkTA", "https://www.youtube.com/channel/UCawZsQWqfGSbCI5yjkdVkTA", "Matthew Berman");
+        var channel = new Channel(1, "https://www.youtube.com/channel/UCawZsQWqfGSbCI5yjkdVkTA", "Matthew Berman");
 
         var feeds = await catalog.ListVideoFeedsAsync(channel, CancellationToken.None);
 

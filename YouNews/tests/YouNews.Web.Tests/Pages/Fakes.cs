@@ -24,10 +24,10 @@ public sealed class FakeChannelStore : IChannelStore
 
     public Task<Channel?> AddAsync(ChannelDetails details, CancellationToken cancellationToken)
     {
-        if (Channels.Any(channel => channel.YouTubeId == details.YouTubeId))
+        if (Channels.Any(channel => channel.Url == details.Url))
             return Task.FromResult<Channel?>(null);
 
-        var channel = new Channel(Channels.Count + 1, details.YouTubeId, details.Url, details.Name);
+        var channel = new Channel(Channels.Count + 1, details.Url, details.Name);
         Channels.Add(channel);
         return Task.FromResult<Channel?>(channel);
     }

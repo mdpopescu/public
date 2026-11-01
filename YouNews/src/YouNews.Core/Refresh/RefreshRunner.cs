@@ -62,12 +62,24 @@ public sealed class RefreshRunner : IRefreshRun
             }
             catch (Exception exception) when (exception is not OperationCanceledException || !cancellationToken.IsCancellationRequested)
             {
-                await dependencies.Videos.RecordFailureAsync(video.Id, exception.Message, cancellationToken).ConfigureAwait(false);
+                await TryRecordFailureAsync(video, exception.Message, cancellationToken).ConfigureAwait(false);
                 failed++;
             }
         }
 
         return (completed, failed);
+    }
+
+    private async Task TryRecordFailureAsync(TrackedVideo video, string reason, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await dependencies.Videos.RecordFailureAsync(video.Id, reason, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            // The video stays pending either way, so only the displayed reason is lost. The other videos still run.
+        }
     }
 }
 

@@ -13,7 +13,7 @@ public sealed class RefreshRunTests
         time = new FakeTimeProvider(new DateTimeOffset(2026, 11, 1, 23, 30, 0, TimeSpan.Zero));
         time.SetLocalTimeZone(TimeZoneInfo.CreateCustomTimeZone("Plus2", TimeSpan.FromHours(2), "Plus2", "Plus2"));
         channels = new FakeChannelStore();
-        channels.Channels.Add(new Channel(1, "UC1", "https://youtube.com/@one", "Channel One"));
+        channels.Channels.Add(new Channel(1, "https://youtube.com/@one", "Channel One"));
         videos = new FakeVideoStore();
         catalog = new FakeCatalog();
         catalog.Feeds[1] = [[]];
@@ -201,6 +201,21 @@ public sealed class RefreshRunTests
         Assert.AreEqual("Title of two", last.Activity);
         Assert.AreEqual(1, last.VideosDone);
         Assert.AreEqual(2, last.VideosTotal);
+    }
+
+    [TestMethod]
+    public async Task AStoreFailureWhileRecordingAFailureDoesNotEndTheRun()
+    {
+        await AddPendingAsync("bad");
+        await AddPendingAsync("good");
+        writer.FailingTitles.Add("Title of bad");
+        videos.FailRecordingFailures = true;
+
+        await RunAsync();
+
+        Assert.AreEqual(VideoState.Done, videos.Find("good").State);
+        Assert.AreEqual(1, log.Runs.Single().Completed);
+        Assert.AreEqual(1, log.Runs.Single().Failed);
     }
 
     //

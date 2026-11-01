@@ -25,12 +25,14 @@ public class DatabaseInitializerTests
     {
         await fixture.InitializeAsync();
 
-        var channels = await new SqliteChannelStore(fixture.Factory).ListAsync(CancellationToken.None);
+        var store = new SqliteChannelStore(fixture.Factory);
+        var channels = await store.ListAsync(CancellationToken.None);
 
         var channel = channels.Single();
-        Assert.AreEqual("UCawZsQWqfGSbCI5yjkdVkTA", channel.YouTubeId);
-        Assert.AreEqual("https://www.youtube.com/@matthew_berman/", channel.Url);
+                Assert.AreEqual("https://www.youtube.com/@matthew_berman/", channel.Url);
         Assert.AreEqual("Matthew Berman", channel.Name);
+        var sameChannelAgain = new ChannelDetails("UCawZsQWqfGSbCI5yjkdVkTA", channel.Url, channel.Name);
+        Assert.IsNull(await store.AddAsync(sameChannelAgain, CancellationToken.None), "The seed must be stored under the channel's real YouTube ID.");
     }
 
     [TestMethod]

@@ -18,9 +18,9 @@ public sealed class VideoDiscovery : IVideoDiscovery
 
     public async Task<IReadOnlyList<string>> DiscoverAsync(CancellationToken cancellationToken)
     {
-        await RecheckWaitingVideosAsync(cancellationToken).ConfigureAwait(false);
-
         var problems = new List<string>();
+        await RecheckWaitingVideosAsync(problems, cancellationToken).ConfigureAwait(false);
+
         foreach (var channel in await channels.ListAsync(cancellationToken).ConfigureAwait(false))
         {
             try
@@ -85,19 +85,31 @@ public sealed class VideoDiscovery : IVideoDiscovery
         }
     }
 
-    private async Task RecheckWaitingVideosAsync(CancellationToken cancellationToken)
+    private async Task RecheckWaitingVideosAsync(List<string> problems, CancellationToken cancellationToken)
     {
         foreach (var video in await videos.ListByStateAsync(VideoState.Recheck, cancellationToken).ConfigureAwait(false))
         {
-            var details = await catalog.GetDetailsAsync(video.YouTubeId, cancellationToken).ConfigureAwait(false);
-            var expired = time.GetUtcNow() - video.FirstSeenAt > TimeSpan.FromDays(RECHECK_DAYS);
-            var state = InitialStateFor(details.Availability);
-            if (state == VideoState.Recheck && expired)
+            try
             {
-                state = VideoState.GaveUp;
+                await RecheckAsync(video, cancellationToken).ConfigureAwait(false);
             }
-
-            await videos.SetStateAsync(video.Id, state, details.Reason, cancellationToken).ConfigureAwait(false);
+            catch (Exception exception) when (exception is not OperationCanceledException || !cancellationToken.IsCancellationRequested)
+            {
+                problems.Add($"Could not recheck video {video.Title}: {exception.Message}");
+            }
         }
+    }
+
+    private async Task RecheckAsync(TrackedVideo video, CancellationToken cancellationToken)
+    {
+        var details = await catalog.GetDetailsAsync(video.YouTubeId, cancellationToken).ConfigureAwait(false);
+        var expired = time.GetUtcNow() - video.FirstSeenAt > TimeSpan.FromDays(RECHECK_DAYS);
+        var state = InitialStateFor(details.Availability);
+        if (state == VideoState.Recheck && expired)
+        {
+            state = VideoState.GaveUp;
+        }
+
+        await videos.SetStateAsync(video.Id, state, details.Reason, cancellationToken).ConfigureAwait(false);
     }
 }

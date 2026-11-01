@@ -175,5 +175,5 @@ public sealed class YtDlpVideoCatalogTests
     private static string DetailsJson(string liveStatus) =>
         $$"""{"id":"zhnJo7s91ls","title":"Some title","upload_date":"20261031","timestamp":1793400000,"live_status":"{{liveStatus}}","channel":"C"}""";
 
-    private static Channel Channel(string url) => new(1, "UC1", url, "Test channel");
+    private static Channel Channel(string url) => new(1, url, "Test channel");
 }

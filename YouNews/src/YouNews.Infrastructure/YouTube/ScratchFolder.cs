@@ -17,7 +17,7 @@ public sealed class ScratchFolder : IDisposable
         {
             Directory.Delete(Path, true);
         }
-        catch (IOException)
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
         {
             // Cleanup must not hide the real result; the folder is only scratch space.
         }

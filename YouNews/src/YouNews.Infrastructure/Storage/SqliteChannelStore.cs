@@ -7,7 +7,7 @@ namespace YouNews.Infrastructure.Storage;
 
 public sealed class SqliteChannelStore : IChannelStore
 {
-    private const string LIST = "SELECT id AS Id, youtube_id AS YouTubeId, url AS Url, name AS Name FROM channels WHERE removed = 0 ORDER BY name, id";
+    private const string LIST = "SELECT id AS Id, url AS Url, name AS Name FROM channels WHERE removed = 0 ORDER BY name, id";
     private const string FIND = "SELECT id AS Id, removed AS Removed FROM channels WHERE youtube_id = @YouTubeId";
     private const string INSERT = "INSERT INTO channels (youtube_id, url, name) VALUES (@YouTubeId, @Url, @Name); SELECT last_insert_rowid()";
     private const string REACTIVATE = "UPDATE channels SET removed = 0, url = @Url, name = @Name WHERE id = @Id";
@@ -38,7 +38,7 @@ public sealed class SqliteChannelStore : IChannelStore
                 ? await connection.ExecuteScalarAsync<long>(new CommandDefinition(INSERT, details, transaction, cancellationToken: cancellationToken)).ConfigureAwait(false)
                 : await ReactivateAsync(connection, transaction, existing.Id, details, cancellationToken).ConfigureAwait(false);
             await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-            return new Channel(id, details.YouTubeId, details.Url, details.Name);
+            return new Channel(id, details.Url, details.Name);
         }
 
         return null;

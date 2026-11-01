@@ -80,7 +80,7 @@ public sealed class AnalysisParser
         var endSeconds = transcript.Segments.Count > 0 ? transcript.Segments[^1].Start.TotalSeconds : -1;
         return ReadNumbers(root, "frameTimes")
             .Where(seconds => seconds >= 0 && seconds <= endSeconds)
-            .Distinct()
+            .DistinctBy(Math.Floor)
             .Take(MAX_FRAME_TIMES)
             .Select(TimeSpan.FromSeconds)
             .ToList();

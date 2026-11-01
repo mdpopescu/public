@@ -49,13 +49,13 @@ public sealed class YtDlpVideoCatalog : IVideoCatalog
         }
         catch (TimeoutException)
         {
-            return new VideoDetails(youTubeId, youTubeId, VideoAvailability.RecheckLater, null, "yt-dlp timed out.");
+            return new VideoDetails(youTubeId, VideoAvailability.RecheckLater, null, "yt-dlp timed out.");
         }
 
         if (result.ExitCode != 0)
         {
             var (availability, reason) = classifier.Classify(result.StandardError, result.ExitCode);
-            return new VideoDetails(youTubeId, youTubeId, availability, null, reason);
+            return new VideoDetails(youTubeId, availability, null, reason);
         }
 
         return ReadDetails(youTubeId, result.StandardOutput);
@@ -94,8 +94,8 @@ public sealed class YtDlpVideoCatalog : IVideoCatalog
 
         var liveStatus = ReadString(root, "live_status");
         return liveStatus is null or "not_live" or "was_live"
-            ? new VideoDetails(youTubeId, title, VideoAvailability.Eligible, publishedOn, null)
-            : new VideoDetails(youTubeId, title, VideoAvailability.RecheckLater, publishedOn, $"The video is not finished yet (live status: {liveStatus}).");
+            ? new VideoDetails(title, VideoAvailability.Eligible, publishedOn, null)
+            : new VideoDetails(title, VideoAvailability.RecheckLater, publishedOn, $"The video is not finished yet (live status: {liveStatus}).");
     }
 
     private static DateOnly? ReadPublishedOn(JsonElement root)

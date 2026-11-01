@@ -17,7 +17,7 @@ public enum VideoState
 }
 
 /// <summary>What YouTube currently says about one video.</summary>
-public sealed record VideoDetails(string YouTubeId, string Title, VideoAvailability Availability, DateOnly? PublishedOn, string? Reason);
+public sealed record VideoDetails(string Title, VideoAvailability Availability, DateOnly? PublishedOn, string? Reason);
 
 /// <summary>A video the application has seen, with its processing state.</summary>
 public sealed record TrackedVideo(

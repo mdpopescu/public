@@ -19,6 +19,8 @@ internal sealed class FakeVideoStore : IVideoStore
 {
     public List<TrackedVideo> Videos { get; } = [];
 
+    public bool FailRecordingFailures { get; set; }
+
     public Task<IReadOnlySet<string>> GetKnownIdsAsync(long channelId, CancellationToken cancellationToken)
     {
         var known = Videos.Where(video => video.ChannelId == channelId).Select(video => video.YouTubeId).ToHashSet();
@@ -44,6 +46,11 @@ internal sealed class FakeVideoStore : IVideoStore
 
     public Task RecordFailureAsync(long videoId, string reason, CancellationToken cancellationToken)
     {
+        if (FailRecordingFailures)
+        {
+            throw new InvalidOperationException("database is locked");
+        }
+
         Replace(videoId, video => video with { Attempts = video.Attempts + 1, LastReason = reason });
         return Task.CompletedTask;
     }

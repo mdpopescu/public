@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using YouNews.Infrastructure.Processes;
 
 namespace YouNews.Infrastructure.YouTube;
 
@@ -17,15 +18,22 @@ public sealed class YouTubeAudioDownloader : IAudioDownloader
         Directory.CreateDirectory(workDirectory);
         var prefix = $"{youTubeId}-{Guid.NewGuid():N}";
 
-        var result = await ytDlp.RunAsync(["-f", "ba[abr<=64]/ba", "-o", Path.Combine(workDirectory, $"{prefix}.%(ext)s"), url], cancellationToken).ConfigureAwait(false);
+        ProcessResult result;
+        try
+        {
+            result = await ytDlp.RunAsync(["-f", "ba[abr<=64]/ba", "-o", Path.Combine(workDirectory, $"{prefix}.%(ext)s"), url], cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception)
+        {
+            DeleteFiles(prefix);
+            throw;
+        }
 
-        var files = Directory.GetFiles(workDirectory, $"{prefix}.*");
-        var audio = files.FirstOrDefault(file => !file.EndsWith(".part", StringComparison.Ordinal));
+        var audio = Directory.GetFiles(workDirectory, $"{prefix}.*").FirstOrDefault(file => !file.EndsWith(".part", StringComparison.Ordinal));
         if (result.ExitCode == 0 && audio != null)
             return audio;
 
-        foreach (var file in files)
-            File.Delete(file);
+        DeleteFiles(prefix);
         throw new InvalidOperationException($"yt-dlp could not download the audio of {youTubeId}: {result.StandardError.Trim()}");
     }
 
@@ -33,4 +41,10 @@ public sealed class YouTubeAudioDownloader : IAudioDownloader
 
     private readonly YtDlpRunner ytDlp;
     private readonly string workDirectory;
+
+    private void DeleteFiles(string prefix)
+    {
+        foreach (var file in Directory.GetFiles(workDirectory, $"{prefix}.*"))
+            File.Delete(file);
+    }
 }

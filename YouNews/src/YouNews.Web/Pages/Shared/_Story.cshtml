@@ -12,7 +12,7 @@
             <div class="frames">
                 @foreach (var frame in Model.FrameUrls)
                 {
-                    <img src="@frame" alt="" loading="lazy" onerror="this.style.display='none'" />
+                    <a href="@frame" target="_blank" rel="noopener noreferrer"><img src="@frame" alt="" loading="lazy" onerror="this.parentElement.style.display='none'" /></a>
                 }
             </div>
         }

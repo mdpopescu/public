@@ -18,11 +18,7 @@ public sealed class DailyRefreshService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var latestRun = await log.GetLatestAsync(stoppingToken);
-        if (schedule.IsOverdue(time.GetUtcNow(), latestRun))
-        {
-            trigger.TryStart();
-        }
+        await CatchUpAsync(stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -37,4 +33,20 @@ public sealed class DailyRefreshService : BackgroundService
     private readonly IRefreshLog log;
     private readonly RefreshSchedule schedule;
     private readonly TimeProvider time;
+
+    private async Task CatchUpAsync(CancellationToken stoppingToken)
+    {
+        try
+        {
+            var latestRun = await log.GetLatestAsync(stoppingToken);
+            if (schedule.IsOverdue(time.GetUtcNow(), latestRun))
+            {
+                trigger.TryStart();
+            }
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            // An exception here would stop the whole service. Missing one catch-up is much the lesser evil.
+        }
+    }
 }

@@ -57,6 +57,20 @@ public sealed class YouTubeAudioDownloaderTests
     }
 
     [TestMethod]
+    public async Task TimeoutDeletesPartialFiles()
+    {
+        runner.Behavior = invocation =>
+        {
+            WriteFiles(invocation, "m4a.part");
+            throw new TimeoutException("yt-dlp took too long");
+        };
+
+        await Assert.ThrowsExactlyAsync<TimeoutException>(() => sut.DownloadAudioAsync("zhnJo7s91ls", CancellationToken.None));
+
+        Assert.IsEmpty(Directory.GetFiles(environment.Options.WorkDirectory), "A timed-out download must not leave files behind.");
+    }
+
+    [TestMethod]
     public async Task FailureReportsTheToolMessageAndDeletesPartialFiles()
     {
         runner.Behavior = invocation =>

@@ -175,7 +175,7 @@ public sealed class DayPageTests
     [TestMethod]
     public async Task Home_WithNothingCollectedButChannels_DoesNotNagAboutChannels()
     {
-        sut.Channels.Channels.Add(new Channel(1, "UC1", "https://youtube.com/@one", "One"));
+        sut.Channels.Channels.Add(new Channel(1, "https://youtube.com/@one", "One"));
 
         var html = await browser.GetStringAsync("/");
 

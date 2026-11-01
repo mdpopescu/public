@@ -13,7 +13,7 @@ public sealed class VideoDiscoveryTests
         time = new FakeTimeProvider(new DateTimeOffset(2026, 11, 1, 6, 0, 0, TimeSpan.Zero));
         time.SetLocalTimeZone(TimeZoneInfo.Utc);
         channels = new FakeChannelStore();
-        channels.Channels.Add(new Channel(1, "UC1", "https://youtube.com/@one", "One"));
+        channels.Channels.Add(new Channel(1, "https://youtube.com/@one", "One"));
         videos = new FakeVideoStore();
         catalog = new FakeCatalog();
         sut = new VideoDiscovery(channels, videos, catalog, time);
@@ -52,7 +52,7 @@ public sealed class VideoDiscoveryTests
     public async Task InitialStateFollowsAvailability(VideoAvailability availability, VideoState expected)
     {
         SetFeed("video");
-        catalog.Details["video"] = new VideoDetails("video", "Title", availability, null, "reason");
+        catalog.Details["video"] = new VideoDetails("Title", availability, null, "reason");
 
         await sut.DiscoverAsync(CancellationToken.None);
 
@@ -63,7 +63,7 @@ public sealed class VideoDiscoveryTests
     public async Task VideoWithoutDateDoesNotEndTheWalk()
     {
         SetFeed("members-only", "normal");
-        catalog.Details["members-only"] = new VideoDetails("members-only", "members-only", VideoAvailability.PermanentlyUnavailable, null, "members only");
+        catalog.Details["members-only"] = new VideoDetails("members-only", VideoAvailability.PermanentlyUnavailable, null, "members only");
         AddDetails("normal", new DateOnly(2026, 10, 31));
 
         await sut.DiscoverAsync(CancellationToken.None);
@@ -86,7 +86,7 @@ public sealed class VideoDiscoveryTests
     [TestMethod]
     public async Task FailingChannelIsReportedAndOthersStillChecked()
     {
-        channels.Channels.Add(new Channel(2, "UC2", "https://youtube.com/@two", "Two"));
+        channels.Channels.Add(new Channel(2, "https://youtube.com/@two", "Two"));
         catalog.FailingChannels.Add(1);
         catalog.Feeds[2] = [["video"]];
         AddDetails("video", new DateOnly(2026, 10, 31));
@@ -115,7 +115,7 @@ public sealed class VideoDiscoveryTests
     {
         await videos.AddAsync(new NewVideo(1, "stream", "Stream", VideoState.Recheck, "is live", time.GetUtcNow()), CancellationToken.None);
         catalog.Feeds[1] = [[]];
-        catalog.Details["stream"] = new VideoDetails("stream", "Stream", VideoAvailability.RecheckLater, null, "still live");
+        catalog.Details["stream"] = new VideoDetails("Stream", VideoAvailability.RecheckLater, null, "still live");
 
         time.Advance(TimeSpan.FromDays(6));
         await sut.DiscoverAsync(CancellationToken.None);
@@ -125,6 +125,20 @@ public sealed class VideoDiscoveryTests
         await sut.DiscoverAsync(CancellationToken.None);
         Assert.AreEqual(VideoState.GaveUp, videos.Find("stream").State);
         Assert.AreEqual("still live", videos.Find("stream").LastReason);
+    }
+
+    [TestMethod]
+    public async Task AVideoThatFailsItsRecheckDoesNotBlockTheChannels()
+    {
+        await videos.AddAsync(new NewVideo(1, "broken", "Broken video", VideoState.Recheck, "is live", time.GetUtcNow()), CancellationToken.None);
+        SetFeed("new");
+        AddDetails("new", new DateOnly(2026, 10, 31));
+
+        var problems = await sut.DiscoverAsync(CancellationToken.None);
+
+        StringAssert.Contains(problems.Single(), "Broken video");
+        Assert.AreEqual(VideoState.Recheck, videos.Find("broken").State, "It must be tried again on the next run.");
+        Assert.AreEqual(VideoState.Pending, videos.Find("new").State, "The channel must still be checked.");
     }
 
     //
@@ -139,6 +153,6 @@ public sealed class VideoDiscoveryTests
 
     private void AddDetails(string id, DateOnly publishedOn)
     {
-        catalog.Details[id] = new VideoDetails(id, "Title of " + id, VideoAvailability.Eligible, publishedOn, null);
+        catalog.Details[id] = new VideoDetails("Title of " + id, VideoAvailability.Eligible, publishedOn, null);
     }
 }

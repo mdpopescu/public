@@ -60,18 +60,19 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 
 ## Build & Test
 
-_Add your build and test commands here_
-
 ```bash
-# Example:
-# npm install
-# npm test
+dotnet build YouNews.slnx
+dotnet test YouNews.slnx                                # excludes Live tests
+dotnet test YouNews.slnx --settings live.runsettings    # real LLM, SearXNG, YouTube, SSH
 ```
 
 ## Architecture Overview
 
-_Add a brief overview of your project architecture_
+Dependencies point inward: `YouNews.Web` (pages, presenters, hosting, composition root) and `YouNews.Infrastructure` (SQLite, yt-dlp, ffmpeg, HTTP, SSH, speech) depend on `YouNews.Core` (entities, use cases, ports). `RefreshRunner` drives a run: discovery, then one video at a time through `VideoProcessor`, with prompts in `Core/Briefing`. See README.md.
 
 ## Conventions & Patterns
 
-_Add your project-specific conventions here_
+- Solution format is `.slnx`. Target framework, win-x64 and en-US output are set once in `Directory.Build.props`.
+- Tests that call real services carry `[TestCategory("Live")]`.
+- Machine-specific settings go in the git-ignored `appsettings.Local.json`.
+- Do not install Docker or Windows services unless asked. Commit directly to `master`; do not create branches.

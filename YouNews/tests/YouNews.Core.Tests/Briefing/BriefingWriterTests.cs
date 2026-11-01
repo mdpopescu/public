@@ -63,6 +63,19 @@ public sealed class BriefingWriterTests
     }
 
     [TestMethod]
+    public async Task FrameTimesInTheSameSecondCountOnce()
+    {
+        var model = new ScriptedLanguageModel("""
+            {"headline": "A headline", "tags": ["research"], "frameTimes": [12.2, 12.8, 20], "relatedEntryIds": [], "searchQueries": []}
+            """);
+        var sut = CreateWriter(model);
+
+        var result = await sut.AnalyzeAsync("A title", "A channel", TranscriptBuilder.WithWords(100), [], CancellationToken.None);
+
+        CollectionAssert.AreEqual(new[] { TimeSpan.FromSeconds(12.2), TimeSpan.FromSeconds(20) }, result.FrameTimes.ToList(), "Frame files are named by whole second, so a second frame would overwrite the first.");
+    }
+
+    [TestMethod]
     public async Task AnalysisAcceptsFencedJsonWithSurroundingText()
     {
         var model = new ScriptedLanguageModel("""

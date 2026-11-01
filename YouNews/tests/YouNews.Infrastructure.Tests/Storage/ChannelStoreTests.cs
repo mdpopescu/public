@@ -57,7 +57,7 @@ public class ChannelStoreTests
         await videos.SetStateAsync(video.Id, VideoState.Skipped, "members only", CancellationToken.None);
         await sut.RemoveAsync(channel.Id, CancellationToken.None);
 
-        var readded = await sut.AddAsync(new ChannelDetails(channel.YouTubeId, channel.Url, "Renamed"), CancellationToken.None);
+        var readded = await sut.AddAsync(new ChannelDetails("UC1", channel.Url, "Renamed"), CancellationToken.None);
 
         Assert.IsNotNull(readded);
         Assert.AreEqual(channel.Id, readded.Id, "same row should be reactivated");
