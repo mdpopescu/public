@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "YouNews",
+  "project_id": "47e919f1-adcd-451d-9de6-4c1c84e4626c"
+}
