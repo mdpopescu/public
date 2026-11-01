@@ -6,7 +6,8 @@ public sealed class ProcessRunner : IProcessRunner
 {
     public async Task<ProcessResult> RunAsync(string fileName, IReadOnlyList<string> arguments, string? workingDirectory, TimeSpan timeout, CancellationToken cancellationToken)
     {
-        using var process = new Process { StartInfo = CreateStartInfo(fileName, arguments, workingDirectory) };
+        using var process = new Process();
+        process.StartInfo = CreateStartInfo(fileName, arguments, workingDirectory);
         process.Start();
 
         var output = process.StandardOutput.ReadToEndAsync(CancellationToken.None);

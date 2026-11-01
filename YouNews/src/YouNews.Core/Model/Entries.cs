@@ -14,8 +14,11 @@ public static class EntryTags
 
 public enum ImageKind
 {
+    // ReSharper disable InconsistentNaming
+    // These names are stored as text in SQLite.
     Thumbnail,
     Frame,
+    // ReSharper restore InconsistentNaming
 }
 
 /// <param name="RelativePath">Path below the images folder, with forward slashes.</param>

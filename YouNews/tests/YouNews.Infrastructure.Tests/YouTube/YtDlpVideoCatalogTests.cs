@@ -95,7 +95,7 @@ public sealed class YtDlpVideoCatalogTests
     [TestMethod]
     public async Task ListsVideosAndStreamsAsSeparateFeedsInOrder()
     {
-        runner.Behavior = call => new ProcessResult(0, call.Arguments[^1].EndsWith("/videos") ? "vid1\nvid2\n" : "live1\r\n", "");
+        runner.Behavior = call => new ProcessResult(0, call.Arguments[^1].EndsWith("/videos", StringComparison.Ordinal) ? "vid1\nvid2\n" : "live1\r\n", "");
 
         var feeds = await sut.ListVideoFeedsAsync(Channel("https://www.youtube.com/@matthew_berman/"), CancellationToken.None);
 
@@ -109,7 +109,7 @@ public sealed class YtDlpVideoCatalogTests
     [TestMethod]
     public async Task ChannelWithoutStreamsTabHasEmptySecondFeed()
     {
-        runner.Behavior = call => call.Arguments[^1].EndsWith("/videos")
+        runner.Behavior = call => call.Arguments[^1].EndsWith("/videos", StringComparison.Ordinal)
             ? new ProcessResult(0, "vid1\n", "")
             : new ProcessResult(1, "", "ERROR: [youtube:tab] This channel does not have a streams tab");
 

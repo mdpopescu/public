@@ -7,7 +7,7 @@ using YouNews.Infrastructure.LanguageModels;
 namespace YouNews.Infrastructure.Tests.LanguageModels;
 
 [TestClass]
-public sealed class OpenAiCompatibleLanguageModelTests
+public sealed class OpenAiCompatibleLanguageModelTests : IDisposable
 {
     [TestInitialize]
     public void Initialize()
@@ -179,7 +179,6 @@ public sealed class OpenAiCompatibleLanguageModelTests
     [TestMethod]
     public async Task CancellationDuringRequestIsNotRetried()
     {
-        using var cancellation = new CancellationTokenSource();
         handler.Enqueue(_ =>
         {
             cancellation.Cancel();
@@ -196,7 +195,6 @@ public sealed class OpenAiCompatibleLanguageModelTests
     [TestMethod]
     public async Task CancellationBeforeTheRetryStopsIt()
     {
-        using var cancellation = new CancellationTokenSource();
         handler.Enqueue(_ =>
         {
             cancellation.Cancel();
@@ -232,7 +230,11 @@ public sealed class OpenAiCompatibleLanguageModelTests
         Assert.AreEqual(TimeSpan.FromMinutes(7), httpClient.Timeout);
     }
 
+    public void Dispose() => cancellation.Dispose();
+
     //
+
+    private readonly CancellationTokenSource cancellation = new();
 
     private StubHandler handler = null!;
     private InstantTimeProvider timeProvider = null!;

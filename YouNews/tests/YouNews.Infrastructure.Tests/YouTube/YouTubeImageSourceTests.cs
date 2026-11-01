@@ -35,7 +35,7 @@ public sealed class YouTubeImageSourceTests
     [TestMethod]
     public async Task FallsBackToHighQualityThumbnailWhenMaximumIs404()
     {
-        handler.Respond = uri => uri.AbsoluteUri.EndsWith("maxresdefault.jpg") ? HttpStatusCode.NotFound : HttpStatusCode.OK;
+        handler.Respond = uri => uri.AbsoluteUri.EndsWith("maxresdefault.jpg", StringComparison.Ordinal) ? HttpStatusCode.NotFound : HttpStatusCode.OK;
 
         var images = await sut.CaptureAsync("zhnJo7s91ls", [], CancellationToken.None);
 

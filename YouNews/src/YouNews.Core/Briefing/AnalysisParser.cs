@@ -89,12 +89,27 @@ public sealed class AnalysisParser
     private static List<long> ReadRelatedEntryIds(JsonElement root, IReadOnlyList<EntryDigest> candidates)
     {
         var knownIds = candidates.Select(candidate => candidate.Id).ToHashSet();
-        return ReadNumbers(root, "relatedEntryIds")
-            .Where(number => number == Math.Floor(number) && Math.Abs(number) < long.MaxValue)
-            .Select(number => (long)number)
+        return ReadItems(root, "relatedEntryIds")
+            .Select(ToWholeNumber)
+            .OfType<long>()
             .Where(knownIds.Contains)
             .Distinct()
             .ToList();
+    }
+
+    private static long? ToWholeNumber(JsonElement item)
+    {
+        var parsed = item.ValueKind switch
+        {
+            JsonValueKind.Number => item.TryGetDecimal(out var decimalValue) ? decimalValue : (decimal?)null,
+            JsonValueKind.String => decimal.TryParse(item.GetString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var parsedValue) ? parsedValue : null,
+            _ => null,
+        };
+
+        if (parsed is not { } value || value != decimal.Truncate(value) || value < long.MinValue || value > long.MaxValue)
+            return null;
+
+        return (long)value;
     }
 
     private static IEnumerable<string> ReadStrings(JsonElement root, string name) =>

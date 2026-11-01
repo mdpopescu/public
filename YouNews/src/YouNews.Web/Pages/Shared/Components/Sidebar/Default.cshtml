@@ -10,6 +10,6 @@
             </a>
         }
     </div>
-    <a class="channels@(Model.ChannelsCurrent ? " on" : "")" href="/config">Channels</a>
+    <a class="channels@(Model.ChannelsCurrent ? " on" : "")" asp-page="/Config">Channels</a>
     <partial name="_RefreshControl" model="Model.Refresh" />
 </nav>

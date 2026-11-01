@@ -5,40 +5,37 @@ using YouNews.Core.Ports;
 
 namespace YouNews.Infrastructure.Storage;
 
-public sealed class SqliteChannelStore : IChannelStore
+public sealed class SqliteChannelStore(ISqliteConnectionFactory factory) : IChannelStore
 {
-    public SqliteChannelStore(ISqliteConnectionFactory factory)
-    {
-        this.factory = factory;
-    }
-
     public async Task<IReadOnlyList<Channel>> ListAsync(CancellationToken cancellationToken)
     {
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connection1 = connection.ConfigureAwait(false);
         var rows = await connection.QueryAsync<Channel>(new CommandDefinition(LIST, cancellationToken: cancellationToken)).ConfigureAwait(false);
-        return rows.ToList();
+        return [.. rows];
     }
 
     public async Task<Channel?> AddAsync(ChannelDetails details, CancellationToken cancellationToken)
     {
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
-        await using var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connection1 = connection.ConfigureAwait(false);
+        var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await using var transaction1 = transaction.ConfigureAwait(false);
         var existing = await connection.QuerySingleOrDefaultAsync<ExistingRow>(new CommandDefinition(FIND, details, transaction, cancellationToken: cancellationToken)).ConfigureAwait(false);
-        if (existing is { Removed: not 0 } or null)
-        {
-            var id = existing is null
-                ? await connection.ExecuteScalarAsync<long>(new CommandDefinition(INSERT, details, transaction, cancellationToken: cancellationToken)).ConfigureAwait(false)
-                : await ReactivateAsync(connection, transaction, existing.Id, details, cancellationToken).ConfigureAwait(false);
-            await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-            return new Channel(id, details.Url, details.Name);
-        }
+        if (existing is not ({ Removed: not 0 } or null))
+            return null;
 
-        return null;
+        var id = existing is null
+            ? await connection.ExecuteScalarAsync<long>(new CommandDefinition(INSERT, details, transaction, cancellationToken: cancellationToken)).ConfigureAwait(false)
+            : await ReactivateAsync(connection, transaction, existing.Id, details, cancellationToken).ConfigureAwait(false);
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+        return new Channel(id, details.Url, details.Name);
     }
 
     public async Task RemoveAsync(long channelId, CancellationToken cancellationToken)
     {
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connection1 = connection.ConfigureAwait(false);
         await connection.ExecuteAsync(new CommandDefinition(REMOVE, new { ChannelId = channelId }, cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
@@ -49,8 +46,6 @@ public sealed class SqliteChannelStore : IChannelStore
     private const string INSERT = "INSERT INTO channels (youtube_id, url, name) VALUES (@YouTubeId, @Url, @Name); SELECT last_insert_rowid()";
     private const string REACTIVATE = "UPDATE channels SET removed = 0, url = @Url, name = @Name WHERE id = @Id";
     private const string REMOVE = "UPDATE channels SET removed = 1 WHERE id = @ChannelId";
-
-    private readonly ISqliteConnectionFactory factory;
 
     private static async Task<long> ReactivateAsync(DbConnection connection, DbTransaction transaction, long channelId, ChannelDetails details, CancellationToken cancellationToken)
     {

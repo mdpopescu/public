@@ -163,6 +163,17 @@ public sealed class BriefingWriterTests
     }
 
     [TestMethod]
+    public async Task RelatedIdsThatAreNotWholeNumbersOrAreHugeAreDiscarded()
+    {
+        var model = new ScriptedLanguageModel("""{"headline": "H", "tags": ["research"], "relatedEntryIds": [7.5, 1e300, 99999999999999999999, 9223372036854775807, 7.0, 7]}""");
+        var sut = CreateWriter(model);
+
+        var result = await sut.AnalyzeAsync("A title", "A channel", TranscriptBuilder.WithWords(100), [Digest(7), Digest(long.MaxValue)], CancellationToken.None);
+
+        CollectionAssert.AreEqual(new[] { long.MaxValue, 7L }, result.RelatedEntryIds.ToList(), "7.5 must not become 7, and huge values must not overflow.");
+    }
+
+    [TestMethod]
     public async Task InventedAndRepeatedRelatedIdsAreDiscarded()
     {
         var model = new ScriptedLanguageModel("""{"headline": "H", "tags": ["research"], "relatedEntryIds": [3, 999, 3, "5", 1.5, "x"]}""");

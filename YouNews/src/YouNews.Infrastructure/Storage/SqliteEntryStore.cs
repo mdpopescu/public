@@ -14,8 +14,10 @@ public sealed class SqliteEntryStore : IEntryStore
 
     public async Task<long> AddAsync(NewEntry entry, CancellationToken cancellationToken)
     {
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
-        await using var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connectionScope = connection.ConfigureAwait(false);
+        var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await using var transactionScope = transaction.ConfigureAwait(false);
         var entryParameters = new { entry.VideoId, Day = StorageFormat.ToText(entry.Day), entry.Headline, entry.Summary, entry.Opinion };
         var id = await connection.ExecuteScalarAsync<long>(new CommandDefinition(INSERT_ENTRY, entryParameters, transaction, cancellationToken: cancellationToken)).ConfigureAwait(false);
         await InsertPartsAsync(connection, transaction, id, entry, cancellationToken).ConfigureAwait(false);
@@ -26,7 +28,8 @@ public sealed class SqliteEntryStore : IEntryStore
 
     public async Task<IReadOnlyList<EntryDigest>> ListRecentDigestsAsync(int limit, CancellationToken cancellationToken)
     {
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connectionScope = connection.ConfigureAwait(false);
         var rows = (await connection.QueryAsync<DigestRow>(new CommandDefinition(RECENT, new { Limit = limit }, cancellationToken: cancellationToken)).ConfigureAwait(false)).ToList();
         var tags = await parts.LoadTagsAsync(connection, rows.Select(row => row.Id).ToList(), cancellationToken).ConfigureAwait(false);
         return rows.Select(row => new EntryDigest(row.Id, StorageFormat.ParseDay(row.Day), row.Headline, tags[row.Id].ToList(), row.Summary)).ToList();

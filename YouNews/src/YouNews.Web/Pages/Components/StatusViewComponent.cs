@@ -22,13 +22,13 @@ public sealed class StatusViewComponent : ViewComponent
     public async Task<IViewComponentResult> InvokeAsync(string part)
     {
         var cancellationToken = HttpContext.RequestAborted;
-        var problems = await toolProblems.GetAsync(cancellationToken);
+        var problems = await toolProblems.GetAsync(cancellationToken).ConfigureAwait(false);
         if (part == BANNER)
             return View(BANNER, presenter.Present(null, [], problems));
 
-        var lastRun = await log.GetLatestAsync(cancellationToken);
-        var pending = await videos.ListByStateAsync(VideoState.Pending, cancellationToken);
-        var gaveUp = await videos.ListByStateAsync(VideoState.GaveUp, cancellationToken);
+        var lastRun = await log.GetLatestAsync(cancellationToken).ConfigureAwait(false);
+        var pending = await videos.ListByStateAsync(VideoState.Pending, cancellationToken).ConfigureAwait(false);
+        var gaveUp = await videos.ListByStateAsync(VideoState.GaveUp, cancellationToken).ConfigureAwait(false);
         var waiting = pending.Where(video => video.Attempts > 0).Concat(gaveUp).ToList();
         return View(FOOTER, presenter.Present(lastRun, waiting, problems));
     }

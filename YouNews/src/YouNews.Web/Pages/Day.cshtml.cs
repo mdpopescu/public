@@ -5,13 +5,8 @@ using YouNews.Web.Presentation;
 
 namespace YouNews.Web.Pages;
 
-public sealed class DayModel : DayPageModelBase
+public sealed class DayModel(IEntryReader reader, IEntryPresenter presenter) : DayPageModelBase(reader, presenter)
 {
-    public DayModel(IEntryReader reader, IEntryPresenter presenter)
-        : base(reader, presenter)
-    {
-    }
-
     public async Task<IActionResult> OnGetAsync(string date, CancellationToken cancellationToken)
     {
         if (!DateOnly.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var day))

@@ -14,7 +14,8 @@ public sealed class SqliteSetupStore : ISetupStore
 
     public async Task<SetupSnapshot?> GetLatestAsync(CancellationToken cancellationToken)
     {
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connectionScope = connection.ConfigureAwait(false);
         var row = await connection.QuerySingleOrDefaultAsync<SnapshotRow>(new CommandDefinition(SELECT, cancellationToken: cancellationToken)).ConfigureAwait(false);
         if (row is null)
             return null;
@@ -32,7 +33,8 @@ public sealed class SqliteSetupStore : ISetupStore
             CheckedAt = StorageFormat.ToText(snapshot.CheckedAt),
             snapshot.Warning,
         };
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connectionScope = connection.ConfigureAwait(false);
         await connection.ExecuteAsync(new CommandDefinition(UPSERT, parameters, cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 

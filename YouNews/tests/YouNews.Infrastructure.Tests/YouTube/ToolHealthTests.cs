@@ -95,7 +95,7 @@ public sealed class ToolHealthTests
     private void Tools(string? ytDlp, bool ffmpeg = true, bool node = true) =>
         runner.Behavior = call => call.FileName switch
         {
-            var name when name.EndsWith("yt-dlp.exe") || name == "yt-dlp" => ytDlp == null ? throw new Win32Exception(2) : new ProcessResult(0, ytDlp, ""),
+            var name when name.EndsWith("yt-dlp.exe", StringComparison.Ordinal) || name == "yt-dlp" => ytDlp == null ? throw new Win32Exception(2) : new ProcessResult(0, ytDlp, ""),
             "ffmpeg" => ffmpeg ? new ProcessResult(0, "ffmpeg version 7", "") : throw new Win32Exception(2),
             _ => node ? new ProcessResult(0, "v22.0.0", "") : throw new Win32Exception(2),
         };

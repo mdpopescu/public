@@ -1,7 +1,6 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
 using YouNews.Core.Model;
-using YouNews.Infrastructure;
 using YouNews.Infrastructure.Storage;
 
 namespace YouNews.Infrastructure.Tests.Storage;

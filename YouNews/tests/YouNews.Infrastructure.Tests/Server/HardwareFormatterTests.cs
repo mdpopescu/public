@@ -22,10 +22,10 @@ public sealed class HardwareFormatterTests
     public void ReadsModelLinesFromDriverInformation()
     {
         var sut = new HardwareFormatter();
-        const string information = "Model: \t\t NVIDIA GeForce RTX 2060 SUPER\nIRQ:   \t\t 135\nGPU UUID: \t GPU-1234\nVideo BIOS: \t 90.06.31.00.50\n"
+        const string INFORMATION = "Model: \t\t NVIDIA GeForce RTX 2060 SUPER\nIRQ:   \t\t 135\nGPU UUID: \t GPU-1234\nVideo BIOS: \t 90.06.31.00.50\n"
             + "Model: \t\t NVIDIA GeForce RTX 5060 Ti\nIRQ:   \t\t 136\n";
 
-        var gpus = sut.ParseGpuInformation(information);
+        var gpus = sut.ParseGpuInformation(INFORMATION);
 
         CollectionAssert.AreEqual(new[] { "NVIDIA GeForce RTX 2060 SUPER", "NVIDIA GeForce RTX 5060 Ti" }, gpus.ToList());
     }

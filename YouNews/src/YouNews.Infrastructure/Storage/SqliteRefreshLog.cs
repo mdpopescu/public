@@ -21,13 +21,15 @@ public sealed class SqliteRefreshLog : IRefreshLog
             run.Failed,
             run.Problem,
         };
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connectionScope = connection.ConfigureAwait(false);
         await connection.ExecuteAsync(new CommandDefinition(INSERT, parameters, cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 
     public async Task<RefreshRun?> GetLatestAsync(CancellationToken cancellationToken)
     {
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connectionScope = connection.ConfigureAwait(false);
         var row = await connection.QuerySingleOrDefaultAsync<RunRow>(new CommandDefinition(LATEST, cancellationToken: cancellationToken)).ConfigureAwait(false);
         return row is null
             ? null

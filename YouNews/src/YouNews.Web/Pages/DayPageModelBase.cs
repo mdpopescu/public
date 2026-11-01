@@ -6,7 +6,7 @@ using YouNews.Web.Presentation;
 namespace YouNews.Web.Pages;
 
 /// <summary>Shows the story cards of one day.</summary>
-public abstract class DayPageModelBase : PageModel
+public abstract class DayPageModelBase(IEntryReader reader, IEntryPresenter presenter) : PageModel
 {
     public string Heading { get; private set; } = "";
 
@@ -14,11 +14,7 @@ public abstract class DayPageModelBase : PageModel
 
     public string? NotFoundMessage { get; private set; }
 
-    protected DayPageModelBase(IEntryReader reader, IEntryPresenter presenter)
-    {
-        this.reader = reader;
-        this.presenter = presenter;
-    }
+    //
 
     /// <summary>Shows the day, or the friendly "nothing here" page with a 404 status when it has no entries.</summary>
     protected async Task<IActionResult> ShowDayAsync(DateOnly day, CancellationToken cancellationToken)
@@ -41,9 +37,4 @@ public abstract class DayPageModelBase : PageModel
         Response.StatusCode = StatusCodes.Status404NotFound;
         return Page();
     }
-
-    //
-
-    private readonly IEntryReader reader;
-    private readonly IEntryPresenter presenter;
 }

@@ -16,7 +16,7 @@ public sealed class RefreshModel : PageModel
     public IActionResult OnPost(string? returnUrl)
     {
         trigger.TryStart();
-        return Redirect(Url.IsLocalUrl(returnUrl) ? returnUrl! : "/");
+        return Redirect(Url.IsLocalUrl(returnUrl) ? returnUrl : "/");
     }
 
     //

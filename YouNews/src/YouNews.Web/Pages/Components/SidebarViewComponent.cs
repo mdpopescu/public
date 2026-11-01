@@ -17,7 +17,7 @@ public sealed class SidebarViewComponent : ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync(DateOnly? currentDay, bool channelsCurrent)
     {
-        var days = await reader.ListDaysAsync(HttpContext.RequestAborted);
+        var days = await reader.ListDaysAsync(HttpContext.RequestAborted).ConfigureAwait(false);
         return View(new SidebarView(dayPresenter.Present(days, currentDay), refreshPresenter.Present(status.Current), channelsCurrent));
     }
 

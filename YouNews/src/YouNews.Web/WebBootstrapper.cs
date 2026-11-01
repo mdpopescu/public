@@ -40,7 +40,7 @@ public static class WebBootstrapper
 
     public static async Task UseYouNewsAsync(this WebApplication app)
     {
-        await app.Services.GetRequiredService<IDatabaseInitializer>().InitializeAsync(app.Lifetime.ApplicationStopping);
+        await app.Services.GetRequiredService<IDatabaseInitializer>().InitializeAsync(app.Lifetime.ApplicationStopping).ConfigureAwait(false);
 
         var options = app.Services.GetRequiredService<IOptions<YouNewsOptions>>().Value;
         Directory.CreateDirectory(options.ImagesDirectory);

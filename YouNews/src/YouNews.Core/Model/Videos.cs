@@ -2,18 +2,24 @@ namespace YouNews.Core.Model;
 
 public enum VideoAvailability
 {
+    // ReSharper disable InconsistentNaming
+    // Named like VideoState, whose names are stored as text in SQLite.
     Eligible,
     PermanentlyUnavailable,
     RecheckLater,
+    // ReSharper restore InconsistentNaming
 }
 
 public enum VideoState
 {
+    // ReSharper disable InconsistentNaming
+    // These names are stored as text in SQLite.
     Pending,
     Recheck,
     Skipped,
     GaveUp,
     Done,
+    // ReSharper restore InconsistentNaming
 }
 
 /// <summary>What YouTube currently says about one video.</summary>

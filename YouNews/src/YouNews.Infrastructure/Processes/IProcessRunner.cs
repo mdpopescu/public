@@ -10,6 +10,10 @@ public interface IProcessRunner
     /// The program and its children are killed on timeout or cancellation, and a <see cref="TimeoutException"/>
     /// or <see cref="OperationCanceledException"/> is thrown.
     /// </summary>
+    /// <param name="fileName">The program to start.</param>
+    /// <param name="arguments">The arguments, passed one by one without shell quoting.</param>
     /// <param name="workingDirectory">Null to use the current one.</param>
+    /// <param name="timeout">How long the program may run before it is killed.</param>
+    /// <param name="cancellationToken">Cancels the run and kills the program.</param>
     Task<ProcessResult> RunAsync(string fileName, IReadOnlyList<string> arguments, string? workingDirectory, TimeSpan timeout, CancellationToken cancellationToken);
 }

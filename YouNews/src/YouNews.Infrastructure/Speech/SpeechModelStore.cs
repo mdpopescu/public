@@ -95,7 +95,8 @@ public sealed class SpeechModelStore : ISpeechModelStore
             using var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            await using (var target = File.Create(partial))
+            var target = File.Create(partial);
+            await using (target.ConfigureAwait(false))
             {
                 await response.Content.CopyToAsync(target, cancellationToken).ConfigureAwait(false);
             }

@@ -6,7 +6,8 @@ using YouNews.Web.Presentation;
 
 namespace YouNews.Web.Pages;
 
-public sealed class ConfigModel : PageModel
+public sealed class ConfigModel(IChannelStore channels, IInterestStore interests, IVideoCatalog catalog, ISetupStore setupStore, ISetupPresenter setupPresenter)
+    : PageModel
 {
     public IReadOnlyList<Channel> Channels { get; private set; } = [];
 
@@ -20,15 +21,6 @@ public sealed class ConfigModel : PageModel
 
     [TempData]
     public string? Message { get; set; }
-
-    public ConfigModel(IChannelStore channels, IInterestStore interests, IVideoCatalog catalog, ISetupStore setupStore, ISetupPresenter setupPresenter)
-    {
-        this.channels = channels;
-        this.interests = interests;
-        this.catalog = catalog;
-        this.setupStore = setupStore;
-        this.setupPresenter = setupPresenter;
-    }
 
     public async Task<IActionResult> OnGetAsync(CancellationToken cancellationToken)
     {
@@ -65,12 +57,6 @@ public sealed class ConfigModel : PageModel
     }
 
     //
-
-    private readonly IChannelStore channels;
-    private readonly IInterestStore interests;
-    private readonly IVideoCatalog catalog;
-    private readonly ISetupStore setupStore;
-    private readonly ISetupPresenter setupPresenter;
 
     private async Task LoadAsync(CancellationToken cancellationToken)
     {

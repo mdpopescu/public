@@ -52,39 +52,11 @@ internal sealed class EntryParts
         return rows.ToList();
     }
 
-    private sealed class TagRow
-    {
-        public long EntryId { get; set; }
+    private sealed record TagRow(long EntryId, string Tag);
 
-        public string Tag { get; set; } = "";
-    }
+    private sealed record SourceRow(long EntryId, string Title, string Url);
 
-    private sealed class SourceRow
-    {
-        public long EntryId { get; set; }
+    private sealed record ImageRow(long EntryId, string RelativePath, string Kind);
 
-        public string Title { get; set; } = "";
-
-        public string Url { get; set; } = "";
-    }
-
-    private sealed class ImageRow
-    {
-        public long EntryId { get; set; }
-
-        public string RelativePath { get; set; } = "";
-
-        public string Kind { get; set; } = "";
-    }
-
-    private sealed class RelatedRow
-    {
-        public long EntryId { get; set; }
-
-        public long RelatedId { get; set; }
-
-        public string Day { get; set; } = "";
-
-        public string Headline { get; set; } = "";
-    }
+    private sealed record RelatedRow(long EntryId, long RelatedId, string Day, string Headline);
 }

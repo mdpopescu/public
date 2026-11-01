@@ -13,7 +13,8 @@ public sealed class SqliteVideoStore : IVideoStore
 
     public async Task<IReadOnlySet<string>> GetKnownIdsAsync(long channelId, CancellationToken cancellationToken)
     {
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connectionScope = connection.ConfigureAwait(false);
         var ids = await connection.QueryAsync<string>(new CommandDefinition(KNOWN_IDS, new { ChannelId = channelId }, cancellationToken: cancellationToken)).ConfigureAwait(false);
         return ids.ToHashSet();
     }
@@ -35,7 +36,8 @@ public sealed class SqliteVideoStore : IVideoStore
 
     public async Task<IReadOnlyList<TrackedVideo>> ListByStateAsync(VideoState state, CancellationToken cancellationToken)
     {
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connectionScope = connection.ConfigureAwait(false);
         var rows = await connection.QueryAsync<VideoRow>(new CommandDefinition(LIST_BY_STATE, new { State = state.ToString() }, cancellationToken: cancellationToken)).ConfigureAwait(false);
         return rows.Select(ToTrackedVideo).ToList();
     }
@@ -80,7 +82,8 @@ public sealed class SqliteVideoStore : IVideoStore
 
     private async Task ExecuteAsync(string sql, object parameters, CancellationToken cancellationToken)
     {
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connectionScope = connection.ConfigureAwait(false);
         await connection.ExecuteAsync(new CommandDefinition(sql, parameters, cancellationToken: cancellationToken)).ConfigureAwait(false);
     }
 

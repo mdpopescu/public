@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Time.Testing;
 using YouNews.Core.Model;
+using YouNews.Core.Ports;
 using YouNews.Core.Refresh;
 
 namespace YouNews.Core.Tests.Refresh;
@@ -234,7 +235,7 @@ public sealed class RefreshRunTests
     private FakeEntryStore entries = null!;
     private RefreshRunner sut = null!;
 
-    private sealed class CancellingWriter : YouNews.Core.Ports.IBriefingWriter
+    private sealed class CancellingWriter : IBriefingWriter
     {
         public Task<VideoAnalysis> AnalyzeAsync(string title, string channelName, Transcript transcript, IReadOnlyList<EntryDigest> candidates, CancellationToken cancellationToken)
         {
@@ -247,7 +248,7 @@ public sealed class RefreshRunTests
         public Task<string> WriteOpinionAsync(OpinionRequest request, CancellationToken cancellationToken) => throw new NotSupportedException();
     }
 
-    private RefreshRunner CreateSut(int? limit, YouNews.Core.Ports.IBriefingWriter? replacementWriter = null)
+    private RefreshRunner CreateSut(int? limit, IBriefingWriter? replacementWriter = null)
     {
         var discovery = new VideoDiscovery(channels, videos, catalog, time);
         var processor = new VideoProcessor(new VideoProcessorDependencies(captions, speech, replacementWriter ?? writer, search, images, entries, time));
@@ -255,10 +256,7 @@ public sealed class RefreshRunTests
         return new RefreshRunner(dependencies, discovery, processor, new RefreshLimits(limit));
     }
 
-    private Task AddPendingAsync(string id)
-    {
-        return videos.AddAsync(new NewVideo(1, id, "Title of " + id, VideoState.Pending, null, time.GetUtcNow()), CancellationToken.None);
-    }
+    private Task AddPendingAsync(string id) => videos.AddAsync(new NewVideo(1, id, "Title of " + id, VideoState.Pending, null, time.GetUtcNow()), CancellationToken.None);
 
     private Task RunAsync() => sut.ExecuteAsync(_ => { }, CancellationToken.None);
 }

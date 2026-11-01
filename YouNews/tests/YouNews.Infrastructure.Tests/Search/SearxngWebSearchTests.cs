@@ -12,7 +12,8 @@ public sealed class SearxngWebSearchTests
     [TestMethod]
     public async Task MapsResultsAndBuildsJsonQuery()
     {
-        var handler = new StubHandler(_ => Json("""
+        var handler = new StubHandler(_ => Json(
+            """
             {"query":"ternary bonsai","results":[
               {"title":"Bonsai models","url":"https://example.com/bonsai","content":"Ternary weights."},
               {"title":"Paper","url":"https://arxiv.org/abs/1","content":"Research."}]}
@@ -83,11 +84,13 @@ public sealed class SearxngWebSearchTests
     [TestMethod]
     public async Task ReturnsEmptyWhenRequestTimesOut()
     {
-        var sut = Create(new StubHandler(async (_, token) =>
-        {
-            await Task.Delay(TimeSpan.FromSeconds(30), token);
-            return Json("""{"results":[]}""");
-        }), timeoutSeconds: 1);
+        var sut = Create(
+            new StubHandler(async (_, token) =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(30), token);
+                return Json("""{"results":[]}""");
+            }),
+            timeoutSeconds: 1);
 
         var results = await sut.SearchAsync("q", CancellationToken.None);
 
@@ -98,12 +101,14 @@ public sealed class SearxngWebSearchTests
     public async Task ThrowsWhenCallerCancels()
     {
         using var source = new CancellationTokenSource();
-        var sut = Create(new StubHandler(async (_, token) =>
-        {
-            await source.CancelAsync();
-            await Task.Delay(TimeSpan.FromSeconds(30), token);
-            return Json("{}");
-        }));
+        var sut = Create(
+            new StubHandler(async (_, token) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                await source.CancelAsync();
+                await Task.Delay(TimeSpan.FromSeconds(30), token);
+                return Json("{}");
+            }));
 
         await Assert.ThrowsAsync<OperationCanceledException>(() => sut.SearchAsync("q", source.Token));
     }
@@ -141,10 +146,11 @@ public sealed class SearxngWebSearchTests
 
     private static SearxngWebSearch Create(StubHandler handler, int maximumResults = 5, int timeoutSeconds = 30)
     {
-        var options = Options.Create(new YouNewsOptions
-        {
-            Search = { SearxngUrl = "http://searx.test:8888/", MaximumResults = maximumResults, TimeoutSeconds = timeoutSeconds },
-        });
+        var options = Options.Create(
+            new YouNewsOptions
+            {
+                Search = { SearxngUrl = "http://searx.test:8888/", MaximumResults = maximumResults, TimeoutSeconds = timeoutSeconds },
+            });
         return new SearxngWebSearch(new HttpClient(handler), options, NullLogger<SearxngWebSearch>.Instance);
     }
 

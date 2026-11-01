@@ -16,11 +16,11 @@ public sealed class CachedToolProblems : IToolProblems
 
     public async Task<IReadOnlyList<string>> GetAsync(CancellationToken cancellationToken)
     {
-        await gate.WaitAsync(cancellationToken);
+        await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
             if (cached is null || time.GetUtcNow() >= expiresAt)
-                await RefreshAsync(cancellationToken);
+                await RefreshAsync(cancellationToken).ConfigureAwait(false);
 
             return cached!;
         }
@@ -43,7 +43,7 @@ public sealed class CachedToolProblems : IToolProblems
     {
         try
         {
-            cached = await health.FindProblemsAsync(cancellationToken);
+            cached = await health.FindProblemsAsync(cancellationToken).ConfigureAwait(false);
             expiresAt = time.GetUtcNow() + LIFETIME;
         }
         catch (Exception exception) when (exception is not OperationCanceledException)

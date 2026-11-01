@@ -4,24 +4,19 @@ using Microsoft.Extensions.Options;
 
 namespace YouNews.Infrastructure.Storage;
 
-public sealed class DatabaseInitializer : IDatabaseInitializer
+public sealed class DatabaseInitializer(ISqliteConnectionFactory factory, IDatabaseMigrations migrations, TimeProvider timeProvider, IOptions<YouNewsOptions> options)
+    : IDatabaseInitializer
 {
-    public DatabaseInitializer(ISqliteConnectionFactory factory, IDatabaseMigrations migrations, TimeProvider timeProvider, IOptions<YouNewsOptions> options)
-    {
-        this.factory = factory;
-        this.migrations = migrations;
-        this.timeProvider = timeProvider;
-        dataDirectory = options.Value.DataDirectory;
-    }
-
     public async Task InitializeAsync(CancellationToken cancellationToken)
     {
         Directory.CreateDirectory(dataDirectory);
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connection1 = connection.ConfigureAwait(false);
         await connection.ExecuteAsync(new CommandDefinition("PRAGMA journal_mode=WAL", cancellationToken: cancellationToken)).ConfigureAwait(false);
         await connection.ExecuteAsync(new CommandDefinition(CREATE_VERSION_TABLE, cancellationToken: cancellationToken)).ConfigureAwait(false);
 
-        await using var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await using var transaction1 = transaction.ConfigureAwait(false);
         var applied = await connection.ExecuteScalarAsync<int>(new CommandDefinition(SELECT_VERSION, transaction: transaction, cancellationToken: cancellationToken)).ConfigureAwait(false);
         await ApplyMigrationsAsync(connection, transaction, applied, cancellationToken).ConfigureAwait(false);
         if (applied == 0)
@@ -45,10 +40,7 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
         "New AI research",
     ];
 
-    private readonly ISqliteConnectionFactory factory;
-    private readonly IDatabaseMigrations migrations;
-    private readonly TimeProvider timeProvider;
-    private readonly string dataDirectory;
+    private readonly string dataDirectory = options.Value.DataDirectory;
 
     private static async Task SeedAsync(DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken)
     {

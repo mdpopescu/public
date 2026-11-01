@@ -4,23 +4,20 @@ using YouNews.Core.Ports;
 
 namespace YouNews.Infrastructure.Storage;
 
-public sealed class SqliteEntryReader : IEntryReader
+public sealed class SqliteEntryReader(ISqliteConnectionFactory factory) : IEntryReader
 {
-    public SqliteEntryReader(ISqliteConnectionFactory factory)
-    {
-        this.factory = factory;
-    }
-
     public async Task<IReadOnlyList<DayCount>> ListDaysAsync(CancellationToken cancellationToken)
     {
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connection1 = connection.ConfigureAwait(false);
         var rows = await connection.QueryAsync<DayRow>(new CommandDefinition(DAYS, cancellationToken: cancellationToken)).ConfigureAwait(false);
-        return rows.Select(row => new DayCount(StorageFormat.ParseDay(row.Day), row.EntryCount)).ToList();
+        return [.. rows.Select(row => new DayCount(StorageFormat.ParseDay(row.Day), row.EntryCount))];
     }
 
     public async Task<IReadOnlyList<Entry>> ListForDayAsync(DateOnly day, CancellationToken cancellationToken)
     {
-        await using var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connection1 = connection.ConfigureAwait(false);
         var query = new CommandDefinition(FOR_DAY, new { Day = StorageFormat.ToText(day) }, cancellationToken: cancellationToken);
         var rows = (await connection.QueryAsync<EntryRow>(query).ConfigureAwait(false)).ToList();
         var ids = rows.Select(row => row.Id).ToList();
@@ -28,7 +25,7 @@ public sealed class SqliteEntryReader : IEntryReader
         var sources = await parts.LoadSourcesAsync(connection, ids, cancellationToken).ConfigureAwait(false);
         var images = await parts.LoadImagesAsync(connection, ids, cancellationToken).ConfigureAwait(false);
         var related = await parts.LoadRelatedAsync(connection, ids, cancellationToken).ConfigureAwait(false);
-        return rows.Select(row => ToEntry(row, tags[row.Id], sources[row.Id], images[row.Id], related[row.Id])).ToList();
+        return [.. rows.Select(row => ToEntry(row, tags[row.Id], sources[row.Id], images[row.Id], related[row.Id]))];
     }
 
     //
@@ -36,13 +33,12 @@ public sealed class SqliteEntryReader : IEntryReader
     private const string DAYS = "SELECT day AS Day, COUNT(*) AS EntryCount FROM entries GROUP BY day ORDER BY day DESC";
 
     private const string FOR_DAY = """
-        SELECT e.id AS Id, e.day AS Day, c.name AS ChannelName, v.youtube_id AS VideoYouTubeId,
-               e.headline AS Headline, e.summary AS Summary, e.opinion AS Opinion
-        FROM entries e JOIN videos v ON v.id = e.video_id JOIN channels c ON c.id = v.channel_id
-        WHERE e.day = @Day ORDER BY e.id DESC
-        """;
+                                   SELECT e.id AS Id, e.day AS Day, c.name AS ChannelName, v.youtube_id AS VideoYouTubeId,
+                                          e.headline AS Headline, e.summary AS Summary, e.opinion AS Opinion
+                                   FROM entries e JOIN videos v ON v.id = e.video_id JOIN channels c ON c.id = v.channel_id
+                                   WHERE e.day = @Day ORDER BY e.id DESC
+                                   """;
 
-    private readonly ISqliteConnectionFactory factory;
     private readonly EntryParts parts = new();
 
     private static Entry ToEntry(EntryRow row, IEnumerable<string> tags, IEnumerable<WebSource> sources, IEnumerable<EntryImage> images, IEnumerable<RelatedLink> related) => new(
@@ -51,12 +47,12 @@ public sealed class SqliteEntryReader : IEntryReader
         row.ChannelName,
         row.VideoYouTubeId,
         row.Headline,
-        tags.ToList(),
+        [.. tags],
         row.Summary,
         row.Opinion,
-        sources.ToList(),
-        images.ToList(),
-        related.ToList());
+        [.. sources],
+        [.. images],
+        [.. related]);
 
     private sealed class DayRow
     {

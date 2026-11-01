@@ -9,7 +9,7 @@
         <partial name="_RefreshControl" model="Model.Refresh" />
         @if (!Model.HasChannels)
         {
-            <p class="hint">You are not following any channels. <a href="/config">Add one on the Channels page</a>.</p>
+            <p class="hint">You are not following any channels. <a asp-page="/Config">Add one on the Channels page</a>.</p>
         }
     </section>
 }

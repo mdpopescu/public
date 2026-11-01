@@ -12,10 +12,15 @@ public sealed class ServerInspectorTests
     public void Initialize()
     {
         handler = new StubHandler();
-        runner = new FakeRunner();
-        runner.Outputs[GPU_QUERY] = "NVIDIA GeForce RTX 5060 Ti, 16376 MiB\nNVIDIA GeForce RTX 2060 SUPER, 8192 MiB\n";
-        runner.Outputs[CPU_QUERY] = "model name\t: AMD Ryzen 9 3900X 12-Core Processor\n";
-        runner.Outputs["free -h"] = FREE_OUTPUT;
+        runner = new FakeRunner
+        {
+            Outputs =
+            {
+                [GPU_QUERY] = "NVIDIA GeForce RTX 5060 Ti, 16376 MiB\nNVIDIA GeForce RTX 2060 SUPER, 8192 MiB\n",
+                [CPU_QUERY] = "model name\t: AMD Ryzen 9 3900X 12-Core Processor\n",
+                ["free -h"] = FREE_OUTPUT,
+            },
+        };
         var options = Options.Create(new YouNewsOptions { LanguageModel = { BaseUrl = "http://llm.test:8080/v1/" } });
         sut = new ServerInspector(new HttpClient(handler), runner, options);
     }
