@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using YouNews.Core.Model;
 
 namespace YouNews.Web.Tests.Pages;
@@ -327,10 +328,111 @@ public sealed class DayPageTests
         Assert.AreEqual("Checking channel 3 of 23 (Locally), 7 new so far", json.GetProperty("discovery").GetString());
     }
 
+    [TestMethod]
+    public async Task Entry_HasAnEnabledReprocessButtonPostingItsId()
+    {
+        sut.Entries.Entries.Add(TestApp.MakeEntry(7, new DateOnly(2026, 11, 1)));
+
+        var html = await browser.GetStringAsync("/day/2026-11-01");
+
+        var form = ReprocessForm(html);
+        StringAssert.Contains(form, "method=\"post\"");
+        StringAssert.Contains(form, "action=\"/reprocess\"");
+        StringAssert.Contains(form, "name=\"entryId\" value=\"7\"");
+        StringAssert.Contains(form, "name=\"returnUrl\" value=\"/day/2026-11-01#entry-7\"");
+        StringAssert.Contains(form, "name=\"__RequestVerificationToken\"");
+        StringAssert.Matches(form, new Regex(@"<button type=""submit"" class=""btn quiet reprocess"">\s*Reprocess\s*</button>"));
+    }
+
+    [TestMethod]
+    public async Task QueuedEntry_HasADisabledQueuedButton()
+    {
+        sut.Entries.Entries.Add(TestApp.MakeEntry(7, new DateOnly(2026, 11, 1)) with { IsReprocessQueued = true });
+
+        var html = await browser.GetStringAsync("/day/2026-11-01");
+
+        var form = ReprocessForm(html);
+        StringAssert.Matches(form, new Regex(@"<button type=""submit"" class=""btn quiet reprocess"" disabled[^>]*>\s*Queued\s*</button>"));
+    }
+
+    [TestMethod]
+    public async Task FailedEntry_ShowsTheReasonBelowTheHeadingAndAllowsAnotherTry()
+    {
+        sut.Entries.Entries.Add(TestApp.MakeEntry(7, new DateOnly(2026, 11, 1)) with { ReprocessFailure = "model <timed> out" });
+
+        var html = await browser.GetStringAsync("/day/2026-11-01");
+
+        var notice = Regex.Match(html, @"<p class=""error reprocess-failed""[^>]*>([^<]*)</p>");
+        Assert.IsTrue(notice.Success, "the failure notice is missing from: " + html);
+        Assert.AreEqual("Reprocess failed: model &lt;timed&gt; out", notice.Groups[1].Value);
+        Assert.IsLessThan(notice.Index, html.IndexOf("</h2>", StringComparison.Ordinal), "the notice sits below the heading");
+        Assert.DoesNotContain(" disabled", ReprocessForm(html), "the button is enabled again");
+        StringAssert.Contains(ReprocessForm(html), "Reprocess");
+    }
+
+    [TestMethod]
+    public async Task EntryWithoutAFailure_ShowsNoNotice()
+    {
+        sut.Entries.Entries.Add(TestApp.MakeEntry(7, new DateOnly(2026, 11, 1)));
+
+        var html = await browser.GetStringAsync("/day/2026-11-01");
+
+        Assert.DoesNotContain("reprocess-failed", html);
+    }
+
+    [TestMethod]
+    public async Task PostingReprocess_RequestsTheEntryAndReturnsToIt()
+    {
+        sut.Entries.Entries.Add(TestApp.MakeEntry(7, new DateOnly(2026, 11, 1)));
+
+        var response = await sut.SubmitAsync(browser, "/day/2026-11-01", "/reprocess", ("entryId", "7"), ("returnUrl", "/day/2026-11-01#entry-7"));
+
+        Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.AreEqual("/day/2026-11-01#entry-7", response.Headers.Location?.OriginalString);
+        CollectionAssert.AreEqual(new long[] { 7 }, sut.Reprocess.Requested);
+    }
+
+    [TestMethod]
+    public async Task PostingReprocess_WithAnExternalReturnUrl_GoesHome()
+    {
+        var response = await sut.SubmitAsync(browser, "/", "/reprocess", ("entryId", "7"), ("returnUrl", "https://evil.example/x"));
+
+        Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.AreEqual("/", response.Headers.Location?.OriginalString);
+        CollectionAssert.AreEqual(new long[] { 7 }, sut.Reprocess.Requested);
+    }
+
+    [TestMethod]
+    public async Task PostingReprocess_WithoutAnAntiforgeryToken_IsRejected()
+    {
+        var form = new FormUrlEncodedContent([new KeyValuePair<string, string>("entryId", "7")]);
+
+        var response = await browser.PostAsync("/reprocess", form);
+
+        Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.IsEmpty(sut.Reprocess.Requested);
+    }
+
+    [TestMethod]
+    public async Task GettingReprocess_GoesHome()
+    {
+        var response = await browser.GetAsync("/reprocess");
+
+        Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.AreEqual("/", response.Headers.Location?.OriginalString);
+    }
+
     //
 
     private TestApp sut = null!;
     private HttpClient browser = null!;
+
+    private static string ReprocessForm(string html)
+    {
+        var match = Regex.Match(html, @"<form[^>]*class=""reprocess-form""[^>]*>.*?</form>", RegexOptions.Singleline);
+        Assert.IsTrue(match.Success, "no reprocess form found in: " + html);
+        return match.Value;
+    }
 
     private async Task<JsonElement> ReadStatusAsync()
     {

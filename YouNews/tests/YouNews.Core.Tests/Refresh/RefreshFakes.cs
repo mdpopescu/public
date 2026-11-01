@@ -213,18 +213,39 @@ internal sealed class FakeBriefingWriter : IBriefingWriter
 
     public Transcript? LastTranscript { get; private set; }
 
+    public IReadOnlyList<EntryDigest>? LastCandidates { get; private set; }
+
+    public string Summary { get; set; } = "Summary";
+
+    public string Opinion { get; set; } = "Opinion";
+
+    /// <summary>Everything that happened, in order, as "analyze title" or "opinion title".</summary>
+    public List<string> Events { get; } = [];
+
+    /// <summary>Runs while an opinion is being written, so a test can hold the writer.</summary>
+    public Func<Task>? DuringOpinion { get; set; }
+
     public Task<VideoAnalysis> AnalyzeAsync(string title, string channelName, Transcript transcript, IReadOnlyList<EntryDigest> candidates, CancellationToken cancellationToken)
     {
+        Events.Add("analyze " + title);
         LastTranscript = transcript;
+        LastCandidates = candidates;
         return FailingTitles.Contains(title) ? throw new InvalidOperationException("model is down") : Task.FromResult(Analysis);
     }
 
-    public Task<string> SummarizeAsync(string title, Transcript transcript, CancellationToken cancellationToken) => Task.FromResult("Summary");
+    public Task<string> SummarizeAsync(string title, Transcript transcript, CancellationToken cancellationToken) => Task.FromResult(Summary);
 
-    public Task<string> WriteOpinionAsync(OpinionRequest request, CancellationToken cancellationToken)
+    public async Task<string> WriteOpinionAsync(OpinionRequest request, CancellationToken cancellationToken)
     {
+        Events.Add("opinion " + request.Title);
         LastOpinionRequest = request;
-        return Task.FromResult("Opinion");
+        if (DuringOpinion is not null)
+        {
+            await DuringOpinion().ConfigureAwait(false);
+        }
+
+        Events.Add("opinion done " + request.Title);
+        return Opinion;
     }
 }
 
@@ -243,9 +264,15 @@ internal sealed class FakeWebSearch : IWebSearch
 
 internal sealed class FakeImageSource : IImageSource
 {
+    public int Captures { get; private set; }
+
     public IReadOnlyList<EntryImage> Images { get; set; } = [new EntryImage("id/thumbnail.jpg", ImageKind.Thumbnail)];
 
-    public Task<IReadOnlyList<EntryImage>> CaptureAsync(string youTubeId, IReadOnlyList<TimeSpan> frameTimes, CancellationToken cancellationToken) => Task.FromResult(Images);
+    public Task<IReadOnlyList<EntryImage>> CaptureAsync(string youTubeId, IReadOnlyList<TimeSpan> frameTimes, CancellationToken cancellationToken)
+    {
+        Captures++;
+        return Task.FromResult(Images);
+    }
 }
 
 internal sealed class FakeEntryStore : IEntryStore
@@ -253,6 +280,8 @@ internal sealed class FakeEntryStore : IEntryStore
     public List<NewEntry> Added { get; } = [];
 
     public List<EntryDigest> Digests { get; } = [];
+
+    public List<EntryRevision> Revised { get; } = [];
 
     public Action<long>? OnAdded { get; set; }
 
@@ -263,5 +292,111 @@ internal sealed class FakeEntryStore : IEntryStore
         return Task.FromResult((long)Added.Count);
     }
 
+    public Task ReviseAsync(EntryRevision revision, CancellationToken cancellationToken)
+    {
+        Revised.Add(revision);
+        return Task.CompletedTask;
+    }
+
     public Task<IReadOnlyList<EntryDigest>> ListRecentDigestsAsync(int limit, CancellationToken cancellationToken) => Task.FromResult<IReadOnlyList<EntryDigest>>(Digests);
+}
+
+internal sealed class FakeReprocessQueue : IReprocessQueue
+{
+    public Dictionary<long, string> Failures { get; } = [];
+
+    public int GetNextCalls { get; private set; }
+
+    /// <summary>The number of GetNextAsync calls that fail, as a locked database does.</summary>
+    public int FailingCalls { get; set; }
+
+    public Action? OnGetNextFailed { get; set; }
+
+    public List<long> Queued
+    {
+        get
+        {
+            lock (gate)
+            {
+                return requests.ToList();
+            }
+        }
+    }
+
+    public Task RequestAsync(long entryId, CancellationToken cancellationToken)
+    {
+        lock (gate)
+        {
+            if (!requests.Contains(entryId))
+            {
+                requests.Add(entryId);
+            }
+
+            Failures.Remove(entryId);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task<ReprocessJob?> GetNextAsync(CancellationToken cancellationToken)
+    {
+        lock (gate)
+        {
+            GetNextCalls++;
+            if (GetNextCalls <= FailingCalls)
+            {
+                OnGetNextFailed?.Invoke();
+                throw new InvalidOperationException("database is locked");
+            }
+
+            var next = requests.Where(id => !Failures.ContainsKey(id)).Select(id => (long?)id).FirstOrDefault();
+            return Task.FromResult(next is { } id ? new ReprocessJob(id, $"video{id}", $"Title {id}", "Channel One") : null);
+        }
+    }
+
+    public Task RecordFailureAsync(long entryId, string reason, CancellationToken cancellationToken)
+    {
+        lock (gate)
+        {
+            Failures[entryId] = reason;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public void Complete(long entryId)
+    {
+        lock (gate)
+        {
+            requests.Remove(entryId);
+        }
+    }
+
+    //
+
+    private readonly Lock gate = new();
+    private readonly List<long> requests = [];
+}
+
+internal sealed class FakeEntryReprocessor(FakeReprocessQueue queue) : IEntryReprocessor
+{
+    public List<long> Processed { get; } = [];
+
+    public List<SetupSnapshot?> Setups { get; } = [];
+
+    /// <summary>What the reprocess does; by default it succeeds at once.</summary>
+    public Func<ReprocessJob, CancellationToken, Task> Handler { get; set; } = (_, _) => Task.CompletedTask;
+
+    public async Task ReprocessAsync(ReprocessJob job, SetupSnapshot? setup, IReadOnlyList<string> interests, CancellationToken cancellationToken)
+    {
+        Setups.Add(setup);
+        await Handler(job, cancellationToken).ConfigureAwait(false);
+        queue.Complete(job.EntryId);
+        Processed.Add(job.EntryId);
+    }
+}
+
+internal sealed class FailingSetupMonitor : ISetupMonitor
+{
+    public Task<SetupSnapshot?> GetCurrentAsync(CancellationToken cancellationToken) => throw new InvalidOperationException("setup unavailable");
 }

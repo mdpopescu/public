@@ -23,6 +23,8 @@ public sealed partial class TestApp : WebApplicationFactory<Program>
 
     public FakeSetupStore Setup { get; } = new();
 
+    public FakeModelSelection Model { get; } = new();
+
     public FakeToolHealth Tools { get; } = new();
 
     public FakeVideoCatalog Catalog { get; } = new();
@@ -30,6 +32,8 @@ public sealed partial class TestApp : WebApplicationFactory<Program>
     public FakeVideoStore Videos { get; } = new();
 
     public FakeRefresh Refresh { get; } = new();
+
+    public FakeReprocessTrigger Reprocess { get; } = new();
 
     public HttpClient CreateBrowser() =>
         CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false, HandleCookies = true });
@@ -60,11 +64,15 @@ public sealed partial class TestApp : WebApplicationFactory<Program>
             Replace<IInterestStore>(services, Interests);
             Replace<IRefreshLog>(services, Log);
             Replace<ISetupStore>(services, Setup);
+            Replace<ICurrentModel>(services, Model);
+            Replace<IModelSelector>(services, Model);
             Replace<IToolHealth>(services, Tools);
             Replace<IVideoCatalog>(services, Catalog);
             Replace<IVideoStore>(services, Videos);
             Replace<IRefreshTrigger>(services, Refresh);
             Replace<IRefreshStatus>(services, Refresh);
+            Replace<IReprocessTrigger>(services, Reprocess);
+            Replace<IReprocessWorker>(services, new IdleReprocessWorker());
         });
     }
 

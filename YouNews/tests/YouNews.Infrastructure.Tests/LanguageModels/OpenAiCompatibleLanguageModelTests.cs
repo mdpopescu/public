@@ -13,9 +13,10 @@ public sealed class OpenAiCompatibleLanguageModelTests : IDisposable
     public void Initialize()
     {
         handler = new StubHandler();
+        currentModel = new FakeCurrentModel("gemma4-26b");
         timeProvider = new InstantTimeProvider();
         var options = new YouNewsOptions { LanguageModel = { BaseUrl = "http://llm.test/v1/", Model = "gemma4-26b", MaxTokens = 16000 } };
-        sut = new OpenAiCompatibleLanguageModel(new HttpClient(handler), Options.Create(options), timeProvider);
+        sut = new OpenAiCompatibleLanguageModel(new HttpClient(handler), Options.Create(options), currentModel, timeProvider);
     }
 
     [TestMethod]
@@ -34,6 +35,21 @@ public sealed class OpenAiCompatibleLanguageModelTests : IDisposable
         Assert.AreEqual("the system", messages[0].GetProperty("content").GetString());
         Assert.AreEqual("user", messages[1].GetProperty("role").GetString());
         Assert.AreEqual("the user", messages[1].GetProperty("content").GetString());
+    }
+
+    [TestMethod]
+    public async Task ChangingTheCurrentModelBetweenCallsChangesTheRequestedModel()
+    {
+        handler.Enqueue(Answer("one"));
+        handler.Enqueue(Answer("two"));
+
+        await sut.CompleteAsync("s", "u", true, CancellationToken.None);
+        currentModel.Model = "other-model";
+        await sut.CompleteAsync("s", "u", true, CancellationToken.None);
+
+        var bodies = handler.Bodies.ToList();
+        Assert.AreEqual("gemma4-26b", bodies[0].RootElement.GetProperty("model").GetString());
+        Assert.AreEqual("other-model", bodies[1].RootElement.GetProperty("model").GetString());
     }
 
     [TestMethod]
@@ -225,7 +241,7 @@ public sealed class OpenAiCompatibleLanguageModelTests : IDisposable
         var options = new YouNewsOptions { LanguageModel = { TimeoutMinutes = 7 } };
         var httpClient = new HttpClient(new StubHandler());
 
-        _ = new OpenAiCompatibleLanguageModel(httpClient, Options.Create(options), TimeProvider.System);
+        _ = new OpenAiCompatibleLanguageModel(httpClient, Options.Create(options), new FakeCurrentModel("any-model"), TimeProvider.System);
 
         Assert.AreEqual(TimeSpan.FromMinutes(7), httpClient.Timeout);
     }
@@ -237,6 +253,7 @@ public sealed class OpenAiCompatibleLanguageModelTests : IDisposable
     private readonly CancellationTokenSource cancellation = new();
 
     private StubHandler handler = null!;
+    private FakeCurrentModel currentModel = null!;
     private InstantTimeProvider timeProvider = null!;
     private OpenAiCompatibleLanguageModel sut = null!;
 

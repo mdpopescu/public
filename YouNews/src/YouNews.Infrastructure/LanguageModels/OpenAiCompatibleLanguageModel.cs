@@ -10,17 +10,19 @@ namespace YouNews.Infrastructure.LanguageModels;
 /// <summary>Talks to an OpenAI-compatible server. A llama-swap in front may fail while it swaps models, hence the single retry.</summary>
 public sealed class OpenAiCompatibleLanguageModel : ILanguageModel
 {
-    public OpenAiCompatibleLanguageModel(HttpClient httpClient, IOptions<YouNewsOptions> options, TimeProvider timeProvider)
+    public OpenAiCompatibleLanguageModel(HttpClient httpClient, IOptions<YouNewsOptions> options, ICurrentModel currentModel, TimeProvider timeProvider)
     {
         this.httpClient = httpClient;
         this.options = options.Value.LanguageModel;
+        this.currentModel = currentModel;
         this.timeProvider = timeProvider;
         httpClient.Timeout = TimeSpan.FromMinutes(this.options.TimeoutMinutes);
     }
 
     public async Task<string> CompleteAsync(string systemPrompt, string userPrompt, bool thinking, CancellationToken cancellationToken)
     {
-        var body = BuildRequestBody(systemPrompt, userPrompt, thinking);
+        var model = await currentModel.GetAsync(cancellationToken).ConfigureAwait(false);
+        var body = BuildRequestBody(model, systemPrompt, userPrompt, thinking);
         try
         {
             return await SendAsync(body, cancellationToken).ConfigureAwait(false);
@@ -41,6 +43,7 @@ public sealed class OpenAiCompatibleLanguageModel : ILanguageModel
 
     private readonly HttpClient httpClient;
     private readonly LanguageModelOptions options;
+    private readonly ICurrentModel currentModel;
     private readonly TimeProvider timeProvider;
 
     private static string ReadContent(string responseBody)
@@ -94,11 +97,11 @@ public sealed class OpenAiCompatibleLanguageModel : ILanguageModel
     private static string Shorten(string text) =>
         text.Length <= MAX_ERROR_BODY_CHARACTERS ? text : text[..MAX_ERROR_BODY_CHARACTERS] + "...";
 
-    private string BuildRequestBody(string systemPrompt, string userPrompt, bool thinking)
+    private string BuildRequestBody(string model, string systemPrompt, string userPrompt, bool thinking)
     {
         var body = new JsonObject
         {
-            ["model"] = options.Model,
+            ["model"] = model,
             ["max_tokens"] = options.MaxTokens,
             ["messages"] = new JsonArray(
                 new JsonObject { ["role"] = "system", ["content"] = systemPrompt },

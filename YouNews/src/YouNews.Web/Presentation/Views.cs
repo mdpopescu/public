@@ -8,7 +8,9 @@ public sealed record RelatedView(string Url, string Text);
 
 /// <summary>A story card, ready to render without any logic.</summary>
 public sealed record EntryView(
+    long Id,
     string AnchorId,
+    string PageUrl,
     string Headline,
     string ChannelName,
     string VideoUrl,
@@ -20,7 +22,10 @@ public sealed record EntryView(
     IReadOnlyList<string> FrameUrls,
     IReadOnlyList<RelatedView> Related,
     bool IsOffTopic,
-    string ArtClass);
+    string ArtClass,
+    bool IsReprocessQueued,
+    string ReprocessLabel,
+    string? ReprocessFailureText);
 
 /// <summary>One day in the list on the left.</summary>
 public sealed record DayLinkView(string Url, string Label, string CountText, string FullDate, bool IsCurrent);
@@ -36,7 +41,7 @@ public sealed record StatusView(
     IReadOnlyList<WaitingVideoView> Waiting,
     IReadOnlyList<string> ToolProblems);
 
-public sealed record SetupView(bool HasData, string Hardware, IReadOnlyList<string> Models, string CheckedAtText, string? Warning);
+public sealed record SetupView(bool HasData, string Hardware, IReadOnlyList<string> Models, string CheckedAtText, string? Warning, string CurrentModel, IReadOnlyList<string> ModelChoices);
 
 /// <summary>The sidebar content of every page.</summary>
 public sealed record SidebarView(IReadOnlyList<DayLinkView> Days, RefreshView Refresh, bool ChannelsCurrent);

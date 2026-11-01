@@ -14,6 +14,7 @@ public class EntryStoreTests
         sut = new SqliteEntryStore(fixture.Factory);
         reader = new SqliteEntryReader(fixture.Factory);
         videos = new SqliteVideoStore(fixture.Factory);
+        queue = new SqliteReprocessQueue(fixture.Factory);
     }
 
     [TestCleanup]
@@ -97,6 +98,92 @@ public class EntryStoreTests
     }
 
     [TestMethod]
+    public async Task ReviseAsync_Revision_ReplacesTextsSourcesAndRelatedAndKeepsTheRest()
+    {
+        var day = new DateOnly(2026, 10, 31);
+        var (_, first) = await fixture.AddChannelWithVideoAsync();
+        var firstId = await sut.AddAsync(Entry(first.Id, new DateOnly(2026, 10, 30), "First"), CancellationToken.None);
+        var (_, second) = await fixture.AddChannelWithVideoAsync("2");
+        var id = await sut.AddAsync(Entry(second.Id, day, "Second"), CancellationToken.None);
+        await queue.RequestAsync(id, CancellationToken.None);
+        var revision = new EntryRevision(id, "New summary", "New opinion", [new WebSource("New source", "https://new.example")], [firstId]);
+
+        await sut.ReviseAsync(revision, CancellationToken.None);
+
+        var entry = (await reader.ListForDayAsync(day, CancellationToken.None)).Single();
+        Assert.AreEqual("New summary", entry.Summary);
+        Assert.AreEqual("New opinion", entry.Opinion);
+        CollectionAssert.AreEqual(new[] { new WebSource("New source", "https://new.example") }, entry.WebSources.ToArray());
+        CollectionAssert.AreEqual(new[] { new RelatedLink(firstId, new DateOnly(2026, 10, 30), "First") }, entry.Related.ToArray());
+        Assert.AreEqual("Second", entry.Headline);
+        CollectionAssert.AreEqual(new[] { "local models", "research" }, entry.Tags.ToArray());
+        CollectionAssert.AreEqual(new[] { new EntryImage("vid/thumb.jpg", ImageKind.Thumbnail), new EntryImage("vid/f1.jpg", ImageKind.Frame) }, entry.Images.ToArray());
+        Assert.IsTrue((await videos.ListByStateAsync(VideoState.Done, CancellationToken.None)).Any(video => video.Id == second.Id), "the video stays done");
+        Assert.IsFalse(entry.IsReprocessQueued, "the request is done");
+        Assert.IsNull(await queue.GetNextAsync(CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task ReviseAsync_UnknownRelatedId_RollsBackEverything()
+    {
+        var day = new DateOnly(2026, 10, 31);
+        var (_, first) = await fixture.AddChannelWithVideoAsync();
+        var firstId = await sut.AddAsync(Entry(first.Id, new DateOnly(2026, 10, 30), "First"), CancellationToken.None);
+        var (_, second) = await fixture.AddChannelWithVideoAsync("2");
+        var id = await sut.AddAsync(Entry(second.Id, day, "Second", related: [firstId]), CancellationToken.None);
+        await queue.RequestAsync(id, CancellationToken.None);
+        var revision = new EntryRevision(id, "New summary", "New opinion", [new WebSource("New source", "https://new.example")], [9999]);
+
+        await Assert.ThrowsAsync<SqliteException>(() => sut.ReviseAsync(revision, CancellationToken.None));
+
+        var entry = (await reader.ListForDayAsync(day, CancellationToken.None)).Single();
+        Assert.AreEqual("Summary of Second", entry.Summary);
+        Assert.AreEqual("Opinion on Second", entry.Opinion);
+        CollectionAssert.AreEqual(new[] { new WebSource("Source A", "https://a.example"), new WebSource("Source B", "https://b.example") }, entry.WebSources.ToArray());
+        CollectionAssert.AreEqual(new[] { new RelatedLink(firstId, new DateOnly(2026, 10, 30), "First") }, entry.Related.ToArray());
+        Assert.IsTrue(entry.IsReprocessQueued, "the request must survive");
+    }
+
+    [TestMethod]
+    public async Task ListForDayAsync_NoRequest_IsNotQueuedAndHasNoFailure()
+    {
+        var day = new DateOnly(2026, 10, 31);
+        await AddEntryAsync("1", day);
+
+        var entry = (await reader.ListForDayAsync(day, CancellationToken.None)).Single();
+
+        Assert.IsFalse(entry.IsReprocessQueued);
+        Assert.IsNull(entry.ReprocessFailure);
+    }
+
+    [TestMethod]
+    public async Task ListForDayAsync_QueuedRequest_IsQueuedWithoutFailure()
+    {
+        var day = new DateOnly(2026, 10, 31);
+        var id = await AddEntryAsync("1", day);
+        await queue.RequestAsync(id, CancellationToken.None);
+
+        var entry = (await reader.ListForDayAsync(day, CancellationToken.None)).Single();
+
+        Assert.IsTrue(entry.IsReprocessQueued);
+        Assert.IsNull(entry.ReprocessFailure);
+    }
+
+    [TestMethod]
+    public async Task ListForDayAsync_FailedRequest_ShowsTheFailureAndIsNotQueued()
+    {
+        var day = new DateOnly(2026, 10, 31);
+        var id = await AddEntryAsync("1", day);
+        await queue.RequestAsync(id, CancellationToken.None);
+        await queue.RecordFailureAsync(id, "model is down", CancellationToken.None);
+
+        var entry = (await reader.ListForDayAsync(day, CancellationToken.None)).Single();
+
+        Assert.IsFalse(entry.IsReprocessQueued);
+        Assert.AreEqual("model is down", entry.ReprocessFailure);
+    }
+
+    [TestMethod]
     public async Task ListDaysAsync_EntriesOnSeveralDays_NewestDayFirstWithCounts()
     {
         await AddEntryAsync("1", new DateOnly(2026, 10, 29));
@@ -164,6 +251,7 @@ public class EntryStoreTests
     private SqliteEntryStore sut = null!;
     private SqliteEntryReader reader = null!;
     private SqliteVideoStore videos = null!;
+    private SqliteReprocessQueue queue = null!;
 
     private static NewEntry Entry(long videoId, DateOnly day, string headline, IReadOnlyList<long>? related = null) => new(
         videoId,
@@ -176,9 +264,9 @@ public class EntryStoreTests
         [new EntryImage("vid/thumb.jpg", ImageKind.Thumbnail), new EntryImage("vid/f1.jpg", ImageKind.Frame)],
         related ?? []);
 
-    private async Task AddEntryAsync(string suffix, DateOnly day)
+    private async Task<long> AddEntryAsync(string suffix, DateOnly day)
     {
         var (_, video) = await fixture.AddChannelWithVideoAsync(suffix);
-        await sut.AddAsync(Entry(video.Id, day, $"Headline {suffix}"), CancellationToken.None);
+        return await sut.AddAsync(Entry(video.Id, day, $"Headline {suffix}"), CancellationToken.None);
     }
 }

@@ -34,8 +34,10 @@ public sealed class SqliteEntryReader(ISqliteConnectionFactory factory) : IEntry
 
     private const string FOR_DAY = """
                                    SELECT e.id AS Id, e.day AS Day, c.name AS ChannelName, v.youtube_id AS VideoYouTubeId,
-                                          e.headline AS Headline, e.summary AS Summary, e.opinion AS Opinion
+                                          e.headline AS Headline, e.summary AS Summary, e.opinion AS Opinion,
+                                          r.id IS NOT NULL AND r.failure IS NULL AS IsReprocessQueued, r.failure AS ReprocessFailure
                                    FROM entries e JOIN videos v ON v.id = e.video_id JOIN channels c ON c.id = v.channel_id
+                                   LEFT JOIN reprocess_requests r ON r.entry_id = e.id
                                    WHERE e.day = @Day ORDER BY v.published_on DESC, e.id DESC
                                    """;
 
@@ -52,7 +54,9 @@ public sealed class SqliteEntryReader(ISqliteConnectionFactory factory) : IEntry
         row.Opinion,
         [.. sources],
         [.. images],
-        [.. related]);
+        [.. related],
+        row.IsReprocessQueued,
+        row.ReprocessFailure);
 
     private sealed class DayRow
     {
@@ -76,5 +80,9 @@ public sealed class SqliteEntryReader(ISqliteConnectionFactory factory) : IEntry
         public string Summary { get; set; } = "";
 
         public string Opinion { get; set; } = "";
+
+        public bool IsReprocessQueued { get; set; }
+
+        public string? ReprocessFailure { get; set; }
     }
 }

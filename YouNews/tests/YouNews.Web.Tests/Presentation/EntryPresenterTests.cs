@@ -101,6 +101,42 @@ public sealed class EntryPresenterTests
         CollectionAssert.AreEqual(new[] { "Good", "example.org" }, view.Sources.Select(source => source.Title).ToArray());
     }
 
+    [TestMethod]
+    public void Present_ExposesIdAndPageUrl()
+    {
+        var view = sut.Present(MakeEntry());
+
+        Assert.AreEqual(42, view.Id);
+        Assert.AreEqual("/day/2026-11-01#entry-42", view.PageUrl);
+    }
+
+    [TestMethod]
+    public void Present_PlainEntry_IsNotQueuedAndHasNoFailure()
+    {
+        var view = sut.Present(MakeEntry());
+
+        Assert.IsFalse(view.IsReprocessQueued);
+        Assert.AreEqual("Reprocess", view.ReprocessLabel);
+        Assert.IsNull(view.ReprocessFailureText);
+    }
+
+    [TestMethod]
+    public void Present_QueuedEntry_ShowsQueuedLabel()
+    {
+        var view = sut.Present(MakeEntry(isQueued: true));
+
+        Assert.IsTrue(view.IsReprocessQueued);
+        Assert.AreEqual("Queued", view.ReprocessLabel);
+    }
+
+    [TestMethod]
+    public void Present_FailedEntry_FormatsTheFailureText()
+    {
+        var view = sut.Present(MakeEntry(failure: "model timed out"));
+
+        Assert.AreEqual("Reprocess failed: model timed out", view.ReprocessFailureText);
+    }
+
     //
 
     private EntryPresenter sut = null!;
@@ -111,6 +147,8 @@ public sealed class EntryPresenterTests
         string[]? tags = null,
         EntryImage[]? images = null,
         RelatedLink[]? related = null,
-        WebSource[]? sources = null) =>
-        new(42, new DateOnly(2026, 11, 1), "Sample Channel", "abc123XYZ_-", "Headline", tags ?? [EntryTags.LOCAL_MODELS], summary, opinion, sources ?? [], images ?? [], related ?? []);
+        WebSource[]? sources = null,
+        bool isQueued = false,
+        string? failure = null) =>
+        new(42, new DateOnly(2026, 11, 1), "Sample Channel", "abc123XYZ_-", "Headline", tags ?? [EntryTags.LOCAL_MODELS], summary, opinion, sources ?? [], images ?? [], related ?? [], isQueued, failure);
 }

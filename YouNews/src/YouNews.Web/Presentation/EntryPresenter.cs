@@ -15,7 +15,9 @@ public sealed partial class EntryPresenter : IEntryPresenter
     {
         var tags = entry.Tags.Select(PresentTag).ToList();
         return new EntryView(
+            entry.Id,
             $"entry-{entry.Id}",
+            PageUrl(entry.Day, entry.Id),
             entry.Headline,
             entry.ChannelName,
             $"https://www.youtube.com/watch?v={Uri.EscapeDataString(entry.VideoYouTubeId)}",
@@ -27,7 +29,10 @@ public sealed partial class EntryPresenter : IEntryPresenter
             entry.Images.Where(image => image.Kind == ImageKind.Frame).Select(image => ImageUrl(image)!).ToList(),
             entry.Related.Select(PresentRelated).ToList(),
             entry.Tags.Contains(EntryTags.OFF_TOPIC),
-            tags.Count > 0 ? tags[0].CssClass : "tag-none");
+            tags.Count > 0 ? tags[0].CssClass : "tag-none",
+            entry.IsReprocessQueued,
+            entry.IsReprocessQueued ? "Queued" : "Reprocess",
+            entry.ReprocessFailure is null ? null : $"Reprocess failed: {entry.ReprocessFailure}");
     }
 
     //
@@ -52,6 +57,8 @@ public sealed partial class EntryPresenter : IEntryPresenter
     private static string? ImageUrl(EntryImage? image) =>
         image is null ? null : WebBootstrapper.IMAGES_PATH + "/" + string.Join('/', image.RelativePath.Split('/').Select(Uri.EscapeDataString));
 
+    private static string PageUrl(DateOnly day, long entryId) => $"/day/{day:yyyy-MM-dd}#entry-{entryId}";
+
     private static RelatedView PresentRelated(RelatedLink link) =>
-        new($"/day/{link.Day:yyyy-MM-dd}#entry-{link.EntryId}", $"{link.Day.ToString("MMM d", CultureInfo.InvariantCulture)}: {link.Headline}");
+        new(PageUrl(link.Day, link.EntryId), $"{link.Day.ToString("MMM d", CultureInfo.InvariantCulture)}: {link.Headline}");
 }

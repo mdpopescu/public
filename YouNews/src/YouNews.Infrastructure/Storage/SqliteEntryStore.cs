@@ -26,6 +26,22 @@ public sealed class SqliteEntryStore : IEntryStore
         return id;
     }
 
+    public async Task ReviseAsync(EntryRevision revision, CancellationToken cancellationToken)
+    {
+        var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
+        await using var connectionScope = connection.ConfigureAwait(false);
+        var transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        await using var transactionScope = transaction.ConfigureAwait(false);
+        var id = new { revision.EntryId };
+        await connection.ExecuteAsync(new CommandDefinition(UPDATE_TEXTS, new { revision.EntryId, revision.Summary, revision.Opinion }, transaction, cancellationToken: cancellationToken)).ConfigureAwait(false);
+        await connection.ExecuteAsync(new CommandDefinition(DELETE_PARTS, id, transaction, cancellationToken: cancellationToken)).ConfigureAwait(false);
+        var sources = revision.WebSources.Select((source, position) => new { revision.EntryId, Position = position, source.Title, source.Url });
+        var related = revision.RelatedEntryIds.Select((relatedId, position) => new { revision.EntryId, RelatedId = relatedId, Position = position });
+        await InsertAllAsync(connection, transaction, INSERT_SOURCE, sources, cancellationToken).ConfigureAwait(false);
+        await InsertAllAsync(connection, transaction, INSERT_RELATED, related, cancellationToken).ConfigureAwait(false);
+        await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<IReadOnlyList<EntryDigest>> ListRecentDigestsAsync(int limit, CancellationToken cancellationToken)
     {
         var connection = await factory.OpenAsync(cancellationToken).ConfigureAwait(false);
@@ -47,6 +63,14 @@ public sealed class SqliteEntryStore : IEntryStore
     private const string INSERT_IMAGE = "INSERT INTO entry_images (entry_id, position, relative_path, kind) VALUES (@EntryId, @Position, @RelativePath, @Kind)";
     private const string INSERT_RELATED = "INSERT INTO entry_related (entry_id, related_entry_id, position) VALUES (@EntryId, @RelatedId, @Position)";
     private const string MARK_DONE = "UPDATE videos SET state = 'Done', last_reason = NULL WHERE id = @VideoId";
+
+    private const string UPDATE_TEXTS = "UPDATE entries SET summary = @Summary, opinion = @Opinion WHERE id = @EntryId";
+
+    private const string DELETE_PARTS = """
+        DELETE FROM entry_web_sources WHERE entry_id = @EntryId;
+        DELETE FROM entry_related WHERE entry_id = @EntryId;
+        DELETE FROM reprocess_requests WHERE entry_id = @EntryId
+        """;
 
     private const string RECENT = """
         SELECT id AS Id, day AS Day, headline AS Headline, summary AS Summary

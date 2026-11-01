@@ -66,6 +66,19 @@ public sealed class FakeRefreshLog : IRefreshLog
     public Task<RefreshRun?> GetLatestAsync(CancellationToken cancellationToken) => Task.FromResult(Latest);
 }
 
+public sealed class FakeModelSelection : ICurrentModel, IModelSelector
+{
+    public string Model { get; set; } = "gemma4-26b";
+
+    public Task<string> GetAsync(CancellationToken cancellationToken) => Task.FromResult(Model);
+
+    public Task SelectAsync(string model, CancellationToken cancellationToken)
+    {
+        Model = model;
+        return Task.CompletedTask;
+    }
+}
+
 public sealed class FakeSetupStore : ISetupStore
 {
     public SetupSnapshot? Snapshot { get; set; }
@@ -140,5 +153,30 @@ public sealed class FakeRefresh : IRefreshTrigger, IRefreshStatus
     {
         StartCount++;
         return true;
+    }
+}
+
+public sealed class FakeReprocessTrigger : IReprocessTrigger
+{
+    public List<long> Requested { get; } = [];
+
+    public Task RequestAsync(long entryId, CancellationToken cancellationToken)
+    {
+        Requested.Add(entryId);
+        return Task.CompletedTask;
+    }
+}
+
+public sealed class IdleReprocessWorker : IReprocessWorker
+{
+    public async Task RunAsync(CancellationToken stopping)
+    {
+        try
+        {
+            await Task.Delay(Timeout.Infinite, stopping);
+        }
+        catch (OperationCanceledException)
+        {
+        }
     }
 }

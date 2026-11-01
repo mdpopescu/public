@@ -13,7 +13,7 @@ public sealed class BriefingLiveTests
     public void Initialize()
     {
         var options = new YouNewsOptions { LanguageModel = { BaseUrl = "http://192.168.0.176:8080/v1", Model = "gemma4-26b", MaxTokens = 16000, TimeoutMinutes = 15 } };
-        var languageModel = new OpenAiCompatibleLanguageModel(new HttpClient(), Options.Create(options), TimeProvider.System);
+        var languageModel = new OpenAiCompatibleLanguageModel(new HttpClient(), Options.Create(options), new FakeCurrentModel(options.LanguageModel.Model), TimeProvider.System);
         sut = new BriefingWriter(languageModel, TimeProvider.System);
     }
 

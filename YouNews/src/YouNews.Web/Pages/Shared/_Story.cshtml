@@ -18,13 +18,24 @@
         }
     </div>
     <div class="body">
-        <div class="tags">
-            @foreach (var tag in Model.Tags)
-            {
-                <span class="tag @tag.CssClass">@tag.Text</span>
-            }
+        <div class="story-top">
+            <div class="tags">
+                @foreach (var tag in Model.Tags)
+                {
+                    <span class="tag @tag.CssClass">@tag.Text</span>
+                }
+            </div>
+            <form method="post" asp-page="/Reprocess" class="reprocess-form">
+                <input type="hidden" name="entryId" value="@Model.Id" />
+                <input type="hidden" name="returnUrl" value="@Model.PageUrl" />
+                <button type="submit" class="btn quiet reprocess" disabled="@Model.IsReprocessQueued">@Model.ReprocessLabel</button>
+            </form>
         </div>
         <h2>@Model.Headline</h2>
+        @if (Model.ReprocessFailureText is not null)
+        {
+            <p class="error reprocess-failed" role="alert">@Model.ReprocessFailureText</p>
+        }
         <div class="meta">
             <span>@Model.ChannelName</span>
             <a href="@Model.VideoUrl" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>

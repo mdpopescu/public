@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.RegularExpressions;
 using YouNews.Core.Model;
 
 namespace YouNews.Web.Tests.Pages;
@@ -44,6 +45,66 @@ public sealed class ConfigPageTests
 
         StringAssert.Contains(html, "has not been checked yet");
         StringAssert.Contains(html, "not following any channels yet");
+    }
+
+    [TestMethod]
+    public async Task Config_ShowsTheModelInUseSelectedAndTheButtonDisabled()
+    {
+        sut.Setup.Snapshot = new SetupSnapshot(["gemma4-26b", "qwen3-30b"], "RTX 5060 Ti, 62 GB RAM", DateTimeOffset.UtcNow, null);
+        sut.Model.Model = "qwen3-30b";
+
+        var html = await browser.GetStringAsync("/config");
+
+        StringAssert.Contains(html, "Model in use");
+        StringAssert.Contains(html, "data-current-model=\"qwen3-30b\"");
+        StringAssert.Contains(html, "<option value=\"gemma4-26b\">");
+        StringAssert.Contains(html, "<option value=\"qwen3-30b\" selected=\"selected\">");
+        Assert.IsTrue(Regex.IsMatch(html, "<button[^>]*disabled[^>]*>Use this model</button>"), html);
+    }
+
+    [TestMethod]
+    public async Task Config_ModelInUseIsNotReported_ItIsStillListedAndSelected()
+    {
+        sut.Setup.Snapshot = new SetupSnapshot(["qwen3-30b"], "RTX 5060 Ti, 62 GB RAM", DateTimeOffset.UtcNow, null);
+
+        var html = await browser.GetStringAsync("/config");
+
+        StringAssert.Contains(html, "<option value=\"gemma4-26b\" selected=\"selected\">");
+    }
+
+    [TestMethod]
+    public async Task Model_ListedModel_IsSavedAndAnnounced()
+    {
+        sut.Setup.Snapshot = new SetupSnapshot(["gemma4-26b", "qwen3-30b"], "RTX 5060 Ti, 62 GB RAM", DateTimeOffset.UtcNow, null);
+
+        var response = await sut.SubmitAsync(browser, "/config", "/config?handler=Model", ("model", " qwen3-30b "));
+
+        Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.AreEqual("qwen3-30b", sut.Model.Model);
+        StringAssert.Contains(await browser.GetStringAsync("/config"), "Now using qwen3-30b.");
+    }
+
+    [TestMethod]
+    public async Task Model_UnknownModel_SavesNothingAndSaysSo()
+    {
+        sut.Setup.Snapshot = new SetupSnapshot(["gemma4-26b", "qwen3-30b"], "RTX 5060 Ti, 62 GB RAM", DateTimeOffset.UtcNow, null);
+
+        var response = await sut.SubmitAsync(browser, "/config", "/config?handler=Model", ("model", "not-a-model"));
+
+        Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.AreEqual("gemma4-26b", sut.Model.Model);
+        StringAssert.Contains(await browser.GetStringAsync("/config"), "not-a-model");
+    }
+
+    [TestMethod]
+    public async Task Model_BlankModel_SavesNothing()
+    {
+        sut.Setup.Snapshot = new SetupSnapshot(["gemma4-26b", "qwen3-30b"], "RTX 5060 Ti, 62 GB RAM", DateTimeOffset.UtcNow, null);
+
+        var response = await sut.SubmitAsync(browser, "/config", "/config?handler=Model", ("model", "   "));
+
+        Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
+        Assert.AreEqual("gemma4-26b", sut.Model.Model);
     }
 
     [TestMethod]

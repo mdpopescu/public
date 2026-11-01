@@ -62,6 +62,18 @@
         <dl class="setup">
             <dt>Hardware</dt>
             <dd>@Model.Setup.Hardware</dd>
+            <dt>Model in use</dt>
+            <dd>
+                <form method="post" asp-page-handler="Model" class="model-form">
+                    <select name="model" autocomplete="off" data-model-select data-current-model="@Model.Setup.CurrentModel">
+                        @foreach (var name in Model.Setup.ModelChoices)
+                        {
+                            <option value="@name" selected="@(name == Model.Setup.CurrentModel)">@name</option>
+                        }
+                    </select>
+                    <button type="submit" class="btn" disabled>Use this model</button>
+                </form>
+            </dd>
             <dt>Models</dt>
             <dd>
                 @if (Model.Setup.Models.Count == 0)

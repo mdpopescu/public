@@ -35,6 +35,8 @@ public static class WebBootstrapper
             builder.Services.AddHostedService<RefreshOnLaunchService>();
         }
 
+        builder.Services.AddHostedService<ReprocessService>();
+
         return builder;
     }
 

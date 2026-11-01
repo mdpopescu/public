@@ -38,9 +38,13 @@ public static class InfrastructureBootstrapper
         services.AddSingleton<IVideoStore, SqliteVideoStore>();
         services.AddSingleton<IEntryStore, SqliteEntryStore>();
         services.AddSingleton<IEntryReader, SqliteEntryReader>();
+        services.AddSingleton<IReprocessQueue, SqliteReprocessQueue>();
         services.AddSingleton<IInterestStore, SqliteInterestStore>();
         services.AddSingleton<ISetupStore, SqliteSetupStore>();
         services.AddSingleton<IRefreshLog, SqliteRefreshLog>();
+        services.AddSingleton<SqliteModelSelection>();
+        services.AddSingleton<ICurrentModel>(provider => provider.GetRequiredService<SqliteModelSelection>());
+        services.AddSingleton<IModelSelector>(provider => provider.GetRequiredService<SqliteModelSelection>());
     }
 
     private static void AddYouTube(IServiceCollection services)

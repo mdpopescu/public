@@ -55,6 +55,19 @@ public sealed record Entry(
     string Opinion,
     IReadOnlyList<WebSource> WebSources,
     IReadOnlyList<EntryImage> Images,
-    IReadOnlyList<RelatedLink> Related);
+    IReadOnlyList<RelatedLink> Related,
+    bool IsReprocessQueued = false,
+    string? ReprocessFailure = null);
+
+/// <summary>An entry waiting to be written again with the current model.</summary>
+public sealed record ReprocessJob(long EntryId, string YouTubeId, string Title, string ChannelName);
+
+/// <summary>The new texts and links of an existing entry. Headline, tags, images and day stay as they are.</summary>
+public sealed record EntryRevision(
+    long EntryId,
+    string Summary,
+    string Opinion,
+    IReadOnlyList<WebSource> WebSources,
+    IReadOnlyList<long> RelatedEntryIds);
 
 public sealed record DayCount(DateOnly Day, int EntryCount);

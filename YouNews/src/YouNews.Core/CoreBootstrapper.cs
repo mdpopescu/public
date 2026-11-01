@@ -16,7 +16,13 @@ public static class CoreBootstrapper
         services.AddSingleton<IBriefingWriter, BriefingWriter>();
         services.AddSingleton<IVideoDiscovery, VideoDiscovery>();
         services.AddSingleton<VideoProcessorDependencies>();
-        services.AddSingleton<IVideoProcessor, VideoProcessor>();
+        services.AddSingleton<VideoProcessor>();
+        services.AddSingleton<IVideoProcessor>(provider => provider.GetRequiredService<VideoProcessor>());
+        services.AddSingleton<IEntryReprocessor>(provider => provider.GetRequiredService<VideoProcessor>());
+        services.AddSingleton<ReprocessDependencies>();
+        services.AddSingleton<ReprocessWorker>();
+        services.AddSingleton<IReprocessTrigger>(provider => provider.GetRequiredService<ReprocessWorker>());
+        services.AddSingleton<IReprocessWorker>(provider => provider.GetRequiredService<ReprocessWorker>());
         services.AddSingleton<RefreshDependencies>();
         services.AddSingleton<IRefreshRun, RefreshRunner>();
         services.AddSingleton<RefreshCoordinator>();

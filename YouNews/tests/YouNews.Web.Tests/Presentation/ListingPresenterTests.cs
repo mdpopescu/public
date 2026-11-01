@@ -75,7 +75,7 @@ public sealed class ListingPresenterTests
     [TestMethod]
     public void Setup_NeverChecked_HasNoData()
     {
-        Assert.IsFalse(new SetupPresenter(TimeProvider.System).Present(null).HasData);
+        Assert.IsFalse(new SetupPresenter(TimeProvider.System).Present(null, "gemma4-26b").HasData);
     }
 
     [TestMethod]
@@ -85,11 +85,51 @@ public sealed class ListingPresenterTests
         time.SetLocalTimeZone(TimeZoneInfo.CreateCustomTimeZone("test", TimeSpan.FromHours(2), "test", "test"));
         var snapshot = new SetupSnapshot(["gemma4-26b"], "RTX 5060 Ti, 62 GB RAM", new DateTimeOffset(2026, 11, 1, 22, 30, 0, TimeSpan.Zero), "server unreachable");
 
-        var view = new SetupPresenter(time).Present(snapshot);
+        var view = new SetupPresenter(time).Present(snapshot, "gemma4-26b");
 
         Assert.AreEqual("2026-11-02 00:30", view.CheckedAtText);
         Assert.AreEqual("server unreachable", view.Warning);
         CollectionAssert.AreEqual(new[] { "gemma4-26b" }, view.Models.ToArray());
+    }
+
+    [TestMethod]
+    public void Setup_CurrentModelIsAmongTheReportedOnes_ChoicesAreTheReportedOnes()
+    {
+        var snapshot = new SetupSnapshot(["gemma4-26b", "qwen3-30b"], "hardware", DateTimeOffset.UnixEpoch, null);
+
+        var view = new SetupPresenter(TimeProvider.System).Present(snapshot, "qwen3-30b");
+
+        Assert.AreEqual("qwen3-30b", view.CurrentModel);
+        CollectionAssert.AreEqual(new[] { "gemma4-26b", "qwen3-30b" }, view.ModelChoices.ToArray());
+    }
+
+    [TestMethod]
+    public void Setup_CurrentModelIsNotAmongTheReportedOnes_ItIsAddedInSortedPosition()
+    {
+        var snapshot = new SetupSnapshot(["gemma4-26b", "qwen3-30b"], "hardware", DateTimeOffset.UnixEpoch, null);
+
+        var view = new SetupPresenter(TimeProvider.System).Present(snapshot, "llama-3");
+
+        CollectionAssert.AreEqual(new[] { "gemma4-26b", "llama-3", "qwen3-30b" }, view.ModelChoices.ToArray());
+    }
+
+    [TestMethod]
+    public void Setup_NeverChecked_ChoicesAreJustTheCurrentModel()
+    {
+        var view = new SetupPresenter(TimeProvider.System).Present(null, "gemma4-26b");
+
+        Assert.AreEqual("gemma4-26b", view.CurrentModel);
+        CollectionAssert.AreEqual(new[] { "gemma4-26b" }, view.ModelChoices.ToArray());
+    }
+
+    [TestMethod]
+    public void Setup_ReportedModelsAreUnsorted_ChoicesAreOrdinalSorted()
+    {
+        var snapshot = new SetupSnapshot(["qwen3-30b", "Zed", "gemma4-26b"], "hardware", DateTimeOffset.UnixEpoch, null);
+
+        var view = new SetupPresenter(TimeProvider.System).Present(snapshot, "gemma4-26b");
+
+        CollectionAssert.AreEqual(new[] { "Zed", "gemma4-26b", "qwen3-30b" }, view.ModelChoices.ToArray());
     }
 
     [TestMethod]
