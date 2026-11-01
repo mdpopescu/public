@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using YouNews.Core.Ports;
+using YouNews.Infrastructure.LanguageModels;
 using YouNews.Infrastructure.Processes;
 using YouNews.Infrastructure.Search;
 using YouNews.Infrastructure.Server;
@@ -22,6 +23,7 @@ public static class InfrastructureBootstrapper
         AddServerInspection(services);
         AddSearch(services);
         AddSpeech(services);
+        services.AddHttpClient<ILanguageModel, OpenAiCompatibleLanguageModel>();
         return services;
     }
 

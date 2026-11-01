@@ -1,4 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using YouNews.Core.Briefing;
+using YouNews.Core.Ports;
 using YouNews.Core.Refresh;
 using YouNews.Core.Setup;
 
@@ -11,6 +13,7 @@ public static class CoreBootstrapper
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton(limits);
         services.AddSingleton<ISetupMonitor, SetupMonitor>();
+        services.AddSingleton<IBriefingWriter, BriefingWriter>();
         services.AddSingleton<IVideoDiscovery, VideoDiscovery>();
         services.AddSingleton<VideoProcessorDependencies>();
         services.AddSingleton<IVideoProcessor, VideoProcessor>();
