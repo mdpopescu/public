@@ -6,25 +6,6 @@ namespace YouNews.Infrastructure.Storage;
 
 public sealed class DatabaseInitializer : IDatabaseInitializer
 {
-    private const string CREATE_VERSION_TABLE = "CREATE TABLE IF NOT EXISTS schema_version (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)";
-    private const string SELECT_VERSION = "SELECT COALESCE(MAX(version), 0) FROM schema_version";
-    private const string INSERT_VERSION = "INSERT INTO schema_version (version, applied_at) VALUES (@Version, @AppliedAt)";
-    private const string INSERT_CHANNEL = "INSERT INTO channels (youtube_id, url, name) VALUES (@YouTubeId, @Url, @Name)";
-    private const string INSERT_INTEREST = "INSERT INTO interests (position, text) VALUES (@Position, @Text)";
-
-    private static readonly string[] SEED_INTERESTS =
-    [
-        "New local models, and whether they beat what is on my server",
-        "AI legislation, including rumors of it",
-        "The RAM and video card market",
-        "New AI research",
-    ];
-
-    private readonly ISqliteConnectionFactory factory;
-    private readonly IDatabaseMigrations migrations;
-    private readonly TimeProvider timeProvider;
-    private readonly string dataDirectory;
-
     public DatabaseInitializer(ISqliteConnectionFactory factory, IDatabaseMigrations migrations, TimeProvider timeProvider, IOptions<YouNewsOptions> options)
     {
         this.factory = factory;
@@ -49,6 +30,25 @@ public sealed class DatabaseInitializer : IDatabaseInitializer
     }
 
     //
+
+    private const string CREATE_VERSION_TABLE = "CREATE TABLE IF NOT EXISTS schema_version (version INTEGER PRIMARY KEY, applied_at TEXT NOT NULL)";
+    private const string SELECT_VERSION = "SELECT COALESCE(MAX(version), 0) FROM schema_version";
+    private const string INSERT_VERSION = "INSERT INTO schema_version (version, applied_at) VALUES (@Version, @AppliedAt)";
+    private const string INSERT_CHANNEL = "INSERT INTO channels (youtube_id, url, name) VALUES (@YouTubeId, @Url, @Name)";
+    private const string INSERT_INTEREST = "INSERT INTO interests (position, text) VALUES (@Position, @Text)";
+
+    private static readonly string[] SEED_INTERESTS =
+    [
+        "New local models, and whether they beat what is on my server",
+        "AI legislation, including rumors of it",
+        "The RAM and video card market",
+        "New AI research",
+    ];
+
+    private readonly ISqliteConnectionFactory factory;
+    private readonly IDatabaseMigrations migrations;
+    private readonly TimeProvider timeProvider;
+    private readonly string dataDirectory;
 
     private static async Task SeedAsync(DbConnection connection, DbTransaction transaction, CancellationToken cancellationToken)
     {

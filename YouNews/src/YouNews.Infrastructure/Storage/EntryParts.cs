@@ -7,16 +7,6 @@ namespace YouNews.Infrastructure.Storage;
 /// <summary>Loads the tags, sources, images and related links of many entries with one query each.</summary>
 internal sealed class EntryParts
 {
-    private const string TAGS = "SELECT entry_id AS EntryId, tag AS Tag FROM entry_tags WHERE entry_id IN @Ids ORDER BY entry_id, position";
-    private const string SOURCES = "SELECT entry_id AS EntryId, title AS Title, url AS Url FROM entry_web_sources WHERE entry_id IN @Ids ORDER BY entry_id, position";
-    private const string IMAGES = "SELECT entry_id AS EntryId, relative_path AS RelativePath, kind AS Kind FROM entry_images WHERE entry_id IN @Ids ORDER BY entry_id, position";
-
-    private const string RELATED = """
-        SELECT r.entry_id AS EntryId, e.id AS RelatedId, e.day AS Day, e.headline AS Headline
-        FROM entry_related r JOIN entries e ON e.id = r.related_entry_id
-        WHERE r.entry_id IN @Ids ORDER BY r.entry_id, r.position
-        """;
-
     public async Task<ILookup<long, string>> LoadTagsAsync(DbConnection connection, IReadOnlyList<long> ids, CancellationToken cancellationToken)
     {
         var rows = await QueryAsync<TagRow>(connection, TAGS, ids, cancellationToken).ConfigureAwait(false);
@@ -42,6 +32,16 @@ internal sealed class EntryParts
     }
 
     //
+
+    private const string TAGS = "SELECT entry_id AS EntryId, tag AS Tag FROM entry_tags WHERE entry_id IN @Ids ORDER BY entry_id, position";
+    private const string SOURCES = "SELECT entry_id AS EntryId, title AS Title, url AS Url FROM entry_web_sources WHERE entry_id IN @Ids ORDER BY entry_id, position";
+    private const string IMAGES = "SELECT entry_id AS EntryId, relative_path AS RelativePath, kind AS Kind FROM entry_images WHERE entry_id IN @Ids ORDER BY entry_id, position";
+
+    private const string RELATED = """
+        SELECT r.entry_id AS EntryId, e.id AS RelatedId, e.day AS Day, e.headline AS Headline
+        FROM entry_related r JOIN entries e ON e.id = r.related_entry_id
+        WHERE r.entry_id IN @Ids ORDER BY r.entry_id, r.position
+        """;
 
     private static async Task<List<T>> QueryAsync<T>(DbConnection connection, string sql, IReadOnlyList<long> ids, CancellationToken cancellationToken)
     {

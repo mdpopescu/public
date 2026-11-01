@@ -7,10 +7,6 @@ namespace YouNews.Infrastructure.Search;
 /// <summary>Asks the primary search first and falls back to the secondary only when the primary finds too little.</summary>
 public sealed class TieredWebSearch : IWebSearch
 {
-    private readonly IWebSearch primary;
-    private readonly IWebSearch secondary;
-    private readonly SearchOptions options;
-
     public TieredWebSearch(IWebSearch primary, IWebSearch secondary, IOptions<YouNewsOptions> options)
     {
         this.primary = primary;
@@ -37,6 +33,10 @@ public sealed class TieredWebSearch : IWebSearch
     }
 
     //
+
+    private readonly IWebSearch primary;
+    private readonly IWebSearch secondary;
+    private readonly SearchOptions options;
 
     private static string Normalize(string url)
     {

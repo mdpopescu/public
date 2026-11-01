@@ -6,26 +6,6 @@ namespace YouNews.Infrastructure.Storage;
 
 public sealed class SqliteVideoStore : IVideoStore
 {
-    private const string KNOWN_IDS = "SELECT youtube_id FROM videos WHERE channel_id = @ChannelId";
-
-    private const string INSERT = """
-        INSERT OR IGNORE INTO videos (channel_id, youtube_id, title, state, last_reason, first_seen_at, first_seen_ticks)
-        VALUES (@ChannelId, @YouTubeId, @Title, @State, @Reason, @FirstSeenAt, @FirstSeenTicks)
-        """;
-
-    private const string LIST_BY_STATE = """
-        SELECT v.id AS Id, v.channel_id AS ChannelId, v.youtube_id AS YouTubeId, v.title AS Title, v.state AS State,
-               v.attempts AS Attempts, v.last_reason AS LastReason, v.first_seen_at AS FirstSeenAt
-        FROM videos v JOIN channels c ON c.id = v.channel_id
-        WHERE v.state = @State AND c.removed = 0
-        ORDER BY v.first_seen_ticks DESC, v.id DESC
-        """;
-
-    private const string SET_STATE = "UPDATE videos SET state = @State, last_reason = @Reason WHERE id = @VideoId";
-    private const string RECORD_FAILURE = "UPDATE videos SET attempts = attempts + 1, last_reason = @Reason WHERE id = @VideoId";
-
-    private readonly ISqliteConnectionFactory factory;
-
     public SqliteVideoStore(ISqliteConnectionFactory factory)
     {
         this.factory = factory;
@@ -67,6 +47,26 @@ public sealed class SqliteVideoStore : IVideoStore
         ExecuteAsync(RECORD_FAILURE, new { VideoId = videoId, Reason = reason }, cancellationToken);
 
     //
+
+    private const string KNOWN_IDS = "SELECT youtube_id FROM videos WHERE channel_id = @ChannelId";
+
+    private const string INSERT = """
+        INSERT OR IGNORE INTO videos (channel_id, youtube_id, title, state, last_reason, first_seen_at, first_seen_ticks)
+        VALUES (@ChannelId, @YouTubeId, @Title, @State, @Reason, @FirstSeenAt, @FirstSeenTicks)
+        """;
+
+    private const string LIST_BY_STATE = """
+        SELECT v.id AS Id, v.channel_id AS ChannelId, v.youtube_id AS YouTubeId, v.title AS Title, v.state AS State,
+               v.attempts AS Attempts, v.last_reason AS LastReason, v.first_seen_at AS FirstSeenAt
+        FROM videos v JOIN channels c ON c.id = v.channel_id
+        WHERE v.state = @State AND c.removed = 0
+        ORDER BY v.first_seen_ticks DESC, v.id DESC
+        """;
+
+    private const string SET_STATE = "UPDATE videos SET state = @State, last_reason = @Reason WHERE id = @VideoId";
+    private const string RECORD_FAILURE = "UPDATE videos SET attempts = attempts + 1, last_reason = @Reason WHERE id = @VideoId";
+
+    private readonly ISqliteConnectionFactory factory;
 
     private static TrackedVideo ToTrackedVideo(VideoRow row) => new(
         row.Id,

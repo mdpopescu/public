@@ -11,10 +11,6 @@ namespace YouNews.Infrastructure.Search;
 /// <summary>Searches through a SearXNG instance's JSON API.</summary>
 public sealed class SearxngWebSearch : IWebSearch
 {
-    private readonly HttpClient httpClient;
-    private readonly SearchOptions options;
-    private readonly ILogger<SearxngWebSearch> logger;
-
     public SearxngWebSearch(HttpClient httpClient, IOptions<YouNewsOptions> options, ILogger<SearxngWebSearch> logger)
     {
         this.httpClient = httpClient;
@@ -47,6 +43,10 @@ public sealed class SearxngWebSearch : IWebSearch
     }
 
     //
+
+    private readonly HttpClient httpClient;
+    private readonly SearchOptions options;
+    private readonly ILogger<SearxngWebSearch> logger;
 
     private async Task<IReadOnlyList<WebResult>> FetchAsync(string query, CancellationToken cancellationToken)
     {

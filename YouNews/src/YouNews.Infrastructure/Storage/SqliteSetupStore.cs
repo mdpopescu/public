@@ -7,16 +7,6 @@ namespace YouNews.Infrastructure.Storage;
 
 public sealed class SqliteSetupStore : ISetupStore
 {
-    private const string SELECT = "SELECT models AS Models, hardware AS Hardware, checked_at AS CheckedAt, warning AS Warning FROM setup_snapshot WHERE id = 1";
-
-    private const string UPSERT = """
-        INSERT INTO setup_snapshot (id, models, hardware, checked_at, warning) VALUES (1, @Models, @Hardware, @CheckedAt, @Warning)
-        ON CONFLICT(id) DO UPDATE SET models = excluded.models, hardware = excluded.hardware,
-                                      checked_at = excluded.checked_at, warning = excluded.warning
-        """;
-
-    private readonly ISqliteConnectionFactory factory;
-
     public SqliteSetupStore(ISqliteConnectionFactory factory)
     {
         this.factory = factory;
@@ -47,6 +37,16 @@ public sealed class SqliteSetupStore : ISetupStore
     }
 
     //
+
+    private const string SELECT = "SELECT models AS Models, hardware AS Hardware, checked_at AS CheckedAt, warning AS Warning FROM setup_snapshot WHERE id = 1";
+
+    private const string UPSERT = """
+        INSERT INTO setup_snapshot (id, models, hardware, checked_at, warning) VALUES (1, @Models, @Hardware, @CheckedAt, @Warning)
+        ON CONFLICT(id) DO UPDATE SET models = excluded.models, hardware = excluded.hardware,
+                                      checked_at = excluded.checked_at, warning = excluded.warning
+        """;
+
+    private readonly ISqliteConnectionFactory factory;
 
     private sealed class SnapshotRow
     {

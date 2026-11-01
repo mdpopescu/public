@@ -157,6 +157,8 @@ public sealed class SearxngWebSearchTests
         {
         }
 
+        //
+
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             Requests.Add(request.RequestUri!);

@@ -6,18 +6,6 @@ namespace YouNews.Infrastructure.Storage;
 
 public sealed class SqliteEntryReader : IEntryReader
 {
-    private const string DAYS = "SELECT day AS Day, COUNT(*) AS EntryCount FROM entries GROUP BY day ORDER BY day DESC";
-
-    private const string FOR_DAY = """
-        SELECT e.id AS Id, e.day AS Day, c.name AS ChannelName, v.youtube_id AS VideoYouTubeId,
-               e.headline AS Headline, e.summary AS Summary, e.opinion AS Opinion
-        FROM entries e JOIN videos v ON v.id = e.video_id JOIN channels c ON c.id = v.channel_id
-        WHERE e.day = @Day ORDER BY e.id DESC
-        """;
-
-    private readonly ISqliteConnectionFactory factory;
-    private readonly EntryParts parts = new();
-
     public SqliteEntryReader(ISqliteConnectionFactory factory)
     {
         this.factory = factory;
@@ -44,6 +32,18 @@ public sealed class SqliteEntryReader : IEntryReader
     }
 
     //
+
+    private const string DAYS = "SELECT day AS Day, COUNT(*) AS EntryCount FROM entries GROUP BY day ORDER BY day DESC";
+
+    private const string FOR_DAY = """
+        SELECT e.id AS Id, e.day AS Day, c.name AS ChannelName, v.youtube_id AS VideoYouTubeId,
+               e.headline AS Headline, e.summary AS Summary, e.opinion AS Opinion
+        FROM entries e JOIN videos v ON v.id = e.video_id JOIN channels c ON c.id = v.channel_id
+        WHERE e.day = @Day ORDER BY e.id DESC
+        """;
+
+    private readonly ISqliteConnectionFactory factory;
+    private readonly EntryParts parts = new();
 
     private static Entry ToEntry(EntryRow row, IEnumerable<string> tags, IEnumerable<WebSource> sources, IEnumerable<EntryImage> images, IEnumerable<RelatedLink> related) => new(
         row.Id,

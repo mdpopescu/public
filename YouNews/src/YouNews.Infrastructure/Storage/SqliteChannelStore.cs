@@ -7,14 +7,6 @@ namespace YouNews.Infrastructure.Storage;
 
 public sealed class SqliteChannelStore : IChannelStore
 {
-    private const string LIST = "SELECT id AS Id, url AS Url, name AS Name FROM channels WHERE removed = 0 ORDER BY name, id";
-    private const string FIND = "SELECT id AS Id, removed AS Removed FROM channels WHERE youtube_id = @YouTubeId";
-    private const string INSERT = "INSERT INTO channels (youtube_id, url, name) VALUES (@YouTubeId, @Url, @Name); SELECT last_insert_rowid()";
-    private const string REACTIVATE = "UPDATE channels SET removed = 0, url = @Url, name = @Name WHERE id = @Id";
-    private const string REMOVE = "UPDATE channels SET removed = 1 WHERE id = @ChannelId";
-
-    private readonly ISqliteConnectionFactory factory;
-
     public SqliteChannelStore(ISqliteConnectionFactory factory)
     {
         this.factory = factory;
@@ -51,6 +43,14 @@ public sealed class SqliteChannelStore : IChannelStore
     }
 
     //
+
+    private const string LIST = "SELECT id AS Id, url AS Url, name AS Name FROM channels WHERE removed = 0 ORDER BY name, id";
+    private const string FIND = "SELECT id AS Id, removed AS Removed FROM channels WHERE youtube_id = @YouTubeId";
+    private const string INSERT = "INSERT INTO channels (youtube_id, url, name) VALUES (@YouTubeId, @Url, @Name); SELECT last_insert_rowid()";
+    private const string REACTIVATE = "UPDATE channels SET removed = 0, url = @Url, name = @Name WHERE id = @Id";
+    private const string REMOVE = "UPDATE channels SET removed = 1 WHERE id = @ChannelId";
+
+    private readonly ISqliteConnectionFactory factory;
 
     private static async Task<long> ReactivateAsync(DbConnection connection, DbTransaction transaction, long channelId, ChannelDetails details, CancellationToken cancellationToken)
     {

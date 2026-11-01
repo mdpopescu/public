@@ -7,25 +7,6 @@ namespace YouNews.Infrastructure.Storage;
 
 public sealed class SqliteEntryStore : IEntryStore
 {
-    private const string INSERT_ENTRY = """
-        INSERT INTO entries (video_id, day, headline, summary, opinion) VALUES (@VideoId, @Day, @Headline, @Summary, @Opinion);
-        SELECT last_insert_rowid()
-        """;
-
-    private const string INSERT_TAG = "INSERT INTO entry_tags (entry_id, position, tag) VALUES (@EntryId, @Position, @Tag)";
-    private const string INSERT_SOURCE = "INSERT INTO entry_web_sources (entry_id, position, title, url) VALUES (@EntryId, @Position, @Title, @Url)";
-    private const string INSERT_IMAGE = "INSERT INTO entry_images (entry_id, position, relative_path, kind) VALUES (@EntryId, @Position, @RelativePath, @Kind)";
-    private const string INSERT_RELATED = "INSERT INTO entry_related (entry_id, related_entry_id, position) VALUES (@EntryId, @RelatedId, @Position)";
-    private const string MARK_DONE = "UPDATE videos SET state = 'Done', last_reason = NULL WHERE id = @VideoId";
-
-    private const string RECENT = """
-        SELECT id AS Id, day AS Day, headline AS Headline, summary AS Summary
-        FROM entries ORDER BY day DESC, id DESC LIMIT @Limit
-        """;
-
-    private readonly ISqliteConnectionFactory factory;
-    private readonly EntryParts parts = new();
-
     public SqliteEntryStore(ISqliteConnectionFactory factory)
     {
         this.factory = factory;
@@ -52,6 +33,25 @@ public sealed class SqliteEntryStore : IEntryStore
     }
 
     //
+
+    private const string INSERT_ENTRY = """
+        INSERT INTO entries (video_id, day, headline, summary, opinion) VALUES (@VideoId, @Day, @Headline, @Summary, @Opinion);
+        SELECT last_insert_rowid()
+        """;
+
+    private const string INSERT_TAG = "INSERT INTO entry_tags (entry_id, position, tag) VALUES (@EntryId, @Position, @Tag)";
+    private const string INSERT_SOURCE = "INSERT INTO entry_web_sources (entry_id, position, title, url) VALUES (@EntryId, @Position, @Title, @Url)";
+    private const string INSERT_IMAGE = "INSERT INTO entry_images (entry_id, position, relative_path, kind) VALUES (@EntryId, @Position, @RelativePath, @Kind)";
+    private const string INSERT_RELATED = "INSERT INTO entry_related (entry_id, related_entry_id, position) VALUES (@EntryId, @RelatedId, @Position)";
+    private const string MARK_DONE = "UPDATE videos SET state = 'Done', last_reason = NULL WHERE id = @VideoId";
+
+    private const string RECENT = """
+        SELECT id AS Id, day AS Day, headline AS Headline, summary AS Summary
+        FROM entries ORDER BY day DESC, id DESC LIMIT @Limit
+        """;
+
+    private readonly ISqliteConnectionFactory factory;
+    private readonly EntryParts parts = new();
 
     private static Task InsertAllAsync(DbConnection connection, DbTransaction transaction, string sql, IEnumerable<object> rows, CancellationToken cancellationToken) =>
         connection.ExecuteAsync(new CommandDefinition(sql, rows.ToList(), transaction, cancellationToken: cancellationToken));

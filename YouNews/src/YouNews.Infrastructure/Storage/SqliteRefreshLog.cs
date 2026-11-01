@@ -6,18 +6,6 @@ namespace YouNews.Infrastructure.Storage;
 
 public sealed class SqliteRefreshLog : IRefreshLog
 {
-    private const string INSERT = """
-        INSERT INTO refresh_runs (started_at, finished_at, completed, failed, problem)
-        VALUES (@StartedAt, @FinishedAt, @Completed, @Failed, @Problem)
-        """;
-
-    private const string LATEST = """
-        SELECT started_at AS StartedAt, finished_at AS FinishedAt, completed AS Completed, failed AS Failed, problem AS Problem
-        FROM refresh_runs ORDER BY id DESC LIMIT 1
-        """;
-
-    private readonly ISqliteConnectionFactory factory;
-
     public SqliteRefreshLog(ISqliteConnectionFactory factory)
     {
         this.factory = factory;
@@ -47,6 +35,18 @@ public sealed class SqliteRefreshLog : IRefreshLog
     }
 
     //
+
+    private const string INSERT = """
+        INSERT INTO refresh_runs (started_at, finished_at, completed, failed, problem)
+        VALUES (@StartedAt, @FinishedAt, @Completed, @Failed, @Problem)
+        """;
+
+    private const string LATEST = """
+        SELECT started_at AS StartedAt, finished_at AS FinishedAt, completed AS Completed, failed AS Failed, problem AS Problem
+        FROM refresh_runs ORDER BY id DESC LIMIT 1
+        """;
+
+    private readonly ISqliteConnectionFactory factory;
 
     private sealed class RunRow
     {

@@ -7,11 +7,6 @@ namespace YouNews.Infrastructure.Tests.Storage;
 [TestClass]
 public class EntryStoreTests
 {
-    private readonly StorageFixture fixture = new();
-    private SqliteEntryStore sut = null!;
-    private SqliteEntryReader reader = null!;
-    private SqliteVideoStore videos = null!;
-
     [TestInitialize]
     public async Task Initialize()
     {
@@ -148,6 +143,11 @@ public class EntryStoreTests
     }
 
     //
+
+    private readonly StorageFixture fixture = new();
+    private SqliteEntryStore sut = null!;
+    private SqliteEntryReader reader = null!;
+    private SqliteVideoStore videos = null!;
 
     private static NewEntry Entry(long videoId, DateOnly day, string headline, IReadOnlyList<long>? related = null) => new(
         videoId,

@@ -11,6 +11,41 @@ namespace YouNews.Infrastructure.Search;
 /// <summary>Searches DuckDuckGo through a headless Camoufox browser driven by a small Python script.</summary>
 public sealed class CamoufoxWebSearch : IWebSearch
 {
+    public CamoufoxWebSearch(IProcessRunner processRunner, IOptions<YouNewsOptions> options, ILogger<CamoufoxWebSearch> logger)
+    {
+        this.processRunner = processRunner;
+        this.options = options.Value.Search;
+        workDirectory = options.Value.WorkDirectory;
+        this.logger = logger;
+    }
+
+    public async Task<IReadOnlyList<WebResult>> SearchAsync(string query, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(query))
+            return [];
+
+        try
+        {
+            var path = await EnsureScriptAsync(cancellationToken).ConfigureAwait(false);
+            var result = await processRunner
+                .RunAsync(options.PythonPath, [path, query], workDirectory, TimeSpan.FromSeconds(options.TimeoutSeconds), cancellationToken)
+                .ConfigureAwait(false);
+            return Parse(result, query);
+        }
+        catch (TimeoutException)
+        {
+            logger.LogWarning("Camoufox search for '{Query}' timed out after {Seconds} seconds", query, options.TimeoutSeconds);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            logger.LogWarning(ex, "Camoufox search for '{Query}' failed", query);
+        }
+
+        return [];
+    }
+
+    //
+
     private const string SCRIPT_FILE_NAME = "camoufox_search.py";
 
     private const string SCRIPT = """
@@ -62,41 +97,6 @@ public sealed class CamoufoxWebSearch : IWebSearch
     private readonly ILogger<CamoufoxWebSearch> logger;
     private readonly SemaphoreSlim scriptLock = new(1, 1);
     private string? scriptPath;
-
-    public CamoufoxWebSearch(IProcessRunner processRunner, IOptions<YouNewsOptions> options, ILogger<CamoufoxWebSearch> logger)
-    {
-        this.processRunner = processRunner;
-        this.options = options.Value.Search;
-        workDirectory = options.Value.WorkDirectory;
-        this.logger = logger;
-    }
-
-    public async Task<IReadOnlyList<WebResult>> SearchAsync(string query, CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrWhiteSpace(query))
-            return [];
-
-        try
-        {
-            var path = await EnsureScriptAsync(cancellationToken).ConfigureAwait(false);
-            var result = await processRunner
-                .RunAsync(options.PythonPath, [path, query], workDirectory, TimeSpan.FromSeconds(options.TimeoutSeconds), cancellationToken)
-                .ConfigureAwait(false);
-            return Parse(result, query);
-        }
-        catch (TimeoutException)
-        {
-            logger.LogWarning("Camoufox search for '{Query}' timed out after {Seconds} seconds", query, options.TimeoutSeconds);
-        }
-        catch (Exception ex) when (ex is not OperationCanceledException)
-        {
-            logger.LogWarning(ex, "Camoufox search for '{Query}' failed", query);
-        }
-
-        return [];
-    }
-
-    //
 
     private IReadOnlyList<WebResult> Parse(ProcessResult result, string query)
     {

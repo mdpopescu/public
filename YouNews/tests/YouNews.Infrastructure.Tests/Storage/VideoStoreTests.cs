@@ -6,11 +6,6 @@ namespace YouNews.Infrastructure.Tests.Storage;
 [TestClass]
 public class VideoStoreTests
 {
-    private readonly StorageFixture fixture = new();
-    private SqliteVideoStore sut = null!;
-    private SqliteChannelStore channels = null!;
-    private long channelId;
-
     [TestInitialize]
     public async Task Initialize()
     {
@@ -123,4 +118,11 @@ public class VideoStoreTests
 
         Assert.IsNull((await sut.ListByStateAsync(VideoState.Pending, CancellationToken.None)).Single().LastReason);
     }
+
+    //
+
+    private readonly StorageFixture fixture = new();
+    private SqliteVideoStore sut = null!;
+    private SqliteChannelStore channels = null!;
+    private long channelId;
 }

@@ -6,8 +6,6 @@ namespace YouNews.Infrastructure.Storage;
 
 public sealed class SqliteConnectionFactory : ISqliteConnectionFactory
 {
-    private readonly string connectionString;
-
     public SqliteConnectionFactory(IOptions<YouNewsOptions> options)
     {
         connectionString = new SqliteConnectionStringBuilder
@@ -32,4 +30,8 @@ public sealed class SqliteConnectionFactory : ISqliteConnectionFactory
             throw;
         }
     }
+
+    //
+
+    private readonly string connectionString;
 }

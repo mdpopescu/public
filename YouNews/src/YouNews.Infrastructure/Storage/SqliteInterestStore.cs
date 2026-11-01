@@ -5,12 +5,6 @@ namespace YouNews.Infrastructure.Storage;
 
 public sealed class SqliteInterestStore : IInterestStore
 {
-    private const string SELECT = "SELECT text FROM interests ORDER BY position";
-    private const string DELETE = "DELETE FROM interests";
-    private const string INSERT = "INSERT INTO interests (position, text) VALUES (@Position, @Text)";
-
-    private readonly ISqliteConnectionFactory factory;
-
     public SqliteInterestStore(ISqliteConnectionFactory factory)
     {
         this.factory = factory;
@@ -32,4 +26,12 @@ public sealed class SqliteInterestStore : IInterestStore
         await connection.ExecuteAsync(new CommandDefinition(INSERT, rows, transaction, cancellationToken: cancellationToken)).ConfigureAwait(false);
         await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
     }
+
+    //
+
+    private const string SELECT = "SELECT text FROM interests ORDER BY position";
+    private const string DELETE = "DELETE FROM interests";
+    private const string INSERT = "INSERT INTO interests (position, text) VALUES (@Position, @Text)";
+
+    private readonly ISqliteConnectionFactory factory;
 }

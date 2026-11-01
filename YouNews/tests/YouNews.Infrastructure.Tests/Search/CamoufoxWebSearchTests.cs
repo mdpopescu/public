@@ -125,9 +125,6 @@ public sealed class CamoufoxWebSearchTests
 
     private sealed class FakeProcessRunner : IProcessRunner
     {
-        private readonly ProcessResult? result;
-        private readonly Exception? failure;
-
         public int Calls { get; private set; }
 
         public string FileName { get; private set; } = "";
@@ -148,5 +145,10 @@ public sealed class CamoufoxWebSearchTests
             Timeout = timeout;
             return failure is null ? Task.FromResult(result!) : Task.FromException<ProcessResult>(failure);
         }
+
+        //
+
+        private readonly ProcessResult? result;
+        private readonly Exception? failure;
     }
 }

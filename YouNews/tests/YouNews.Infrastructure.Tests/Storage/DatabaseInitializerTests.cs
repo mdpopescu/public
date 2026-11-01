@@ -7,8 +7,6 @@ namespace YouNews.Infrastructure.Tests.Storage;
 [TestClass]
 public class DatabaseInitializerTests
 {
-    private readonly StorageFixture fixture = new();
-
     [TestCleanup]
     public void Cleanup() => fixture.Dispose();
 
@@ -106,6 +104,8 @@ public class DatabaseInitializerTests
     }
 
     //
+
+    private readonly StorageFixture fixture = new();
 
     private sealed class FakeMigrations : IDatabaseMigrations
     {

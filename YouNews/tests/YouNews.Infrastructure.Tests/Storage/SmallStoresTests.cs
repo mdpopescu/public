@@ -6,8 +6,6 @@ namespace YouNews.Infrastructure.Tests.Storage;
 [TestClass]
 public class SmallStoresTests
 {
-    private readonly StorageFixture fixture = new();
-
     [TestInitialize]
     public async Task Initialize() => await fixture.InitializeAsync();
 
@@ -96,4 +94,8 @@ public class SmallStoresTests
         Assert.AreEqual(last, latest);
         Assert.AreEqual(last.StartedAt.Offset, latest!.StartedAt.Offset);
     }
+
+    //
+
+    private readonly StorageFixture fixture = new();
 }

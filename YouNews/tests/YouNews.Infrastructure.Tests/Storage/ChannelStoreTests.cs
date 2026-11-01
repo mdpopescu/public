@@ -6,9 +6,6 @@ namespace YouNews.Infrastructure.Tests.Storage;
 [TestClass]
 public class ChannelStoreTests
 {
-    private readonly StorageFixture fixture = new();
-    private SqliteChannelStore sut = null!;
-
     [TestInitialize]
     public async Task Initialize()
     {
@@ -79,4 +76,9 @@ public class ChannelStoreTests
 
         Assert.IsNull(third);
     }
+
+    //
+
+    private readonly StorageFixture fixture = new();
+    private SqliteChannelStore sut = null!;
 }

@@ -19,6 +19,8 @@ public sealed partial class Json3Parser
             .ToList();
     }
 
+    //
+
     private static TranscriptSegment? ToSegment(JsonElement caption)
     {
         if (!caption.TryGetProperty("segs", out var segments))

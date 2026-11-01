@@ -141,9 +141,9 @@ internal sealed class FakeSpeechTranscriber : ISpeechTranscriber
 
 internal sealed class FakeBriefingWriter : IBriefingWriter
 {
-    public VideoAnalysis Analysis { get; set; } = new("Headline", ["research"], [TimeSpan.FromSeconds(30)], [], []);
-
     public HashSet<string> FailingTitles { get; } = [];
+
+    public VideoAnalysis Analysis { get; set; } = new("Headline", ["research"], [TimeSpan.FromSeconds(30)], [], []);
 
     public OpinionRequest? LastOpinionRequest { get; private set; }
 
