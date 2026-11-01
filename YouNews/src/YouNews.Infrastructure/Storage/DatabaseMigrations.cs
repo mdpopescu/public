@@ -82,5 +82,6 @@ public sealed class DatabaseMigrations : IDatabaseMigrations
         );
         """,
         "ALTER TABLE videos ADD COLUMN published_on TEXT NULL;",
+        "UPDATE entries SET day = v.published_on FROM videos v WHERE v.id = entries.video_id AND v.published_on IS NOT NULL;",
     ];
 }

@@ -40,7 +40,7 @@ internal sealed class FakeVideoStore : IVideoStore
     {
         lock (gate)
         {
-            Videos.Add(new TrackedVideo(Videos.Count + 1, video.ChannelId, video.YouTubeId, video.Title, video.State, 0, video.Reason, video.FirstSeenAt));
+            Videos.Add(new TrackedVideo(Videos.Count + 1, video.ChannelId, video.YouTubeId, video.Title, video.State, 0, video.Reason, video.FirstSeenAt, video.PublishedOn));
             if (video.PublishedOn is { } publishedOn)
             {
                 PublishedOn[video.YouTubeId] = publishedOn;
@@ -127,6 +127,9 @@ internal sealed class FakeCatalog : IVideoCatalog
 
     public List<string> DetailRequests { get; } = [];
 
+    /// <summary>When false, asking about a video without details fails, as a failing lookup does.</summary>
+    public bool UnknownVideosHaveNoDate { get; set; }
+
     public Task<ChannelDetails?> ResolveChannelAsync(string urlOrHandle, CancellationToken cancellationToken) => throw new NotSupportedException();
 
     public Task<IReadOnlyList<IReadOnlyList<FeedVideo>>> ListVideoFeedsAsync(Channel channel, CancellationToken cancellationToken)
@@ -150,7 +153,9 @@ internal sealed class FakeCatalog : IVideoCatalog
     public Task<VideoDetails> GetDetailsAsync(string youTubeId, CancellationToken cancellationToken)
     {
         DetailRequests.Add(youTubeId);
-        return Task.FromResult(Details[youTubeId]);
+        return Task.FromResult(UnknownVideosHaveNoDate && !Details.ContainsKey(youTubeId)
+            ? new VideoDetails(youTubeId, VideoAvailability.Eligible, null, null)
+            : Details[youTubeId]);
     }
 }
 

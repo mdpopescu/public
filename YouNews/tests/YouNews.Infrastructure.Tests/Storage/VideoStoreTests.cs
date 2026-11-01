@@ -31,6 +31,16 @@ public class VideoStoreTests
     }
 
     [TestMethod]
+    public async Task ListByStateAsync_VideoWithPublicationDate_ReturnsTheDate()
+    {
+        await AddPendingAsync("dated", new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero), new DateOnly(2026, 10, 19));
+
+        var video = (await sut.ListByStateAsync(VideoState.Pending, CancellationToken.None)).Single();
+
+        Assert.AreEqual(new DateOnly(2026, 10, 19), video.PublishedOn);
+    }
+
+    [TestMethod]
     public async Task AddAsync_KnownVideo_LeavesItUnchanged()
     {
         var seen = new DateTimeOffset(2026, 10, 30, 8, 0, 0, TimeSpan.Zero);

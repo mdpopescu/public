@@ -63,7 +63,7 @@ public sealed class SqliteVideoStore : IVideoStore
 
     private const string LIST_BY_STATE = """
         SELECT v.id AS Id, v.channel_id AS ChannelId, v.youtube_id AS YouTubeId, v.title AS Title, v.state AS State,
-               v.attempts AS Attempts, v.last_reason AS LastReason, v.first_seen_at AS FirstSeenAt
+               v.attempts AS Attempts, v.last_reason AS LastReason, v.first_seen_at AS FirstSeenAt, v.published_on AS PublishedOn
         FROM videos v JOIN channels c ON c.id = v.channel_id
         WHERE v.state = @State AND c.removed = 0
         ORDER BY date(v.first_seen_at, 'localtime') DESC, v.published_on DESC, v.first_seen_ticks DESC, v.id DESC
@@ -83,7 +83,8 @@ public sealed class SqliteVideoStore : IVideoStore
         Enum.Parse<VideoState>(row.State),
         row.Attempts,
         row.LastReason,
-        StorageFormat.ParseMoment(row.FirstSeenAt));
+        StorageFormat.ParseMoment(row.FirstSeenAt),
+        row.PublishedOn is { } publishedOn ? StorageFormat.ParseDay(publishedOn) : null);
 
     private async Task ExecuteAsync(string sql, object parameters, CancellationToken cancellationToken)
     {
@@ -109,5 +110,7 @@ public sealed class SqliteVideoStore : IVideoStore
         public string? LastReason { get; set; }
 
         public string FirstSeenAt { get; set; } = "";
+
+        public string? PublishedOn { get; set; }
     }
 }

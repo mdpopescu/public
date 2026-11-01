@@ -15,6 +15,7 @@ public sealed class VideoProcessor : IVideoProcessor
     public async Task ProcessAsync(TrackedVideo video, ProcessingContext context, CancellationToken cancellationToken)
     {
         var channelName = context.Channels.TryGetValue(video.ChannelId, out var channel) ? channel.Name : "Unknown channel";
+        var day = await GetEntryDayAsync(video, cancellationToken).ConfigureAwait(false);
         var transcript = await GetTranscriptAsync(video.YouTubeId, cancellationToken).ConfigureAwait(false);
         var candidates = await dependencies.Entries.ListRecentDigestsAsync(RELATED_CANDIDATES, cancellationToken).ConfigureAwait(false);
 
@@ -27,7 +28,6 @@ public sealed class VideoProcessor : IVideoProcessor
         var opinion = await dependencies.Writer.WriteOpinionAsync(opinionRequest, cancellationToken).ConfigureAwait(false);
         var images = await dependencies.Images.CaptureAsync(video.YouTubeId, analysis.FrameTimes, cancellationToken).ConfigureAwait(false);
 
-        var day = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(video.FirstSeenAt, dependencies.Time.LocalTimeZone).DateTime);
         var sources = searchResults.Select(result => new WebSource(result.Title, result.Url)).ToList();
         var relatedIds = related.Select(candidate => candidate.Id).ToList();
         var entry = new NewEntry(video.Id, day, analysis.Headline, analysis.Tags, summary, opinion, sources, images, relatedIds);
@@ -37,6 +37,15 @@ public sealed class VideoProcessor : IVideoProcessor
     //
 
     private readonly VideoProcessorDependencies dependencies;
+
+    /// <summary>Asks for the exact publication date, because the date stored from a channel listing may be rounded.</summary>
+    private async Task<DateOnly> GetEntryDayAsync(TrackedVideo video, CancellationToken cancellationToken)
+    {
+        var details = await dependencies.Catalog.GetDetailsAsync(video.YouTubeId, cancellationToken).ConfigureAwait(false);
+        return details.PublishedOn
+            ?? video.PublishedOn
+            ?? DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(video.FirstSeenAt, dependencies.Time.LocalTimeZone).DateTime);
+    }
 
     private async Task<Transcript> GetTranscriptAsync(string youTubeId, CancellationToken cancellationToken)
     {
@@ -63,6 +72,7 @@ public sealed class VideoProcessor : IVideoProcessor
 
 /// <summary>The services needed to turn a video into an entry.</summary>
 public sealed record VideoProcessorDependencies(
+    IVideoCatalog Catalog,
     ICaptionSource Captions,
     ISpeechTranscriber Speech,
     IBriefingWriter Writer,

@@ -16,7 +16,7 @@ public sealed class RefreshRunTests
         channels = new FakeChannelStore();
         channels.Channels.Add(new Channel(1, "https://youtube.com/@one", "Channel One"));
         videos = new FakeVideoStore();
-        catalog = new FakeCatalog();
+        catalog = new FakeCatalog { UnknownVideosHaveNoDate = true };
         catalog.Feeds[1] = [[]];
         log = new FakeRefreshLog();
         setupMonitor = new FakeSetupMonitor();
@@ -31,7 +31,7 @@ public sealed class RefreshRunTests
     }
 
     [TestMethod]
-    public async Task ProducesAnEntryDatedByRetrievalNotPublication()
+    public async Task ProducesAnEntryDatedByRetrievalWhenThePublicationDateIsUnknown()
     {
         await AddPendingAsync("video");
 
@@ -315,7 +315,7 @@ public sealed class RefreshRunTests
     }
 
     [TestMethod]
-    public async Task EntryIsFiledUnderTheDayTheVideoWasDiscovered()
+    public async Task EntryWithoutAPublicationDateIsFiledUnderTheDayTheVideoWasDiscovered()
     {
         await AddPendingAsync("video");
         time.Advance(TimeSpan.FromDays(1));
@@ -323,6 +323,28 @@ public sealed class RefreshRunTests
         await RunAsync();
 
         Assert.AreEqual(new DateOnly(2026, 11, 2), entries.Added.Single().Day, "A backlog must not move a video to the day it finally got processed.");
+    }
+
+    [TestMethod]
+    public async Task EntryIsFiledUnderTheExactPublicationDateRatherThanTheRoundedListingDate()
+    {
+        await videos.AddAsync(new NewVideo(1, "video", "Title of video", VideoState.Pending, null, time.GetUtcNow(), new DateOnly(2026, 10, 19)), CancellationToken.None);
+        catalog.Details["video"] = new VideoDetails("Title of video", VideoAvailability.Eligible, new DateOnly(2026, 10, 14), null);
+
+        await RunAsync();
+
+        Assert.AreEqual(new DateOnly(2026, 10, 14), entries.Added.Single().Day, "The video page's date wins over the stored listing date and the discovery day.");
+    }
+
+    [TestMethod]
+    public async Task EntryFallsBackToTheStoredDateWhenTheExactDateCannotBeRead()
+    {
+        await videos.AddAsync(new NewVideo(1, "video", "Title of video", VideoState.Pending, null, time.GetUtcNow(), new DateOnly(2026, 10, 19)), CancellationToken.None);
+        catalog.Details["video"] = new VideoDetails("video", VideoAvailability.RecheckLater, null, "yt-dlp timed out.");
+
+        await RunAsync();
+
+        Assert.AreEqual(new DateOnly(2026, 10, 19), entries.Added.Single().Day, "A failed lookup must not move the video to the day it was discovered.");
     }
 
     [TestMethod]
@@ -381,7 +403,7 @@ public sealed class RefreshRunTests
     private RefreshRunner CreateSut(int? limit, IBriefingWriter? replacementWriter = null, IVideoDiscovery? discovery = null)
     {
         discovery ??= new VideoDiscovery(channels, videos, catalog, time);
-        var processor = new VideoProcessor(new VideoProcessorDependencies(captions, speech, replacementWriter ?? writer, search, images, entries, time));
+        var processor = new VideoProcessor(new VideoProcessorDependencies(catalog, captions, speech, replacementWriter ?? writer, search, images, entries, time));
         var dependencies = new RefreshDependencies(channels, videos, new FakeInterestStore(), log, setupMonitor, time);
         return new RefreshRunner(dependencies, discovery, processor, new RefreshLimits(limit));
     }

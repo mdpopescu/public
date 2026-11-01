@@ -37,7 +37,8 @@ public sealed record TrackedVideo(
     VideoState State,
     int Attempts,
     string? LastReason,
-    DateTimeOffset FirstSeenAt);
+    DateTimeOffset FirstSeenAt,
+    DateOnly? PublishedOn = null);
 
 /// <summary>A video that should get its first state in the store.</summary>
 public sealed record NewVideo(long ChannelId, string YouTubeId, string Title, VideoState State, string? Reason, DateTimeOffset FirstSeenAt, DateOnly? PublishedOn = null);
