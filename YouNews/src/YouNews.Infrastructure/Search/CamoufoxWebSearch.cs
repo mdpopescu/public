@@ -20,6 +20,7 @@ public sealed class CamoufoxWebSearch : IWebSearch
         from urllib.parse import parse_qs, quote_plus, urlparse
 
         from camoufox.async_api import AsyncCamoufox
+        from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 
         def unwrap(href):
@@ -32,8 +33,13 @@ public sealed class CamoufoxWebSearch : IWebSearch
         async def main(query):
             async with AsyncCamoufox(headless=True) as browser:
                 page = await browser.new_page()
-                await page.goto("https://html.duckduckgo.com/html/?q=" + quote_plus(query), wait_until="domcontentloaded")
+                await page.goto("https://html.duckduckgo.com/html/?q=" + quote_plus(query), wait_until="load")
                 results = []
+                try:
+                    await page.wait_for_selector(".result__a", timeout=15000)
+                except PlaywrightTimeoutError:
+                    print("[]")
+                    return
                 for item in await page.query_selector_all(".result"):
                     link = await item.query_selector(".result__a")
                     if link is None:
