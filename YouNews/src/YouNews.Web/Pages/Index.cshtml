@@ -5,11 +5,22 @@
     <section class="empty">
         <div class="empty-art" aria-hidden="true"></div>
         <h1>Nothing here yet</h1>
-        <p>YouNews has not collected any videos so far. Press Refresh and the first briefing will appear here when it is ready.</p>
-        <partial name="_RefreshControl" model="Model.Refresh" />
-        @if (!Model.HasChannels)
+        @if (Model.Refresh.IsRunning)
+        {
+            <p>YouNews is collecting your first videos, and the sidebar shows its progress. The first briefing will appear here when it is ready.</p>
+        }
+        else
+        {
+            <p>YouNews has not collected any videos so far. Press Refresh and the first briefing will appear here when it is ready.</p>
+            <partial name="_RefreshControl" model="Model.Refresh" />
+        }
+        @if (Model.ChannelCount == 0)
         {
             <p class="hint">You are not following any channels. <a asp-page="/Config">Add one on the Channels page</a>.</p>
+        }
+        else
+        {
+            <p class="hint">@Model.FollowingText <a asp-page="/Config">Manage channels</a></p>
         }
     </section>
 }

@@ -184,6 +184,43 @@ public sealed class DayPageTests
     }
 
     [TestMethod]
+    [DataRow(1, "Following 1 channel.")]
+    [DataRow(2, "Following 2 channels.")]
+    public async Task Home_WithNothingCollectedButChannels_LinksToChannelsAndSaysHowManyAreFollowed(int count, string expected)
+    {
+        for (var id = 1; id <= count; id++)
+            sut.Channels.Channels.Add(new Channel(id, "https://youtube.com/@channel" + id, "Channel " + id));
+
+        var html = await browser.GetStringAsync("/");
+
+        StringAssert.Contains(html, expected);
+        StringAssert.Contains(html, "href=\"/config\">Manage channels");
+    }
+
+    [TestMethod]
+    public async Task Home_WithNothingCollectedAndIdle_AsksForARefresh()
+    {
+        var html = await browser.GetStringAsync("/");
+
+        StringAssert.Contains(html, "Press Refresh");
+        StringAssert.Contains(html, "Refresh</button>");
+        Assert.DoesNotContain("collecting your first videos", html);
+    }
+
+    [TestMethod]
+    public async Task Home_WithNothingCollectedWhileRefreshing_SaysSoAndShowsProgressOnce()
+    {
+        sut.Refresh.Current = new RefreshProgress("Looking for new videos", 0, 0);
+
+        var html = await browser.GetStringAsync("/");
+
+        StringAssert.Contains(html, "collecting your first videos");
+        Assert.DoesNotContain("Press Refresh", html, "there is no button to press during a run");
+        Assert.DoesNotContain("Refresh</button>", html);
+        Assert.HasCount(2, html.Split("data-refresh-progress"), "refresh.js only updates the first progress block, so a second one would freeze:\n" + html);
+    }
+
+    [TestMethod]
     public async Task Pages_ShowToolProblemsInABanner()
     {
         sut.Tools.Problems.Add("yt-dlp 2026.07.04 is older than 2026.10.26");

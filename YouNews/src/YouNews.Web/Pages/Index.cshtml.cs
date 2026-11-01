@@ -7,9 +7,11 @@ namespace YouNews.Web.Pages;
 
 public sealed class IndexModel : DayPageModelBase
 {
+    public string FollowingText => ChannelCount == 1 ? "Following 1 channel." : $"Following {ChannelCount} channels.";
+
     public bool IsEmpty { get; private set; }
 
-    public bool HasChannels { get; private set; }
+    public int ChannelCount { get; private set; }
 
     public RefreshView Refresh { get; private set; } = new(false, "", 0, 0, 0);
 
@@ -29,7 +31,7 @@ public sealed class IndexModel : DayPageModelBase
             return await ShowDayAsync(days[0].Day, cancellationToken);
 
         IsEmpty = true;
-        HasChannels = (await channels.ListAsync(cancellationToken)).Count > 0;
+        ChannelCount = (await channels.ListAsync(cancellationToken)).Count;
         Refresh = refreshPresenter.Present(status.Current);
         ViewData["Title"] = "Welcome";
         return Page();
