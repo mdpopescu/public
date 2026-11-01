@@ -1,0 +1,16 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Registration</h1>
+    <p>
+        <form asp-page-handler="Register" method="post">
+            <label for="nickname">Nickname</label>
+            <input id="nickname" name="nickname" type="text"/>
+            <input type="submit" value="OK"/>
+        </form>
+    </p>
+</div>

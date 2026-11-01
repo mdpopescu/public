@@ -159,6 +159,8 @@ Public repository - CC-by-SA 3.0
 
 * WClone: clone a website into a local folder, rewriting URLs as needed.
 
+* WebChat: an IRC-like application that allows people to chat in rooms, but over the HTTP protocol (instead of IRC)
+
 * WebStore: Another implementation of an inventory management system, using an event store
 
 * WinFormsClock: drawing a clock using WinForms graphics
