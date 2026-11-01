@@ -48,7 +48,9 @@ public sealed class YouTubeLiveTests
 
         Assert.HasCount(2, feeds);
         Assert.IsGreaterThan(10, feeds[0].Count, $"videos feed had {feeds[0].Count} items");
-        Assert.IsTrue(feeds[0].All(id => id.Length == 11), string.Join(",", feeds[0].Take(5)));
+        Assert.IsTrue(feeds[0].All(video => video.YouTubeId.Length == 11), string.Join(",", feeds[0].Take(5)));
+        Assert.IsTrue(feeds[0].All(video => video.Details.PublishedOn is not null), "The listing must give a date for every video: " + string.Join(",", feeds[0].Take(5)));
+        Assert.IsTrue(feeds[0].Take(5).All(video => video.Details.Title != video.YouTubeId), "The listing must give titles: " + string.Join(",", feeds[0].Take(5)));
     }
 
     [TestMethod]

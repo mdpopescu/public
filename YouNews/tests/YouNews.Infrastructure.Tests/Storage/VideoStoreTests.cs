@@ -72,6 +72,46 @@ public class VideoStoreTests
     }
 
     [TestMethod]
+    public async Task ListByStateAsync_SameDay_MostRecentlyPublishedFirstAndUnknownDatesLast()
+    {
+        var seen = new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero);
+        await AddPendingAsync("unknown", seen.AddMinutes(3), null);
+        await AddPendingAsync("older", seen.AddMinutes(2), new DateOnly(2026, 10, 1));
+        await AddPendingAsync("newest", seen, new DateOnly(2026, 10, 29));
+        await AddPendingAsync("middle", seen.AddMinutes(1), new DateOnly(2026, 10, 15));
+
+        var order = (await sut.ListByStateAsync(VideoState.Pending, CancellationToken.None)).Select(v => v.YouTubeId).ToArray();
+
+        CollectionAssert.AreEqual(new[] { "newest", "middle", "older", "unknown" }, order);
+    }
+
+    [TestMethod]
+    public async Task ListByStateAsync_DifferentDays_LaterDiscoveryWinsOverNewerPublication()
+    {
+        var seen = new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero);
+        await AddPendingAsync("found-yesterday", seen, new DateOnly(2026, 10, 30));
+        await AddPendingAsync("found-today", seen.AddDays(1), new DateOnly(2026, 10, 2));
+
+        var order = (await sut.ListByStateAsync(VideoState.Pending, CancellationToken.None)).Select(v => v.YouTubeId).ToArray();
+
+        CollectionAssert.AreEqual(new[] { "found-today", "found-yesterday" }, order);
+    }
+
+    [TestMethod]
+    public async Task SetPublishedOnIfMissingAsync_FillsAGapButKeepsAKnownDate()
+    {
+        var seen = new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero);
+        await AddPendingAsync("gap", seen, null);
+        await AddPendingAsync("dated", seen, new DateOnly(2026, 10, 10));
+
+        await sut.SetPublishedOnIfMissingAsync("gap", new DateOnly(2026, 10, 20), CancellationToken.None);
+        await sut.SetPublishedOnIfMissingAsync("dated", new DateOnly(2026, 10, 25), CancellationToken.None);
+
+        var order = (await sut.ListByStateAsync(VideoState.Pending, CancellationToken.None)).Select(v => v.YouTubeId).ToArray();
+        CollectionAssert.AreEqual(new[] { "gap", "dated" }, order, "gap is now 20 October; dated must have stayed at 10 October, not moved to the 25th ahead of it.");
+    }
+
+    [TestMethod]
     public async Task ListByStateAsync_VideosOfRemovedChannel_AreLeftOut()
     {
         var (channel, _) = await fixture.AddChannelWithVideoAsync("2");
@@ -125,4 +165,7 @@ public class VideoStoreTests
     private SqliteVideoStore sut = null!;
     private SqliteChannelStore channels = null!;
     private long channelId;
+
+    private Task AddPendingAsync(string id, DateTimeOffset seen, DateOnly? publishedOn) =>
+        sut.AddAsync(new NewVideo(channelId, id, id, VideoState.Pending, null, seen, publishedOn), CancellationToken.None);
 }

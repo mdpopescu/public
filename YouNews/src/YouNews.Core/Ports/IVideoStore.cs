@@ -11,7 +11,13 @@ public interface IVideoStore
     /// <summary>Records a newly seen video. A video already known is left unchanged.</summary>
     Task AddAsync(NewVideo video, CancellationToken cancellationToken);
 
-    /// <summary>Lists videos in a state, newest first, leaving out those of channels no longer followed.</summary>
+    /// <summary>Records when a known video was published, unless that is already recorded.</summary>
+    Task SetPublishedOnIfMissingAsync(string youTubeId, DateOnly publishedOn, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Lists videos in a state, leaving out those of channels no longer followed. The most recently discovered day comes first,
+    /// and within a day the most recently published video. Videos without a known publication date come last in their day.
+    /// </summary>
     Task<IReadOnlyList<TrackedVideo>> ListByStateAsync(VideoState state, CancellationToken cancellationToken);
 
     /// <summary>Changes the state of a video and records why, without counting an attempt.</summary>

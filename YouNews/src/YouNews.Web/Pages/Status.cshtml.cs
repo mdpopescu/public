@@ -16,12 +16,12 @@ public sealed class StatusModel : PageModel
     {
         var current = status.Current;
         Response.Headers.CacheControl = "no-store";
-        return new JsonResult(new StatusResponse(current?.Activity ?? "", current?.VideosDone ?? 0, current?.VideosTotal ?? 0, current is not null));
+        return new JsonResult(new StatusResponse(current?.Activity ?? "", current?.VideosDone ?? 0, current?.VideosTotal ?? 0, current is not null, current?.Discovery ?? ""));
     }
 
     //
 
     private readonly IRefreshStatus status;
 
-    private sealed record StatusResponse(string Activity, int VideosDone, int VideosTotal, bool Running);
+    private sealed record StatusResponse(string Activity, int VideosDone, int VideosTotal, bool Running, string Discovery);
 }

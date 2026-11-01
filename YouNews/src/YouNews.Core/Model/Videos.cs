@@ -25,6 +25,9 @@ public enum VideoState
 /// <summary>What YouTube currently says about one video.</summary>
 public sealed record VideoDetails(string Title, VideoAvailability Availability, DateOnly? PublishedOn, string? Reason);
 
+/// <summary>A video as a channel listing shows it. YouTube rounds the age of older videos down, so the real date can be earlier than the one given.</summary>
+public sealed record FeedVideo(string YouTubeId, VideoDetails Details);
+
 /// <summary>A video the application has seen, with its processing state.</summary>
 public sealed record TrackedVideo(
     long Id,
@@ -37,4 +40,4 @@ public sealed record TrackedVideo(
     DateTimeOffset FirstSeenAt);
 
 /// <summary>A video that should get its first state in the store.</summary>
-public sealed record NewVideo(long ChannelId, string YouTubeId, string Title, VideoState State, string? Reason, DateTimeOffset FirstSeenAt);
+public sealed record NewVideo(long ChannelId, string YouTubeId, string Title, VideoState State, string? Reason, DateTimeOffset FirstSeenAt, DateOnly? PublishedOn = null);

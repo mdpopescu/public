@@ -31,7 +31,7 @@ public sealed class YtDlpVideoCatalog : IVideoCatalog
         return ReadChannel(result.StandardOutput, url);
     }
 
-    public async Task<IReadOnlyList<IReadOnlyList<string>>> ListVideoFeedsAsync(Channel channel, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<IReadOnlyList<FeedVideo>>> ListVideoFeedsAsync(Channel channel, CancellationToken cancellationToken)
     {
         var videos = await ListTabAsync(channel, "videos", cancellationToken).ConfigureAwait(false);
         var streams = await ListTabAsync(channel, "streams", cancellationToken).ConfigureAwait(false);
@@ -90,12 +90,31 @@ public sealed class YtDlpVideoCatalog : IVideoCatalog
         using var document = JsonDocument.Parse(json);
         var root = document.RootElement;
         var title = ReadString(root, "title") ?? youTubeId;
-        var publishedOn = ReadPublishedOn(root);
 
+        return ByLiveStatus(root, title);
+    }
+
+    private static VideoDetails ByLiveStatus(JsonElement root, string title)
+    {
+        var publishedOn = ReadPublishedOn(root);
         var liveStatus = ReadString(root, "live_status");
         return liveStatus is null or "not_live" or "was_live"
             ? new VideoDetails(title, VideoAvailability.Eligible, publishedOn, null)
             : new VideoDetails(title, VideoAvailability.RecheckLater, publishedOn, $"The video is not finished yet (live status: {liveStatus}).");
+    }
+
+    private static FeedVideo ReadFeedVideo(string line)
+    {
+        using var document = JsonDocument.Parse(line);
+        var root = document.RootElement;
+        var id = ReadString(root, "id") ?? throw new InvalidOperationException("yt-dlp listed a video without an ID.");
+        var title = ReadString(root, "title") ?? id;
+        var availability = ReadString(root, "availability");
+        var details = availability is "subscriber_only" or "premium_only" or "needs_auth" or "private"
+            ? new VideoDetails(title, VideoAvailability.PermanentlyUnavailable, ReadPublishedOn(root), $"YouTube does not show this video to everyone ({availability}).")
+            : ByLiveStatus(root, title);
+
+        return new FeedVideo(id, details);
     }
 
     private static DateOnly? ReadPublishedOn(JsonElement root)
@@ -113,13 +132,13 @@ public sealed class YtDlpVideoCatalog : IVideoCatalog
     private static string? ReadString(JsonElement root, string name) =>
         root.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.String ? value.GetString() : null;
 
-    private async Task<IReadOnlyList<string>?> ListTabAsync(Channel channel, string tab, CancellationToken cancellationToken)
+    private async Task<IReadOnlyList<FeedVideo>?> ListTabAsync(Channel channel, string tab, CancellationToken cancellationToken)
     {
         var url = $"{channel.Url.TrimEnd('/')}/{tab}";
-        var result = await ytDlp.RunAsync(["--flat-playlist", "--playlist-end", "200", "--print", "id", url], cancellationToken).ConfigureAwait(false);
+        var result = await ytDlp.RunAsync(["--flat-playlist", "--playlist-end", "200", "--extractor-args", "youtubetab:approximate_date", "--dump-json", url], cancellationToken).ConfigureAwait(false);
 
         return result.ExitCode != 0
             ? null
-            : result.StandardOutput.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            : result.StandardOutput.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(ReadFeedVideo).ToList();
     }
 }

@@ -7,9 +7,11 @@
     var activity = progress.querySelector('[data-refresh-activity]');
     var bar = progress.querySelector('[data-refresh-bar]');
     var count = progress.querySelector('[data-refresh-count]');
+    var discovery = progress.querySelector('[data-refresh-discovery]');
 
     function show(status) {
         activity.textContent = status.activity;
+        discovery.textContent = status.discovery;
         if (status.videosTotal > 0) {
             bar.classList.remove('busy');
             bar.style.width = Math.min(100, Math.round(status.videosDone * 100 / status.videosTotal)) + '%';

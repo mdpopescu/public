@@ -317,6 +317,16 @@ public sealed class DayPageTests
         Assert.AreEqual(5, json.GetProperty("videosTotal").GetInt32());
     }
 
+    [TestMethod]
+    public async Task Status_WhileDiscovering_ReportsWhatDiscoveryIsDoing()
+    {
+        sut.Refresh.Current = new RefreshProgress("Reading transcript", 2, 5, "Checking channel 3 of 23 (Locally), 7 new so far");
+
+        var json = await ReadStatusAsync();
+
+        Assert.AreEqual("Checking channel 3 of 23 (Locally), 7 new so far", json.GetProperty("discovery").GetString());
+    }
+
     //
 
     private TestApp sut = null!;

@@ -101,7 +101,7 @@ public sealed class FakeVideoCatalog : IVideoCatalog
         return Task.FromResult(Known.GetValueOrDefault(urlOrHandle));
     }
 
-    public Task<IReadOnlyList<IReadOnlyList<string>>> ListVideoFeedsAsync(Channel channel, CancellationToken cancellationToken) =>
+    public Task<IReadOnlyList<IReadOnlyList<FeedVideo>>> ListVideoFeedsAsync(Channel channel, CancellationToken cancellationToken) =>
         throw new NotSupportedException();
 
     public Task<VideoDetails> GetDetailsAsync(string youTubeId, CancellationToken cancellationToken) =>
@@ -116,6 +116,9 @@ public sealed class FakeVideoStore : IVideoStore
         throw new NotSupportedException();
 
     public Task AddAsync(NewVideo video, CancellationToken cancellationToken) => throw new NotSupportedException();
+
+    public Task SetPublishedOnIfMissingAsync(string youTubeId, DateOnly publishedOn, CancellationToken cancellationToken) =>
+        throw new NotSupportedException();
 
     public Task<IReadOnlyList<TrackedVideo>> ListByStateAsync(VideoState state, CancellationToken cancellationToken) =>
         Task.FromResult<IReadOnlyList<TrackedVideo>>(Videos.Where(video => video.State == state).ToList());

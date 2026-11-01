@@ -43,6 +43,22 @@ public class EntryStoreTests
     }
 
     [TestMethod]
+    public async Task ListForDayAsync_SameDay_MostRecentlyPublishedFirstWhateverOrderTheyWereProcessedIn()
+    {
+        var (_, older) = await fixture.AddChannelWithVideoAsync();
+        var (_, newer) = await fixture.AddChannelWithVideoAsync("2");
+        await videos.SetPublishedOnIfMissingAsync(older.YouTubeId, new DateOnly(2026, 10, 5), CancellationToken.None);
+        await videos.SetPublishedOnIfMissingAsync(newer.YouTubeId, new DateOnly(2026, 10, 29), CancellationToken.None);
+        var day = new DateOnly(2026, 10, 30);
+        await sut.AddAsync(Entry(newer.Id, day, "Newer"), CancellationToken.None);
+        await sut.AddAsync(Entry(older.Id, day, "Older"), CancellationToken.None);
+
+        var headlines = (await reader.ListForDayAsync(day, CancellationToken.None)).Select(entry => entry.Headline).ToArray();
+
+        CollectionAssert.AreEqual(new[] { "Newer", "Older" }, headlines);
+    }
+
+    [TestMethod]
     public async Task AddAsync_Entry_MarksVideoDoneAndClearsLastReason()
     {
         var (_, video) = await fixture.AddChannelWithVideoAsync();

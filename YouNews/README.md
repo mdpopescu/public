@@ -23,7 +23,7 @@ src\YouNews.Web\bin\Debug\net10.0\win-x64\YouNews.Web.exe
 
 Then open http://localhost:5080. In this command-line mode it refreshes once on launch and keeps serving until Ctrl+C. The Refresh button starts a run at any time.
 
-The first run processes a month of videos for each channel, newest first, which can take hours. To go gradually, set `YouNews:Refresh:MaximumVideosPerRun`: the remaining videos wait for the next run.
+The first run processes a month of videos for each channel, which can take many hours. Videos are processed while the channels are still being checked, always taking the most recently discovered day first and, within a day, the most recently published video. To go gradually, set `YouNews:Refresh:MaximumVideosPerRun`: the remaining videos wait for the next run.
 
 ## Configuration
 

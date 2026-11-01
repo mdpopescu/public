@@ -8,6 +8,9 @@ public sealed class VideoDiscovery : IVideoDiscovery
     public const int RECHECK_DAYS = 7;
     public const int LOOK_BACK_MONTHS = 1;
 
+    /// <summary>From this age YouTube's listing may say "1 month ago" for a video up to two months old, so the date must be confirmed.</summary>
+    public const int LISTING_DATE_TRUSTED_DAYS = 28;
+
     public VideoDiscovery(IChannelStore channels, IVideoStore videos, IVideoCatalog catalog, TimeProvider time)
     {
         this.channels = channels;
@@ -16,16 +19,19 @@ public sealed class VideoDiscovery : IVideoDiscovery
         this.time = time;
     }
 
-    public async Task<IReadOnlyList<string>> DiscoverAsync(CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<string>> DiscoverAsync(IDiscoveryListener listener, CancellationToken cancellationToken)
     {
         var problems = new List<string>();
-        await RecheckWaitingVideosAsync(problems, cancellationToken).ConfigureAwait(false);
+        await RecheckWaitingVideosAsync(problems, listener, cancellationToken).ConfigureAwait(false);
 
-        foreach (var channel in await channels.ListAsync(cancellationToken).ConfigureAwait(false))
+        var followed = await channels.ListAsync(cancellationToken).ConfigureAwait(false);
+        for (var index = 0; index < followed.Count; index++)
         {
+            var channel = followed[index];
+            listener.ChannelStarted(index + 1, followed.Count, channel.Name);
             try
             {
-                await DiscoverChannelAsync(channel, cancellationToken).ConfigureAwait(false);
+                await DiscoverChannelAsync(channel, listener, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception) when (exception is not OperationCanceledException || !cancellationToken.IsCancellationRequested)
             {
@@ -53,45 +59,83 @@ public sealed class VideoDiscovery : IVideoDiscovery
         };
     }
 
-    private async Task DiscoverChannelAsync(Channel channel, CancellationToken cancellationToken)
+    private static bool NeedsConfirming(VideoDetails listed, DateOnly today) =>
+        listed.Availability == VideoAvailability.Eligible
+        && (listed.PublishedOn is null || listed.PublishedOn <= today.AddDays(-LISTING_DATE_TRUSTED_DAYS));
+
+    private async Task DiscoverChannelAsync(Channel channel, IDiscoveryListener listener, CancellationToken cancellationToken)
     {
         var known = (await videos.GetKnownIdsAsync(channel.Id, cancellationToken).ConfigureAwait(false)).ToHashSet();
-        var cutoff = DateOnly.FromDateTime(time.GetLocalNow().DateTime).AddMonths(-LOOK_BACK_MONTHS);
+        var walk = new ChannelWalk(channel, known, DateOnly.FromDateTime(time.GetLocalNow().DateTime), listener);
 
         foreach (var feed in await catalog.ListVideoFeedsAsync(channel, cancellationToken).ConfigureAwait(false))
         {
-            await WalkFeedAsync(channel, feed, known, cutoff, cancellationToken).ConfigureAwait(false);
+            await WalkFeedAsync(walk, feed, cancellationToken).ConfigureAwait(false);
         }
     }
 
-    private async Task WalkFeedAsync(Channel channel, IReadOnlyList<string> feed, HashSet<string> known, DateOnly cutoff, CancellationToken cancellationToken)
+    /// <summary>
+    /// Walks down to the look-back cutoff rather than stopping at the first known video:
+    /// a run stopped partway through a channel leaves older videos behind the known ones, and the next run has to find them.
+    /// </summary>
+    private async Task WalkFeedAsync(ChannelWalk walk, IReadOnlyList<FeedVideo> feed, CancellationToken cancellationToken)
     {
-        foreach (var youTubeId in feed)
+        foreach (var listed in feed)
         {
-            if (known.Contains(youTubeId))
+            if (listed.Details.PublishedOn < walk.Cutoff)
             {
                 return;
             }
 
-            var details = await catalog.GetDetailsAsync(youTubeId, cancellationToken).ConfigureAwait(false);
-            if (details.PublishedOn < cutoff)
+            var carryOn = walk.Known.Contains(listed.YouTubeId)
+                ? await FillInPublishedOnAsync(walk, listed, cancellationToken).ConfigureAwait(false)
+                : await TryRecordAsync(walk, listed, cancellationToken).ConfigureAwait(false);
+            if (!carryOn)
             {
                 return;
             }
-
-            var video = new NewVideo(channel.Id, youTubeId, details.Title, InitialStateFor(details.Availability), details.Reason, time.GetUtcNow());
-            await videos.AddAsync(video, cancellationToken).ConfigureAwait(false);
-            known.Add(youTubeId);
         }
     }
 
-    private async Task RecheckWaitingVideosAsync(List<string> problems, CancellationToken cancellationToken)
+    private async Task<bool> FillInPublishedOnAsync(ChannelWalk walk, FeedVideo listed, CancellationToken cancellationToken)
+    {
+        if (listed.Details.PublishedOn is { } publishedOn && !NeedsConfirming(listed.Details, walk.Today))
+        {
+            await videos.SetPublishedOnIfMissingAsync(listed.YouTubeId, publishedOn, cancellationToken).ConfigureAwait(false);
+        }
+
+        return true;
+    }
+
+    private async Task<bool> TryRecordAsync(ChannelWalk walk, FeedVideo listed, CancellationToken cancellationToken)
+    {
+        var details = NeedsConfirming(listed.Details, walk.Today)
+            ? await catalog.GetDetailsAsync(listed.YouTubeId, cancellationToken).ConfigureAwait(false)
+            : listed.Details;
+        if (details.PublishedOn < walk.Cutoff)
+        {
+            return false;
+        }
+
+        var state = InitialStateFor(details.Availability);
+        var video = new NewVideo(walk.Channel.Id, listed.YouTubeId, details.Title, state, details.Reason, time.GetUtcNow(), details.PublishedOn);
+        await videos.AddAsync(video, cancellationToken).ConfigureAwait(false);
+        walk.Known.Add(listed.YouTubeId);
+        if (state == VideoState.Pending)
+        {
+            walk.Listener.VideoQueued();
+        }
+
+        return true;
+    }
+
+    private async Task RecheckWaitingVideosAsync(List<string> problems, IDiscoveryListener listener, CancellationToken cancellationToken)
     {
         foreach (var video in await videos.ListByStateAsync(VideoState.Recheck, cancellationToken).ConfigureAwait(false))
         {
             try
             {
-                await RecheckAsync(video, cancellationToken).ConfigureAwait(false);
+                await RecheckAsync(video, listener, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception exception) when (exception is not OperationCanceledException || !cancellationToken.IsCancellationRequested)
             {
@@ -100,7 +144,7 @@ public sealed class VideoDiscovery : IVideoDiscovery
         }
     }
 
-    private async Task RecheckAsync(TrackedVideo video, CancellationToken cancellationToken)
+    private async Task RecheckAsync(TrackedVideo video, IDiscoveryListener listener, CancellationToken cancellationToken)
     {
         var details = await catalog.GetDetailsAsync(video.YouTubeId, cancellationToken).ConfigureAwait(false);
         var expired = time.GetUtcNow() - video.FirstSeenAt > TimeSpan.FromDays(RECHECK_DAYS);
@@ -111,5 +155,14 @@ public sealed class VideoDiscovery : IVideoDiscovery
         }
 
         await videos.SetStateAsync(video.Id, state, details.Reason, cancellationToken).ConfigureAwait(false);
+        if (state == VideoState.Pending)
+        {
+            listener.VideoQueued();
+        }
+    }
+
+    private sealed record ChannelWalk(Channel Channel, HashSet<string> Known, DateOnly Today, IDiscoveryListener Listener)
+    {
+        public DateOnly Cutoff { get; } = Today.AddMonths(-LOOK_BACK_MONTHS);
     }
 }

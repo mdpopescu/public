@@ -81,5 +81,6 @@ public sealed class DatabaseMigrations : IDatabaseMigrations
             problem TEXT NULL
         );
         """,
+        "ALTER TABLE videos ADD COLUMN published_on TEXT NULL;",
     ];
 }

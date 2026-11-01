@@ -1,5 +1,6 @@
 using YouNews.Core.Model;
 using YouNews.Core.Ports;
+using YouNews.Core.Refresh;
 using YouNews.Core.Setup;
 
 namespace YouNews.Core.Tests.Refresh;
@@ -19,23 +20,53 @@ internal sealed class FakeVideoStore : IVideoStore
 {
     public List<TrackedVideo> Videos { get; } = [];
 
+    public Dictionary<string, DateOnly> PublishedOn { get; } = [];
+
     public bool FailRecordingFailures { get; set; }
+
+    /// <summary>Runs right after a video is added, on the discovery side of a run.</summary>
+    public Action<NewVideo>? OnAdded { get; set; }
 
     public Task<IReadOnlySet<string>> GetKnownIdsAsync(long channelId, CancellationToken cancellationToken)
     {
-        var known = Videos.Where(video => video.ChannelId == channelId).Select(video => video.YouTubeId).ToHashSet();
-        return Task.FromResult<IReadOnlySet<string>>(known);
+        lock (gate)
+        {
+            var known = Videos.Where(video => video.ChannelId == channelId).Select(video => video.YouTubeId).ToHashSet();
+            return Task.FromResult<IReadOnlySet<string>>(known);
+        }
     }
 
     public Task AddAsync(NewVideo video, CancellationToken cancellationToken)
     {
-        Videos.Add(new TrackedVideo(Videos.Count + 1, video.ChannelId, video.YouTubeId, video.Title, video.State, 0, video.Reason, video.FirstSeenAt));
+        lock (gate)
+        {
+            Videos.Add(new TrackedVideo(Videos.Count + 1, video.ChannelId, video.YouTubeId, video.Title, video.State, 0, video.Reason, video.FirstSeenAt));
+            if (video.PublishedOn is { } publishedOn)
+            {
+                PublishedOn[video.YouTubeId] = publishedOn;
+            }
+        }
+
+        OnAdded?.Invoke(video);
+        return Task.CompletedTask;
+    }
+
+    public Task SetPublishedOnIfMissingAsync(string youTubeId, DateOnly publishedOn, CancellationToken cancellationToken)
+    {
+        lock (gate)
+        {
+            PublishedOn.TryAdd(youTubeId, publishedOn);
+        }
+
         return Task.CompletedTask;
     }
 
     public Task<IReadOnlyList<TrackedVideo>> ListByStateAsync(VideoState state, CancellationToken cancellationToken)
     {
-        return Task.FromResult<IReadOnlyList<TrackedVideo>>(Videos.Where(video => video.State == state).ToList());
+        lock (gate)
+        {
+            return Task.FromResult<IReadOnlyList<TrackedVideo>>(Videos.Where(video => video.State == state).ToList());
+        }
     }
 
     public Task SetStateAsync(long videoId, VideoState state, string? reason, CancellationToken cancellationToken)
@@ -59,16 +90,36 @@ internal sealed class FakeVideoStore : IVideoStore
 
     //
 
+    private readonly Lock gate = new();
+
     private void Replace(long videoId, Func<TrackedVideo, TrackedVideo> change)
     {
-        var index = Videos.FindIndex(video => video.Id == videoId);
-        Videos[index] = change(Videos[index]);
+        lock (gate)
+        {
+            var index = Videos.FindIndex(video => video.Id == videoId);
+            Videos[index] = change(Videos[index]);
+        }
     }
+}
+
+internal sealed class FakeDiscoveryListener : IDiscoveryListener
+{
+    public List<string> Channels { get; } = [];
+
+    public int VideosQueued { get; private set; }
+
+    public void ChannelStarted(int position, int total, string channelName) => Channels.Add($"{position}/{total} {channelName}");
+
+    public void VideoQueued() => VideosQueued++;
 }
 
 internal sealed class FakeCatalog : IVideoCatalog
 {
+    /// <summary>Feeds that give only IDs, so discovery has to ask for the details of each video.</summary>
     public Dictionary<long, IReadOnlyList<IReadOnlyList<string>>> Feeds { get; } = [];
+
+    /// <summary>Feeds as a real listing gives them, with what YouTube shows for each video.</summary>
+    public Dictionary<long, IReadOnlyList<IReadOnlyList<FeedVideo>>> ListedFeeds { get; } = [];
 
     public Dictionary<string, VideoDetails> Details { get; } = [];
 
@@ -78,14 +129,22 @@ internal sealed class FakeCatalog : IVideoCatalog
 
     public Task<ChannelDetails?> ResolveChannelAsync(string urlOrHandle, CancellationToken cancellationToken) => throw new NotSupportedException();
 
-    public Task<IReadOnlyList<IReadOnlyList<string>>> ListVideoFeedsAsync(Channel channel, CancellationToken cancellationToken)
+    public Task<IReadOnlyList<IReadOnlyList<FeedVideo>>> ListVideoFeedsAsync(Channel channel, CancellationToken cancellationToken)
     {
         if (FailingChannels.Contains(channel.Id))
         {
             throw new InvalidOperationException("listing failed");
         }
 
-        return Task.FromResult(Feeds[channel.Id]);
+        if (ListedFeeds.TryGetValue(channel.Id, out var listed))
+        {
+            return Task.FromResult(listed);
+        }
+
+        IReadOnlyList<IReadOnlyList<FeedVideo>> idsOnly = Feeds[channel.Id]
+            .Select(feed => (IReadOnlyList<FeedVideo>)feed.Select(id => new FeedVideo(id, new VideoDetails(id, VideoAvailability.Eligible, null, null))).ToList())
+            .ToList();
+        return Task.FromResult(idsOnly);
     }
 
     public Task<VideoDetails> GetDetailsAsync(string youTubeId, CancellationToken cancellationToken)

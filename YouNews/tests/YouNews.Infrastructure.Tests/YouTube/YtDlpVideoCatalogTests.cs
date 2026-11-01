@@ -95,22 +95,44 @@ public sealed class YtDlpVideoCatalogTests
     [TestMethod]
     public async Task ListsVideosAndStreamsAsSeparateFeedsInOrder()
     {
-        runner.Behavior = call => new ProcessResult(0, call.Arguments[^1].EndsWith("/videos", StringComparison.Ordinal) ? "vid1\nvid2\n" : "live1\r\n", "");
+        runner.Behavior = call => new ProcessResult(0, call.Arguments[^1].EndsWith("/videos", StringComparison.Ordinal) ? "{\"id\":\"vid1\"}\n{\"id\":\"vid2\"}\n" : "{\"id\":\"live1\"}\r\n", "");
 
         var feeds = await sut.ListVideoFeedsAsync(Channel("https://www.youtube.com/@matthew_berman/"), CancellationToken.None);
 
-        CollectionAssert.AreEqual(new[] { "vid1", "vid2" }, feeds[0].ToArray());
-        CollectionAssert.AreEqual(new[] { "live1" }, feeds[1].ToArray());
+        CollectionAssert.AreEqual(new[] { "vid1", "vid2" }, feeds[0].Select(video => video.YouTubeId).ToArray());
+        CollectionAssert.AreEqual(new[] { "live1" }, feeds[1].Select(video => video.YouTubeId).ToArray());
         Assert.AreEqual("https://www.youtube.com/@matthew_berman/videos", runner.Invocations[0].Arguments[^1]);
         Assert.AreEqual("https://www.youtube.com/@matthew_berman/streams", runner.Invocations[1].Arguments[^1]);
         CollectionAssert.Contains(runner.Invocations[0].Arguments.ToList(), "200");
     }
 
     [TestMethod]
+    public async Task ListingGivesTitleDateAndAvailabilityOfEachVideo()
+    {
+        const string LISTING = """
+            {"id":"normal","title":"Normal video","upload_date":"20261030"}
+            {"id":"members","title":"Members video","upload_date":"20261029","availability":"subscriber_only"}
+            {"id":"upcoming","title":"Upcoming video","live_status":"is_upcoming"}
+            {"id":"past","title":"Past stream","upload_date":"20261025","live_status":"was_live"}
+            """;
+        runner.Behavior = call => new ProcessResult(0, call.Arguments[^1].EndsWith("/videos", StringComparison.Ordinal) ? LISTING : "", "");
+
+        var feed = (await sut.ListVideoFeedsAsync(Channel("https://www.youtube.com/@x"), CancellationToken.None))[0];
+
+        Assert.AreEqual(new VideoDetails("Normal video", VideoAvailability.Eligible, new DateOnly(2026, 10, 30), null), feed[0].Details);
+        Assert.AreEqual(VideoAvailability.PermanentlyUnavailable, feed[1].Details.Availability);
+        Assert.AreEqual("Members video", feed[1].Details.Title);
+        Assert.AreEqual(VideoAvailability.RecheckLater, feed[2].Details.Availability);
+        Assert.IsNull(feed[2].Details.PublishedOn);
+        Assert.AreEqual(VideoAvailability.Eligible, feed[3].Details.Availability);
+        CollectionAssert.Contains(runner.Invocations[0].Arguments.ToList(), "youtubetab:approximate_date");
+    }
+
+    [TestMethod]
     public async Task ChannelWithoutStreamsTabHasEmptySecondFeed()
     {
         runner.Behavior = call => call.Arguments[^1].EndsWith("/videos", StringComparison.Ordinal)
-            ? new ProcessResult(0, "vid1\n", "")
+            ? new ProcessResult(0, "{\"id\":\"vid1\"}\n", "")
             : new ProcessResult(1, "", "ERROR: [youtube:tab] This channel does not have a streams tab");
 
         var feeds = await sut.ListVideoFeedsAsync(Channel("https://www.youtube.com/@x"), CancellationToken.None);

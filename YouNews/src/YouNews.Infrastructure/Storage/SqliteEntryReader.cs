@@ -36,7 +36,7 @@ public sealed class SqliteEntryReader(ISqliteConnectionFactory factory) : IEntry
                                    SELECT e.id AS Id, e.day AS Day, c.name AS ChannelName, v.youtube_id AS VideoYouTubeId,
                                           e.headline AS Headline, e.summary AS Summary, e.opinion AS Opinion
                                    FROM entries e JOIN videos v ON v.id = e.video_id JOIN channels c ON c.id = v.channel_id
-                                   WHERE e.day = @Day ORDER BY e.id DESC
+                                   WHERE e.day = @Day ORDER BY v.published_on DESC, e.id DESC
                                    """;
 
     private readonly EntryParts parts = new();

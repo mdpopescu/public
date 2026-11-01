@@ -26,7 +26,7 @@ public sealed record EntryView(
 public sealed record DayLinkView(string Url, string Label, string CountText, string FullDate, bool IsCurrent);
 
 /// <summary>Either the Refresh button (not running) or a progress bar.</summary>
-public sealed record RefreshView(bool IsRunning, string Activity, int Done, int Total, int Percent);
+public sealed record RefreshView(bool IsRunning, string Activity, int Done, int Total, int Percent, string Discovery = "");
 
 public sealed record WaitingVideoView(string Title, string Url, string Reason, string Detail);
 

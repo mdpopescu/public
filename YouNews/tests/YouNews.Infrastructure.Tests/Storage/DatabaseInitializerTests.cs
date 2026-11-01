@@ -76,7 +76,7 @@ public class DatabaseInitializerTests
 
         await using var connection = await fixture.Factory.OpenAsync(CancellationToken.None);
         var versions = (await connection.QueryAsync<int>("SELECT version FROM schema_version")).ToList();
-        CollectionAssert.AreEqual(new[] { 1 }, versions, "version table should list each migration exactly once");
+        CollectionAssert.AreEqual(new[] { 1, 2 }, versions, "version table should list each migration exactly once");
     }
 
     [TestMethod]
@@ -89,7 +89,7 @@ public class DatabaseInitializerTests
 
         await using var connection = await fixture.Factory.OpenAsync(CancellationToken.None);
         var versions = (await connection.QueryAsync<int>("SELECT version FROM schema_version ORDER BY version")).ToList();
-        CollectionAssert.AreEqual(new[] { 1, 2 }, versions);
+        CollectionAssert.AreEqual(new[] { 1, 2, 3 }, versions);
         Assert.HasCount(1, (await new SqliteChannelStore(fixture.Factory).ListAsync(CancellationToken.None)), "upgrade must not seed again");
     }
 

@@ -53,6 +53,20 @@ public sealed class ListingPresenterTests
     }
 
     [TestMethod]
+    public void Refresh_WhileDiscovering_ShowsDiscoveryAlongsideTheVideo()
+    {
+        var view = new RefreshPresenter().Present(new RefreshProgress("Summarizing", 1, 4, "Checking channel 3 of 23 (Locally), 7 new so far"));
+
+        Assert.AreEqual("Checking channel 3 of 23 (Locally), 7 new so far", view.Discovery);
+    }
+
+    [TestMethod]
+    public void Refresh_AfterDiscovery_HasNoDiscoveryText()
+    {
+        Assert.AreEqual("", new RefreshPresenter().Present(new RefreshProgress("Summarizing", 1, 4)).Discovery);
+    }
+
+    [TestMethod]
     public void Refresh_RunningWithUnknownTotal_HasZeroPercent()
     {
         Assert.AreEqual(0, new RefreshPresenter().Present(new RefreshProgress("Starting", 0, 0)).Percent);

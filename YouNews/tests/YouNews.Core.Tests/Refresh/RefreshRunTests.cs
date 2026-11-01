@@ -205,6 +205,127 @@ public sealed class RefreshRunTests
     }
 
     [TestMethod]
+    public async Task AVideoIsProcessedWhileDiscoveryIsStillRunning()
+    {
+        var discoveryMayEnd = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var discovery = new ScriptedDiscovery(async listener =>
+        {
+            await videos.AddAsync(new NewVideo(1, "early", "Title of early", VideoState.Pending, null, time.GetUtcNow()), CancellationToken.None);
+            listener.VideoQueued();
+            await discoveryMayEnd.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        });
+        entries.OnAdded = videoId =>
+        {
+            videos.SetStateAsync(videoId, VideoState.Done, null, CancellationToken.None);
+            discoveryMayEnd.TrySetResult();
+        };
+        sut = CreateSut(limit: null, discovery: discovery);
+
+        await RunAsync();
+
+        Assert.HasCount(1, entries.Added, "Discovery only ends once the video is done, so a run that waits for discovery first would time out.");
+        Assert.IsNull(log.Runs.Single().Problem, log.Runs.Single().Problem);
+    }
+
+    [TestMethod]
+    public async Task AVideoFoundWhileTheOthersAreBeingProcessedIsTakenInStoreOrder()
+    {
+        await AddPendingAsync("waiting");
+        var discovery = new ScriptedDiscovery(_ => Task.CompletedTask);
+        sut = CreateSut(limit: null, discovery: discovery);
+        entries.OnAdded = videoId =>
+        {
+            videos.SetStateAsync(videoId, VideoState.Done, null, CancellationToken.None);
+            if (entries.Added.Count == 1)
+            {
+                videos.AddAsync(new NewVideo(1, "late", "Title of late", VideoState.Pending, null, time.GetUtcNow()), CancellationToken.None);
+            }
+        };
+
+        await RunAsync();
+
+        Assert.HasCount(2, entries.Added, "The store is asked again before every video, so the late one must not be missed.");
+    }
+
+    [TestMethod]
+    public async Task ConsumerWaitsForDiscoveryWhenTheQueueIsEmpty()
+    {
+        var discovery = new ScriptedDiscovery(async listener =>
+        {
+            await Task.Delay(50);
+            await videos.AddAsync(new NewVideo(1, "slow", "Title of slow", VideoState.Pending, null, time.GetUtcNow()), CancellationToken.None);
+            listener.VideoQueued();
+        });
+        sut = CreateSut(limit: null, discovery: discovery);
+
+        await RunAsync();
+
+        Assert.AreEqual(VideoState.Done, videos.Find("slow").State);
+    }
+
+    [TestMethod]
+    public async Task AFailedDiscoveryIsRecordedAndWaitingVideosStillRun()
+    {
+        await AddPendingAsync("video");
+        sut = CreateSut(limit: null, discovery: new ScriptedDiscovery(_ => throw new InvalidOperationException("no channels today")));
+
+        await RunAsync();
+
+        Assert.AreEqual(VideoState.Done, videos.Find("video").State);
+        StringAssert.Contains(log.Runs.Single().Problem!, "no channels today");
+    }
+
+    [TestMethod]
+    public async Task StoppingEndsBothSidesAndRecordsNoRun()
+    {
+        using var source = new CancellationTokenSource();
+        var discoverySawStop = false;
+        var discovery = new ScriptedDiscovery(async _ =>
+        {
+            // ReSharper disable AccessToDisposedClosure
+            await source.CancelAsync();
+            await Task.Delay(Timeout.Infinite, source.Token).ContinueWith(_ => discoverySawStop = true, TaskScheduler.Default);
+            source.Token.ThrowIfCancellationRequested();
+            // ReSharper restore AccessToDisposedClosure
+        });
+        sut = CreateSut(limit: null, discovery: discovery);
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => sut.ExecuteAsync(_ => { }, source.Token));
+
+        Assert.IsTrue(discoverySawStop);
+        Assert.IsEmpty(log.Runs);
+    }
+
+    [TestMethod]
+    public async Task ProgressShowsDiscoveryAlongsideTheVideoAndClearsItAtTheEnd()
+    {
+        var reported = new List<RefreshProgress>();
+        var discovery = new ScriptedDiscovery(listener =>
+        {
+            listener.ChannelStarted(3, 23, "Locally");
+            listener.VideoQueued();
+            return Task.CompletedTask;
+        });
+        sut = CreateSut(limit: null, discovery: discovery);
+
+        await sut.ExecuteAsync(reported.Add, CancellationToken.None);
+
+        Assert.IsTrue(reported.Exists(progress => progress.Discovery == "Checking channel 3 of 23 (Locally), 1 new so far"), string.Join(" | ", reported));
+        Assert.IsNull(reported[^1].Discovery);
+    }
+
+    [TestMethod]
+    public async Task EntryIsFiledUnderTheDayTheVideoWasDiscovered()
+    {
+        await AddPendingAsync("video");
+        time.Advance(TimeSpan.FromDays(1));
+
+        await RunAsync();
+
+        Assert.AreEqual(new DateOnly(2026, 11, 2), entries.Added.Single().Day, "A backlog must not move a video to the day it finally got processed.");
+    }
+
+    [TestMethod]
     public async Task AStoreFailureWhileRecordingAFailureDoesNotEndTheRun()
     {
         await AddPendingAsync("bad");
@@ -235,6 +356,15 @@ public sealed class RefreshRunTests
     private FakeEntryStore entries = null!;
     private RefreshRunner sut = null!;
 
+    private sealed class ScriptedDiscovery(Func<IDiscoveryListener, Task> script) : IVideoDiscovery
+    {
+        public async Task<IReadOnlyList<string>> DiscoverAsync(IDiscoveryListener listener, CancellationToken cancellationToken)
+        {
+            await script(listener);
+            return [];
+        }
+    }
+
     private sealed class CancellingWriter : IBriefingWriter
     {
         public Task<VideoAnalysis> AnalyzeAsync(string title, string channelName, Transcript transcript, IReadOnlyList<EntryDigest> candidates, CancellationToken cancellationToken)
@@ -248,9 +378,9 @@ public sealed class RefreshRunTests
         public Task<string> WriteOpinionAsync(OpinionRequest request, CancellationToken cancellationToken) => throw new NotSupportedException();
     }
 
-    private RefreshRunner CreateSut(int? limit, IBriefingWriter? replacementWriter = null)
+    private RefreshRunner CreateSut(int? limit, IBriefingWriter? replacementWriter = null, IVideoDiscovery? discovery = null)
     {
-        var discovery = new VideoDiscovery(channels, videos, catalog, time);
+        discovery ??= new VideoDiscovery(channels, videos, catalog, time);
         var processor = new VideoProcessor(new VideoProcessorDependencies(captions, speech, replacementWriter ?? writer, search, images, entries, time));
         var dependencies = new RefreshDependencies(channels, videos, new FakeInterestStore(), log, setupMonitor, time);
         return new RefreshRunner(dependencies, discovery, processor, new RefreshLimits(limit));

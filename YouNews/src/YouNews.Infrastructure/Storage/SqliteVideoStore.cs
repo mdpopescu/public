@@ -30,9 +30,13 @@ public sealed class SqliteVideoStore : IVideoStore
             video.Reason,
             FirstSeenAt = StorageFormat.ToText(video.FirstSeenAt),
             FirstSeenTicks = video.FirstSeenAt.UtcTicks,
+            PublishedOn = video.PublishedOn is { } publishedOn ? StorageFormat.ToText(publishedOn) : null,
         };
         await ExecuteAsync(INSERT, parameters, cancellationToken).ConfigureAwait(false);
     }
+
+    public Task SetPublishedOnIfMissingAsync(string youTubeId, DateOnly publishedOn, CancellationToken cancellationToken) =>
+        ExecuteAsync(SET_PUBLISHED_ON, new { YouTubeId = youTubeId, PublishedOn = StorageFormat.ToText(publishedOn) }, cancellationToken);
 
     public async Task<IReadOnlyList<TrackedVideo>> ListByStateAsync(VideoState state, CancellationToken cancellationToken)
     {
@@ -53,8 +57,8 @@ public sealed class SqliteVideoStore : IVideoStore
     private const string KNOWN_IDS = "SELECT youtube_id FROM videos WHERE channel_id = @ChannelId";
 
     private const string INSERT = """
-        INSERT OR IGNORE INTO videos (channel_id, youtube_id, title, state, last_reason, first_seen_at, first_seen_ticks)
-        VALUES (@ChannelId, @YouTubeId, @Title, @State, @Reason, @FirstSeenAt, @FirstSeenTicks)
+        INSERT OR IGNORE INTO videos (channel_id, youtube_id, title, state, last_reason, first_seen_at, first_seen_ticks, published_on)
+        VALUES (@ChannelId, @YouTubeId, @Title, @State, @Reason, @FirstSeenAt, @FirstSeenTicks, @PublishedOn)
         """;
 
     private const string LIST_BY_STATE = """
@@ -62,9 +66,10 @@ public sealed class SqliteVideoStore : IVideoStore
                v.attempts AS Attempts, v.last_reason AS LastReason, v.first_seen_at AS FirstSeenAt
         FROM videos v JOIN channels c ON c.id = v.channel_id
         WHERE v.state = @State AND c.removed = 0
-        ORDER BY v.first_seen_ticks DESC, v.id DESC
+        ORDER BY date(v.first_seen_at, 'localtime') DESC, v.published_on DESC, v.first_seen_ticks DESC, v.id DESC
         """;
 
+    private const string SET_PUBLISHED_ON = "UPDATE videos SET published_on = @PublishedOn WHERE youtube_id = @YouTubeId AND published_on IS NULL";
     private const string SET_STATE = "UPDATE videos SET state = @State, last_reason = @Reason WHERE id = @VideoId";
     private const string RECORD_FAILURE = "UPDATE videos SET attempts = attempts + 1, last_reason = @Reason WHERE id = @VideoId";
 

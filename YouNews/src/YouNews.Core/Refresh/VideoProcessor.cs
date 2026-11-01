@@ -27,7 +27,7 @@ public sealed class VideoProcessor : IVideoProcessor
         var opinion = await dependencies.Writer.WriteOpinionAsync(opinionRequest, cancellationToken).ConfigureAwait(false);
         var images = await dependencies.Images.CaptureAsync(video.YouTubeId, analysis.FrameTimes, cancellationToken).ConfigureAwait(false);
 
-        var day = DateOnly.FromDateTime(dependencies.Time.GetLocalNow().DateTime);
+        var day = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(video.FirstSeenAt, dependencies.Time.LocalTimeZone).DateTime);
         var sources = searchResults.Select(result => new WebSource(result.Title, result.Url)).ToList();
         var relatedIds = related.Select(candidate => candidate.Id).ToList();
         var entry = new NewEntry(video.Id, day, analysis.Headline, analysis.Tags, summary, opinion, sources, images, relatedIds);
