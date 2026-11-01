@@ -1,7 +1,17 @@
 
+.scratch/
+
 # Beads / Dolt files (added by bd init)
 .dolt/
 *.db
 .beads-credential-key
 .beads/proxieddb/
 *.gate.lock*
+
+# Build output and machine-specific settings
+bin/
+obj/
+_ReSharper.Caches/
+*.user
+.vs/
+appsettings.Local.json

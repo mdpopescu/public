@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+
+  <ItemGroup>
+    <PackageReference Include="MSTest" Version="4.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\YouNews.Core\YouNews.Core.csproj" />
+    <ProjectReference Include="..\..\src\YouNews.Infrastructure\YouNews.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

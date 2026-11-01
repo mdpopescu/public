@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/YouNews.Core/YouNews.Core.csproj" />
+    <Project Path="src/YouNews.Infrastructure/YouNews.Infrastructure.csproj" />
+    <Project Path="src/YouNews.Web/YouNews.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/YouNews.Core.Tests/YouNews.Core.Tests.csproj" />
+    <Project Path="tests/YouNews.Infrastructure.Tests/YouNews.Infrastructure.Tests.csproj" />
+    <Project Path="tests/YouNews.Web.Tests/YouNews.Web.Tests.csproj" />
+  </Folder>
+</Solution>
