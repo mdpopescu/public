@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - YouNews</title>
+    <link rel="stylesheet" href="~/site.css" asp-append-version="true" />
+</head>
+<body>
+<div class="shell">
+    @await Component.InvokeAsync("Sidebar", new { currentDay = ViewData["CurrentDay"] as DateOnly?, channelsCurrent = ViewData["Section"] as string == "channels" })
+    <main>
+        @await Component.InvokeAsync("Status", new { part = "Banner" })
+        @RenderBody()
+        @await Component.InvokeAsync("Status", new { part = "Footer" })
+    </main>
+</div>
+<script src="~/refresh.js" asp-append-version="true" defer></script>
+</body>
+</html>

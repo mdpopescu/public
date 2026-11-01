@@ -1,0 +1,15 @@
+@model SidebarView
+<nav class="side" aria-label="Days">
+    <a class="brand" href="/">YouNews</a>
+    <div class="days">
+        @foreach (var day in Model.Days)
+        {
+            <a class="day@(day.IsCurrent ? " on" : "")" href="@day.Url" title="@day.FullDate"@(day.IsCurrent ? " aria-current=page" : "")>
+                <span class="day-name">@day.Label</span>
+                <span class="day-count">@day.CountText</span>
+            </a>
+        }
+    </div>
+    <a class="channels@(Model.ChannelsCurrent ? " on" : "")" href="/config">Channels</a>
+    <partial name="_RefreshControl" model="Model.Refresh" />
+</nav>

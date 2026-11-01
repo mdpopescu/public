@@ -1,0 +1,23 @@
+@page "/"
+@model IndexModel
+@if (Model.IsEmpty)
+{
+    <section class="empty">
+        <div class="empty-art" aria-hidden="true"></div>
+        <h1>Nothing here yet</h1>
+        <p>YouNews has not collected any videos so far. Press Refresh and the first briefing will appear here when it is ready.</p>
+        <partial name="_RefreshControl" model="Model.Refresh" />
+        @if (!Model.HasChannels)
+        {
+            <p class="hint">You are not following any channels. <a href="/config">Add one on the Channels page</a>.</p>
+        }
+    </section>
+}
+else if (Model.NotFoundMessage is not null)
+{
+    <partial name="_NothingHere" model="Model.NotFoundMessage" />
+}
+else
+{
+    <partial name="_DayContent" model="Model" />
+}

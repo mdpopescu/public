@@ -1,0 +1,29 @@
+@model StatusView
+@if (Model.LastRunText is not null || Model.Waiting.Count > 0)
+{
+    <footer class="status">
+        @if (Model.LastRunText is not null)
+        {
+            <p>@Model.LastRunText</p>
+        }
+        @if (Model.LastRunProblem is not null)
+        {
+            <p class="status-problem">@Model.LastRunProblem</p>
+        }
+        @if (Model.Waiting.Count > 0)
+        {
+            <details>
+                <summary>Waiting to retry (@Model.Waiting.Count)</summary>
+                <ul>
+                    @foreach (var video in Model.Waiting)
+                    {
+                        <li>
+                            <a href="@video.Url" target="_blank" rel="noopener noreferrer">@video.Title</a>
+                            <span class="muted">(@video.Detail)</span>: @video.Reason
+                        </li>
+                    }
+                </ul>
+            </details>
+        }
+    </footer>
+}

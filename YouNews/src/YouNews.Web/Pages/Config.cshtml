@@ -1,0 +1,89 @@
+@page "/config"
+@model ConfigModel
+<h1>Channels and interests</h1>
+@if (Model.Message is not null)
+{
+    <p class="notice" role="status">@Model.Message</p>
+}
+
+<section class="panel">
+    <h2>Channels you follow</h2>
+    @if (Model.Channels.Count == 0)
+    {
+        <p class="muted">You are not following any channels yet.</p>
+    }
+    else
+    {
+        <ul class="channel-list">
+            @foreach (var channel in Model.Channels)
+            {
+                <li>
+                    <div>
+                        <strong>@channel.Name</strong>
+                        <a class="muted" href="@channel.Url" target="_blank" rel="noopener noreferrer">@channel.Url</a>
+                    </div>
+                    <form method="post" asp-page-handler="Remove" asp-route-id="@channel.Id">
+                        <button type="submit" class="btn quiet">Remove</button>
+                    </form>
+                </li>
+            }
+        </ul>
+    }
+    <form method="post" asp-page-handler="Add" class="add-form">
+        <label for="address">Add a channel</label>
+        <div class="row">
+            <input id="address" name="address" type="text" value="@Model.Address" placeholder="@@handle or https://www.youtube.com/@@handle" autocomplete="off" />
+            <button type="submit" class="btn">Add</button>
+        </div>
+        @if (Model.AddError is not null)
+        {
+            <p class="error" role="alert">@Model.AddError</p>
+        }
+    </form>
+</section>
+
+<section class="panel">
+    <h2>Interests</h2>
+    <p class="muted">One per line. The briefing uses these to decide what matters to you.</p>
+    <form method="post" asp-page-handler="Interests">
+        <textarea name="interestsText" rows="7">@Model.InterestsText</textarea>
+        <button type="submit" class="btn">Save interests</button>
+    </form>
+</section>
+
+<section class="panel">
+    <h2>Detected setup</h2>
+    @if (!Model.Setup.HasData)
+    {
+        <p class="muted">The AI server has not been checked yet. It is checked at the start of the next refresh.</p>
+    }
+    else
+    {
+        <dl class="setup">
+            <dt>Hardware</dt>
+            <dd>@Model.Setup.Hardware</dd>
+            <dt>Models</dt>
+            <dd>
+                @if (Model.Setup.Models.Count == 0)
+                {
+                    <span class="muted">none reported</span>
+                }
+                else
+                {
+                    <ul class="plain">
+                        @foreach (var name in Model.Setup.Models)
+                        {
+                            <li>@name</li>
+                        }
+                    </ul>
+                }
+            </dd>
+            <dt>Checked</dt>
+            <dd>@Model.Setup.CheckedAtText</dd>
+        </dl>
+        @if (Model.Setup.Warning is not null)
+        {
+            <p class="error">@Model.Setup.Warning</p>
+        }
+    }
+</section>

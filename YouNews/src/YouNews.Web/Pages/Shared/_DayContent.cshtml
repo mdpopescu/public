@@ -1,0 +1,6 @@
+@model DayPageModelBase
+<h1>@Model.Heading</h1>
+@foreach (var entry in Model.Entries)
+{
+    <partial name="_Story" model="entry" />
+}

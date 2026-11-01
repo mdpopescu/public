@@ -1,0 +1,13 @@
+@model StatusView
+@if (Model.ToolProblems.Count > 0)
+{
+    <section class="banner" role="alert">
+        <strong>Something needs fixing before new videos can be processed</strong>
+        <ul>
+            @foreach (var problem in Model.ToolProblems)
+            {
+                <li>@problem</li>
+            }
+        </ul>
+    </section>
+}

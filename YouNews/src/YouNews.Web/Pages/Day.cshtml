@@ -1,0 +1,10 @@
+@page "/day/{date}"
+@model DayModel
+@if (Model.NotFoundMessage is not null)
+{
+    <partial name="_NothingHere" model="Model.NotFoundMessage" />
+}
+else
+{
+    <partial name="_DayContent" model="Model" />
+}

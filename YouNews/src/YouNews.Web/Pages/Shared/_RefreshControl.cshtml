@@ -1,0 +1,16 @@
+@model RefreshView
+@if (Model.IsRunning)
+{
+    <div class="progress" data-refresh-progress role="status">
+        <div class="progress-text" data-refresh-activity>@Model.Activity</div>
+        <div class="progress-track"><div class="progress-bar@(Model.Total == 0 ? " busy" : "")" data-refresh-bar style="width:@(Model.Total == 0 ? 100 : Model.Percent)%"></div></div>
+        <div class="progress-count" data-refresh-count>@(Model.Total > 0 ? $"{Model.Done} of {Model.Total} videos" : "")</div>
+    </div>
+}
+else
+{
+    <form method="post" asp-page="/Refresh">
+        <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+        <button type="submit" class="btn">&#8635; Refresh</button>
+    </form>
+}

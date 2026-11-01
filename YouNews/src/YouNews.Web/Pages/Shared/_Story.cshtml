@@ -1,0 +1,88 @@
+@model EntryView
+<article class="story@(Model.IsOffTopic ? " off-topic" : "")" id="@Model.AnchorId">
+    <div class="media">
+        <div class="art @Model.ArtClass">
+            @if (Model.MainImageUrl is not null)
+            {
+                <img src="@Model.MainImageUrl" alt="" loading="lazy" onerror="this.style.display='none'" />
+            }
+        </div>
+        @if (Model.FrameUrls.Count > 0)
+        {
+            <div class="frames">
+                @foreach (var frame in Model.FrameUrls)
+                {
+                    <img src="@frame" alt="" loading="lazy" onerror="this.style.display='none'" />
+                }
+            </div>
+        }
+    </div>
+    <div class="body">
+        <div class="tags">
+            @foreach (var tag in Model.Tags)
+            {
+                <span class="tag @tag.CssClass">@tag.Text</span>
+            }
+        </div>
+        <h2>@Model.Headline</h2>
+        <div class="meta">
+            <span>@Model.ChannelName</span>
+            <a href="@Model.VideoUrl" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
+        </div>
+        @if (Model.SummaryParagraphs.Count > 0)
+        {
+            <div class="prose summary">
+                @foreach (var paragraph in Model.SummaryParagraphs)
+                {
+                    <p>@paragraph</p>
+                }
+            </div>
+        }
+        @if (Model.OpinionParagraphs.Count > 0 && Model.IsOffTopic)
+        {
+            <details class="opinion">
+                <summary>Opinion</summary>
+                <div class="prose">
+                    @foreach (var paragraph in Model.OpinionParagraphs)
+                    {
+                        <p>@paragraph</p>
+                    }
+                </div>
+            </details>
+        }
+        else if (Model.OpinionParagraphs.Count > 0)
+        {
+            <section class="opinion">
+                <h3>Opinion</h3>
+                <div class="prose">
+                    @foreach (var paragraph in Model.OpinionParagraphs)
+                    {
+                        <p>@paragraph</p>
+                    }
+                </div>
+            </section>
+        }
+        @if (Model.Sources.Count > 0)
+        {
+            <div class="sources">
+                <span class="label">Sources checked</span>
+                <ul>
+                    @foreach (var source in Model.Sources)
+                    {
+                        <li><a href="@source.Url" target="_blank" rel="noopener noreferrer">@source.Title</a></li>
+                    }
+                </ul>
+            </div>
+        }
+        @if (Model.Related.Count > 0)
+        {
+            <div class="related">
+                <span class="label">Related:</span>
+                @foreach (var link in Model.Related)
+                {
+                    <a href="@link.Url">@link.Text</a>
+                }
+            </div>
+        }
+    </div>
+</article>
