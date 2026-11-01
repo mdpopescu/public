@@ -5,6 +5,7 @@ using YouNews.Core.Ports;
 using YouNews.Infrastructure.Processes;
 using YouNews.Infrastructure.Search;
 using YouNews.Infrastructure.Server;
+using YouNews.Infrastructure.Speech;
 using YouNews.Infrastructure.Storage;
 using YouNews.Infrastructure.YouTube;
 
@@ -20,6 +21,7 @@ public static class InfrastructureBootstrapper
         AddYouTube(services);
         AddServerInspection(services);
         AddSearch(services);
+        AddSpeech(services);
         return services;
     }
 
@@ -69,5 +71,13 @@ public static class InfrastructureBootstrapper
             provider.GetRequiredService<SearxngWebSearch>(),
             provider.GetRequiredService<CamoufoxWebSearch>(),
             provider.GetRequiredService<IOptions<YouNewsOptions>>()));
+    }
+
+    private static void AddSpeech(IServiceCollection services)
+    {
+        services.AddHttpClient(SpeechModelStore.HTTP_CLIENT_NAME, client => client.Timeout = Timeout.InfiniteTimeSpan);
+        services.AddSingleton<ISpeechModelStore, SpeechModelStore>();
+        services.AddSingleton<ISpeechRecognizer, SherpaSpeechRecognizer>();
+        services.AddSingleton<ISpeechTranscriber, ParakeetSpeechTranscriber>();
     }
 }
