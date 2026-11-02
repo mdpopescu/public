@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+    <File Path="scripts/Install-Service.ps1" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/YouNews.Core/YouNews.Core.csproj" />
     <Project Path="src/YouNews.Infrastructure/YouNews.Infrastructure.csproj" />
