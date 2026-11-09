@@ -31,7 +31,7 @@ public sealed partial class Json3Parser
         if (text.Length == 0)
             return null;
 
-        var startMilliseconds = caption.TryGetProperty("tStartMs", out var start) ? start.GetInt64() : 0;
+        var startMilliseconds = caption.TryGetProperty("tStartMs", out var start) && start.ValueKind == JsonValueKind.Number ? start.GetInt64() : 0;
         return new TranscriptSegment(TimeSpan.FromMilliseconds(startMilliseconds), text);
     }
 

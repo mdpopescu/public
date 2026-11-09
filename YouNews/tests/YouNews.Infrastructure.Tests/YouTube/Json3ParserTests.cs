@@ -42,4 +42,15 @@ public sealed class Json3ParserTests
 
         Assert.IsEmpty(segments);
     }
+
+    [TestMethod]
+    public void EventWithANullStartIsReadFromTheBeginning()
+    {
+        var sut = new Json3Parser();
+
+        var segments = sut.Parse("""{"events":[{"tStartMs":null,"segs":[{"utf8":"no start"}]}]}""");
+
+        Assert.AreEqual(TimeSpan.Zero, segments.Single().Start);
+        Assert.AreEqual("no start", segments.Single().Text);
+    }
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using YouNews.Core.Model;
 using YouNews.Core.Ports;
 
@@ -157,6 +158,7 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
 
     private sealed record QueueOutcome(int Completed, int Failed, string? Problem);
 
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     private enum VideoOutcome
     {
         Completed,
