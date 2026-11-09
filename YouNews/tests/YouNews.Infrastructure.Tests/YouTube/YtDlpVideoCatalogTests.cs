@@ -129,6 +129,22 @@ public sealed class YtDlpVideoCatalogTests
     }
 
     [TestMethod]
+    public async Task ListedUpcomingStreamWithNullTimestampHasNoPublishDate()
+    {
+        const string LISTING = """
+            {"id":"upcoming","title":"Upcoming stream","duration":null,"timestamp":null,"upload_date":null,"live_status":"is_upcoming","availability":null}
+            {"id":"normal","title":"Normal","timestamp":1793491200}
+            """;
+        runner.Behavior = call => new ProcessResult(0, call.Arguments[^1].EndsWith("/streams", StringComparison.Ordinal) ? LISTING : "{\"id\":\"vid1\"}\n", "");
+
+        var feeds = await sut.ListVideoFeedsAsync(Channel("https://www.youtube.com/@x"), CancellationToken.None);
+
+        Assert.AreEqual(VideoAvailability.RecheckLater, feeds[1][0].Details.Availability);
+        Assert.IsNull(feeds[1][0].Details.PublishedOn);
+        Assert.AreEqual(new DateOnly(2026, 11, 1), feeds[1][1].Details.PublishedOn);
+    }
+
+    [TestMethod]
     public async Task ChannelWithoutStreamsTabHasEmptySecondFeed()
     {
         runner.Behavior = call => call.Arguments[^1].EndsWith("/videos", StringComparison.Ordinal)

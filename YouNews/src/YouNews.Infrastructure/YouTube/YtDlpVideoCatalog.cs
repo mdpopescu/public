@@ -123,7 +123,7 @@ public sealed class YtDlpVideoCatalog : IVideoCatalog
         if (uploadDate != null && DateOnly.TryParseExact(uploadDate, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
             return date;
 
-        if (root.TryGetProperty("timestamp", out var timestamp) && timestamp.TryGetInt64(out var seconds))
+        if (root.TryGetProperty("timestamp", out var timestamp) && timestamp.ValueKind == JsonValueKind.Number && timestamp.TryGetInt64(out var seconds))
             return DateOnly.FromDateTime(DateTimeOffset.FromUnixTimeSeconds(seconds).UtcDateTime);
 
         return null;
