@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using YouNews.Core.Ports;
 using YouNews.Infrastructure.Processes;
 
 namespace YouNews.Infrastructure.YouTube;
@@ -34,7 +35,8 @@ public sealed class YouTubeAudioDownloader : IAudioDownloader
             return audio;
 
         DeleteFiles(prefix);
-        throw new InvalidOperationException($"yt-dlp could not download the audio of {youTubeId}: {result.StandardError.Trim()}");
+        var message = $"yt-dlp could not download the audio of {youTubeId}: {result.StandardError.Trim()}";
+        throw YtDlpRunner.IsRateLimited(result) ? new RateLimitedException(message) : new InvalidOperationException(message);
     }
 
     //

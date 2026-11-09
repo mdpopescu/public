@@ -1,3 +1,4 @@
+using YouNews.Core.Ports;
 using YouNews.Infrastructure.Processes;
 using YouNews.Infrastructure.YouTube;
 
@@ -83,6 +84,21 @@ public sealed class YouTubeAudioDownloaderTests
 
         Assert.Contains("zhnJo7s91ls", exception.Message);
         Assert.Contains("Sign in to confirm you are not a bot", exception.Message);
+        Assert.IsEmpty(environment.WorkFiles(), string.Join(", ", environment.WorkFiles()));
+    }
+
+    [TestMethod]
+    public async Task RateLimitedDownloadThrowsRateLimitedAndDeletesPartialFiles()
+    {
+        runner.Behavior = invocation =>
+        {
+            WriteFiles(invocation, "m4a.part");
+            return new ProcessResult(1, "", "ERROR: unable to download video data: HTTP Error 429: Too Many Requests\n");
+        };
+
+        var exception = await Assert.ThrowsExactlyAsync<RateLimitedException>(() => sut.DownloadAudioAsync("zhnJo7s91ls", CancellationToken.None));
+
+        Assert.Contains("zhnJo7s91ls", exception.Message);
         Assert.IsEmpty(environment.WorkFiles(), string.Join(", ", environment.WorkFiles()));
     }
 
