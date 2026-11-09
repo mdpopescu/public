@@ -93,7 +93,7 @@ public sealed class BriefingPrompts
         "{{EntryTags.INDUSTRY}}": AI companies, products, funding, hosted services.
         "{{EntryTags.OFF_TOPIC}}": use this alone, and only if none of the others fits.
 
-        frameTimes: 0 to 2 times in whole seconds from the start of the video, taken from the timestamps ([12:34] is 754). Pick moments where the speaker is showing something visual: a chart, a benchmark, a product, a demo ("as you can see", "this graph"). Use an empty list if there are none.
+        frameTimes: 0 to 2 times in whole seconds from the start of the video, taken from the timestamps and written as plain numbers: [12:34] is 754, never 12:34. Pick moments where the speaker is showing something visual: a chart, a benchmark, a product, a demo ("as you can see", "this graph"). Use an empty list if there are none.
 
         relatedEntryIds: IDs from the earlier entries about the same model, company, bill, or story. Only use IDs that appear in that list. Empty list if none is really related.
 

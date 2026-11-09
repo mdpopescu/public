@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using YouNews.Core.Model;
 
 namespace YouNews.Core.Briefing;
@@ -36,7 +37,12 @@ public sealed class AnalysisParser
 
     private static readonly JsonReaderOptions READER_OPTIONS = new() { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip };
 
-    private static JsonDocument? ReadFirstObject(string response)
+    private static readonly Regex BARE_TIMESTAMP = new(@"(?<=[\[,]\s*)\d+(:\d{2}){1,2}(?=\s*[,\]])");
+
+    private static JsonDocument? ReadFirstObject(string response) =>
+        ReadFirstObjectExactly(response) ?? ReadFirstObjectExactly(BARE_TIMESTAMP.Replace(response, "\"$&\""));
+
+    private static JsonDocument? ReadFirstObjectExactly(string response)
     {
         for (var start = response.IndexOf('{'); start >= 0; start = response.IndexOf('{', start + 1))
         {
@@ -126,11 +132,23 @@ public sealed class AnalysisParser
             {
                 yield return item.GetDouble();
             }
-            else if (item.ValueKind == JsonValueKind.String && double.TryParse(item.GetString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var number))
+            else if (item.ValueKind == JsonValueKind.String && TryParseSeconds(item.GetString()!, out var number))
             {
                 yield return number;
             }
         }
+    }
+
+    private static bool TryParseSeconds(string text, out double seconds)
+    {
+        if (double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out seconds))
+        {
+            return true;
+        }
+
+        var parsed = TimeSpan.TryParseExact(text.Trim(), ["m\\:ss", "h\\:mm\\:ss"], CultureInfo.InvariantCulture, out var time);
+        seconds = time.TotalSeconds;
+        return parsed;
     }
 
     private static IEnumerable<JsonElement> ReadItems(JsonElement root, string name)

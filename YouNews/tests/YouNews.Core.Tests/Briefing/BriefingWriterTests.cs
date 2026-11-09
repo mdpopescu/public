@@ -76,6 +76,23 @@ public sealed class BriefingWriterTests
     }
 
     [TestMethod]
+    public async Task FrameTimesWrittenAsBareTimestampsAreAccepted()
+    {
+        var model = new ScriptedLanguageModel("""
+            ```json
+            {"headline": "A headline", "tags": ["research"], "frameTimes": [0:12, 0:20], "relatedEntryIds": [], "searchQueries": []}
+            ```
+            """);
+        var sut = CreateWriter(model);
+
+        var result = await sut.AnalyzeAsync("A title", "A channel", TranscriptBuilder.WithWords(100), [], CancellationToken.None);
+
+        Assert.AreEqual("A headline", result.Headline);
+        CollectionAssert.AreEqual(new[] { TimeSpan.FromSeconds(12), TimeSpan.FromSeconds(20) }, result.FrameTimes.ToList());
+        Assert.HasCount(1, model.Calls, "The reply is recoverable, so it needs no retry.");
+    }
+
+    [TestMethod]
     public async Task AnalysisAcceptsFencedJsonWithSurroundingText()
     {
         var model = new ScriptedLanguageModel("""
