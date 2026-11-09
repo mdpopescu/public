@@ -1,10 +1,14 @@
 using YouNews.Core.Model;
+using YouNews.Core.Ports;
 
 namespace YouNews.Core.Refresh;
 
 public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscovery discovery, IVideoProcessor processor, RefreshLimits limits)
     : IRefreshRun
 {
+    /// <summary>A video that has failed this many times is given up on, so that a broken one is not retried forever.</summary>
+    public const int MAXIMUM_ATTEMPTS = 15;
+
     public async Task ExecuteAsync(Action<RefreshProgress> reportProgress, CancellationToken cancellationToken)
     {
         var startedAt = dependencies.Time.GetUtcNow();
@@ -20,15 +24,18 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
         // ReSharper disable once AccessToDisposedClosure
         var discovering = Task.Run(() => DiscoverAsync(activity, discoveryStop.Token), CancellationToken.None);
 
-        var (completed, failed) = await ProcessAlongsideDiscoveryAsync(activity, context, new RunningDiscovery(discovering, discoveryStop), cancellationToken).ConfigureAwait(false);
+        var outcome = await ProcessAlongsideDiscoveryAsync(activity, context, new RunningDiscovery(discovering, discoveryStop), cancellationToken).ConfigureAwait(false);
         var problems = await discovering.ConfigureAwait(false);
 
-        var problem = problems.Count == 0 ? null : string.Join(" ", problems);
-        var finished = new RefreshRun(startedAt, dependencies.Time.GetUtcNow(), completed, failed, problem);
+        IReadOnlyList<string> allProblems = outcome.Problem is null ? problems : [.. problems, outcome.Problem];
+        var problem = allProblems.Count == 0 ? null : string.Join(" ", allProblems);
+        var finished = new RefreshRun(startedAt, dependencies.Time.GetUtcNow(), outcome.Completed, outcome.Failed, problem);
         await dependencies.Log.RecordAsync(finished, cancellationToken).ConfigureAwait(false);
     }
 
     //
+
+    private const string RATE_LIMIT_PROBLEM = "Stopped processing videos because YouTube's rate limit was reached; the rest wait for the next run.";
 
     private async Task<IReadOnlyList<string>> DiscoverAsync(RefreshActivity activity, CancellationToken cancellationToken)
     {
@@ -46,7 +53,7 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
         }
     }
 
-    private async Task<(int Completed, int Failed)> ProcessAlongsideDiscoveryAsync(
+    private async Task<QueueOutcome> ProcessAlongsideDiscoveryAsync(
         RefreshActivity activity,
         ProcessingContext context,
         RunningDiscovery running,
@@ -67,8 +74,9 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
     /// <summary>
     ///     The consumer side. The store is the queue, and it is asked again before every video,
     ///     so a video discovered a moment ago still goes ahead of older ones already waiting.
+    ///     YouTube's rate limit ends it early: every further request would only be refused and keep the limit in place.
     /// </summary>
-    private async Task<(int Completed, int Failed)> ProcessQueueAsync(RefreshActivity activity, ProcessingContext context, CancellationToken cancellationToken)
+    private async Task<QueueOutcome> ProcessQueueAsync(RefreshActivity activity, ProcessingContext context, CancellationToken cancellationToken)
     {
         var tried = new HashSet<long>();
         var completed = 0;
@@ -78,11 +86,15 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
             if (next is null)
                 break;
 
+            var outcome = await TryProcessAsync(next, context, cancellationToken).ConfigureAwait(false);
+            if (outcome == VideoOutcome.RateLimited)
+                return new QueueOutcome(completed, tried.Count - completed, RATE_LIMIT_PROBLEM);
+
             tried.Add(next.Id);
-            completed += await TryProcessAsync(next, context, cancellationToken).ConfigureAwait(false) ? 1 : 0;
+            completed += outcome == VideoOutcome.Completed ? 1 : 0;
         }
 
-        return (completed, tried.Count - completed);
+        return new QueueOutcome(completed, tried.Count - completed, null);
     }
 
     /// <summary>
@@ -109,17 +121,21 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
 
     private int TotalFor(int videos) => limits.MaximumVideosPerRun is { } maximum ? Math.Min(maximum, videos) : videos;
 
-    private async Task<bool> TryProcessAsync(TrackedVideo video, ProcessingContext context, CancellationToken cancellationToken)
+    private async Task<VideoOutcome> TryProcessAsync(TrackedVideo video, ProcessingContext context, CancellationToken cancellationToken)
     {
         try
         {
             await processor.ProcessAsync(video, context, cancellationToken).ConfigureAwait(false);
-            return true;
+            return VideoOutcome.Completed;
+        }
+        catch (RateLimitedException)
+        {
+            return VideoOutcome.RateLimited;
         }
         catch (Exception exception) when (exception is not OperationCanceledException || !cancellationToken.IsCancellationRequested)
         {
             await TryRecordFailureAsync(video, exception.Message, cancellationToken).ConfigureAwait(false);
-            return false;
+            return VideoOutcome.Failed;
         }
     }
 
@@ -128,6 +144,8 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
         try
         {
             await dependencies.Videos.RecordFailureAsync(video.Id, reason, cancellationToken).ConfigureAwait(false);
+            if (video.Attempts + 1 >= MAXIMUM_ATTEMPTS)
+                await dependencies.Videos.SetStateAsync(video.Id, VideoState.GaveUp, reason, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
@@ -136,4 +154,13 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
     }
 
     private sealed record RunningDiscovery(Task Finished, CancellationTokenSource Stop);
+
+    private sealed record QueueOutcome(int Completed, int Failed, string? Problem);
+
+    private enum VideoOutcome
+    {
+        Completed,
+        Failed,
+        RateLimited,
+    }
 }

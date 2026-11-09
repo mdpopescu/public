@@ -370,6 +370,63 @@ public sealed class RefreshRunTests
         Assert.AreEqual(1, log.Runs.Single().Failed);
     }
 
+    [TestMethod]
+    public async Task RateLimitStopsTheRunWithoutCountingAnAttempt()
+    {
+        await AddPendingAsync("first");
+        await AddPendingAsync("limited");
+        await AddPendingAsync("third");
+        captions.RateLimitedIds.Add("limited");
+
+        await RunAsync();
+
+        Assert.AreEqual(VideoState.Done, videos.Find("first").State);
+        foreach (var id in new[] { "limited", "third" })
+        {
+            var video = videos.Find(id);
+            Assert.AreEqual(VideoState.Pending, video.State, id);
+            Assert.AreEqual(0, video.Attempts, $"{id}: being rate-limited is not the video's fault.");
+        }
+
+        var run = log.Runs.Single();
+        Assert.AreEqual(1, run.Completed);
+        Assert.AreEqual(0, run.Failed);
+        StringAssert.Contains(run.Problem!, "rate limit", run.Problem);
+    }
+
+    [TestMethod]
+    public async Task RateLimitProblemIsRecordedAlongsideChannelProblems()
+    {
+        catalog.FailingChannels.Add(1);
+        await AddPendingAsync("limited");
+        captions.RateLimitedIds.Add("limited");
+
+        await RunAsync();
+
+        var problem = log.Runs.Single().Problem!;
+        StringAssert.Contains(problem, "Channel One", problem);
+        StringAssert.Contains(problem, "rate limit", problem);
+    }
+
+    [TestMethod]
+    public async Task VideoIsGivenUpAfterTooManyFailedAttempts()
+    {
+        await AddPendingAsync("bad");
+        writer.FailingTitles.Add("Title of bad");
+
+        for (var run = 1; run < RefreshRunner.MAXIMUM_ATTEMPTS; run++)
+            await RunAsync();
+
+        Assert.AreEqual(VideoState.Pending, videos.Find("bad").State, $"Still retried after {RefreshRunner.MAXIMUM_ATTEMPTS - 1} failures.");
+
+        await RunAsync();
+
+        var bad = videos.Find("bad");
+        Assert.AreEqual(VideoState.GaveUp, bad.State);
+        Assert.AreEqual(RefreshRunner.MAXIMUM_ATTEMPTS, bad.Attempts);
+        Assert.AreEqual("model is down", bad.LastReason);
+    }
+
     //
 
     private FakeTimeProvider time = null!;

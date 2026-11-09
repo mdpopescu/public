@@ -1,3 +1,5 @@
+using System.Globalization;
+using YouNews.Core.Ports;
 using YouNews.Infrastructure.Processes;
 using YouNews.Infrastructure.YouTube;
 
@@ -90,6 +92,28 @@ public sealed class YtDlpCaptionSourceTests
         await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => sut.GetCaptionsAsync("zhnJo7s91ls", CancellationToken.None));
 
         Assert.IsEmpty(environment.WorkFiles(), string.Join(", ", environment.WorkFiles()));
+    }
+
+    [TestMethod]
+    public async Task RateLimitedSubtitleDownloadThrowsRateLimitedAndStillCleansUp()
+    {
+        runner.Behavior = _ => new ProcessResult(1, "", "ERROR: Unable to download video subtitles for 'en': HTTP Error 429: Too Many Requests");
+
+        var exception = await Assert.ThrowsExactlyAsync<RateLimitedException>(() => sut.GetCaptionsAsync("zhnJo7s91ls", CancellationToken.None));
+
+        StringAssert.Contains(exception.Message, "zhnJo7s91ls");
+        Assert.IsEmpty(environment.WorkFiles(), string.Join(", ", environment.WorkFiles()));
+    }
+
+    [TestMethod]
+    public async Task PacesSubtitleDownloads()
+    {
+        WriteFiles(("en", Caption("x")));
+
+        await sut.GetCaptionsAsync("zhnJo7s91ls", CancellationToken.None);
+
+        var call = runner.Invocations.Single();
+        Assert.AreEqual(YtDlpCaptionSource.SECONDS_BETWEEN_SUBTITLES.ToString(CultureInfo.InvariantCulture), call.ValueAfter("--sleep-subtitles"), call.ToString());
     }
 
     [TestMethod]

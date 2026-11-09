@@ -13,6 +13,10 @@ public sealed partial class YtDlpRunner
         tools = options.Value.Tools;
     }
 
+    /// <summary>Tells whether yt-dlp failed because YouTube refused the request for being one too many.</summary>
+    public static bool IsRateLimited(ProcessResult result) =>
+        result.ExitCode != 0 && result.StandardError.Contains("HTTP Error 429", StringComparison.Ordinal);
+
     /// <summary>Gets the watch page address of a video, rejecting identifiers that are not safe to use in paths.</summary>
     public string WatchUrl(string youTubeId)
     {
