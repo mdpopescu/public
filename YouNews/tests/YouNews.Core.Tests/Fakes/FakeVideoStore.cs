@@ -50,8 +50,24 @@ internal sealed class FakeVideoStore : IVideoStore
     {
         lock (gate)
         {
-            return Task.FromResult<IReadOnlyList<TrackedVideo>>([.. Videos.Where(video => video.State == state)]);
+            IReadOnlyList<TrackedVideo> listed =
+            [
+                .. Videos.Where(video => video.State == state)
+                    .OrderBy(video => deferred.ContainsKey(video.Id))
+                    .ThenBy(video => deferred.GetValueOrDefault(video.Id)),
+            ];
+            return Task.FromResult(listed);
         }
+    }
+
+    public Task DeferAsync(long videoId, DateTimeOffset deferredAt, CancellationToken cancellationToken)
+    {
+        lock (gate)
+        {
+            deferred[videoId] = deferredAt;
+        }
+
+        return Task.CompletedTask;
     }
 
     public Task SetStateAsync(long videoId, VideoState state, string? reason, CancellationToken cancellationToken)
@@ -74,6 +90,7 @@ internal sealed class FakeVideoStore : IVideoStore
     //
 
     private readonly Lock gate = new();
+    private readonly Dictionary<long, DateTimeOffset> deferred = [];
 
     private void Replace(long videoId, Func<TrackedVideo, TrackedVideo> change)
     {

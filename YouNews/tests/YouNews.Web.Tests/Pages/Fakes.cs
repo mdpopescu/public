@@ -136,6 +136,8 @@ public sealed class FakeVideoStore : IVideoStore
     public Task<IReadOnlyList<TrackedVideo>> ListByStateAsync(VideoState state, CancellationToken cancellationToken) =>
         Task.FromResult<IReadOnlyList<TrackedVideo>>(Videos.Where(video => video.State == state).ToList());
 
+    public Task DeferAsync(long videoId, DateTimeOffset deferredAt, CancellationToken cancellationToken) => Task.CompletedTask;
+
     public Task SetStateAsync(long videoId, VideoState state, string? reason, CancellationToken cancellationToken) =>
         throw new NotSupportedException();
 

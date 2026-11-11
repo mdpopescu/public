@@ -10,6 +10,9 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
     /// <summary>A video that has failed this many times is given up on, so that a broken one is not retried forever.</summary>
     public const int MAXIMUM_ATTEMPTS = 15;
 
+    /// <summary>How long YouTube is left alone after it refuses a request because of its rate limit.</summary>
+    public static readonly TimeSpan RATE_LIMIT_PAUSE = TimeSpan.FromMinutes(10);
+
     public async Task ExecuteAsync(Action<RefreshProgress> reportProgress, CancellationToken cancellationToken)
     {
         var startedAt = dependencies.Time.GetUtcNow();
@@ -20,7 +23,7 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
         var channels = await dependencies.Channels.ListAsync(cancellationToken).ConfigureAwait(false);
         var context = new ProcessingContext(channels.ToDictionary(channel => channel.Id), setup, interests);
 
-        var activity = new RefreshActivity(reportProgress);
+        var activity = new RefreshActivity(reportProgress, dependencies.Time);
         using var discoveryStop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         // ReSharper disable once AccessToDisposedClosure
         var discovering = Task.Run(() => DiscoverAsync(activity, discoveryStop.Token), CancellationToken.None);
@@ -28,7 +31,7 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
         var outcome = await ProcessAlongsideDiscoveryAsync(activity, context, new RunningDiscovery(discovering, discoveryStop), cancellationToken).ConfigureAwait(false);
         var problems = await discovering.ConfigureAwait(false);
 
-        IReadOnlyList<string> allProblems = outcome.Problem is null ? problems : [.. problems, outcome.Problem];
+        IReadOnlyList<string> allProblems = activity.RateLimitPauses == 0 ? problems : [.. problems, RateLimitProblem(activity.RateLimitPauses)];
         var problem = allProblems.Count == 0 ? null : string.Join(" ", allProblems);
         var finished = new RefreshRun(startedAt, dependencies.Time.GetUtcNow(), outcome.Completed, outcome.Failed, problem);
         await dependencies.Log.RecordAsync(finished, cancellationToken).ConfigureAwait(false);
@@ -36,7 +39,10 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
 
     //
 
-    private const string RATE_LIMIT_PROBLEM = "Stopped processing videos because YouTube's rate limit was reached; the rest wait for the next run.";
+    private static string RateLimitProblem(int pauses) =>
+        pauses == 1
+            ? $"YouTube's rate limit paused the run once for {RATE_LIMIT_PAUSE.TotalMinutes:0} minutes."
+            : $"YouTube's rate limit paused the run {pauses} times for {RATE_LIMIT_PAUSE.TotalMinutes:0} minutes each.";
 
     private async Task<IReadOnlyList<string>> DiscoverAsync(RefreshActivity activity, CancellationToken cancellationToken)
     {
@@ -75,7 +81,8 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
     /// <summary>
     ///     The consumer side. The store is the queue, and it is asked again before every video,
     ///     so a video discovered a moment ago still goes ahead of older ones already waiting.
-    ///     YouTube's rate limit ends it early: every further request would only be refused and keep the limit in place.
+    ///     A video refused by YouTube's rate limit goes to the end of the queue, and the run leaves YouTube alone for a while
+    ///     before taking the next one: asking again at once would only be refused and keep the limit in place.
     /// </summary>
     private async Task<QueueOutcome> ProcessQueueAsync(RefreshActivity activity, ProcessingContext context, CancellationToken cancellationToken)
     {
@@ -89,13 +96,17 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
 
             var outcome = await TryProcessAsync(next, context, cancellationToken).ConfigureAwait(false);
             if (outcome == VideoOutcome.RateLimited)
-                return new QueueOutcome(completed, tried.Count - completed, RATE_LIMIT_PROBLEM);
+            {
+                await dependencies.Videos.DeferAsync(next.Id, dependencies.Time.GetUtcNow(), cancellationToken).ConfigureAwait(false);
+                await activity.WaitOutVideoRateLimitAsync(cancellationToken).ConfigureAwait(false);
+                continue;
+            }
 
             tried.Add(next.Id);
             completed += outcome == VideoOutcome.Completed ? 1 : 0;
         }
 
-        return new QueueOutcome(completed, tried.Count - completed, null);
+        return new QueueOutcome(completed, tried.Count - completed);
     }
 
     /// <summary>
@@ -156,7 +167,7 @@ public sealed class RefreshRunner(RefreshDependencies dependencies, IVideoDiscov
 
     private sealed record RunningDiscovery(Task Finished, CancellationTokenSource Stop);
 
-    private sealed record QueueOutcome(int Completed, int Failed, string? Problem);
+    private sealed record QueueOutcome(int Completed, int Failed);
 
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     private enum VideoOutcome

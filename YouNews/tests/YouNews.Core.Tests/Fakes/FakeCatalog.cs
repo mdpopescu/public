@@ -15,6 +15,9 @@ internal sealed class FakeCatalog : IVideoCatalog
 
     public HashSet<long> FailingChannels { get; } = [];
 
+    /// <summary>Channels whose listing YouTube refuses because of its rate limit.</summary>
+    public HashSet<long> RateLimitedChannels { get; } = [];
+
     public List<string> DetailRequests { get; } = [];
 
     /// <summary>When false, asking about a video without details fails, as a failing lookup does.</summary>
@@ -26,6 +29,9 @@ internal sealed class FakeCatalog : IVideoCatalog
     {
         if (FailingChannels.Contains(channel.Id))
             throw new InvalidOperationException("listing failed");
+
+        if (RateLimitedChannels.Contains(channel.Id))
+            throw new RateLimitedException($"HTTP Error 429: Too Many Requests for channel {channel.Id}");
 
         if (ListedFeeds.TryGetValue(channel.Id, out var listed))
             return Task.FromResult(listed);

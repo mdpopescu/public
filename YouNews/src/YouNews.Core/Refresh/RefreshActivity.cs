@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Threading.Channels;
 using YouNews.Core.Model;
 
@@ -9,9 +10,13 @@ namespace YouNews.Core.Refresh;
 /// </summary>
 internal sealed class RefreshActivity : IDiscoveryListener
 {
-    public RefreshActivity(Action<RefreshProgress> report)
+    /// <summary>How many times either side of the run waited for YouTube's rate limit.</summary>
+    public int RateLimitPauses { get; private set; }
+
+    public RefreshActivity(Action<RefreshProgress> report, TimeProvider time)
     {
         this.report = report;
+        this.time = time;
         lock (gate)
         {
             Publish();
@@ -60,6 +65,30 @@ internal sealed class RefreshActivity : IDiscoveryListener
         }
     }
 
+    public async Task WaitOutChannelRateLimitAsync(CancellationToken cancellationToken)
+    {
+        var pause = StartPause(cancellationToken);
+        lock (gate)
+        {
+            channel = $"YouTube's rate limit was reached, next channel check at {pause.ResumesAt}";
+            Publish();
+        }
+
+        await pause.Delay.ConfigureAwait(false);
+    }
+
+    public async Task WaitOutVideoRateLimitAsync(CancellationToken cancellationToken)
+    {
+        var pause = StartPause(cancellationToken);
+        lock (gate)
+        {
+            activity = $"YouTube's rate limit was reached, next video at {pause.ResumesAt}";
+            Publish();
+        }
+
+        await pause.Delay.ConfigureAwait(false);
+    }
+
     /// <summary>Call before looking in the store, so that a video queued after the look still wakes the next wait.</summary>
     public void ForgetEarlierWakeUps()
     {
@@ -75,6 +104,7 @@ internal sealed class RefreshActivity : IDiscoveryListener
     //
 
     private readonly Action<RefreshProgress> report;
+    private readonly TimeProvider time;
     private readonly Lock gate = new();
 
     private readonly Channel<bool> wakeUps = System.Threading.Channels.Channel.CreateBounded<bool>(
@@ -86,9 +116,23 @@ internal sealed class RefreshActivity : IDiscoveryListener
     private int videosDone;
     private int videosTotal;
 
+    /// <summary>Starts the delay before announcing it, so that whoever hears the announcement sees a pause already under way.</summary>
+    private Pause StartPause(CancellationToken cancellationToken)
+    {
+        var resumesAt = TimeZoneInfo.ConvertTime(time.GetUtcNow() + RefreshRunner.RATE_LIMIT_PAUSE, time.LocalTimeZone);
+        lock (gate)
+        {
+            RateLimitPauses++;
+        }
+
+        return new Pause(Task.Delay(RefreshRunner.RATE_LIMIT_PAUSE, time, cancellationToken), resumesAt.ToString("HH:mm", CultureInfo.InvariantCulture));
+    }
+
     private void Publish()
     {
         var discovery = channel is null ? null : $"{channel}, {found} new so far";
         report(new RefreshProgress(activity, videosDone, videosTotal, discovery));
     }
+
+    private sealed record Pause(Task Delay, string ResumesAt);
 }

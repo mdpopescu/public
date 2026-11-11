@@ -144,7 +144,7 @@ public sealed class ListingPresenterTests
             new TrackedVideo(2, 1, "bbb", "Second", VideoState.GaveUp, 5, null, DateTimeOffset.UnixEpoch),
         };
 
-        var view = new StatusPresenter(time).Present(run, waiting, ["yt-dlp too old"]);
+        var view = new StatusPresenter(time).Present(run, waiting, ["yt-dlp too old"], PendingQueue.EMPTY);
 
         Assert.AreEqual("Last refresh 2026-11-01 06:12: 3 completed, 1 failed.", view.LastRunText);
         Assert.AreEqual("server was down", view.LastRunProblem);
@@ -159,7 +159,7 @@ public sealed class ListingPresenterTests
     [TestMethod]
     public void Status_NoRunYet_HasNoRunText()
     {
-        var view = new StatusPresenter(TimeProvider.System).Present(null, [], []);
+        var view = new StatusPresenter(TimeProvider.System).Present(null, [], [], PendingQueue.EMPTY);
 
         Assert.IsNull(view.LastRunText);
         Assert.IsNull(view.LastRunProblem);

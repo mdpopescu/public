@@ -198,6 +198,25 @@ public sealed class VideoDiscoveryTests
     }
 
     [TestMethod]
+    public async Task RateLimitedChannelGoesToTheEndOfTheQueueAndIsCheckedAfterAWait()
+    {
+        channels.Channels.Add(new Channel(2, "https://youtube.com/@two", "Two"));
+        catalog.RateLimitedChannels.Add(1);
+        catalog.Feeds[1] = [["from-one"]];
+        catalog.Feeds[2] = [["from-two"]];
+        AddDetails("from-one", new DateOnly(2026, 10, 31));
+        AddDetails("from-two", new DateOnly(2026, 10, 31));
+        listener.DuringRateLimitWait = () => catalog.RateLimitedChannels.Clear();
+
+        var problems = await sut.DiscoverAsync(listener, CancellationToken.None);
+
+        Assert.IsEmpty(problems, string.Join(" | ", problems));
+        Assert.AreEqual(1, listener.RateLimitWaits);
+        CollectionAssert.AreEqual(new[] { "1/2 One", "1/2 Two", "2/2 One" }, listener.Channels, string.Join(" | ", listener.Channels));
+        CollectionAssert.AreEqual(new[] { "from-two", "from-one" }, videos.Videos.Select(video => video.YouTubeId).ToArray());
+    }
+
+    [TestMethod]
     public async Task RecheckVideoBecomesPendingWhenItIsFinished()
     {
         await videos.AddAsync(new NewVideo(1, "stream", "Stream", VideoState.Recheck, "is live", time.GetUtcNow()), CancellationToken.None);

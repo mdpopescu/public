@@ -17,8 +17,12 @@ public interface IVideoStore
     /// <summary>
     /// Lists videos in a state, leaving out those of channels no longer followed. The most recently discovered day comes first,
     /// and within a day the most recently published video. Videos without a known publication date come last in their day.
+    /// Deferred videos come after all the others, the earliest deferred first.
     /// </summary>
     Task<IReadOnlyList<TrackedVideo>> ListByStateAsync(VideoState state, CancellationToken cancellationToken);
+
+    /// <summary>Moves a video to the end of the queue, behind every video deferred before it.</summary>
+    Task DeferAsync(long videoId, DateTimeOffset deferredAt, CancellationToken cancellationToken);
 
     /// <summary>Changes the state of a video and records why, without counting an attempt.</summary>
     Task SetStateAsync(long videoId, VideoState state, string? reason, CancellationToken cancellationToken);

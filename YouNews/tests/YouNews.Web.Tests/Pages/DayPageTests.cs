@@ -250,7 +250,10 @@ public sealed class DayPageTests
         StringAssert.Contains(html, "Needs captions");
         StringAssert.Contains(html, "no captions yet");
         StringAssert.Contains(html, "Hopeless");
-        Assert.DoesNotContain("Never tried", html, "a video that was never attempted is not waiting to retry");
+        var retrySection = html[html.IndexOf("Waiting to retry", StringComparison.Ordinal)..];
+        retrySection = retrySection[..retrySection.IndexOf("</details>", StringComparison.Ordinal)];
+        Assert.DoesNotContain("Never tried", retrySection, "a video that was never attempted is not waiting to retry");
+        StringAssert.Contains(html, "2 videos waiting to be processed");
     }
 
     [TestMethod]

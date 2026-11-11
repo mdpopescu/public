@@ -85,5 +85,6 @@ public sealed class DatabaseMigrations : IDatabaseMigrations
         "UPDATE entries SET day = v.published_on FROM videos v WHERE v.id = entries.video_id AND v.published_on IS NOT NULL;",
         "CREATE TABLE model_selection (id INTEGER PRIMARY KEY CHECK (id = 1), model TEXT NOT NULL);",
         "CREATE TABLE reprocess_requests (id INTEGER PRIMARY KEY AUTOINCREMENT, entry_id INTEGER NOT NULL UNIQUE REFERENCES entries(id), failure TEXT NULL);",
+        "ALTER TABLE videos ADD COLUMN deferred_ticks INTEGER NULL;",
     ];
 }

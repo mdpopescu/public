@@ -146,6 +146,35 @@ public class VideoStoreTests
     }
 
     [TestMethod]
+    public async Task ListByStateAsync_DeferredVideo_ComesAfterAllOthers()
+    {
+        var seen = new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero);
+        await AddPendingAsync("newest-but-deferred", seen.AddDays(2), null);
+        await AddPendingAsync("older", seen, null);
+        await AddPendingAsync("oldest", seen.AddDays(-2), null);
+        await DeferAsync("newest-but-deferred", seen);
+
+        var order = (await sut.ListByStateAsync(VideoState.Pending, CancellationToken.None)).Select(v => v.YouTubeId).ToArray();
+
+        CollectionAssert.AreEqual(new[] { "older", "oldest", "newest-but-deferred" }, order);
+    }
+
+    [TestMethod]
+    public async Task ListByStateAsync_DeferredVideos_EarliestDeferredFirst()
+    {
+        var seen = new DateTimeOffset(2026, 10, 30, 12, 0, 0, TimeSpan.Zero);
+        await AddPendingAsync("deferred-late", seen.AddDays(3), null);
+        await AddPendingAsync("deferred-early", seen, null);
+        await AddPendingAsync("normal", seen.AddDays(-1), null);
+        await DeferAsync("deferred-early", seen.AddHours(1));
+        await DeferAsync("deferred-late", seen.AddHours(2));
+
+        var order = (await sut.ListByStateAsync(VideoState.Pending, CancellationToken.None)).Select(v => v.YouTubeId).ToArray();
+
+        CollectionAssert.AreEqual(new[] { "normal", "deferred-early", "deferred-late" }, order);
+    }
+
+    [TestMethod]
     public async Task SetStateAsync_Video_ChangesStateAndReasonWithoutCountingAnAttempt()
     {
         var (_, video) = await fixture.AddChannelWithVideoAsync();
@@ -175,6 +204,12 @@ public class VideoStoreTests
     private SqliteVideoStore sut = null!;
     private SqliteChannelStore channels = null!;
     private long channelId;
+
+    private async Task DeferAsync(string youTubeId, DateTimeOffset deferredAt)
+    {
+        var video = (await sut.ListByStateAsync(VideoState.Pending, CancellationToken.None)).Single(v => v.YouTubeId == youTubeId);
+        await sut.DeferAsync(video.Id, deferredAt, CancellationToken.None);
+    }
 
     private Task AddPendingAsync(string id, DateTimeOffset seen, DateOnly? publishedOn) =>
         sut.AddAsync(new NewVideo(channelId, id, id, VideoState.Pending, null, seen, publishedOn), CancellationToken.None);

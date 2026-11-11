@@ -10,10 +10,18 @@ public sealed class StatusPresenter : IStatusPresenter
         this.time = time;
     }
 
-    public StatusView Present(RefreshRun? lastRun, IReadOnlyList<TrackedVideo> waiting, IReadOnlyList<string> toolProblems) =>
-        new(lastRun is null ? null : DescribeRun(lastRun), lastRun?.Problem, waiting.Select(PresentWaiting).ToList(), toolProblems);
+    public StatusView Present(RefreshRun? lastRun, IReadOnlyList<TrackedVideo> waiting, IReadOnlyList<string> toolProblems, PendingQueue queue) =>
+        new(
+            lastRun is null ? null : DescribeRun(lastRun),
+            lastRun?.Problem,
+            waiting.Select(PresentWaiting).ToList(),
+            toolProblems,
+            DescribeQueue(queue.Videos.Count),
+            queue.Videos.Take(QUEUE_PREVIEW_SIZE).Select(video => PresentQueued(video, queue.ChannelNames)).ToList());
 
     //
+
+    private const int QUEUE_PREVIEW_SIZE = 10;
 
     private readonly TimeProvider time;
 
@@ -22,10 +30,29 @@ public sealed class StatusPresenter : IStatusPresenter
         var detail = video.State == VideoState.GaveUp ? "gave up" : video.Attempts == 1 ? "tried once" : $"tried {video.Attempts} times";
         return new WaitingVideoView(
             video.Title,
-            $"https://www.youtube.com/watch?v={Uri.EscapeDataString(video.YouTubeId)}",
+            WatchUrl(video),
             string.IsNullOrWhiteSpace(video.LastReason) ? "no reason recorded" : video.LastReason,
             detail);
     }
+
+    private static string? DescribeQueue(int count) => count switch
+    {
+        0 => null,
+        1 => "1 video waiting to be processed",
+        _ => $"{count} videos waiting to be processed",
+    };
+
+    private static QueuedVideoView PresentQueued(TrackedVideo video, IReadOnlyDictionary<long, string> channelNames)
+    {
+        var parts = new List<string>();
+        if (channelNames.TryGetValue(video.ChannelId, out var channel))
+            parts.Add(channel);
+        if (video.PublishedOn is { } publishedOn)
+            parts.Add(publishedOn.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+        return new QueuedVideoView(video.Title, WatchUrl(video), string.Join(", ", parts));
+    }
+
+    private static string WatchUrl(TrackedVideo video) => $"https://www.youtube.com/watch?v={Uri.EscapeDataString(video.YouTubeId)}";
 
     private string DescribeRun(RefreshRun run)
     {

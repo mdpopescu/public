@@ -1,5 +1,5 @@
 @model StatusView
-@if (Model.LastRunText is not null || Model.Waiting.Count > 0)
+@if (Model.LastRunText is not null || Model.Waiting.Count > 0 || Model.QueueText is not null)
 {
     <footer class="status">
         @if (Model.LastRunText is not null)
@@ -20,6 +20,24 @@
                         <li>
                             <a href="@video.Url" target="_blank" rel="noopener noreferrer">@video.Title</a>
                             <span class="muted">(@video.Detail)</span>: @video.Reason
+                        </li>
+                    }
+                </ul>
+            </details>
+        }
+        @if (Model.QueueText is not null)
+        {
+            <details>
+                <summary>@Model.QueueText</summary>
+                <ul>
+                    @foreach (var video in Model.Queue)
+                    {
+                        <li>
+                            <a href="@video.Url" target="_blank" rel="noopener noreferrer">@video.Title</a>
+                            @if (video.Detail.Length > 0)
+                            {
+                                <span class="muted">(@video.Detail)</span>
+                            }
                         </li>
                     }
                 </ul>

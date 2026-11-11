@@ -54,6 +54,9 @@ public sealed class YtDlpVideoCatalog : IVideoCatalog
 
         if (result.ExitCode != 0)
         {
+            if (YtDlpRunner.IsRateLimited(result))
+                throw new RateLimitedException($"yt-dlp could not get the details of {youTubeId}: {result.StandardError.Trim()}");
+
             var (availability, reason) = classifier.Classify(result.StandardError, result.ExitCode);
             return new VideoDetails(youTubeId, availability, null, reason);
         }
@@ -136,6 +139,9 @@ public sealed class YtDlpVideoCatalog : IVideoCatalog
     {
         var url = $"{channel.Url.TrimEnd('/')}/{tab}";
         var result = await ytDlp.RunAsync(["--flat-playlist", "--playlist-end", "200", "--extractor-args", "youtubetab:approximate_date", "--dump-json", url], cancellationToken).ConfigureAwait(false);
+
+        if (YtDlpRunner.IsRateLimited(result))
+            throw new RateLimitedException($"yt-dlp could not list {url}: {result.StandardError.Trim()}");
 
         return result.ExitCode != 0
             ? null

@@ -371,27 +371,53 @@ public sealed class RefreshRunTests
     }
 
     [TestMethod]
-    public async Task RateLimitStopsTheRunWithoutCountingAnAttempt()
+    public async Task RateLimitedVideoGoesToTheEndOfTheQueueAndTheRunCarriesOnAfterAPause()
     {
         await AddPendingAsync("first");
         await AddPendingAsync("limited");
         await AddPendingAsync("third");
         captions.RateLimitedIds.Add("limited");
+        var reported = new List<RefreshProgress>();
 
-        await RunAsync();
+        await sut.ExecuteAsync(progress => { reported.Add(progress); LiftRateLimitsWhenPaused(progress); }, CancellationToken.None);
 
-        Assert.AreEqual(VideoState.Done, videos.Find("first").State);
-        foreach (var id in new[] { "limited", "third" })
-        {
-            var video = videos.Find(id);
-            Assert.AreEqual(VideoState.Pending, video.State, id);
-            Assert.AreEqual(0, video.Attempts, $"{id}: being rate-limited is not the video's fault.");
-        }
-
+        var order = entries.Added.Select(entry => videos.Videos.Single(video => video.Id == entry.VideoId).YouTubeId).ToArray();
+        CollectionAssert.AreEqual(new[] { "first", "third", "limited" }, order, string.Join(", ", order));
+        Assert.AreEqual(0, videos.Find("limited").Attempts, "Being rate-limited is not the video's fault.");
+        Assert.IsTrue(
+            reported.Exists(progress => progress.Activity == "YouTube's rate limit was reached, next video at 01:40"),
+            "23:30 UTC plus 10 minutes is 01:40 in the +2 zone. Reported: " + string.Join(" | ", reported.Select(progress => progress.Activity)));
         var run = log.Runs.Single();
-        Assert.AreEqual(1, run.Completed);
+        Assert.AreEqual(3, run.Completed);
         Assert.AreEqual(0, run.Failed);
-        StringAssert.Contains(run.Problem!, "rate limit", run.Problem);
+        StringAssert.Contains(run.Problem!, "rate limit paused the run once", run.Problem);
+    }
+
+    [TestMethod]
+    public async Task RunWaitsTenMinutesBeforeTheNextVideoAfterARateLimit()
+    {
+        await AddPendingAsync("limited");
+        await AddPendingAsync("next");
+        captions.RateLimitedIds.Add("limited");
+        var paused = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var running = sut.ExecuteAsync(
+            progress =>
+            {
+                if (progress.Activity.StartsWith("YouTube's rate limit", StringComparison.Ordinal))
+                    paused.TrySetResult();
+            },
+            CancellationToken.None);
+
+        await paused.Task.WaitAsync(TimeSpan.FromSeconds(10));
+        time.Advance(RefreshRunner.RATE_LIMIT_PAUSE - TimeSpan.FromSeconds(1));
+        await Task.Delay(100);
+        Assert.IsEmpty(entries.Added, "No video may start before the pause is over.");
+
+        captions.RateLimitedIds.Clear();
+        time.Advance(TimeSpan.FromSeconds(1));
+        await running.WaitAsync(TimeSpan.FromSeconds(10));
+
+        Assert.HasCount(2, entries.Added);
     }
 
     [TestMethod]
@@ -442,6 +468,7 @@ public sealed class RefreshRunTests
     private FakeImageSource images = null!;
     private FakeEntryStore entries = null!;
     private RefreshRunner sut = null!;
+    private readonly HashSet<string> announcedPauses = [];
 
     private sealed class ScriptedDiscovery(Func<IDiscoveryListener, Task> script) : IVideoDiscovery
     {
@@ -475,5 +502,18 @@ public sealed class RefreshRunTests
 
     private Task AddPendingAsync(string id) => videos.AddAsync(new NewVideo(1, id, "Title of " + id, VideoState.Pending, null, time.GetUtcNow()), CancellationToken.None);
 
-    private Task RunAsync() => sut.ExecuteAsync(_ => { }, CancellationToken.None);
+    /// <summary>Runs with YouTube's rate limit lifting during every pause, as it does once YouTube is left alone for a while.</summary>
+    private Task RunAsync() => sut.ExecuteAsync(LiftRateLimitsWhenPaused, CancellationToken.None);
+
+    /// <summary>Ends each pause at once by moving the clock past it. Every pause announces a different resume time, so each is seen once.</summary>
+    private void LiftRateLimitsWhenPaused(RefreshProgress progress)
+    {
+        var pause = new[] { progress.Activity, progress.Discovery }.FirstOrDefault(text => text?.StartsWith("YouTube's rate limit", StringComparison.Ordinal) == true);
+        if (pause is null || !announcedPauses.Add(pause))
+            return;
+
+        captions.RateLimitedIds.Clear();
+        catalog.RateLimitedChannels.Clear();
+        time.Advance(RefreshRunner.RATE_LIMIT_PAUSE);
+    }
 }

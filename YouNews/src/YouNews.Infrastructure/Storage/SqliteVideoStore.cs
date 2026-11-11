@@ -52,6 +52,9 @@ public sealed class SqliteVideoStore : IVideoStore
     public Task RecordFailureAsync(long videoId, string reason, CancellationToken cancellationToken) =>
         ExecuteAsync(RECORD_FAILURE, new { VideoId = videoId, Reason = reason }, cancellationToken);
 
+    public Task DeferAsync(long videoId, DateTimeOffset deferredAt, CancellationToken cancellationToken) =>
+        ExecuteAsync(DEFER, new { VideoId = videoId, DeferredTicks = deferredAt.UtcTicks }, cancellationToken);
+
     //
 
     private const string KNOWN_IDS = "SELECT youtube_id FROM videos WHERE channel_id = @ChannelId";
@@ -66,11 +69,12 @@ public sealed class SqliteVideoStore : IVideoStore
                v.attempts AS Attempts, v.last_reason AS LastReason, v.first_seen_at AS FirstSeenAt, v.published_on AS PublishedOn
         FROM videos v JOIN channels c ON c.id = v.channel_id
         WHERE v.state = @State AND c.removed = 0
-        ORDER BY date(v.first_seen_at, 'localtime') DESC, v.published_on DESC, v.first_seen_ticks DESC, v.id DESC
+        ORDER BY v.deferred_ticks IS NOT NULL, v.deferred_ticks, date(v.first_seen_at, 'localtime') DESC, v.published_on DESC, v.first_seen_ticks DESC, v.id DESC
         """;
 
     private const string SET_PUBLISHED_ON = "UPDATE videos SET published_on = @PublishedOn WHERE youtube_id = @YouTubeId AND published_on IS NULL";
     private const string SET_STATE = "UPDATE videos SET state = @State, last_reason = @Reason WHERE id = @VideoId";
+    private const string DEFER = "UPDATE videos SET deferred_ticks = @DeferredTicks WHERE id = @VideoId";
     private const string RECORD_FAILURE = "UPDATE videos SET attempts = attempts + 1, last_reason = @Reason WHERE id = @VideoId";
 
     private readonly ISqliteConnectionFactory factory;

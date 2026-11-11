@@ -1,4 +1,5 @@
 using YouNews.Core.Model;
+using YouNews.Core.Ports;
 using YouNews.Infrastructure.Processes;
 using YouNews.Infrastructure.YouTube;
 
@@ -163,6 +164,34 @@ public sealed class YtDlpVideoCatalogTests
         runner.Behavior = _ => new ProcessResult(1, "", "ERROR: Unable to download API page: getaddrinfo failed");
 
         await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => sut.ListVideoFeedsAsync(Channel("https://www.youtube.com/@x"), CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task RateLimitedVideosTabThrowsRateLimited()
+    {
+        runner.Behavior = _ => new ProcessResult(1, "", "ERROR: Unable to download API page: HTTP Error 429: Too Many Requests");
+
+        await Assert.ThrowsExactlyAsync<RateLimitedException>(() => sut.ListVideoFeedsAsync(Channel("https://www.youtube.com/@x"), CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task RateLimitedStreamsTabThrowsRateLimitedInsteadOfBeingMissing()
+    {
+        runner.Behavior = call => call.Arguments[^1].EndsWith("/videos", StringComparison.Ordinal)
+            ? new ProcessResult(0, "{\"id\":\"vid1\"}\n", "")
+            : new ProcessResult(1, "", "ERROR: Unable to download API page: HTTP Error 429: Too Many Requests");
+
+        await Assert.ThrowsExactlyAsync<RateLimitedException>(() => sut.ListVideoFeedsAsync(Channel("https://www.youtube.com/@x"), CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task RateLimitedDetailsThrowsRateLimited()
+    {
+        runner.Behavior = _ => new ProcessResult(1, "", "ERROR: [youtube] zhnJo7s91ls: Unable to download webpage: HTTP Error 429: Too Many Requests");
+
+        var exception = await Assert.ThrowsExactlyAsync<RateLimitedException>(() => sut.GetDetailsAsync("zhnJo7s91ls", CancellationToken.None));
+
+        StringAssert.Contains(exception.Message, "zhnJo7s91ls");
     }
 
     [TestMethod]

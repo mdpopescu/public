@@ -35,11 +35,16 @@ public sealed record RefreshView(bool IsRunning, string Activity, int Done, int 
 
 public sealed record WaitingVideoView(string Title, string Url, string Reason, string Detail);
 
+/// <summary>A video next in line to be processed; Detail holds the channel and publish date when known.</summary>
+public sealed record QueuedVideoView(string Title, string Url, string Detail);
+
 public sealed record StatusView(
     string? LastRunText,
     string? LastRunProblem,
     IReadOnlyList<WaitingVideoView> Waiting,
-    IReadOnlyList<string> ToolProblems);
+    IReadOnlyList<string> ToolProblems,
+    string? QueueText,
+    IReadOnlyList<QueuedVideoView> Queue);
 
 public sealed record SetupView(bool HasData, string Hardware, IReadOnlyList<string> Models, string CheckedAtText, string? Warning, string CurrentModel, IReadOnlyList<string> ModelChoices);
 

@@ -76,7 +76,7 @@ public class DatabaseInitializerTests
 
         await using var connection = await fixture.Factory.OpenAsync(CancellationToken.None);
         var versions = (await connection.QueryAsync<int>("SELECT version FROM schema_version")).ToList();
-        CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5 }, versions, "version table should list each migration exactly once");
+        CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5, 6 }, versions, "version table should list each migration exactly once");
     }
 
     [TestMethod]
@@ -89,7 +89,7 @@ public class DatabaseInitializerTests
 
         await using var connection = await fixture.Factory.OpenAsync(CancellationToken.None);
         var versions = (await connection.QueryAsync<int>("SELECT version FROM schema_version ORDER BY version")).ToList();
-        CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5, 6 }, versions);
+        CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5, 6, 7 }, versions);
         Assert.HasCount(1, (await new SqliteChannelStore(fixture.Factory).ListAsync(CancellationToken.None)), "upgrade must not seed again");
     }
 
@@ -112,6 +112,19 @@ public class DatabaseInitializerTests
 
         var days = (await connection.QueryAsync<string>("SELECT day FROM entries ORDER BY video_id")).ToArray();
         CollectionAssert.AreEqual(new[] { "2026-10-19", "2026-11-01" }, days, "An entry whose video has no date must keep its day.");
+    }
+
+    [TestMethod]
+    public async Task InitializeAsync_DatabaseWithoutDeferralColumn_AddsItAndKeepsExistingVideos()
+    {
+        var beforeDeferral = new FakeMigrations(new DatabaseMigrations().Scripts.Take(5).ToList());
+        await new DatabaseInitializer(fixture.Factory, beforeDeferral, TimeProvider.System, fixture.Options).InitializeAsync(CancellationToken.None);
+        await using var connection = await fixture.Factory.OpenAsync(CancellationToken.None);
+        await connection.ExecuteAsync("INSERT INTO videos (id, channel_id, youtube_id, title, state, first_seen_at, first_seen_ticks) VALUES (1, 1, 'old', 'Old', 'Pending', '2026-11-01T10:00:00+00:00', 0)");
+
+        await fixture.CreateInitializer().InitializeAsync(CancellationToken.None);
+
+        Assert.IsNull(await connection.ExecuteScalarAsync<long?>("SELECT deferred_ticks FROM videos WHERE youtube_id = 'old'"));
     }
 
     [TestMethod]
