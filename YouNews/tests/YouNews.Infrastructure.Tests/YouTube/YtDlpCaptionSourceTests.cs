@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Globalization;
 using YouNews.Core.Ports;
 using YouNews.Infrastructure.Processes;
@@ -13,7 +14,7 @@ public sealed class YtDlpCaptionSourceTests
     {
         environment = new TestEnvironment();
         runner = new FakeProcessRunner();
-        sut = new YtDlpCaptionSource(new YtDlpRunner(runner, environment.Wrapped), new Json3Parser(), environment.Wrapped);
+        sut = new YtDlpCaptionSource(new YtDlpRunner(runner, environment.Wrapped, NullLogger<YtDlpRunner>.Instance), new Json3Parser(), environment.Wrapped);
     }
 
     [TestCleanup]
@@ -106,6 +107,34 @@ public sealed class YtDlpCaptionSourceTests
     }
 
     [TestMethod]
+    public async Task RefusedTranslatedTrackStillReadsTheTracksThatWereWritten()
+    {
+        WriteFiles(("en-orig", Caption("auto original")));
+        var written = runner.Behavior;
+        runner.Behavior = call =>
+        {
+            written(call);
+            return new ProcessResult(0, "", "WARNING: Unable to download video subtitles for 'en': HTTP Error 429: Too Many Requests");
+        };
+
+        var transcript = await sut.GetCaptionsAsync("zhnJo7s91ls", CancellationToken.None);
+
+        Assert.AreEqual("auto original", transcript?.Segments.Single().Text);
+        CollectionAssert.Contains(runner.Invocations.Single().Arguments.ToList(), "--ignore-errors", runner.Invocations.Single().ToString());
+    }
+
+    [TestMethod]
+    public async Task RefusedOnlyTrackCountsAsNoCaptionsRatherThanRateLimit()
+    {
+        runner.Behavior = _ => new ProcessResult(0, "", "WARNING: Unable to download video subtitles for 'en': HTTP Error 429: Too Many Requests");
+
+        var transcript = await sut.GetCaptionsAsync("zhnJo7s91ls", CancellationToken.None);
+
+        Assert.IsNull(transcript, "A refused translation must fall through to speech-to-text, not be retried as a rate limit.");
+        Assert.IsEmpty(environment.WorkFiles(), string.Join(", ", environment.WorkFiles()));
+    }
+
+    [TestMethod]
     public async Task PacesSubtitleDownloads()
     {
         WriteFiles(("en", Caption("x")));
@@ -126,7 +155,7 @@ public sealed class YtDlpCaptionSourceTests
         var call = runner.Invocations.Single();
         Assert.AreEqual("en.*,en", call.ValueAfter("--sub-langs"), call.ToString());
         Assert.AreEqual("json3", call.ValueAfter("--sub-format"));
-        CollectionAssert.IsSubsetOf(new[] { "--skip-download", "--write-subs", "--write-auto-subs", "--no-update", "--no-warnings" }, call.Arguments.ToList());
+        CollectionAssert.IsSubsetOf(new[] { "--ignore-errors", "--skip-download", "--write-subs", "--write-auto-subs", "--no-update" }, call.Arguments.ToList());
         StringAssert.StartsWith(call.ValueAfter("-o"), environment.Options.WorkDirectory);
         Assert.AreEqual("https://www.youtube.com/watch?v=zhnJo7s91ls", call.Arguments[^1]);
     }

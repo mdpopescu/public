@@ -82,20 +82,68 @@ public sealed class ToolHealthTests
         await sut.FindProblemsAsync(CancellationToken.None);
 
         CollectionAssert.AreEqual(
-            new[] { @"C:\tools\yt-dlp.exe --version", "ffmpeg -version", "node --version" },
+            new[] { @"C:\tools\yt-dlp.exe --version", @"C:\tools\yt-dlp.exe --no-update --list-impersonate-targets", "ffmpeg -version", "node --version" },
             runner.Invocations.Select(call => call.ToString()).ToArray());
     }
 
+    [TestMethod]
+    public async Task YtDlpWithoutAnyImpersonationTargetGivesProblemWithTheFix()
+    {
+        Tools(ytDlp: "2026.10.26", impersonateTargets: UNAVAILABLE_TARGETS);
+
+        var problems = await sut.FindProblemsAsync(CancellationToken.None);
+
+        var problem = problems.Single();
+        StringAssert.Contains(problem, "impersonate");
+        StringAssert.Contains(problem, "pip install --upgrade \"yt-dlp[default,curl-cffi]\"");
+    }
+
+    [TestMethod]
+    public async Task FailedImpersonationListingGivesProblem()
+    {
+        Tools(ytDlp: "2026.10.26");
+        var tools = runner.Behavior;
+        runner.Behavior = call => call.Arguments.Contains("--list-impersonate-targets") ? new ProcessResult(2, "", "error: no such option") : tools(call);
+
+        var problems = await sut.FindProblemsAsync(CancellationToken.None);
+
+        StringAssert.Contains(problems.Single(), "impersonate");
+    }
+
     //
+
+    private const string AVAILABLE_TARGETS = """
+        [info] Available impersonate targets
+        Client          OS           Source
+        --------------------------------------
+        Chrome-133      Macos-15     curl_cffi
+        Chrome-136      Macos-15     curl_cffi
+        """;
+
+    private const string UNAVAILABLE_TARGETS = """
+        [info] Available impersonate targets
+        Client    OS   Source
+        --------------------------------------------
+        Chrome    -    curl_cffi (unavailable)
+        Firefox   -    curl_cffi>=0.10 (unavailable)
+        """;
 
     private TestEnvironment environment = null!;
     private FakeProcessRunner runner = null!;
     private ToolHealth sut = null!;
 
-    private void Tools(string? ytDlp, bool ffmpeg = true, bool node = true) =>
+    private static ProcessResult YtDlp(FakeProcessRunner.Invocation call, string? version, string impersonateTargets)
+    {
+        if (version == null)
+            throw new Win32Exception(2);
+
+        return call.Arguments.Contains("--list-impersonate-targets") ? new ProcessResult(0, impersonateTargets, "") : new ProcessResult(0, version, "");
+    }
+
+    private void Tools(string? ytDlp, bool ffmpeg = true, bool node = true, string impersonateTargets = AVAILABLE_TARGETS) =>
         runner.Behavior = call => call.FileName switch
         {
-            var name when name.EndsWith("yt-dlp.exe", StringComparison.Ordinal) || name == "yt-dlp" => ytDlp == null ? throw new Win32Exception(2) : new ProcessResult(0, ytDlp, ""),
+            var name when name.EndsWith("yt-dlp.exe", StringComparison.Ordinal) || name == "yt-dlp" => YtDlp(call, ytDlp, impersonateTargets),
             "ffmpeg" => ffmpeg ? new ProcessResult(0, "ffmpeg version 7", "") : throw new Win32Exception(2),
             _ => node ? new ProcessResult(0, "v22.0.0", "") : throw new Win32Exception(2),
         };

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Net;
 using YouNews.Core.Model;
 using YouNews.Infrastructure.Processes;
@@ -15,7 +16,7 @@ public sealed class YouTubeImageSourceTests
         runner = new FakeProcessRunner();
         handler = new StubHandler();
         var thumbnails = new ThumbnailDownloader(new StubHttpClientFactory(handler), environment.Wrapped);
-        var frames = new FrameExtractor(new YtDlpRunner(runner, environment.Wrapped), runner, environment.Wrapped);
+        var frames = new FrameExtractor(new YtDlpRunner(runner, environment.Wrapped, NullLogger<YtDlpRunner>.Instance), runner, environment.Wrapped);
         sut = new YouTubeImageSource(thumbnails, frames);
     }
 

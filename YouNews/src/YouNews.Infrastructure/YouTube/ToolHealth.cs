@@ -6,7 +6,7 @@ using YouNews.Infrastructure.Processes;
 
 namespace YouNews.Infrastructure.YouTube;
 
-/// <summary>Checks that yt-dlp is recent enough and that ffmpeg and node can be started.</summary>
+/// <summary>Checks that yt-dlp is recent enough and can impersonate a browser, and that ffmpeg and node can be started.</summary>
 public sealed partial class ToolHealth : IToolHealth
 {
     public ToolHealth(IProcessRunner processRunner, IOptions<YouNewsOptions> options)
@@ -19,6 +19,7 @@ public sealed partial class ToolHealth : IToolHealth
     {
         var problems = new List<string>();
         AddIfNotNull(problems, await CheckYtDlpAsync(cancellationToken).ConfigureAwait(false));
+        AddIfNotNull(problems, await CheckImpersonationAsync(cancellationToken).ConfigureAwait(false));
         AddIfNotNull(problems, await CheckStartsAsync("ffmpeg", tools.FfmpegPath, "-version", "Install ffmpeg (for example `winget install Gyan.FFmpeg`) or set YouNews:Tools:FfmpegPath.", cancellationToken).ConfigureAwait(false));
         AddIfNotNull(problems, await CheckStartsAsync("node", tools.NodePath, "--version", "Install Node.js (for example `winget install OpenJS.NodeJS.LTS`) or set YouNews:Tools:NodePath.", cancellationToken).ConfigureAwait(false));
         return problems;
@@ -56,7 +57,7 @@ public sealed partial class ToolHealth : IToolHealth
     private async Task<string?> CheckYtDlpAsync(CancellationToken cancellationToken)
     {
         var upgrade = "Upgrade it with `pip install --upgrade \"yt-dlp[default]\"` or set YouNews:Tools:YtDlpPath.";
-        var result = await TryRunAsync(tools.YtDlpPath, "--version", cancellationToken).ConfigureAwait(false);
+        var result = await TryRunAsync(tools.YtDlpPath, ["--version"], cancellationToken).ConfigureAwait(false);
         if (result == null)
             return $"yt-dlp could not be started from \"{tools.YtDlpPath}\". Install it with `pip install --upgrade \"yt-dlp[default]\"` or set YouNews:Tools:YtDlpPath.";
 
@@ -69,17 +70,36 @@ public sealed partial class ToolHealth : IToolHealth
             : null;
     }
 
+    /// <summary>
+    ///     Without a browser to impersonate, YouTube answers caption downloads with HTTP 429 as if it were rate-limiting,
+    ///     so the real cause never shows. A yt-dlp that cannot start is reported by the version check instead.
+    /// </summary>
+    private async Task<string?> CheckImpersonationAsync(CancellationToken cancellationToken)
+    {
+        var result = await TryRunAsync(tools.YtDlpPath, ["--no-update", "--list-impersonate-targets"], cancellationToken).ConfigureAwait(false);
+        if (result == null)
+            return null;
+
+        var targets = result.StandardOutput.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .SkipWhile(line => !line.StartsWith("---", StringComparison.Ordinal))
+            .Skip(1);
+        return result.ExitCode == 0 && targets.Any(line => !line.Contains("(unavailable)", StringComparison.Ordinal))
+            ? null
+            : "yt-dlp has no browser to impersonate, so YouTube refuses caption downloads with HTTP 429. "
+              + "Install the missing library with `pip install --upgrade \"yt-dlp[default,curl-cffi]\"`.";
+    }
+
     private async Task<string?> CheckStartsAsync(string name, string path, string argument, string fix, CancellationToken cancellationToken)
     {
-        var result = await TryRunAsync(path, argument, cancellationToken).ConfigureAwait(false);
+        var result = await TryRunAsync(path, [argument], cancellationToken).ConfigureAwait(false);
         return result is { ExitCode: 0 } ? null : $"{name} could not be started from \"{path}\". {fix}";
     }
 
-    private async Task<ProcessResult?> TryRunAsync(string path, string argument, CancellationToken cancellationToken)
+    private async Task<ProcessResult?> TryRunAsync(string path, IReadOnlyList<string> arguments, CancellationToken cancellationToken)
     {
         try
         {
-            return await processRunner.RunAsync(path, [argument], null, TimeSpan.FromMinutes(tools.TimeoutMinutes), cancellationToken).ConfigureAwait(false);
+            return await processRunner.RunAsync(path, arguments, null, TimeSpan.FromMinutes(tools.TimeoutMinutes), cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex) when (ex is Win32Exception or TimeoutException)
         {

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using YouNews.Core.Ports;
 using YouNews.Infrastructure.Processes;
 using YouNews.Infrastructure.YouTube;
@@ -12,7 +13,7 @@ public sealed class YouTubeAudioDownloaderTests
     {
         environment = new TestEnvironment();
         runner = new FakeProcessRunner();
-        sut = new YouTubeAudioDownloader(new YtDlpRunner(runner, environment.Wrapped), environment.Wrapped);
+        sut = new YouTubeAudioDownloader(new YtDlpRunner(runner, environment.Wrapped, NullLogger<YtDlpRunner>.Instance), environment.Wrapped);
     }
 
     [TestCleanup]

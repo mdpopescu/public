@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using YouNews.Core.Model;
 using YouNews.Infrastructure.Processes;
 using YouNews.Infrastructure.YouTube;
@@ -14,7 +15,7 @@ public sealed class YouTubeLiveTests
     {
         environment = new TestEnvironment();
         var processRunner = new ProcessRunner();
-        ytDlp = new YtDlpRunner(processRunner, environment.Wrapped);
+        ytDlp = new YtDlpRunner(processRunner, environment.Wrapped, NullLogger<YtDlpRunner>.Instance);
         catalog = new YtDlpVideoCatalog(ytDlp, new VideoErrorClassifier(), new ChannelAddressParser());
     }
 

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using System.Diagnostics;
 using Microsoft.Extensions.Options;
 using YouNews.Infrastructure.Processes;
@@ -18,7 +19,7 @@ public sealed class SpeechLiveTests
     {
         var options = Options.Create(new YouNewsOptions { DataDirectory = FindScratchDirectory() });
         var processRunner = new ProcessRunner();
-        var downloader = new FirstMinuteDownloader(new YouTubeAudioDownloader(new YtDlpRunner(processRunner, options), options), processRunner, options);
+        var downloader = new FirstMinuteDownloader(new YouTubeAudioDownloader(new YtDlpRunner(processRunner, options, NullLogger<YtDlpRunner>.Instance), options), processRunner, options);
         var store = new SpeechModelStore(new FailingHttpClientFactory(), processRunner, options);
         using var recognizer = new SherpaSpeechRecognizer(store, options);
         var sut = new ParakeetSpeechTranscriber(downloader, processRunner, recognizer, options);

@@ -7,7 +7,10 @@ using YouNews.Infrastructure.Processes;
 
 namespace YouNews.Infrastructure.YouTube;
 
-/// <summary>Downloads the English json3 caption files of a video with yt-dlp and reads them.</summary>
+/// <summary>
+///     Downloads the English json3 caption files of a video with yt-dlp and reads them. A track YouTube refuses is skipped
+///     rather than ending the download, because YouTube rate-limits machine-translated tracks far harder than the others.
+/// </summary>
 public sealed class YtDlpCaptionSource : ICaptionSource
 {
     /// <summary>YouTube rate-limits caption downloads, and one video can have several caption files.</summary>
@@ -28,7 +31,7 @@ public sealed class YtDlpCaptionSource : ICaptionSource
 
         var result = await ytDlp.RunAsync(
             [
-                "--skip-download", "--write-subs", "--write-auto-subs", "--write-info-json", "--sub-langs", "en.*,en", "--sub-format", "json3",
+                "--ignore-errors", "--skip-download", "--write-subs", "--write-auto-subs", "--write-info-json", "--sub-langs", "en.*,en", "--sub-format", "json3",
                 "--sleep-subtitles", SECONDS_BETWEEN_SUBTITLES.ToString(CultureInfo.InvariantCulture), "-o", template, url,
             ],
             cancellationToken).ConfigureAwait(false);

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using YouNews.Core.Model;
 using YouNews.Core.Ports;
 using YouNews.Infrastructure.Processes;
@@ -14,7 +15,7 @@ public sealed class YtDlpVideoCatalogTests
         environment = new TestEnvironment();
         environment.Options.Tools.NodePath = @"C:\tools\node.exe";
         runner = new FakeProcessRunner();
-        sut = new YtDlpVideoCatalog(new YtDlpRunner(runner, environment.Wrapped), new VideoErrorClassifier(), new ChannelAddressParser());
+        sut = new YtDlpVideoCatalog(new YtDlpRunner(runner, environment.Wrapped, NullLogger<YtDlpRunner>.Instance), new VideoErrorClassifier(), new ChannelAddressParser());
     }
 
     [TestCleanup]
@@ -28,7 +29,8 @@ public sealed class YtDlpVideoCatalogTests
         await sut.GetDetailsAsync("zhnJo7s91ls", CancellationToken.None);
 
         var call = runner.Invocations.Single();
-        CollectionAssert.AreEqual(new[] { "--no-update", "--js-runtimes", @"node:C:\tools\node.exe", "--no-warnings" }, call.Arguments.Take(4).ToArray(), call.ToString());
+        CollectionAssert.AreEqual(new[] { "--no-update", "--js-runtimes", @"node:C:\tools\node.exe" }, call.Arguments.Take(3).ToArray(), call.ToString());
+        CollectionAssert.DoesNotContain(call.Arguments.ToList(), "--no-warnings", call.ToString());
         Assert.AreEqual(TimeSpan.FromMinutes(7), call.Timeout);
         Assert.AreEqual("yt-dlp", call.FileName);
     }
