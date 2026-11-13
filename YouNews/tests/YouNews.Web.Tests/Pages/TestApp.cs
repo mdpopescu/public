@@ -21,6 +21,8 @@ public sealed partial class TestApp : WebApplicationFactory<Program>
 
     public FakeRefreshLog Log { get; } = new();
 
+    public FakeRunAlertStore Alerts { get; } = new();
+
     public FakeSetupStore Setup { get; } = new();
 
     public FakeModelSelection Model { get; } = new();
@@ -63,6 +65,7 @@ public sealed partial class TestApp : WebApplicationFactory<Program>
             Replace<IChannelStore>(services, Channels);
             Replace<IInterestStore>(services, Interests);
             Replace<IRefreshLog>(services, Log);
+            Replace<IRunAlertStore>(services, Alerts);
             Replace<ISetupStore>(services, Setup);
             Replace<ICurrentModel>(services, Model);
             Replace<IModelSelector>(services, Model);

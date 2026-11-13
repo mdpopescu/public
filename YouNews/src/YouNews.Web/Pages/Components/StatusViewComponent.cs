@@ -10,22 +10,26 @@ public sealed class StatusViewComponent : ViewComponent
     public const string BANNER = "Banner";
     public const string FOOTER = "Footer";
 
-    public StatusViewComponent(IRefreshLog log, IVideoStore videos, IChannelStore channels, IToolProblems toolProblems, IStatusPresenter presenter)
+    public StatusViewComponent(IRefreshLog log, IVideoStore videos, IChannelStore channels, IToolProblems toolProblems, IRunAlertStore alerts, IStatusPresenter presenter)
     {
         this.log = log;
         this.videos = videos;
         this.channels = channels;
         this.toolProblems = toolProblems;
+        this.alerts = alerts;
         this.presenter = presenter;
     }
 
-    /// <param name="part">Banner for the tool problems at the top, Footer for the last run and the waiting videos.</param>
+    /// <param name="part">Banner for the tool problems and the alert at the top, Footer for the last run and the waiting videos.</param>
     public async Task<IViewComponentResult> InvokeAsync(string part)
     {
         var cancellationToken = HttpContext.RequestAborted;
         var problems = await toolProblems.GetAsync(cancellationToken).ConfigureAwait(false);
         if (part == BANNER)
-            return View(BANNER, presenter.Present(null, [], problems, PendingQueue.EMPTY));
+        {
+            var alert = await alerts.GetAsync(cancellationToken).ConfigureAwait(false);
+            return View(BANNER, presenter.PresentBanner(problems, alert));
+        }
 
         var lastRun = await log.GetLatestAsync(cancellationToken).ConfigureAwait(false);
         var pending = await videos.ListByStateAsync(VideoState.Pending, cancellationToken).ConfigureAwait(false);
@@ -41,5 +45,6 @@ public sealed class StatusViewComponent : ViewComponent
     private readonly IVideoStore videos;
     private readonly IChannelStore channels;
     private readonly IToolProblems toolProblems;
+    private readonly IRunAlertStore alerts;
     private readonly IStatusPresenter presenter;
 }

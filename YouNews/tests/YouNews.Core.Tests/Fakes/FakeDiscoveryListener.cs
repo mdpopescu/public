@@ -8,6 +8,8 @@ internal sealed class FakeDiscoveryListener : IDiscoveryListener
 
     public int VideosQueued { get; private set; }
 
+    public int ChannelsChecked { get; private set; }
+
     public int RateLimitWaits { get; private set; }
 
     /// <summary>Runs during each rate-limit wait, standing in for what changes on YouTube while the search waits.</summary>
@@ -17,7 +19,9 @@ internal sealed class FakeDiscoveryListener : IDiscoveryListener
 
     public void VideoQueued() => VideosQueued++;
 
-    public Task WaitOutChannelRateLimitAsync(CancellationToken cancellationToken)
+    public void ChannelChecked() => ChannelsChecked++;
+
+    public Task WaitOutChannelRateLimitAsync(string refusal, CancellationToken cancellationToken)
     {
         RateLimitWaits++;
         DuringRateLimitWait?.Invoke();

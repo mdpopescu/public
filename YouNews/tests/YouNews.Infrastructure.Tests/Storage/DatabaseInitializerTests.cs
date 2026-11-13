@@ -76,7 +76,7 @@ public class DatabaseInitializerTests
 
         await using var connection = await fixture.Factory.OpenAsync(CancellationToken.None);
         var versions = (await connection.QueryAsync<int>("SELECT version FROM schema_version")).ToList();
-        CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5, 6 }, versions, "version table should list each migration exactly once");
+        CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5, 6, 7 }, versions, "version table should list each migration exactly once");
     }
 
     [TestMethod]
@@ -89,7 +89,7 @@ public class DatabaseInitializerTests
 
         await using var connection = await fixture.Factory.OpenAsync(CancellationToken.None);
         var versions = (await connection.QueryAsync<int>("SELECT version FROM schema_version ORDER BY version")).ToList();
-        CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5, 6, 7 }, versions);
+        CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5, 6, 7, 8 }, versions);
         Assert.HasCount(1, (await new SqliteChannelStore(fixture.Factory).ListAsync(CancellationToken.None)), "upgrade must not seed again");
     }
 
@@ -125,6 +125,23 @@ public class DatabaseInitializerTests
         await fixture.CreateInitializer().InitializeAsync(CancellationToken.None);
 
         Assert.IsNull(await connection.ExecuteScalarAsync<long?>("SELECT deferred_ticks FROM videos WHERE youtube_id = 'old'"));
+    }
+
+    [TestMethod]
+    public async Task InitializeAsync_DatabaseWithoutAlertTable_AddsItAndKeepsExistingData()
+    {
+        var beforeAlerts = new FakeMigrations(new DatabaseMigrations().Scripts.Take(6).ToList());
+        await new DatabaseInitializer(fixture.Factory, beforeAlerts, TimeProvider.System, fixture.Options).InitializeAsync(CancellationToken.None);
+        await using var connection = await fixture.Factory.OpenAsync(CancellationToken.None);
+        await connection.ExecuteAsync("INSERT INTO videos (id, channel_id, youtube_id, title, state, first_seen_at, first_seen_ticks) VALUES (1, 1, 'old', 'Old', 'Pending', '2026-11-01T10:00:00+00:00', 0)");
+
+        await fixture.CreateInitializer().InitializeAsync(CancellationToken.None);
+
+        var store = new SqliteRunAlertStore(fixture.Factory);
+        Assert.IsNull(await store.GetAsync(CancellationToken.None));
+        await store.RaiseAsync("stopped", DateTimeOffset.UnixEpoch, CancellationToken.None);
+        Assert.IsNotNull(await store.GetAsync(CancellationToken.None), "The new table should accept an alert.");
+        Assert.AreEqual(1, await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM videos WHERE youtube_id = 'old'"));
     }
 
     [TestMethod]

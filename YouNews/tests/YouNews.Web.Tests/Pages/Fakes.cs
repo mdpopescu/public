@@ -66,6 +66,25 @@ public sealed class FakeRefreshLog : IRefreshLog
     public Task<RefreshRun?> GetLatestAsync(CancellationToken cancellationToken) => Task.FromResult(Latest);
 }
 
+public sealed class FakeRunAlertStore : IRunAlertStore
+{
+    public RunAlert? Current { get; set; }
+
+    public Task RaiseAsync(string message, DateTimeOffset raisedAt, CancellationToken cancellationToken)
+    {
+        Current = new RunAlert(message, raisedAt);
+        return Task.CompletedTask;
+    }
+
+    public Task<RunAlert?> GetAsync(CancellationToken cancellationToken) => Task.FromResult(Current);
+
+    public Task DismissAsync(CancellationToken cancellationToken)
+    {
+        Current = null;
+        return Task.CompletedTask;
+    }
+}
+
 public sealed class FakeModelSelection : ICurrentModel, IModelSelector
 {
     public string Model { get; set; } = "gemma4-26b";

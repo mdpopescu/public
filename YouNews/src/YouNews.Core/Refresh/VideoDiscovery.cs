@@ -30,14 +30,16 @@ public sealed class VideoDiscovery : IVideoDiscovery
         while (queue.TryDequeue(out var channel))
         {
             listener.ChannelStarted(checkedCount + 1, followed.Count, channel.Name);
-            if (await TryDiscoverChannelAsync(channel, listener, problems, cancellationToken).ConfigureAwait(false))
+            var refusal = await TryDiscoverChannelAsync(channel, listener, problems, cancellationToken).ConfigureAwait(false);
+            if (refusal is null)
             {
                 checkedCount++;
+                listener.ChannelChecked();
                 continue;
             }
 
             queue.Enqueue(channel);
-            await listener.WaitOutChannelRateLimitAsync(cancellationToken).ConfigureAwait(false);
+            await listener.WaitOutChannelRateLimitAsync(refusal, cancellationToken).ConfigureAwait(false);
         }
 
         return problems;
@@ -65,25 +67,26 @@ public sealed class VideoDiscovery : IVideoDiscovery
         && (listed.PublishedOn is null || listed.PublishedOn <= today.AddDays(-LISTING_DATE_TRUSTED_DAYS));
 
     /// <summary>
-    ///     Checks one channel, recording any failure as a problem. Returns false when YouTube's rate limit refused the check,
-    ///     so the channel goes to the end of the queue. The videos it recorded before the refusal stay recorded.
+    ///     Checks one channel, recording any failure as a problem. Returns what YouTube answered when its rate limit refused
+    ///     the check, so the channel goes to the end of the queue, or null when the check went ahead. The videos it recorded
+    ///     before the refusal stay recorded.
     /// </summary>
-    private async Task<bool> TryDiscoverChannelAsync(Channel channel, IDiscoveryListener listener, List<string> problems, CancellationToken cancellationToken)
+    private async Task<string?> TryDiscoverChannelAsync(Channel channel, IDiscoveryListener listener, List<string> problems, CancellationToken cancellationToken)
     {
         try
         {
             await DiscoverChannelAsync(channel, listener, cancellationToken).ConfigureAwait(false);
         }
-        catch (RateLimitedException)
+        catch (RateLimitedException exception)
         {
-            return false;
+            return exception.Message;
         }
         catch (Exception exception) when (exception is not OperationCanceledException || !cancellationToken.IsCancellationRequested)
         {
             problems.Add($"Could not check channel {channel.Name}: {exception.Message}");
         }
 
-        return true;
+        return null;
     }
 
     private async Task DiscoverChannelAsync(Channel channel, IDiscoveryListener listener, CancellationToken cancellationToken)

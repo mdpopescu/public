@@ -217,6 +217,20 @@ public sealed class VideoDiscoveryTests
     }
 
     [TestMethod]
+    public async Task ChannelChecked_IsHeardOncePerChannelYouTubeAcceptedAndNotForARefusal()
+    {
+        channels.Channels.Add(new Channel(2, "https://youtube.com/@two", "Two"));
+        catalog.RateLimitedChannels.Add(1);
+        catalog.Feeds[1] = [[]];
+        catalog.Feeds[2] = [[]];
+        listener.DuringRateLimitWait = () => catalog.RateLimitedChannels.Clear();
+
+        await sut.DiscoverAsync(listener, CancellationToken.None);
+
+        Assert.AreEqual(2, listener.ChannelsChecked, "Channel Two, then channel One after its refusal. Channels: " + string.Join(" | ", listener.Channels));
+    }
+
+    [TestMethod]
     public async Task RecheckVideoBecomesPendingWhenItIsFinished()
     {
         await videos.AddAsync(new NewVideo(1, "stream", "Stream", VideoState.Recheck, "is live", time.GetUtcNow()), CancellationToken.None);

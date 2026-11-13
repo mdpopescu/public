@@ -86,5 +86,6 @@ public sealed class DatabaseMigrations : IDatabaseMigrations
         "CREATE TABLE model_selection (id INTEGER PRIMARY KEY CHECK (id = 1), model TEXT NOT NULL);",
         "CREATE TABLE reprocess_requests (id INTEGER PRIMARY KEY AUTOINCREMENT, entry_id INTEGER NOT NULL UNIQUE REFERENCES entries(id), failure TEXT NULL);",
         "ALTER TABLE videos ADD COLUMN deferred_ticks INTEGER NULL;",
+        "CREATE TABLE run_alert (id INTEGER PRIMARY KEY CHECK (id = 1), message TEXT NOT NULL, raised_at TEXT NOT NULL);",
     ];
 }

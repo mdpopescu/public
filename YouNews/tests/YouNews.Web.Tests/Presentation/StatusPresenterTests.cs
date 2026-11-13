@@ -7,6 +7,31 @@ namespace YouNews.Web.Tests.Presentation;
 public sealed class StatusPresenterTests
 {
     [TestMethod]
+    public void PresentBanner_Alert_ShowsMessageAndLocalTimeItWasRaised()
+    {
+        var time = new Microsoft.Extensions.Time.Testing.FakeTimeProvider();
+        time.SetLocalTimeZone(TimeZoneInfo.CreateCustomTimeZone("Plus2", TimeSpan.FromHours(2), "Plus2", "Plus2"));
+        var sut = new StatusPresenter(time);
+        var alert = new RunAlert("YouTube refused 5 requests in a row.", new DateTimeOffset(2026, 11, 1, 23, 30, 0, TimeSpan.Zero));
+
+        var view = sut.PresentBanner(["yt-dlp too old"], alert);
+
+        Assert.AreEqual("YouTube refused 5 requests in a row.", view.Alert?.Message);
+        Assert.AreEqual("Raised 2026-11-02 01:30.", view.Alert?.RaisedText, "23:30 UTC is 01:30 the next day in the +2 zone.");
+        CollectionAssert.AreEqual(new[] { "yt-dlp too old" }, view.ToolProblems.ToArray());
+    }
+
+    [TestMethod]
+    public void PresentBanner_NoAlert_HasNoAlertView()
+    {
+        var sut = new StatusPresenter(TimeProvider.System);
+
+        var view = sut.PresentBanner([], null);
+
+        Assert.IsNull(view.Alert, "no alert is shown when none is waiting");
+    }
+
+    [TestMethod]
     public void Present_NoPendingVideos_ShowsNoQueue()
     {
         var sut = new StatusPresenter(TimeProvider.System);

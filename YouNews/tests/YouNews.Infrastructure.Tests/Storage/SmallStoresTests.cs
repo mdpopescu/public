@@ -95,6 +95,62 @@ public class SmallStoresTests
         Assert.AreEqual(last.StartedAt.Offset, latest!.StartedAt.Offset);
     }
 
+    [TestMethod]
+    public async Task AlertGetAsync_NothingRaised_ReturnsNull()
+    {
+        var sut = new SqliteRunAlertStore(fixture.Factory);
+
+        Assert.IsNull(await sut.GetAsync(CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task AlertRaiseAsync_Alert_RoundTripsIncludingOffset()
+    {
+        var sut = new SqliteRunAlertStore(fixture.Factory);
+        var raisedAt = new DateTimeOffset(2026, 11, 1, 23, 30, 0, TimeSpan.FromHours(2));
+
+        await sut.RaiseAsync("YouTube refused 5 requests in a row.", raisedAt, CancellationToken.None);
+
+        var loaded = await sut.GetAsync(CancellationToken.None);
+        Assert.AreEqual(new RunAlert("YouTube refused 5 requests in a row.", raisedAt), loaded);
+        Assert.AreEqual(raisedAt.Offset, loaded!.RaisedAt.Offset);
+    }
+
+    [TestMethod]
+    public async Task AlertRaiseAsync_AlertAlreadyWaiting_KeepsOnlyTheNewOne()
+    {
+        var sut = new SqliteRunAlertStore(fixture.Factory);
+        var when = new DateTimeOffset(2026, 11, 1, 6, 0, 0, TimeSpan.Zero);
+        await sut.RaiseAsync("first", when, CancellationToken.None);
+
+        await sut.RaiseAsync("second", when.AddDays(1), CancellationToken.None);
+
+        await using var connection = await fixture.Factory.OpenAsync(CancellationToken.None);
+        Assert.AreEqual(1, await Dapper.SqlMapper.ExecuteScalarAsync<int>(connection, "SELECT COUNT(*) FROM run_alert"));
+        Assert.AreEqual(new RunAlert("second", when.AddDays(1)), await sut.GetAsync(CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task AlertDismissAsync_AlertWaiting_RemovesIt()
+    {
+        var sut = new SqliteRunAlertStore(fixture.Factory);
+        await sut.RaiseAsync("stopped", DateTimeOffset.UnixEpoch, CancellationToken.None);
+
+        await sut.DismissAsync(CancellationToken.None);
+
+        Assert.IsNull(await sut.GetAsync(CancellationToken.None));
+    }
+
+    [TestMethod]
+    public async Task AlertDismissAsync_NothingWaiting_DoesNothing()
+    {
+        var sut = new SqliteRunAlertStore(fixture.Factory);
+
+        await sut.DismissAsync(CancellationToken.None);
+
+        Assert.IsNull(await sut.GetAsync(CancellationToken.None));
+    }
+
     //
 
     private readonly StorageFixture fixture = new();

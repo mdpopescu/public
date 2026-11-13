@@ -9,5 +9,6 @@ public sealed record RefreshDependencies(
     IVideoStore Videos,
     IInterestStore Interests,
     IRefreshLog Log,
+    IRunAlertStore Alerts,
     ISetupMonitor SetupMonitor,
     TimeProvider Time);

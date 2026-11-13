@@ -26,6 +26,7 @@ public sealed class RefreshRunTests
             },
         };
         log = new FakeRefreshLog();
+        alerts = new FakeRunAlertStore();
         setupMonitor = new FakeSetupMonitor();
         captions = new FakeCaptionSource();
         speech = new FakeSpeechTranscriber();
@@ -435,6 +436,122 @@ public sealed class RefreshRunTests
     }
 
     [TestMethod]
+    public async Task FiveRefusalsInARowStopTheRunWithoutAFifthWaitAndRaiseAnAlert_VideoSide()
+    {
+        var start = time.GetUtcNow();
+        await AddPendingAsync("limited");
+        captions.RateLimitedIds.Add("limited");
+        var searching = new DiscoveryThatWaitsForTheStop();
+        sut = CreateSut(limit: null, discovery: searching);
+
+        await sut.ExecuteAsync(PassPauses, CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(10));
+
+        Assert.AreEqual(4 * RefreshRunner.RATE_LIMIT_PAUSE, time.GetUtcNow() - start, "Four pauses, and none after the fifth refusal.");
+        Assert.IsTrue(searching.WasStopped, "The search for new videos must be cancelled when the run stops.");
+        var run = log.Runs.Single();
+        StringAssert.Contains(run.Problem!, "refused 5 requests in a row", run.Problem);
+        StringAssert.Contains(run.Problem!, "paused the run 4 times", run.Problem);
+        Assert.AreEqual(VideoState.Pending, videos.Find("limited").State);
+        Assert.AreEqual(1, alerts.Raised);
+        StringAssert.Contains(alerts.Current!.Message, "refused 5 requests in a row", alerts.Current.Message);
+        StringAssert.Contains(alerts.Current.Message, "The last refusal was: HTTP Error 429: Too Many Requests for limited", alerts.Current.Message);
+        StringAssert.Contains(run.Problem!, "The last refusal was: HTTP Error 429: Too Many Requests for limited", run.Problem);
+        Assert.AreEqual(run.FinishedAt, alerts.Current.RaisedAt);
+    }
+
+    [TestMethod]
+    public async Task FiveRefusalsInARowStopTheRun_ChannelSideCountsToo()
+    {
+        var start = time.GetUtcNow();
+        catalog.RateLimitedChannels.Add(1);
+        catalog.Feeds[1] = [[]];
+
+        await sut.ExecuteAsync(PassPauses, CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(10));
+
+        Assert.AreEqual(4 * RefreshRunner.RATE_LIMIT_PAUSE, time.GetUtcNow() - start, "Four pauses, and none after the fifth refusal.");
+        StringAssert.Contains(log.Runs.Single().Problem!, "refused 5 requests in a row", log.Runs.Single().Problem);
+        Assert.AreEqual(1, alerts.Raised);
+        StringAssert.Contains(alerts.Current!.Message, "The last refusal was: HTTP Error 429: Too Many Requests for channel 1", alerts.Current.Message);
+    }
+
+    [TestMethod]
+    public async Task FiveRefusalsInARowStopTheRun_SplitBetweenBothSides()
+    {
+        await AddPendingAsync("limited");
+        captions.RateLimitedIds.Add("limited");
+        sut = CreateSut(limit: null, discovery: new RefusedDiscovery());
+
+        await sut.ExecuteAsync(PassPauses, CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(10));
+
+        var problem = log.Runs.Single().Problem!;
+        StringAssert.Contains(problem, "paused the run 4 times", "Both sides share one count of four waits. " + problem);
+        StringAssert.Contains(problem, "refused 5 requests in a row", problem);
+        Assert.AreEqual(1, alerts.Raised);
+    }
+
+    [TestMethod]
+    public async Task ASuccessfulVideoBetweenRefusalsRestartsTheCount_FourRefusalsOneSuccessFourRefusalsDoNotStop()
+    {
+        await AddPendingAsync("a");
+        await AddPendingAsync("b");
+        var scripted = new SequencedCaptionSource([true, true, true, true, false, true, true, true, true, false]);
+        sut = CreateSut(limit: null, captionSource: scripted);
+
+        await sut.ExecuteAsync(PassPauses, CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(10));
+
+        var run = log.Runs.Single();
+        Assert.AreEqual(2, run.Completed, run.Problem);
+        Assert.AreEqual(0, alerts.Raised, run.Problem);
+        Assert.DoesNotContain("requests in a row", run.Problem!, run.Problem);
+        Assert.AreEqual(10, scripted.Calls, "Every scripted answer should have been asked for.");
+    }
+
+    [TestMethod]
+    public async Task AFailedVideoBetweenRefusalsAlsoRestartsTheCount()
+    {
+        await AddPendingAsync("a");
+        await AddPendingAsync("b");
+        writer.FailingTitles.Add("Title of a");
+        var scripted = new SequencedCaptionSource([true, true, true, true, false, true, true, true, true, false]);
+        sut = CreateSut(limit: null, captionSource: scripted);
+
+        await sut.ExecuteAsync(PassPauses, CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(10));
+
+        var run = log.Runs.Single();
+        Assert.AreEqual(0, alerts.Raised, run.Problem);
+        Assert.AreEqual(1, run.Failed, run.Problem);
+    }
+
+    [TestMethod]
+    public async Task AcceptedChannelCheckBetweenRefusalsRestartsTheCount()
+    {
+        sut = CreateSut(limit: null, discovery: new ScriptedDiscovery(async listener =>
+        {
+            for (var round = 0; round < 2; round++)
+            {
+                for (var refusal = 0; refusal < 4; refusal++)
+                    await listener.WaitOutChannelRateLimitAsync("HTTP Error 429: Too Many Requests", CancellationToken.None);
+                listener.ChannelChecked();
+            }
+        }));
+
+        await sut.ExecuteAsync(PassPauses, CancellationToken.None).WaitAsync(TimeSpan.FromSeconds(10));
+
+        Assert.AreEqual(0, alerts.Raised, log.Runs.Single().Problem);
+        StringAssert.Contains(log.Runs.Single().Problem!, "paused the run 8 times", log.Runs.Single().Problem);
+    }
+
+    [TestMethod]
+    public async Task AlertStaysWhenALaterRunGoesWell()
+    {
+        await alerts.RaiseAsync("old alert", time.GetUtcNow(), CancellationToken.None);
+
+        await RunAsync();
+
+        Assert.AreEqual("old alert", alerts.Current?.Message, "Only dismissing may clear the alert.");
+    }
+
+    [TestMethod]
     public async Task VideoIsGivenUpAfterTooManyFailedAttempts()
     {
         await AddPendingAsync("bad");
@@ -460,6 +577,7 @@ public sealed class RefreshRunTests
     private FakeVideoStore videos = null!;
     private FakeCatalog catalog = null!;
     private FakeRefreshLog log = null!;
+    private FakeRunAlertStore alerts = null!;
     private FakeSetupMonitor setupMonitor = null!;
     private FakeCaptionSource captions = null!;
     private FakeSpeechTranscriber speech = null!;
@@ -479,6 +597,43 @@ public sealed class RefreshRunTests
         }
     }
 
+    /// <summary>A search that has nothing to do but wait, and so ends only when the run stops it.</summary>
+    private sealed class DiscoveryThatWaitsForTheStop : IVideoDiscovery
+    {
+        public bool WasStopped { get; private set; }
+
+        public async Task<IReadOnlyList<string>> DiscoverAsync(IDiscoveryListener listener, CancellationToken cancellationToken)
+        {
+            await Task.Delay(Timeout.Infinite, cancellationToken).ContinueWith(_ => WasStopped = cancellationToken.IsCancellationRequested, TaskScheduler.Default);
+            return [];
+        }
+    }
+
+    /// <summary>A search that finds YouTube refusing every channel check, until the run stops it.</summary>
+    private sealed class RefusedDiscovery : IVideoDiscovery
+    {
+        public async Task<IReadOnlyList<string>> DiscoverAsync(IDiscoveryListener listener, CancellationToken cancellationToken)
+        {
+            while (true)
+                await listener.WaitOutChannelRateLimitAsync("HTTP Error 429: Too Many Requests", cancellationToken);
+        }
+    }
+
+    private sealed class SequencedCaptionSource(IEnumerable<bool> refusals) : ICaptionSource
+    {
+        public int Calls { get; private set; }
+
+        public Task<Transcript?> GetCaptionsAsync(string youTubeId, CancellationToken cancellationToken)
+        {
+            Calls++;
+            return answers.TryDequeue(out var refuse) && refuse
+                ? throw new RateLimitedException("HTTP Error 429: Too Many Requests")
+                : Task.FromResult<Transcript?>(new Transcript([new TranscriptSegment(TimeSpan.Zero, "words from captions")]));
+        }
+
+        private readonly Queue<bool> answers = new(refusals);
+    }
+
     private sealed class CancellingWriter : IBriefingWriter
     {
         public Task<VideoAnalysis> AnalyzeAsync(string title, string channelName, Transcript transcript, IReadOnlyList<EntryDigest> candidates, CancellationToken cancellationToken)
@@ -492,11 +647,11 @@ public sealed class RefreshRunTests
         public Task<string> WriteOpinionAsync(OpinionRequest request, CancellationToken cancellationToken) => throw new NotSupportedException();
     }
 
-    private RefreshRunner CreateSut(int? limit, IBriefingWriter? replacementWriter = null, IVideoDiscovery? discovery = null)
+    private RefreshRunner CreateSut(int? limit, IBriefingWriter? replacementWriter = null, IVideoDiscovery? discovery = null, ICaptionSource? captionSource = null)
     {
         discovery ??= new VideoDiscovery(channels, videos, catalog, time);
-        var processor = new VideoProcessor(new VideoProcessorDependencies(catalog, captions, speech, replacementWriter ?? writer, search, images, entries, time));
-        var dependencies = new RefreshDependencies(channels, videos, new FakeInterestStore(), log, setupMonitor, time);
+        var processor = new VideoProcessor(new VideoProcessorDependencies(catalog, captionSource ?? captions, speech, replacementWriter ?? writer, search, images, entries, time));
+        var dependencies = new RefreshDependencies(channels, videos, new FakeInterestStore(), log, alerts, setupMonitor, time);
         return new RefreshRunner(dependencies, discovery, processor, new RefreshLimits(limit));
     }
 
@@ -508,12 +663,24 @@ public sealed class RefreshRunTests
     /// <summary>Ends each pause at once by moving the clock past it. Every pause announces a different resume time, so each is seen once.</summary>
     private void LiftRateLimitsWhenPaused(RefreshProgress progress)
     {
-        var pause = new[] { progress.Activity, progress.Discovery }.FirstOrDefault(text => text?.StartsWith("YouTube's rate limit", StringComparison.Ordinal) == true);
-        if (pause is null || !announcedPauses.Add(pause))
+        if (!IsNewPause(progress))
             return;
 
         captions.RateLimitedIds.Clear();
         catalog.RateLimitedChannels.Clear();
         time.Advance(RefreshRunner.RATE_LIMIT_PAUSE);
+    }
+
+    /// <summary>Ends each pause at once by moving the clock past it, while YouTube keeps refusing.</summary>
+    private void PassPauses(RefreshProgress progress)
+    {
+        if (IsNewPause(progress))
+            time.Advance(RefreshRunner.RATE_LIMIT_PAUSE);
+    }
+
+    private bool IsNewPause(RefreshProgress progress)
+    {
+        var pause = new[] { progress.Activity, progress.Discovery }.FirstOrDefault(text => text?.StartsWith("YouTube's rate limit", StringComparison.Ordinal) == true);
+        return pause is not null && announcedPauses.Add(pause);
     }
 }

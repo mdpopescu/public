@@ -44,7 +44,11 @@ public sealed record StatusView(
     IReadOnlyList<WaitingVideoView> Waiting,
     IReadOnlyList<string> ToolProblems,
     string? QueueText,
-    IReadOnlyList<QueuedVideoView> Queue);
+    IReadOnlyList<QueuedVideoView> Queue,
+    RunAlertView? Alert = null);
+
+/// <summary>An alert about a run that stays on every page until dismissed; RaisedText says when it was raised.</summary>
+public sealed record RunAlertView(string Message, string RaisedText);
 
 public sealed record SetupView(bool HasData, string Hardware, IReadOnlyList<string> Models, string CheckedAtText, string? Warning, string CurrentModel, IReadOnlyList<string> ModelChoices);
 

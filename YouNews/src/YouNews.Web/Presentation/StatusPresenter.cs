@@ -19,6 +19,9 @@ public sealed class StatusPresenter : IStatusPresenter
             DescribeQueue(queue.Videos.Count),
             queue.Videos.Take(QUEUE_PREVIEW_SIZE).Select(video => PresentQueued(video, queue.ChannelNames)).ToList());
 
+    public StatusView PresentBanner(IReadOnlyList<string> toolProblems, RunAlert? alert) =>
+        new(null, null, [], toolProblems, null, [], alert is null ? null : new RunAlertView(alert.Message, $"Raised {FormatLocal(alert.RaisedAt)}."));
+
     //
 
     private const int QUEUE_PREVIEW_SIZE = 10;
@@ -56,7 +59,9 @@ public sealed class StatusPresenter : IStatusPresenter
 
     private string DescribeRun(RefreshRun run)
     {
-        var local = TimeZoneInfo.ConvertTime(run.FinishedAt, time.LocalTimeZone).ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
-        return $"Last refresh {local}: {run.Completed} completed, {run.Failed} failed.";
+        return $"Last refresh {FormatLocal(run.FinishedAt)}: {run.Completed} completed, {run.Failed} failed.";
     }
+
+    private string FormatLocal(DateTimeOffset moment) =>
+        TimeZoneInfo.ConvertTime(moment, time.LocalTimeZone).ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
 }

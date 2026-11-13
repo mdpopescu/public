@@ -1,4 +1,15 @@
 @model StatusView
+@if (Model.Alert is { } alert)
+{
+    <section class="banner" role="alert" data-run-alert>
+        <strong>@alert.Message</strong>
+        <div>@alert.RaisedText</div>
+        <form method="post" asp-page="/DismissAlert">
+            <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+            <button type="submit" class="btn">Dismiss</button>
+        </form>
+    </section>
+}
 @if (Model.ToolProblems.Count > 0)
 {
     <section class="banner" role="alert">

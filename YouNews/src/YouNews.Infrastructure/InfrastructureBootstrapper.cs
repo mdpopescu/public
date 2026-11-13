@@ -42,6 +42,7 @@ public static class InfrastructureBootstrapper
         services.AddSingleton<IInterestStore, SqliteInterestStore>();
         services.AddSingleton<ISetupStore, SqliteSetupStore>();
         services.AddSingleton<IRefreshLog, SqliteRefreshLog>();
+        services.AddSingleton<IRunAlertStore, SqliteRunAlertStore>();
         services.AddSingleton<SqliteModelSelection>();
         services.AddSingleton<ICurrentModel>(provider => provider.GetRequiredService<SqliteModelSelection>());
         services.AddSingleton<IModelSelector>(provider => provider.GetRequiredService<SqliteModelSelection>());
